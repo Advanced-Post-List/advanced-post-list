@@ -2,7 +2,7 @@
 
 /*
   Plugin Name: Advanced Post List
-  Version: 0.2.b1
+  Version: 0.2.b2
   Plugin URI: http://code.google.com/p/wordpress-advanced-post-list/
   Description: Create highly customizable post lists with dynamic features. 
   Author: JoKeR
@@ -26,7 +26,7 @@
  */
 /**
  * @package advanced-post-list
- * @version 0.2.b1
+ * @version 0.2.b2
  * @link http://code.google.com/p/wordpress-advanced-post-list/ Advanced Post List Homepage
  */
 /*****************************************************************************/
@@ -58,7 +58,7 @@ define('APL_NAME', 'Advanced Post List');
 define('APL_DIR', plugin_dir_path(__FILE__));
 define('APL_URL', plugin_dir_url(__FILE__));
 //FIX ALWAYS - Update version number
-define('APL_VERSION', '0.2.b1');
+define('APL_VERSION', '0.2.b2');
 
 /*****************************************************************************/
 /************************ REQUIRED FILES *************************************/

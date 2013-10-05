@@ -103,15 +103,10 @@ class APLCore
         $APLOptions['version'] = APL_VERSION;
       }
       
-//    //CHECKING VERSION FOR MAJOR DATABASE MODIFICATIONS
-//    BAREBONE EXAMPLE
-//    if ($APLOptions->version < X.X.X)
-//    {
-//      $this->upgrade_method();
-//    }
+
       //UPGRADE VERSION
       $oldversion = $APLOptions['version'];
-      if (version_compare($oldversion, APL_VERSION, '<'))
+      if (version_compare(APL_VERSION, $oldversion, '>'))
       {
           //Put upgrade database functions in here. Not before.
           // Ex. upgrade_to_X.X.X();

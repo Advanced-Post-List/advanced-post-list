@@ -883,41 +883,30 @@ Show count: <input type="text" size='5' name='txtNumberposts' id='txtNumberposts
   <p>Nothing selected means show everything, including tags or categories not yet created. Checking all will include everything, but will exclude all future categories or tags.</p>
 
 </div>
-<span  class="noneHide">
+
   <br/><br/>
+<div id="containerPresetStyler" style="min-width: 720px; max-width: 1024px; margin-right: 25px;" >
 
 
-  <p>Before list HTML: <textarea rows='4' cols='200' name='txtBeforeList' id='txtBeforeList' value=''  class="txtHeader"></textarea></p>
-  <br/>
-  <br/>
-  <br/>
-</span>
+<div id="before" class="noneHide" style="clear:both; white-space:nowrap;" >
+<label for="txtBeforeList" style="float:left; width: 125px;" >Before list HTML:</label>
+<textarea name="txtBeforeList" id="txtBeforeList" style="float:none; min-width:570px; max-width: 874px; min-height:70px;"></textarea>
+</div>
 
-<p>List item content: 
+<div id="content" style="clear: both; white-space:nowrap;" >
+<label for="txtContent" style="float:left; width:125px;" >List item content:</label>
+<textarea name='txtContent' id='txtContent' style="float: none; min-width:570px; max-width: 874px; min-height: 70px;" ></textarea>
+</div>
 
-  <textarea name='txtContent' id='txtContent' rows='4' cols="200" class="txtHeader"></textarea>
+<div id="after" class="noneHide" style="clear: both; white-space:nowrap;" >
+<label for="txtAfterList" style="float:left; width:125px;" >After list HTML:</label>
+<textarea name='txtAfterList' id='txtAfterList'  style="float: none; min-width:570px; max-width: 874px; min-height: 70px;" ></textarea>
+</div>
+</div>
 
-</p>
-
-<span  class="noneHide">
-  <br/>
-  <br/>
-  <br/>
-
-  <p>After list HTML: <textarea rows='4' cols='200' name='txtAfterList' id='txtAfterList'  class="txtHeader noneHide"></textarea></p>
-
-  <br/>
-  <br/>
-  <br/>
-
-  <input type=checkbox id="chkExcludeCurrent" name="chkExcludeCurrent" checked="yes"></ input> Exclude current post from results
-
-</span>
-<br/>
-<br/>
-
+  <input type=checkbox id="chkExcludeCurrent" name="chkExcludeCurrent" class="noneHide" checked="yes"></input><label for="chkExcludeCurrent" class="noneHide" >Exclude current post from results</label>
 <p>
-  <button id="btnSavePreset">Save to Preset</button>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" size='30' name='txtPresetName' id='txtPresetName' value='<?php echo $adminOptions["default_preset"]; ?>' >&nbsp;&nbsp;&nbsp;&nbsp;<input type=checkbox id="chkShowPreview" name="chkShowPreview" checked="yes"> show preview
+  <button id="btnSavePreset">Save to Preset</button>&nbsp;&nbsp;:&nbsp;&nbsp;<input type="text" size='30' name='txtPresetName' id='txtPresetName' >&nbsp;&nbsp;&nbsp;&nbsp;<input type=checkbox id="chkShowPreview" name="chkShowPreview" checked="yes"><label for="chkShowPreview" >show preview</label>
 </p>
 
 <p><span id="createStatus">&nbsp;</span></p>
@@ -950,7 +939,7 @@ Show count: <input type="text" size='5' name='txtNumberposts' id='txtNumberposts
 <div id="options1">
 <h4 style="margin-bottom: 1px;" >Settings</h4>
 	<form id="frmSettings" name="frmSettings" enctype="text/plain" method="get" style="margin: 0px;" >
-  	<table width="316" border="1">
+  	<table width="316" border="0 " style="">
   <tr>
     <td width="84"><input id="rdoDeleteDb" name="rdoDeleteDb" type="radio" value="true" <?php
   if ($adminOptions["delete_core_db"] == "true")
