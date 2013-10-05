@@ -3,10 +3,34 @@
 class APLPresetDbObj
 {
 
+  /**
+   * @var string
+   * @since 0.1.0
+   */
   var $_preset_db_name;
+
+  /**
+   * @var array(APLPresetObj())
+   * @since 0.1.0
+   */
   var $_preset_db;
+
+  /**
+   * @var string
+   * @since 0.1.0
+   */
   var $_delete;
 
+  /**
+   * Name: APL Preset Object Constructor
+   * Desc: 
+   * @param string $db_name 
+   * return none
+   * 
+   * @since 0.1.0
+   * 
+   * 1) 
+   */
   function __construct($db_name)
   {
     $this->_preset_db_name = 'APL_preset_db-' . $db_name;
@@ -18,13 +42,21 @@ class APLPresetDbObj
       
       $this->set_to_defaults();
       $this->options_save_db();
-      $this->option_load_db();
+      //$this->option_load_db();
     }
     
   }
   
   
-  
+  /**
+   * Name: APL Load Preset Option Database
+   * Desc: 
+   * @param none
+   * 
+   * @since 0.1.0
+   *  
+   * 1) 
+   */
   function option_load_db()
   {
     //$this->_option_db_name = 'APL_option_db_'.$db_name;
@@ -32,6 +64,15 @@ class APLPresetDbObj
     $this->_preset_db = $DBOptions->_preset_db;
     $this->_delete = $DBOptions->_delete;
   }
+  /**
+   * Name: APL Save Preset Option Database
+   * Desc: 
+   * @param none
+   * 
+   * @since 0.1.0
+   *  
+   * 1) 
+   */
   function options_save_db()
   {
     
@@ -49,10 +90,29 @@ class APLPresetDbObj
 //    }
 //    
 //  }
+  /**
+   * Name: APL Remove Preset Option Database
+   * Desc: 
+   * @param none
+   * 
+   * @since 0.1.0
+   *  
+   * 1) 
+   */
   function options_remove_db()
   {
     delete_option($this->_preset_db_name);
   }
+  /**
+   * Name: APL Set Presets to Default
+   * Desc: 
+   * @param none 
+   * return none
+   * 
+   * @since 0.1.0
+   *   
+   * 1) 
+   */
   function set_to_defaults()
   {
     $this->_preset_db_name = 'APL_preset_db-default';

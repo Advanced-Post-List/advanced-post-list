@@ -4,9 +4,9 @@ if (!function_exists('add_action'))
   echo "Hi there!  I'm just a plugin, not much I can do when called directly.";
   exit;
 }
-$save_preset_nonce = wp_create_nonce('APL_save_preset_handler');
-$delete_preset_nonce = wp_create_nonce('APL_delete_preset_handler');
-$restore_preset_nonce = wp_create_nonce('APL_restore_preset_handler');
+$save_preset_nonce = wp_create_nonce('APL_handler_save_preset');
+$delete_preset_nonce = wp_create_nonce('APL_handler_delete_preset');
+$restore_preset_nonce = wp_create_nonce('APL_handler_restore_preset');
 
 $catList = get_categories('hide_empty=0');
 $tagList = get_tags('hide_empty=0');
@@ -118,7 +118,7 @@ function displayParent()
     {
       //$('#presetPHP').html('PHP code: <code>if(function_exists("kalinsPost_show"){kalinsPost_show("' + data.preset_name + '");}</code>');
       
-      $('#presetPHP').html('PHP code: <code>if(function_exists("APL_run")){APL_run("' + preset_name + '");}</code>');
+      $('#presetPHP').html('PHP code: <code>if(function_exists("APL_display")){APL_display("' + preset_name + '");}</code>');
     }
     
     function deletePreset(id)
@@ -126,7 +126,7 @@ function displayParent()
       //alert("deleting: " + id);
       
       var data = { 
-        action: 'APL_delete_preset_handler',
+        action: 'APL_handler_delete_preset',
         _ajax_nonce : deletePresetNonce
       }
       
@@ -265,7 +265,7 @@ function displayParent()
     
     $('#btnSavePreset').click(function()
     {
-      var data = { action: 'APL_save_preset_handler',
+      var data = { action: 'APL_handler_save_preset',
         _ajax_nonce : savePresetNonce
       }
       
@@ -361,7 +361,7 @@ function displayParent()
     
     $('#btnRestorePreset').click(function(){
       //alert(data.post_type);
-      var data = { action: 'APL_restore_preset_handler',
+      var data = { action: 'APL_handler_restore_preset',
         _ajax_nonce : restorePresetNonce
       }
       
