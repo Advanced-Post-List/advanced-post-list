@@ -2,7 +2,7 @@
 
 /*
   Plugin Name: Advanced Post List
-  Version: 0.2.b2
+  Version: 0.2.0
   Plugin URI: http://code.google.com/p/wordpress-advanced-post-list/
   Description: Create highly customizable post lists with dynamic features. 
   Author: JoKeR
@@ -26,7 +26,8 @@
  */
 /**
  * @package advanced-post-list
- * @version 0.2.b2
+ * @since 0.1.0
+ * @version 0.2.0 - Added more require functions for additional pages.
  * @link http://code.google.com/p/wordpress-advanced-post-list/ Advanced Post List Homepage
  */
 /*****************************************************************************/
@@ -58,7 +59,7 @@ define('APL_NAME', 'Advanced Post List');
 define('APL_DIR', plugin_dir_path(__FILE__));
 define('APL_URL', plugin_dir_url(__FILE__));
 //FIX ALWAYS - Update version number
-define('APL_VERSION', '0.2.b2');
+define('APL_VERSION', '0.2.0');
 
 /*****************************************************************************/
 /************************ REQUIRED FILES *************************************/
@@ -68,8 +69,8 @@ require_once(APL_DIR . 'includes/Class/APLPresetDbObj.php');
 require_once(APL_DIR . 'includes/Class/APLPresetObj.php');
 require_once(APL_DIR . 'includes/Class/APLCallback.php');
 require_once(APL_DIR . 'includes/APLWidget.php');
-require_once(APL_DIR . 'includes/Class/APLExport.php');
-require_once(APL_DIR . 'includes/Class/APLImport.php');
+//require_once(APL_DIR . 'includes/Class/APLExport.php');
+//require_once(APL_DIR . 'includes/Class/APLImport.php');
 
 /*****************************************************************************/
 /************************ LOAD HANDLER ***************************************/
