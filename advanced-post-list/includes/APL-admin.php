@@ -3,17 +3,19 @@
 // APLCore Class uses this file in method APL_admin_head, if any other
 //  method, function, or file uses this php file. Then it will exit this file.
 //
-////////////////////////////////////////////////////////////////////////////////
-
 if (!method_exists('APLCore', 'APL_admin_head'))
 {
     echo "Hi there!  I'm just a plugin, not much I can do when called directly.";
     exit;
 }
+//
+////////////////////////////////////////////////////////////////////////////////
 wp_enqueue_script('jquery-ui-dialog');
 
+//Places the (hidden) dialog content within the page.
 require_once APL_DIR . 'includes/APL-admin_dialogs.php';
-
+//For setting certain parts of the HTML coding that aren't within the 
+// php functions
 $adminOptions = $this->APL_options_load();
 
 function APL_post_tax_content()
@@ -90,12 +92,11 @@ function APL_post_tax_get_left_header($post_type_name)
     $rtnString = '';
 
     $rtnString .= '<div style="float: left; padding: 1px;">';
-    $rtnString .= '<select id="slctParentSelector-' . $post_type_name . '" name="parent_select-' . $post_type_name . '" multiple="multiple">';
+    //$rtnString .= '<select id="slctParentSelector-' . $post_type_name . '" name="parent_select-' . $post_type_name . '" multiple="multiple">';
 
-    $page_settings = array('post_type_name' => $post_type_name);
-    $rtnString .= APL_get_page_heirarchy($page_settings);
+    $rtnString .= APL_get_page_selector_options($post_type_name);
 
-    $rtnString .= '</select>';
+    //$rtnString .= '</select>';
     $rtnString .= '</div>';
 
     return $rtnString;
@@ -105,7 +106,7 @@ function APL_post_tax_get_right_header()
     $rtnString = '';
 
     $rtnString .= '<div style="float: right">';
-    $rtnString .= '<span id="info10" class="info10 ui-icon ui-icon-info info-icon"  style="float:right" ></span>';
+    $rtnString .= '<span id="info10" class="ui-icon ui-icon-info info-icon"  style="float:right" ></span>';
     $rtnString .= '</div>';
     return $rtnString;
     
@@ -214,40 +215,54 @@ function APL_add_terms($post_type_name,
 
     return $rtnString;
 }
-//TODO Change to use APLCore::APL_get_posts() instead of get_posts()
-function APL_get_page_heirarchy($page_settings = array('post_type_name' => 'post'),
+
+function APL_get_page_selector_options($post_type_name = 'post')
+{
+    $rtnString = '';
+    
+    $rtnString .= '<select id="slctParentSelector-' . $post_type_name . '" name="parent_select-' . $post_type_name . '" multiple="multiple">';
+    $rtnString .= '<option id="slctChkCurrent-' . $post_type_name . '" value="' . 0 . '"><b>Current Page</b></option>';
+    
+    if (is_post_type_hierarchical($post_type_name) === TRUE)
+        $rtnString .= APL_get_page_heirarchy ($post_type_name);
+    $rtnString .= '</select>';
+    return $rtnString;
+    
+}
+
+//TODO Change to use APLCore::APL_get_posts() instead of get_posts() -- May not 
+//  be possible since the function inside the class is set to private.
+//TODO Add parent (ID) variable to retrieve less data to cycle through.
+
+function APL_get_page_heirarchy($post_type_name = 'post',
                                 $parent = 0,
                                 $depth = -1)
 {
     $rtnString = '';
     $dashes = '';
-    if ($depth == -1)
-    {
-        $rtnString .= '<option id="slctChkCurrent-' . $page_settings['post_type_name'] . '" value="' . 0 . '"><b>Current Page</b></option>';
-    }
+    
     $depth++;
-    for ($i = 0;
-            $i < $depth;
-            $i++)
+    for ($i = 0; $i < $depth; $i++)
     {
         $dashes .= '-';
     }
 
-    $argPages = array('numberposts' => -1,
-        'orderby' => 'title',
-        'order' => 'ASC',
-        'post_type' => $page_settings['post_type_name']);
+    $argPages = array(
+        'numberposts'   => -1,
+        'orderby'       => 'title',
+        'order'         => 'ASC',
+        'post_type'     => $post_type_name,
+        'post_parent'   => $parent
+        );
     $pages = get_posts($argPages);
-
+    
     foreach ($pages as $page)
     {
-        
-        if ($page->post_parent == $parent)
+        if ($page->post_parent === $parent)
         {
-
             $id = $page->ID;
             $rtnString .= '<option value="' . $page->ID . '">' . $dashes . $page->post_title . '</option>';
-            $rtnString .= APL_get_page_heirarchy($page_settings,
+            $rtnString .= APL_get_page_heirarchy($post_type_name,
                                                  $id,
                                                  $depth);
         }
@@ -269,9 +284,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         $rtnString .= '<input type=checkbox id="chkTerm-' . $post_tax_settings['post_type_name'] . '-' . $post_tax_settings['taxonomy_name'] . '-' . 0 . '" name="chkTerm-' . $post_tax_settings['post_type_name'] . '-' . $post_tax_settings['taxonomy_name'] . '-' . 0 . '" />Any/All<br />';
     }
     $depth++;
-    for ($i = 0;
-            $i < $depth;
-            $i++)
+    for ($i = 0; $i < $depth; $i++)
     {
         $dashes .= '-';
     }
@@ -293,7 +306,9 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
     return $rtnString;
 }
 ////////////////////////////////////////////////////////////////////////////////
-// END OF PHP                                                                 //
+//****************************************************************************//
+//** END OF PHP                                                             **//
+//****************************************************************************//
 ////////////////////////////////////////////////////////////////////////////////
 ?>
 <div style="max-width: 800px; min-width: 640px; margin-top: 0px">
@@ -315,7 +330,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
 <br/>
 <div style="width: 640px; margin-bottom: 6px; margin-top: 3px;">
     <div style="float: right;">
-        <a id="info11" style="font-size: 75%;">Filter Settings Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
+        <a id="info11" class="info_a_link" style="" >Filter Settings Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
     </div>
     <div style="clear: both; height: 26px; margin: 3px 0px;" >
         <div style="float: left;" >
@@ -351,7 +366,6 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
                 <?php
                 //// ALL USERS ////
                 //$author_roles = array('administrator', 'editor', 'author', 'contributor', 'subscriber');
-                
                 $author_roles = array('administrator', 'editor', 'author', 'contributor');
                 foreach ($author_roles as $author_role)
                 {
@@ -360,7 +374,6 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
                         'order' => 'DESC',
                         'role' => $author_role
                     );
-
                     $authors = get_users($author_args);
                     if (!empty($authors))
                     {
@@ -388,7 +401,6 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
                 <option value="rand">Random</option>
                 <option value="comment_count">Comments</option>
             </select>
-
             <select id="slctOrder" style="width:110px;">
                 <option value="DESC">Descending</option>
                 <option value="ASC">Ascending</option>
@@ -420,37 +432,28 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
             <label for="chkExcldDuplicates" >Exclude Duplicates from Current Post.</label>
         </div>
     </div>
-   
 </div>
-
-
-
-
 <div id="divPresetStyler" style="min-width: 640px; max-width: 1024px; margin-right: 25px; margin-top: 3px; margin-bottom: 3px;" >
     <div style="float: left; width: 640px">
         <div style="float: right;">
-            <a id="info12" style="font-size: 75%;">Style Content Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
+            <a id="info12" class="info_a_link" style="">Style Content Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
         </div>
     </div>
-    
     <div id="divExitMsg" style="clear:both; white-space:nowrap;" >
         <label for="txtExitMsg" style="float:left; width: 96px;">Exit Message:</label>
         <textarea name="txtExitMsg" id="txtExitMsg" style="float:inherit; min-width:544px; max-width: 874px; min-height:70px;"></textarea>
     </div>
-
     <div id="divBefore" class="noneHide" style="clear:both; white-space:nowrap;" >
         <label for="txtBeforeList" style="float:left; width: 96px;" >Before list:</label>
         <textarea name="txtBeforeList" id="txtBeforeList" style="float:inherit; min-width:544px; max-width: 874px; min-height:70px;"></textarea>
     </div>
-
     <div id="divContent" style="clear: both; white-space:nowrap;" >
         <div style="float:left; width: 96px;">
             <label for="txtContent" style="float:left; width:96px;" >List content:</label>
-            <a id="info13" style="float:left; max-width: 96px; font-size: 75%;">Shortcodes<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
+            <a id="info13" class="info_a_link" style="float:left;" >Shortcodes<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
         </div>
         <textarea name='txtContent' id='txtContent' style="float: inherit; min-width:544px; max-width: 874px; min-height: 70px;" ></textarea>
     </div>
-
     <div id="divAfter" class="noneHide" style="clear: both; white-space:nowrap;" >
         <label for="txtAfterList" style="float:left; width:96px;" >After list:</label>
         <textarea name='txtAfterList' id='txtAfterList'  style="float: inherit; min-width:544px; max-width: 874px; min-height: 70px;" ></textarea>
@@ -462,31 +465,35 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
     <button id="btnSavePreset">Save Preset</button>
     &nbsp;&nbsp;|&nbsp;&nbsp;
     <input id="chkShowPreview" type=checkbox name="chkShowPreview" checked="checked" />
-    <label for="chkShowPreview" >Show preview</label>&nbsp;(Results may vary <a id="info14" >Details</a>)
+    <label for="chkShowPreview" >Show preview</label>&nbsp;(Results may vary <a id="info14" style="cursor: help;" >Details</a>)
 </div>
-<!--<p><span id="createStatus">&nbsp;</span></p>-->
 <div style="width:700px; padding:10px">
     <div id="divPreview">
         Preview will appear here when saved
     </div>  
 </div>
-
-
 <div id="presetListDiv" style="clear: both">
+    
 </div>
-
-
 <div id="presetPHP">
     PHP code - click load on any preset to generate PHP code for use in your theme
 </div>
-
 <br />
 <hr />
 <br />
 <div id="containerOptions">
     <div id="optionsHeader" align="center"><h3 style="margin: 0px;">General Options</h3></div>
     <div id="optionL" >
-        <h4 style="margin-bottom: 1px;" >Settings</h4>
+        <div class="optionL-row">
+            <div style="float:left">
+                <h4 style="margin: 0px;" >Settings</h4>
+            </div>
+            <div style="float:right">
+                <a id="info15" class="info_a_link" style="float:right;">Settings Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
+            </div>
+        </div>
+        
+        
         <div class="optionL-row">
             <div style="float:left">
                 Delete database upon deactivation.
@@ -494,20 +501,19 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
             <div style="float:right">
                 <input type="radio" id="rdoDeleteDbTRUE" name="rdoDeleteDb" value="true" 
                     <?php
-                    //$a1 = $adminOptions["delete_core_db"];
                     if ($adminOptions["delete_core_db"] === TRUE || !isset($adminOptions["delete_core_db"]))
                     {
                         echo "checked";
                     }
                     ?>
-                /> Yes <input type="radio" id="rdoDeleteDbFALSE" name="rdoDeleteDb" value="false" 
+                /><label for="rdoDeleteDbTRUE"> Yes </label><input type="radio" id="rdoDeleteDbFALSE" name="rdoDeleteDb" value="false" 
                     <?php
                     if ($adminOptions["delete_core_db"] === FALSE)
                     {
                         echo "checked";
                     }
                     ?>
-                /> No
+                /><label for="rdoDeleteDbFALSE"> No </label>
             </div>
         </div>
         <div class="optionL-row">
@@ -517,7 +523,6 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
             <div style="float:right">
                 <select id="slctUITheme" name="slctUITheme">
                     <?php
-                    
                     $theme_array_values = array("ui-lightness","ui-darkness",
                         "smoothness","start","redmond","sunny","overcast",
                         "le-frog","flick","pepper-grinder","eggplant","dark-hive",
@@ -541,9 +546,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
                             echo '<option value="' . $value . '">' . $theme_array_names[$index] . '</option>';
                         }
                     }
-                    
                     ?>
-                    
                 </select>
             </div>
         </div>
@@ -554,20 +557,19 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
             <div style="float:right">
                 <input type="radio" id="rdoDefaultExitMsgTRUE" name="rdoDefaultExitMsg" value="true" 
                     <?php
-                    //$a1 = $adminOptions["delete_core_db"];
                     if ($adminOptions["default_exit"] === TRUE)
                     {
                         echo "checked";
                     }
                     ?>
-                /> Yes <input type="radio" id="rdoDefaultExitMsgFALSE" name="rdoDefaultExitMsg" value="false" 
+                /><label for="rdoDefaultExitMsgTRUE"> Yes </label><input type="radio" id="rdoDefaultExitMsgFALSE" name="rdoDefaultExitMsg" value="false" 
                     <?php
                     if ($adminOptions["default_exit"] === FALSE || !isset($adminOptions["default_exit"]))
                     {
                         echo "checked";
                     }
                     ?>
-                /> No
+                /><label for="rdoDefaultExitMsgFALSE"> No </label>
             </div>
         </div>
         <div class="optionL-row" style="height: auto;">
@@ -576,52 +578,80 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         <div class="optionL-row">
             <button id="btnSaveSettings" style="margin: 10px;">Save Settings</button>
         </div>
-        
-        
     </div>
     <div id="optionR" >
-        <div id="options1" >
+        <div class="optionR-row" style=" margin-top: 0px;">
+            <div style="float:left;">
+                <h4 style="margin: 0px;" >Export Preset Table</h4>
+            </div>
+            <div style="float:right;">
+                <a id="info16" class="info_a_link" style="float:right;">Export/Import Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
+            </div>
+        </div>
+        <div class="optionR-row" style=" margin-top: 0px;">
+            <form id="frmExport" name="frmExport" method="get" enctype="multipart/form-data" style="margin: 0px;">
+                <input type="radio" style="visibility:hidden;" /> Filename: <input id="txtExportFileName" name="txtExportFileName" type="text" style="width: 276px;" value="APL.<?php echo date('Y-m-d-Hi'); ?>" />
+                <br />
+                <input type="radio" style="visibility:hidden;" /><button id="btnExport" type="submit" >Export</button>
+            </form>
+        </div>
+        <div class="optionR-row">
+            <div style="float:left;">
+                <h4 style="margin: 0px" >Import Preset(s)</h4>
+            </div>
+            <div style="float:right;">
+                
+            </div>
+        </div>
+        <div class="optionR-row" style=" margin-top: 0px;">
+            <form id="frmImport" name="frmImport" method="post" enctype="multipart/form-data" style="">
+                <input id="rdoImportTypeFile" type="radio" name="importType" value="file" checked /><label for="rdoImportTypeFile"> Upload: </label><input id="fileImportData" name="importData" type="file" multiple="multiple" style="width: 280px;" />
+                <br/>
+                <input id="rdoImportTypeKalin" type="radio" name="importType" value="kalin" /><label for="rdoImportTypeKalin"> Kalin's Post List Database </label>
+                <br/>
+                <input type="radio" style="visibility:hidden;" /><button id="btnImport" type="submit" >Import</button>
+            </form>
+        </div>
+        <div class="optionR-row">
+            <div style="float:left;">
+                <h4 align="left" style="margin: 0px;">Restore Preset Defaults</h4>
+            </div>
+            <div style="float:right;">
+                <p style="margin: 0px;">Note: Restoring the plugin's default preset  table will only overwrite/add the initial set of presets, and will not delete other presets of a different name.
+                </p>
+                <button id="btnRestorePreset" style="margin: 10px;" >Restore</button>
+            </div>
+        </div>
+        <div class="optionR-row">
+            <div style="float:left;">
+                
+            </div>
+            <div style="float:right;">
+                
+            </div>
+        </div>
+<!--        <div id="options1" >
             <h4 style="margin-bottom: 1px;" >Export Preset Table</h4>
             <form id="frmExport" name="frmExport" method="get" enctype="multipart/form-data" style="margin: 0px;">
                 <input type="radio" style="visibility:hidden;" /> Filename: <input id="txtExportFileName" name="txtExportFileName" type="text" style="width: 250px;" value="APL.<?php echo date('Y-m-d-Hi'); ?>" />
                 <br />
-                <input type="radio" style="visibility:hidden;" /><input id="btnExport" name="btnExport" type="submit" value="Export" />
+                <input type="radio" style="visibility:hidden;" /><button id="btnExport" type="submit" >Export</button>
             </form>
-            <h4 style="margin-top: 10px; margin-bottom: 1px;" >Import Data<em> - Beta Mode: <a href="http://ekojr.com/apl_news/back-up-feature-broken/" title="Release Notes" target="_new">More details</a></em></h4>
+            <h4 style="margin-top: 10px; margin-bottom: 1px;" >Import Data</h4>
             <form id="frmImport" name="frmImport" method="post" enctype="multipart/form-data" style="margin-top: 5px;">
-                <input id="rdoImportType" type="radio" name="importType" value="file" checked /> Upload: <input id="fileImportDir" name="fileImportDir" type="file"  style="width: 225px;" />
+                <input id="rdoImportTypeFile" type="radio" name="importType" value="file" checked /><label for="rdoImportTypeFile"> Upload: </label><input id="fileImportData" name="importData" type="file" multiple="multiple" style="width: 225px;" />
                 <br/>
-                <input id="rdoImportType" type="radio" name="importType" value="kalin" /> Kalin's Post List Database
+                <input id="rdoImportTypeKalin" type="radio" name="importType" value="kalin" /><label for="rdoImportTypeKalin"> Kalin's Post List Database </label>
                 <br/>
-                <input type="radio" style="visibility:hidden;" /><input id="btnImport" name="btnImport" type="submit" value="Import" />
-
+                <input type="radio" style="visibility:hidden;" /><button id="btnImport" type="submit" >Import</button>
             </form>
-
-
-            <?php /* ?>
-            * ORIGINAL IMPORT FORM
-            <form id="frmImport" name="fimport" action="<?php echo plugin_dir_url(__FILE__); ?>includes/import.php" method="post" enctype="multipart/form-data" target="uploadframe" style="margin-top: 5px;">
-
-            <input id="rdoImportType" type="radio" name="importType" value="file" checked /><input name="importFileDir" type="file" id="importFileDir" style="width: 250px;" />
-
-            <br/>
-            <input id="rdoImportType" type="radio" name="importType" value="kalin" />Kalin's Post List Database
-
-            <br/>
-            <input type="radio" style="visibility:hidden;" /><input id="btnImport" name="btnImport" type="submit" value="Import" />
-
-            <iframe id="uploadframe" name="uploadframe" src="<?php echo plugin_dir_url(__FILE__); ?>includes/import.php" width="8" height="8" scrolling="no" frameborder="0" ></iframe>
-            </form><?php */ ?>
-
         </div>
         <div id="options2" align="center" >
-            <h4 align="left" style="margin-bottom: 1px;">Restore Plugin Data</h4>
+            <h4 align="left" style="margin-bottom: 1px;">Restore Preset Defaults</h4>
             <p style="margin: 0px;">Note: Restoring the plugin's default preset  table will only overwrite/add the initial set of presets, and will not delete other presets of a different name.
             </p>
-
             <button id="btnRestorePreset" style="margin: 10px;" >Restore Preset Defaults</button>
-
-        </div>
+        </div>-->
     </div>
 </div>
 <br style="clear: left;" />
@@ -632,7 +662,6 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         <b>Shortcodes:</b> Use these codes inside the list item content (will throw errors if placed in before or after HTML fields)<br />
     </p>
     <ul style="width: 720px">
-
         <li><b>[ID]</b> - the ID number of the page/post</li>
         <li><b>[post_author]</b> - author of the page/post</li>
         <li><b>[post_permalink]</b> - the page permalink</li>
@@ -646,11 +675,9 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         <li><b>[post_modified_gmt format="m-d-Y"]</b> - date page/post was last modified in gmt time <b>*</b></li>
         <li><b>[guid]</b> - original URL of the page/post (post_permalink is probably better)</li>
         <li><b>[comment_count]</b> - number of comments posted for this post/page</li>
-
         <li><b>[item_number offset="1" increment="1"]</b> - the list index for each page/post. Offset parameter sets start position. Increment sets the number you want to increase on each loop.</li>
         <li><b>[final_end]</b> - on the final list item, everything after this shortcode will be excluded. This will allow you to have commas (or anything else) after each item except the last one.</li>
         <li><b>[post_pdf]</b> - URL to the page/post's PDF file. (Requires Kalin's PDF Creation Station plugin. See help menu for more info.)</li>
-
         <li><b>[post_meta name="custom_field_name"]</b> - page/post custom field value. Correct 'name' parameter required</li>
         <li><b>[post_tags delimeter=", " links="true"]</b> - post tags list. Optional 'delimiter' parameter sets separator text. Use optional 'links' parameter to turn off links to tag pages</li>
         <li><b>[post_categories delimeter=", " links="true"]</b> - post categories list. Parameters work like tag shortcode.</li>
@@ -663,8 +690,6 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
     <p>Note: these shortcodes only work in the List item content box on this page.</p>
     <hr/>
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick"><input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----"><input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!"><img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1"></form>
-    
-
 </div>
 
 

@@ -131,6 +131,7 @@ class APLCore
         $APLOptions = $this->APL_options_load();
         if (isset($APLOptions['version']))
         {
+            //Fixes an accidental tag
             if ($APLOptions['version'] === '1.0.1')
             {
                 $APLOptions['version'] = APL_VERSION;
@@ -139,32 +140,15 @@ class APLCore
             ////// UPGRADES //////
             //Put upgrade database functions in here. Not before.
             // Ex. APL_upgrade_to_XXX()
-            $oldversion = $APLOptions['version'];
 
-            //UPGRADE TO 0.3.X
-            if (version_compare('0.3.a1',
-                                $oldversion,
-                                '>'))
+            if (version_compare($APLOptions['version'],
+                                APL_VERSION,
+                                '<'))
             {
-                $this->APL_upgrade_to_03a();
+                $APLOptions = $this->APL_updater($APLOptions);
             }
             
-            if (version_compare('0.3.b5',
-                                $oldversion,
-                                '>'))
-            {
-                $this->APL_upgrade_to_03b5();
-            }
-
-            ////// UPDATE VERSION NUMBER //////
-            $APLOptions = $this->APL_options_load();
-            if (version_compare(APL_VERSION,
-                                $oldversion,
-                                '>'))
-            {
-                $APLOptions['version'] = APL_VERSION;
-                $this->APL_options_save($APLOptions);
-            }
+            
             
         }
 
@@ -194,229 +178,27 @@ class APLCore
         }
     }
 
-    /**
-     * <p><b>Desc: </b>Updates the database in Wordpress options.</p>
-     * @access private
-     * 
-     * @since 0.3.0
-     * 
-     * @uses APLCore::APL_options_load()
-     * @uses APLCore::APL_options_save()
-     * @uses APLPresetDbObj::__construct($db_name)
-     * @uses APLPresetDbObj::options_save_db()
-     * 
-     * @tutorial 
-     * <ol>
-     * <li value="1">Update admin options to carry jquery ui theme.</li>
-     * <li value="2">Get preset database options for update.</li>
-     * <li value="3">Foreach preset setting, do <b>Steps 4-6</b></li>
-     * <li value="4">Process and set the post parent settings accordingly.</li>
-     * <li value="5">Process and set the post type and taxonomy settings 
-     *                within the built-in defaults.</li>
-     * <li value="6">Set other preset settings.</li>
-     * <li value="7">Save Preset Database Options.</li>
-     * </ol>
-     */
-    private function APL_upgrade_to_03a()
+    private function APL_updater($APLOptions)
     {
-        // STEP 1
-        //////// UPDATE ADMIN OPTIONS ////////
-        $APLOptions = $this->APL_options_load();
-        $APLOptions['jquery_ui_theme'] = 'overcast';
-        $this->APL_options_save($APLOptions);
-
-        // Step 2
-        //////// UPDATE PRESET DATABASE OPTIONS ////////
-        $presetDbObj = new APLPresetDbObj('default');
-        $tmp_preset_db = new stdClass();
-        // Step 3
-        foreach ($presetDbObj->_preset_db as $presetObj_name => $presetObj_value)
-        {
-            // Step 4
-            //// SET PARENT SETTING ////
-            $tmp_presetObj = new APLPresetObj();
-            if ($presetObj_value->_postParent === 'current')
-            {
-                $tmp_presetObj->_postParent[0] = "-1";
-            }
-            else if ($presetObj_value->_postParent !== 'None' && $presetObj_value->_postParent !== '')
-            {
-                $tmp_presetObj->_postParent[0] = $presetObj_value->_postParent;
-            }
-
-            // Step 5
-            //// SET POST TYPES & TAXONOMIES SETTINGS ////
-            if ($presetObj_value->_catsSelected !== '')
-            {
-
-                $tmp_presetObj->_postTax->post->taxonomies->category->require_taxonomy = false; //NEW
-                $tmp_presetObj->_postTax->post->taxonomies->category->require_terms = true;
-                if ($presetObj_value->_catsRequired === 'false')
-                {
-                    $tmp_presetObj->_postTax->post->taxonomies->category->require_terms = false;
-                }
-                $tmp_presetObj->_postTax->post->taxonomies->category->include_terms = true;
-                if ($presetObj_value->_catsInclude === 'false')
-                {
-                    $tmp_presetObj->_postTax->post->taxonomies->category->include_terms = false;
-                }
-                $terms = explode(',',
-                                 $presetObj_value->_catsSelected);
-                $i = 0;
-                foreach ($terms as $term)
-                {
-                    $tmp_presetObj->_postTax->post->taxonomies->category->terms[$i] = intval($term);
-                    $i++;
-                }
-                unset($tmp_presetObj->_postTax->post->taxonomies->category->terms[($i - 1)]);
-            }
-            if ($presetObj_value->_tagsSelected !== '')
-            {
-
-                $tmp_presetObj->_postTax->post->taxonomies->post_tag->require_taxonomy = false; //NEW
-                $tmp_presetObj->_postTax->post->taxonomies->post_tag->require_terms = true;
-                if ($presetObj_value->_tagsRequired === 'false')
-                {
-                    $tmp_presetObj->_postTax->post->taxonomies->post_tag->require_terms = false;
-                }
-                $tmp_presetObj->_postTax->post->taxonomies->post_tag->include_terms = true;
-                if ($presetObj_value->_tagsInclude === 'false')
-                {
-                    $tmp_presetObj->_postTax->post->taxonomies->post_tag->include_terms = false;
-                }
-                $terms = explode(',',
-                                 $presetObj_value->_tagsSelected);
-                $i = 0;
-                foreach ($terms as $term)
-                {
-                    $tmp_presetObj->_postTax->post->taxonomies->post_tag->terms[$i] = intval($term);
-                    $i++;
-                }
-                unset($tmp_presetObj->_postTax->post->taxonomies->post_tag->terms[($i - 1)]);
-            }
-            // Step 6
-            //// SET THE LIST AMOUNT ////
-            $tmp_presetObj->_listAmount = intval($presetObj_value->_listAmount);
-
-            //// SET THE ORDER AND ORDERBY SETTINGS ////
-            $tmp_presetObj->_listOrder = $presetObj_value->_listOrder;
-            $tmp_presetObj->_listOrderBy = $presetObj_value->_listOrderBy;
-
-            //// SET THE POST STATUS AS THE DEFAULT ////
-            ////  SETTING                           ////
-            $tmp_presetObj->_postStatus = 'publish';
-
-            //// SET THE EXCLUDE CURRENT POST SETTING ////
-            $tmp_presetObj->_postExcludeCurrent = true;
-            if ($presetObj_value->_postExcludeCurrent === 'false')
-            {
-                $tmp_presetObj->_postExcludeCurrent = false;
-            }
-
-            //// SET THE STYLE (BEFORE/CONTENT/AFTER) //// 
-            ////  CONTENT SETTINGS                    ////
-            $tmp_presetObj->_before = $presetObj_value->_before;
-            $tmp_presetObj->_content = $presetObj_value->_content;
-            $tmp_presetObj->_after = $presetObj_value->_after;
-            $tmp_preset_db->$presetObj_name = $tmp_presetObj;
-        }
-        // Step 7
-        //// STORE AND SAVE THE PRESET DATABASE OPTIONS ////
-        $presetDbObj->_preset_db = $tmp_preset_db;
-        $presetDbObj->options_save_db();
-    }
-    private function APL_upgrade_to_03b5()
-    {
-        $APLOptions = $this->APL_options_load();
-        $APLOptions['default_exit'] = FALSE;
-        $APLOptions['default_exit_msg'] = '<p>Sorry, but no content is available at this time.</p>';
-        $this->APL_options_save($APLOptions);
-
-        // Step 2
-        //////// UPDATE PRESET DATABASE OPTIONS ////////
-        $presetDbObj = new APLPresetDbObj('default');
-        $tmp_preset_db = new stdClass();
-        // Step 3
-        foreach ($presetDbObj->_preset_db as $presetObj_name => $presetObj_value)
-        {
-            // Step 4
-            //// SET PARENT SETTING ////
-            $tmp_presetObj = new APLPresetObj();
-            $tmp_presetObj->_postParents = (array) array();
-            if (isset($presetObj_value->_postParent))
-            {
-                $tmp_presetObj->_postParents = $presetObj_value->_postParent;
-            }
-            $tmp_presetObj->_postTax = (object) new stdClass();
-            if (isset($presetObj_value->_postTax))
-            {
-                $tmp_presetObj->_postTax = $presetObj_value->_postTax;
-            }
-            
-            $tmp_presetObj->_listCount = (int) 5;
-            if (isset($presetObj_value->_listAmount))
-            {
-                $tmp_presetObj->_listCount = $presetObj_value->_listAmount;
-            }
-            
-            $tmp_presetObj->_listOrderBy = (string)'';
-            if (isset($presetObj_value->_listOrderBy))
-            {
-                $tmp_presetObj->_listOrderBy = $presetObj_value->_listOrderBy;
-            }
-            $tmp_presetObj->_listOrder = (string) '';
-            if (isset($presetObj_value->_listOrder))
-            {
-                $tmp_presetObj->_listOrder = $presetObj_value->_listOrder;
-            }
-            
-            $tmp_presetObj->_postVisibility = array('public');//Added
-            if ($presetObj_value->_postStatus === 'private')
-            {
-                $tmp_presetObj->_postVisibility = array('private');
-            }
-            $tmp_presetObj->_postStatus = (array) array('publish');//Changed
-            if (isset($presetObj_value->_postStatus) && $presetObj_value->_postStatus !== 'private')
-            {
-                $tmp_presetObj->_postStatus = array($presetObj_value->_postStatus);
-            }
-            $tmp_presetObj->_userPerm = (string) 'readable';//Added
-            $tmp_presetObj->_postAuthorOperator = (string) 'none';//Added
-            $tmp_presetObj->_postAuthorIDs = (array) array();//Added
-            $tmp_presetObj->_listIgnoreSticky = (bool) FALSE;//Added
-            $tmp_presetObj->_listExcludeCurrent = (bool) TRUE;
-            if (isset($presetObj_value->_listExcludeCurrent))
-            {
-                $tmp_presetObj->_listExcludeCurrent = array($presetObj_value->_postExcludeCurrent);
-            }
-            $tmp_presetObj->_listExcludeDuplicates = (bool) FALSE;//Added
-            $tmp_presetObj->_listExcludePosts = array();//Added
-
-            $tmp_presetObj->_exit = (string) ''; //Added
-            $tmp_presetObj->_before = (string) '';
-            if (isset($presetObj_value->_before))
-            {
-                $tmp_presetObj->_before = $presetObj_value->_before;
-            }
-            $tmp_presetObj->_content = (string) '';
-            if (isset($presetObj_value->_content))
-            {
-                $tmp_presetObj->_content = $presetObj_value->_content;
-            }
-            $tmp_presetObj->_after = (string) '';
-            if (isset($presetObj_value->_after))
-            {
-                $tmp_presetObj->_after = $presetObj_value->_after;
-            }
-            
-            $tmp_preset_db->$presetObj_name = $tmp_presetObj;
-        }
-        // Step 7
-        //// STORE AND SAVE THE PRESET DATABASE OPTIONS ////
-        $presetDbObj->_preset_db = $tmp_preset_db;
-        $presetDbObj->options_save_db();
         
+        $APLPresetDbObj = new APLPresetDbObj('default');
+        $updater = new APLUpdater($APLOptions['version'], $APLPresetDbObj, $APLOptions);
+        //IN THIS CASE, BOTH MUST HAVE VALUES FILLED
+        if ($updater->options === NULL || $updater->presetDbObj === NULL)
+        {
+            return $APLOptions;
+        }
+        else
+        {
+            $APLPresetDbObj = $updater->presetDbObj;
+            $APLPresetDbObj->options_save_db();
+            $APLOptions = $updater->options;
+            $this->APL_options_save($APLOptions);
+
+            return $APLOptions;
+        }
     }
+    
 
     /**
      * <p><b>Desc: </b>Stores all the file (dir/path) values for defining 
@@ -478,8 +260,8 @@ class APLCore
     public function APL_handler_admin_init()
     {
         //STEP 1
-        /*         * ************************************************************
-         * ************** AJAX ACTION HOOKS **************************** 
+        /* ************************************************************ *
+         * ************** AJAX ACTION HOOKS *************************** * 
          * ************************************************************ */
         add_action('wp_ajax_APL_handler_save_preset',
                    array($this, 'APL_handler_save_preset'));
@@ -492,13 +274,17 @@ class APLCore
                    array($this, 'APL_handler_export'));
         add_action('wp_ajax_APL_handler_import',
                    array($this, 'APL_handler_import'));
+        add_action('wp_ajax_APL_import', 
+                   'APL_import');
+        add_action('wp_ajax_APL_export', 
+                   'APL_export');
 
         add_action('wp_ajax_APL_handler_save_settings',
                    array($this, 'APL_handler_save_settings'));
 
         // Step 2
-        /*         * ************************************************************
-         * ************** REMOVE SCRIPTS & STYLES ********************** 
+        /* ************************************************************ *
+         * ************** REMOVE SCRIPTS & STYLES ********************* * 
          * ************************************************************ */
         //wp_deregister_script('apl-jquery');
         wp_deregister_script('apl-admin');
@@ -519,8 +305,8 @@ class APLCore
         }
 
         // Step 4
-        /*         * ************************************************************
-         * ************** REGISTER SCRIPTS ***************************** 
+        /* ************************************************************ *
+         * ************** REGISTER SCRIPTS **************************** * 
          * ************************************************************ */
 //        $script_deps = array();
 //        wp_register_script('apl-jquery',
@@ -564,8 +350,8 @@ class APLCore
                            false);
 
         // Step 5
-        /*         * ************************************************************
-         * ************** REGISTER STYLES ****************************** 
+        /* ************************************************************ *
+         * ************** REGISTER STYLES ***************************** * 
          * ************************************************************ */
         wp_enqueue_style('apl-admin-css',
                          plugins_url() . '/advanced-post-list/includes/css/APL-admin.css',
@@ -884,7 +670,7 @@ class APLCore
         // Step 6
         $postTax_parent_selector = $this->APL_get_post_types(array('hierarchical'));
         
-        //$post_types = $this->APL_get_post_types();
+        $post_types = $this->APL_get_post_types();
         
         // Step 7
         $apl_admin_settings = array(
@@ -893,7 +679,7 @@ class APLCore
             'deletePresetNonce' => wp_create_nonce('APL_handler_delete_preset'),
             'restorePresetNonce' => wp_create_nonce('APL_handler_restore_preset'),
             'exportNonce' => wp_create_nonce('APL_handler_export'),
-            'importNonce' => wp_create_nonce('APL_import'),
+            'importNonce' => wp_create_nonce('APL_handler_import'),
             'saveSettingsNonce' => wp_create_nonce('APL_handler_save_settings'),
             'presetDb' => json_encode((array) $presetDbObj->_preset_db),
             'postTax' => $postTax,
@@ -1309,13 +1095,13 @@ class APLCore
       'include'       => (array)      array(),    //An array, comma- or space-delimited string of term ids to include in the return array.
       'exclude'       => (array)      array(),    //An array, comma- or space-delimited string of term ids to exclude in the return array.
       'exclude_tree'  => (array)      array(),    //NO DOCUMENTATION
-      'orderby'       => (string)     'id',     //Which properties to order by
-      // 'id', 'count', 'name', 'slug', 'term_group', or 'none'
+      'orderby'       => (string)     'id',       //Which properties to order by
+                                                  // 'id', 'count', 'name', 'slug', 'term_group', or 'none'
       'order'         => (string)     'ASC',      //Which direction to orderby
-      // 'ASC' or 'DESC'
-      'hide_empty'    => (boolean)    false,       //Whether to return terms that haven't been used
+                                                  // 'ASC' or 'DESC'
+      'hide_empty'    => (boolean)    false,      //Whether to return terms that haven't been used
       'fields'        => (string)     'ids',      //Which properties to return
-      // 'all', 'ids', 'names', or 'count'
+                                                  // 'all', 'ids', 'names', or 'count'
       'slug'          => (string)     '',         //Returns terms whose "slug" matches this value.
       'hierarchical'  => (boolean)    true,       //Whether to include terms that have non-empty descendants
       'name__like'    => (string)     '',         //Returned terms' names will begin with the value of 'name__like', case-insensitive.
@@ -1429,7 +1215,7 @@ class APLCore
         return $rtnArr;
     }
 //
-//        $available = array(
+//        $arg_example = array(
 //            'orderby' => 'title',
 //            'order' => 'ASC',
 //            'p' => (int) 0,
@@ -1550,32 +1336,7 @@ class APLCore
         // Step 1
         require_once( $this->plugin_dir_path . 'includes/APL-admin.php');
     }
-
-    //TODO CREATE AN AJAX FUNCTION TO IMPORT DATA TO THE PLUGIN
-    // COULDN'T FIND A WAY TO CARRY THE $_FILES GLOBAL VARIBLE
-    // THROUGH .post TO TARGET PHP CODE
-    /**
-     * <p><b>Desc:</b> <b>(<i>Un-used</i>)</b> Handles the AJAX function 
-     *                 for importing data. Method used when jQuery.post is 
-     *                 called in javascript for $('#frmImport').submit().</p>
-     * @access public
-     * 
-     * @since 0.2.0
-     * 
-     * @tutorial 
-     * <ol>
-     * <li value="1">Check wp_create_nonce value.</li>
-     * <li value="2"><i>Return data</i> (if any) as a json string.</li>
-     * </ol>
-     */
-    public function APL_handler_import()
-    {
-        //Step 1
-        check_ajax_referer('APL_handler_import');
-        //Step 2
-        echo json_encode('');
-    }
-
+    
     /**
      * <p><b>Desc:</b></p>
      * @access public
@@ -1593,19 +1354,183 @@ class APLCore
     public function APL_handler_export()
     {
         // Step 1
-        $check_ajax_referer = check_ajax_referer("APL_handler_export");
+        check_ajax_referer("APL_handler_export");
 
         $rtnData = new stdClass();
         // Step 2
-        $rtnData->_ajax_nonce = $_GET['_ajax_nonce'];
-        $rtnData->action = $_GET['action'];
+        $rtnData->_status = 'success';
         $rtnData->_error = '';
+        
         // Step 3
-        $rtnData->filename = $_GET['filename'];
-        $rtnData->export_url = APL_URL . 'includes/export.php';
+        $rtnData->filename = $_POST['filename'];
+        
+        $presetDbObj = new APLPresetDbObj('default');
+        $TMP_export_dataOutput = new stdClass();
+        $TMP_export_dataOutput->version = APL_VERSION;
+        if ($_POST['export_type'] === 'database')
+        {
+            $TMP_export_dataOutput->presetDbObj = $presetDbObj;
+        }
+        else if ($_POST['export_type'] === 'preset')
+        {
+            $presetName = $_POST["filename"];
+            $rtnData->filename = 'APL.' . $presetName . '.' . date('Y-m-d');
+            
+            $TMP_export_dataOutput->presetDbObj->_preset_db->$presetName = $presetDbObj->_preset_db->$presetName;
+        }
+        else 
+        {
+            $rtnData->_status = 'failure';
+            $rtnData->_error = 'No \'Import Type\' selected - Unknown error';
+        }
+
+        update_option('APL_TMP_export_dataOutput', $TMP_export_dataOutput);
+        
+        $rtnData->action = 'APL_export';
+        $rtnData->_ajax_nonce = wp_create_nonce('APL_export');
 
         // Step 4
         echo json_encode($rtnData);
+    }
+    
+    //TODO CREATE AN AJAX FUNCTION TO IMPORT DATA TO THE PLUGIN
+    // COULDN'T FIND A WAY TO CARRY THE $_FILES GLOBAL VARIBLE
+    // THROUGH .post TO TARGET PHP CODE
+    /**
+     * <p><b>Desc:</b> <b>(<i>Un-used</i>)</b> Handles the AJAX function 
+     *                 for importing data. Method used when jQuery.post is 
+     *                 called in javascript for $('#frmImport').submit().</p>
+     * @access public
+     * 
+     * @since 0.2.0
+     * @version 0.3.0 - Fixed major bugs, added multi-file uploading, better error
+     *                  handling.
+     * 
+     * @tutorial 
+     * <ol>
+     * <li value="1">Check wp_create_nonce value.</li>
+     * <li value="2"><i>Return data</i> (if any) as a json string.</li>
+     * </ol>
+     */
+    public function APL_handler_import()
+    {
+
+        check_ajax_referer("APL_handler_import");
+        $rtnData = new stdClass();
+        $rtnData->_msg = 'success';
+        $rtnData->_error = '';
+        $rtnData->_preset_db = new stdClass();
+        $rtnData->overwrite_preset_db = new stdClass();
+
+        $TMPpresetDbObj = new APLPresetDbObj();
+
+        if ($_POST['import_type'] == 'kalin')
+        {
+            //GET KALIN'S POST LIST DATA
+            $kalin_presetDb = get_option('kalinsPost_admin_options');
+            if ($kalin_presetDb === FALSE)
+            {
+                $rtnData->_msg = 'failure';
+                $rtnData->_error .= 'Can\'t load Kalin\'s Post List data - Database may be missing or plugin is not installed.<br />';
+            }
+            else
+            {
+                //UPGRADE
+                $updater = new APLUpdater('kalin', $kalin_presetDb);
+                if ($updater->presetDbObj === NULL)
+                {
+                    $rtnData->_msg = 'failure';
+                    $rtnData->_error .= 'Can\'t upgrade Kalin\'s Post List - Unknown, may be a currupt data.<br />';
+                }
+                else
+                {
+                    //MERGE TOGETHER
+                    foreach ($updater->presetDbObj->_preset_db as $preset_name => $preset_obj)
+                    {
+                        if (!isset($TMPpresetDbObj->_preset_db->$preset_name))
+                        {
+                            $TMPpresetDbObj->_preset_db->$preset_name = $preset_obj;
+                        }
+                    }
+                }
+            }
+        }
+        else if ($_POST['import_type'] == 'file')
+        {
+            foreach ($_FILES as $key => $value)
+            {
+                //GET FILE CONTENT
+                $file_presetDb[$key] = json_decode(file_get_contents($value['tmp_name']));
+                if (is_null($file_presetDb[$key]))
+                {
+                    $rtnData->_msg = 'failure';
+                    $rtnData->_error .= 'Can\'t load file ' . $value['name'] . ' - Syntax Error with JSON encoding inside file.<br />';
+                }
+                else
+                {
+                    //UPGRADE
+                    $updater = new APLUpdater($file_presetDb[$key]->version, $file_presetDb[$key]->presetDbObj);
+                    if ($updater->presetDbObj === NULL)
+                    {
+                        $rtnData->_msg = 'failure';
+                        $rtnData->_error .= 'Can\'t upgrade file ' . $value['name'] . ' - Version number is missing, or no preset table was found; may be a currupted file.<br />';
+                    }
+                    else
+                    {
+                        //MERGE TOGETHER
+                        foreach ($updater->presetDbObj->_preset_db as $preset_name => $preset_obj)
+                        {
+                            if (!isset($TMPpresetDbObj->_preset_db->$preset_name))
+                            {
+                                $TMPpresetDbObj->_preset_db->$preset_name = $preset_obj;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            $rtnData->_msg = 'failure';
+            $rtnData->_error = 'No \'Imput Type\' selected. Choose between either Kalin\'s Post List or upload a file from Advanced Post List';
+        }
+
+
+
+        //LOAD PLUGIN PRESETS
+        $presetDbObj = new APLPresetDbObj('default');
+        $overwrite_preset_db = new stdClass();
+        //COMPARE PLUGIN DB WITH UPLOAD DATA
+        foreach ($TMPpresetDbObj->_preset_db as $tmp_preset_name => $tmp_preset_value)
+        {
+            //ADD MISSING
+            if (!isset($presetDbObj->_preset_db->$tmp_preset_name))
+            {
+                $presetDbObj->_preset_db->$tmp_preset_name = $tmp_preset_value;
+            }
+            //ADD TO CONFIRM OVERWRITE LIST {OBJECT}
+            else
+            {
+                $overwrite_preset_db->$tmp_preset_name = $tmp_preset_value;
+            }
+        }
+
+        //SEND UPDATED AND POSSIBLE OVERWRITES TO UPDATE THE PRESET TABLE IN JS
+        $rtnData->_preset_db = $presetDbObj->_preset_db;
+        $rtnData->overwrite_preset_db = $overwrite_preset_db;
+        //STORE TEMP PRESET DATABASE OBJECT TO BE USED IN import.php
+        update_option('APL_TMP_import_presetDbObj', $TMPpresetDbObj);
+        //DO NOT SAVE HERE - SAVE IN FINAL IMPORT @ import.php
+        //JUST A NOTE FOR FUTURE MODIFICATIONS
+        //$presetDbObj->options_save_db();
+
+        //CREATE NEW AJAX NONCE VALUES
+        $rtnData->action = 'APL_import';
+        $rtnData->_ajax_nonce = wp_create_nonce('APL_import');
+
+        echo json_encode($rtnData);
+
+
     }
 
     /**

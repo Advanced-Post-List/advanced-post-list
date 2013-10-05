@@ -75,10 +75,11 @@ jQuery(document).ready(function($){
             {
                 //FIX - REPLACE PHP CODE
                 var name = $(this).attr('presetname');
-                var url = plugin_url + "includes/export.php?presetname=" + name;
+                apl_preset_export(name);
+                //var url = plugin_url + "includes/export.php?presetname=" + name;
                 //alert(url);
           
-                window.location = url;
+                //window.location = url;
             });
             $('#btnDownload_' + count).button();
         
@@ -91,6 +92,71 @@ jQuery(document).ready(function($){
         
             count++;
         }	
+    }
+    function apl_preset_export(preset_name)
+    {
+        var exportData = { 
+            action : 'APL_handler_export',
+            _ajax_nonce : exportNonce,
+            export_type : 'preset',
+            filename : $.trim(preset_name)
+        };
+        
+        
+        
+        //TESTING MODE SWITCH
+        //formData.append('alpha_mode', 'true');
+        jQuery.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            //cache: false,
+            //contentType: false,
+            //processData: false,
+            
+            data: exportData,
+            
+            beforeSend: function(jqXHR, settings){
+                var element = document.getElementById("APL_exportIF");
+                if (element != null)
+                {
+                    element.parentNode.removeChild(element);
+                }
+            },
+            dataFilter: function(data, type){
+                var dataRtn = convert_JSON_data(data);
+                return dataRtn;
+            },
+            success: function(data, textStatus, jqXHR){
+                //console.log("Hooray, it worked!");
+                if (data._status != 'success')
+                {
+                    apl_alert(data._error, (data._status.charAt(0).toUpperCase() + data._status.slice(1)));
+                }
+                else
+                {
+                    var paramStr = '';
+                    paramStr += '?_ajax_nonce=' + data._ajax_nonce;
+                    paramStr += '&action='      + data.action;
+                    paramStr += '&filename='    + data.filename;
+                    
+
+                    var elemIF = document.createElement("iframe");
+                    elemIF.id = 'APL_exportIF'
+                    elemIF.style.display = "none";
+                    elemIF.src = ajaxurl + paramStr;
+
+                    document.body.appendChild(elemIF);
+                    
+                    //optionsHeader('Exporting Data Successful');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert(errorThrown.stack);
+            },
+            complete: function(jqXHR, textStatus){
+                
+            }
+        });
     }
     ////////////////////////////////////////////////////////////////////////////
     //// AJAX FUNCTIONS ////////////////////////////////////////////////////////
@@ -131,10 +197,6 @@ jQuery(document).ready(function($){
             $('#createStatus').html("Preset deleted successfully.");
         
         });
-    }
-    function downloadPreset(id)
-    {
-      
     }
     function loadPreset(id)
     {
@@ -745,206 +807,394 @@ jQuery(document).ready(function($){
         }
             
     }
+    function check_string_for_errors(input_string)
+    {
+        var iChars = "<>:\"/\\|,?*";
+      
+        for (var i = 0; i < input_string.value.length; i++) 
+        {
+            if (iChars.indexOf(input_string.value.charAt(i)) != -1) 
+            {
+                apl_alert("<p><span class=\"ui-icon ui-icon-alert\" style=\"float:left; margin:0 7px 75px 0;\"></span>Cannot use (< > : \" / \\ | , ? *).<br/>Please rename your filename.</p>", "Illegal Characters");
+                return true;
+            }
+        
+        }
+        return false;
+    }
     $('#txtExportFileName').change(function()
     {
-        //$in = $(this);
-        //var a1 = $in.next().html($in.val());
-      
-        var iChars = "<>:\"/\\|?*";
-      
-        for (var i = 0; i < document.frmExport.txtExportFileName.value.length; i++) 
-        {
-            if (iChars.indexOf(document.frmExport.txtExportFileName.value.charAt(i)) != -1) 
-            {
-                alert ("Cannot use illegal characters (< > : \" / \\ | ? *).\nPlease rename your filename. ");
-                return false;
-            }
-        
-        }
-        return true;
+        check_string_for_errors(document.frmExport.txtExportFileName);
     });
     
-    $('#frmExport').submit(function(){
-        var data = { 
-            action : 'APL_handler_export',
-            _ajax_nonce : exportNonce
-        };
-      
-        //CHECK USER SIDE
-        data.filename = $.trim($('#txtExportFileName').val());
-        $('#btnExport').val('Please wait...');
-      
-        //Check for illegal filename characters
-        // -Note: by default, any illegal character is replaced by another
-        var iChars = "<>:\"/\\|?*";
-        for (var i = 0; i < document.frmExport.txtExportFileName.value.length; i++) 
-        {
-            if (iChars.indexOf(document.frmExport.txtExportFileName.value.charAt(i)) != -1) 
-            {
-                alert ("Cannot use illegal characters (< > : \" / \\ | ? *).\nPlease rename your filename. ");
-                $('#btnExport').val('Export');
-                return false;
-            }
+    function apl_alert(output_msg, title_msg)
+    {
+        if (!title_msg)
+            title_msg = 'Alert';
         
-        }
-        if (data.filename == "")
-        {
-            alert("A filename doesn't exist.\nPlease enter a filename before exporting.");
-            $('#btnExport').val('Export');
-            return false;
-        }
-      
-        jQuery.get(ajaxurl, data, function(dataRtn)
-        {
-            //CONVERT RETURN/RESPONSE DATA (dataRtn)
-            //SYNTAX .substr(start, length)
-            //SYNTAX .substring(start, end)
-            dataRtn = $.trim(dataRtn);
-            var dataR = JSON.parse(dataRtn.substring(dataRtn.indexOf("{"), dataRtn.lastIndexOf("}") + 1));
+        if (!output_msg)
+            output_msg = 'No Message to Display.';
         
-            //CHECK SERVER SIDE
-            //ERROR CHECKING
-            if (dataR._error != '')
-            {
-                //Display error to user
-                alert(dataR._error);
-                $('#btnExport').val('Export');
-                return false;
-            }
-            //FINAL
-            else
-            {
-          
-                //SETUP AN IFRAME TO DOWNLOAD DATA THROUGH export.php
-                //TODO FIX - NEED TO REMOVE PHP CODE. INSERT IT INTO THE AJAX HANDLER IN CORE
-                //var url = "<?php echo APL_URL; ?>includes/export.php?_ajax_nonce=" + data._ajax_nonce + "&action =" + data.action + "&filename=" + dataR.filename;
-                var url = dataR.export_url + "?_ajax_nonce=" + data._ajax_nonce + "&action =" + data.action + "&filename=" + dataR.filename;
-                var elemIF = document.createElement("iframe");
-                elemIF.src = url;
-                elemIF.style.display = "none";
-                document.body.appendChild(elemIF);
-                $('#btnExport').val('Export');
-                optionsHeader('Exporting Data Successful');
+        $("<div></div>").html(output_msg).dialog({
+            title: title_msg,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Ok": function() 
+                {
+                    $( this ).dialog( "close" );
+
+                }
             }
         });
-        //Cancels default action of form after applying jQuery.get/post
-        // 
+    }
+    
+    function convert_JSON_data(json_string)
+    {
+        //CONVERT RETURN/RESPONSE DATA (dataRtn)
+        //SYNTAX .substr(start, length)
+        //SYNTAX .substring(start, end)
+        var tmpData = $.trim(json_string);
+        
+        
+        //CHECKS DATA FOR ADDITIONAL CONTENT, FOR EX. PHP ERRORS
+        //TODO ADD SUPPORT OF MULTI LANGUAGES WITH MULTILINGUAL
+        var cData = tmpData.split("{\"_msg\"");
+        if (cData[0].indexOf("<br />\n<font size='1'>") != -1 && cData[0].indexOf("</table></font>") != -1 && cData.length != 1)
+        {
+            cData[0] = $.trim(cData[0]);
+            var eData = cData[0].split("<br />\n<font size='1'>");
+            
+            //DISPLAY EACH PHP ERROR INDIVIDUALLY
+            //STARTED INDEX AT 1 SINCE eData[0] IS AN EMPTY STRING CREATED BY .split()
+            for (i = 1; i < eData.length; i++)
+            {
+                $("<div></div>").html("<br /><font size='2'>" + eData[i]).dialog({
+                    title: 'PHP Error',
+                    resizable: true,
+                    minWidth: 576,
+                    modal: true,
+                    buttons: {
+                        "Ok": function() 
+                        {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+        
+        var rtnData = JSON.parse(tmpData.substring(tmpData.indexOf("{\"_msg\""), tmpData.lastIndexOf("}") + 1));
+        
+        return rtnData;
+    }
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //// EXPORT ////////////////////////////////////////////////////////////////
+    $('#frmExport').submit(function(){
+        //CHECK USER SIDE
+        if (apl_export_errors())
+        {
+            return false;
+        }
+        apl_db_export();
+        return false;
+    });
+
+    function apl_export_errors()
+    {
+        var var_filename = document.frmExport.txtExportFileName.value;
+        if (check_string_for_errors(document.frmExport.txtExportFileName))
+        {
+            return true;
+        }
+        if (document.frmExport.txtExportFileName.value == "")
+        {
+            apl_alert("A filename doesn't exist.\nPlease enter a filename before exporting.", "Filename Required");
+            return true;
+        }
+        return false;
+    }
+    
+    function apl_db_export()
+    {
+        var formData = new FormData();
+        formData.append('action', 'APL_handler_export');
+        formData.append('_ajax_nonce', exportNonce);
+        formData.append('export_type', 'database');
+        formData.append('filename', $.trim($('#txtExportFileName').val()));
+        
+        //TESTING MODE SWITCH
+        //formData.append('alpha_mode', 'true');
+        jQuery.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            
+            data: formData,
+            
+            beforeSend: function(jqXHR, settings){
+                var a1 = jqXHR;
+                var a2 = settings;
+                var element = document.getElementById("APL_exportIF");
+                if (element != null)
+                {
+                    element.parentNode.removeChild(element);
+                }
+            },
+            dataFilter: function(data, type){
+                var dataRtn = convert_JSON_data(data);
+                return dataRtn;
+            },
+            success: function(data, textStatus, jqXHR){
+                if (data._status != 'success')
+                {
+                    apl_alert(data._error, (data._status.charAt(0).toUpperCase() + data._status.slice(1)));
+                }
+                else
+                {
+                    var paramStr = '';
+                    paramStr += '?_ajax_nonce=' + data._ajax_nonce;
+                    paramStr += '&action='      + data.action;
+                    paramStr += '&filename='    + data.filename;
+                    
+
+                    var elemIF = document.createElement("iframe");
+                    elemIF.id = 'APL_exportIF'
+                    elemIF.style.display = "none";
+                    elemIF.src = ajaxurl + paramStr;
+
+                    document.body.appendChild(elemIF);
+                    
+                    optionsHeader('Exporting Data Successful');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert(errorThrown.stack);
+            },
+            complete: function(jqXHR, textStatus){
+                var a1 = jqXHR;
+                var a2 = textStatus;
+                //
+            }
+        });
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    //// IMPORT ////////////////////////////////////////////////////////////////
+    $('#frmImport').submit(function(e)
+    {
+        e.preventDefault();
+        //CHECK USER SIDE
+        if (apl_import_errors())
+        {
+            return false;
+        }
+        apl_import_db();
         return false;
     });
     
-    
-    //    $('#frmImport').submit(function(e)
-    //    {
-    //      var data = {
-    //        action : 'APL_handler_import',
-    //        _ajax_nonce : importNonce,
-    //        //test : e
-    //      };
-    //      
-    //      //var a1 = $('#fileImportDir').val();
-    //      //var a3 = document.frmImport.fileImportDir;
-    //      
-    //      var a4 = $('#frmImport').serialize();
-    //      
-    //      //data.a1 = a1;
-    //      //data.a2 = a2;
-    //      //data.a3 = a3;
-    //      data.a4 = a4;
-    //      
-    //      alert(a4);
-    //      
-    //      jQuery.post(ajaxurl, data, function(dataRtn)
-    //      {
-    //        //CONVERT RETURN/RESPONSE DATA (dataRtn)
-    //        //SYNTAX .substr(start, length)
-    //        //SYNTAX .substring(start, end)
-    //        dataRtn = $.trim(dataRtn);
-    //        var dataRtn = JSON.parse(dataRtn.substring(dataRtn.indexOf("{"), dataRtn.lastIndexOf("}") + 1));
-    //        
-    //        //CHECK SERVER SIDE
-    //        //ERROR CHECKING
-    //        if (dataRtn._error != '')
-    //        {
-    //          //Display error to user
-    //          alert(dataRtn._error);
-    //          $('#btnImport').val('Import');
-    //          return false;
-    //        }
-    //        //FINAL
-    //        else
-    //        {
-    //          
-    //          //SETUP AN IFRAME TO DOWNLOAD DATA THROUGH export.php
-    //          var url = "<?php// echo APL_URL; ?>includes/import.php?_ajax_nonce=" + data._ajax_nonce + "&action =" + data.action + "&filename=" + dataRtn.filename;
-    //          var elemIF = document.createElement("iframe");
-    //          elemIF.src = url;
-    //          elemIF.style.display = "none";
-    //          document.body.appendChild(elemIF);
-    //          $('#btnImport').val('Import');
-    //        }
-    //      });
-    //    return false;
-    //      
-    //    });
-
-    $('#frmImport').submit(function()
+    function apl_import_errors()
     {
-        var wp_nonce = importNonce;
-      
-        //Get the (radio) Import Type
+        for (var i = 0; i < document.frmImport.importType.length; i++)
+        {
+            if (document.frmImport.importType[i].checked)
+            {
+                var importType = document.frmImport.importType[i].value;
+            }
+        }
+        
+        
+        if ($('#fileImportData').val() == '' && importType == 'file')
+        {
+            alert('No file(s) selected. Please choose a JSON file to upload.');
+            return true;
+        }
+        if ($('#fileImportData').val() != '')
+        {
+            var ext = $('#fileImportData').val().split('.').pop().toLowerCase();
+            if($.inArray(ext, ['json']) == -1) 
+            {
+                alert('Invalid file type. Please choose a JSON file to upload.');
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    function apl_import_db()
+    {
+        
+        var formData = new FormData();
+        jQuery.each($('#fileImportData')[0].files, function(i, file) {
+            formData.append('uploadFile-'+i, file);
+        });
+        formData.append('action', 'APL_handler_import');
+        formData.append('_ajax_nonce', importNonce);
+        
         var rdoImport = document.frmImport.importType;
         for (var i = 0; i < rdoImport.length; i++)
         {
             if (rdoImport[i].checked)
             {
-                var importType = rdoImport[i].value;
+                formData.append('import_type', rdoImport[i].value);
             }
         }
-      
-      
-        //Temp IFrame
-        var elemIF = document.createElement("iframe");
-        elemIF.name = "uploadTarget";
-        elemIF.style.display = "none";
-        var url = plugin_url + "includes/import.php?wp_nonce=" + wp_nonce;
-        elemIF.src = url;
-      
-        document.frmImport.target = "uploadTarget";
-        document.frmImport.action = plugin_url + "includes/import.php?wp_nonce=" + wp_nonce;
-      
-        document.frmImport.appendChild(elemIF);
-      
-        //$('#btnImport').val('Import');
-        var fileDir = $('#fileImportDir').val();
-        if ($('#fileImportDir').val() == '' && importType == 'file')
+        
+        //TESTING MODE SWITCH
+        //formData.append('alpha_mode', 'true');
+        jQuery.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            cache: false,
+            contentType: false,
+            processData: false,
+            
+            data: formData,
+            
+            
+            beforeSend: function(jqXHR, settings){
+                var a1 = jqXHR;
+                var a2 = settings;
+                var element = document.getElementById("APL_exportIF");
+                if (element != null)
+                {
+                    element.parentNode.removeChild(element);
+                }
+            },
+            dataFilter: function(data, type){
+                var dataRtn = convert_JSON_data(data);
+                return dataRtn;
+            },
+            success: function(data, textStatus, jqXHR){
+                if (data._msg != 'success')
+                {
+                    apl_alert(data._error, (data._msg.charAt(0).toUpperCase() + data._msg.slice(1)));
+                }
+                if ($.isEmptyObject( data.overwrite_preset_db ))
+                {
+                    presetObj = data._preset_db;
+                    buildPresetTable();
+                    
+                    var paramStr = '';
+                    paramStr += '?_ajax_nonce=' + data._ajax_nonce;
+                    paramStr += '&action='      + data.action;
+                    paramStr += '&overwrite='   + '';
+
+                    var elemIF = document.createElement("iframe");
+                    elemIF.id = 'APL_importIF'
+                    elemIF.style.display = "none";
+                    elemIF.src = ajaxurl + paramStr;
+
+                    document.body.appendChild(elemIF);
+                    
+                    optionsHeader('Importing Data Successful');
+                }
+                else
+                {
+                    
+                    var overwrite_output = '';
+                    overwrite_output += '<h3 id="overwrite_select_group" style="margin: 5px 0px;" >(<a id="overwrite_select_group_all" >All</a> / <a id="overwrite_select_group_none">None</a>) Presets</h3>';
+
+                    overwrite_output += '<div>';
+                    for (var preset_key in data.overwrite_preset_db)
+                    {
+                        overwrite_output += '<input type="checkbox" name="' + preset_key + '" value="' + preset_key + '" id="chkGroup_overwrite_preset_' + preset_key + '" />';
+                        overwrite_output += '<label for="">' + preset_key + '</label>';
+                        overwrite_output += '<br />';
+                    }
+                    overwrite_output += '</div>';
+                    $('<div id="apl_confirm_overwrite"></div>').html(overwrite_output).dialog({
+                        stack: false,
+                        title: 'Overwrite Presets',
+                        resizable: true,
+                        height: 256,
+                        minWidth: 352,
+                        maxWidth: 512,
+                        maxHeight: 448,
+                        modal: true,
+                        buttons: {
+                            Next: function() 
+                            {
+                                presetObj = data._preset_db;
+                                apl_import_overwrite(data.overwrite_preset_db, data._ajax_nonce, data.action);
+                                buildPresetTable();
+                                
+                                optionsHeader('Importing Data Successful');
+                                
+                                $( this ).dialog( "close" );
+                                var element = document.getElementById("apl_confirm_overwrite");
+                                element.parentNode.removeChild(element);
+                            },
+                            Cancel: function() 
+                            {
+                                $( this ).dialog( "close" );
+                                var element = document.getElementById("apl_confirm_overwrite");
+                                element.parentNode.removeChild(element);
+                            }
+                        },
+                        open: function(){
+                            $('#overwrite_select_group_all').click(function(e){
+                                for (var preset_key in data.overwrite_preset_db)
+                                {
+                                    $('#chkGroup_overwrite_preset_' + preset_key).attr('checked', true);
+                                }
+                            });
+                            $('#overwrite_select_group_none').click(function(e){
+                                for (var preset_key in data.overwrite_preset_db)
+                                {
+                                    $('#chkGroup_overwrite_preset_' + preset_key).attr('checked', false);
+                                }
+                            });
+                        }
+                    });
+                }   
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert(errorThrown.stack);
+            },
+            complete: function(jqXHR, textStatus){
+                var a1 = jqXHR;
+                var a2 = textStatus;
+            }
+        });
+    }
+    
+    function apl_import_overwrite(overwrite_preset_db, ajax_nonce, action)
+    {
+        var overwrite_list = '';//array of preset names parsed by comma
+        
+        for (var preset_key in overwrite_preset_db)
         {
-            return false;
-        }
-        if ($('#fileImportDir').val() != '')
-        {
-            var ext = $('#fileImportDir').val().split('.').pop().toLowerCase();
-            if($.inArray(ext, ['json']) == -1) 
+            if ($('#chkGroup_overwrite_preset_' + preset_key).is(':checked'))
             {
-                alert('Invalid file type. Please choose a JSON file to upload.');
-                return false;
+                overwrite_list += preset_key + ',';
+                presetObj[preset_key] = overwrite_preset_db[preset_key];
             }
         }
-        optionsHeader('Importing Data Successful');
-        switch (importType)
-        {
+        overwrite_list = overwrite_list.substring(0, overwrite_list.length - 1);
         
-            case 'file':
-                return true;
-                break;
-            case 'kalin':
-                return true;
-                break;
-            default:
-                alert('There is no import type selected!');
-                return false;
+        var paramStr = '';
+        paramStr += '?_ajax_nonce=' + ajax_nonce;
+        paramStr += '&action='      + action;
+        paramStr += '&overwrite='   + overwrite_list;
         
-        }
-    });
+        var elemIF = document.createElement("iframe");
+        elemIF.id = 'APL_importIF'
+        elemIF.style.display = "none";
+        elemIF.src = ajaxurl + paramStr;
+        
+        document.body.appendChild(elemIF);
+        elemIF.parentNode.removeChild(elemIF);
+        
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //// RESTORE ///////////////////////////////////////////////////////////////
     $('#btnRestorePreset').click(function()
     {
         //alert(data.post_type);

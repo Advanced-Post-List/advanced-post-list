@@ -20,6 +20,7 @@ class APLPresetDbObj
     /**
      * @var array(APLPresetObj())
      * @since 0.1.0
+     * @todo Change to array in 0.4.0
      */
     var $_preset_db;
 
@@ -51,12 +52,21 @@ class APLPresetDbObj
      * <li value="4">Save 'Preset DbOptions.</li>
      * </ol>
      */
-    function __construct($db_name)
+    function __construct($db_name = '')
     {
-        //Step 1
-        $this->_preset_db_name = 'APL_preset_db-' . $db_name;
-        //Step 2
-        $this->option_load_db();
+        //init
+        $this->_preset_db_name = '';
+        $this->_preset_db = new stdClass();
+        $this->_delete = 'true';
+        
+        if (!empty($db_name))
+        {
+            //Step 1
+            $this->_preset_db_name = 'APL_preset_db-' . $db_name;
+            //Step 2
+            $this->option_load_db();
+        }
+        
 
 //        //If data doesn't exist in options, then make one
 //        if (empty($this->_preset_db) && empty($this->_delete))
@@ -68,7 +78,16 @@ class APLPresetDbObj
 //            //$this->option_load_db();
 //        }
     }
-
+    public function reset_to_version($version)
+    {
+        $this->reset_to_base();
+    }
+    private function reset_to_base()
+    {
+        $this->_preset_db_name = '';
+        $this->_preset_db = new stdClass();
+        $this->_delete = 'true';
+    }
     /**
      * <p><b>Desc:</b> Loads and stores database values to 
      *                 (this) class values.</p>  

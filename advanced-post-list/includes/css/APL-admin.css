@@ -29,8 +29,12 @@
 	margin: 5px;
 }
 .optionL-row {
-    width: available;
-    height: 26px;
+    min-height: 26px;
+}
+.optionR-row {
+    min-height: 26px;
+    margin-right: 25px;
+    margin-top: 9px;
 }
 #options1 {
 	width: 335px;
@@ -53,6 +57,10 @@
 .ui-button-text { 
     padding: .4em 1em !important; 
 } 
+.info_a_link {
+    cursor: help;
+    font-size: 75%
+}
 /*
 .ui-button { margin-left: -1px; }
 

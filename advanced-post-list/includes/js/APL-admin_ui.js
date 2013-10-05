@@ -264,6 +264,14 @@ jQuery(document).ready(function($)
     {
         $("#d14").dialog({ width: 640 });
     });
+    $("#info15").click(function()
+    {
+        $("#d15").dialog({ width: 640 });
+    });
+    $("#info16").click(function()
+    {
+        $("#d16").dialog({ width: 640 });
+    });
     $("#divCustomPostTaxonomyContent").accordion();
     $("#divCustomPostTaxonomyContent").children().each(function(index, domEle)
     {
