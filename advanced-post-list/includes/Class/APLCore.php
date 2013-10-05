@@ -18,20 +18,24 @@ class APLCore
   var $plugin_file_url;
   var $_APL_OPTION_NAME = "APL_Options";
 
+  /*
+   * Name: APL Shortcode Handler
+   * Desc: function handler for when shortcode(post-list is called)
+   * Params: 
+   * Return: 
+   * @since 
+   */
   function __construct($file)
   {
     $this->APL_load_plugin_data($file);
     //$APLOptions = array();
     $APLOptions = $this->APL_options_load();
     
-    //$APLOptions = get_options(array($this->_APL_OPTION_NAME));
-    
     //UPGRADE CODE FOR MODIFICATIONS
     
     //VERSION CHECKING
     
     //ACTION & FILTERS HOOKS
-    //For some reason, it requires the base file with new APLCore()
     register_activation_hook($this->plugin_file_path, array(&$this, 'APL_activation_handler'));
     register_deactivation_hook($this->plugin_file_path, array(&$this, 'APL_deactivation_handler'));
     register_uninstall_hook($this->plugin_file_path, array(&$this, 'APL_uninstall_handler'));
@@ -62,23 +66,15 @@ class APLCore
     $this->plugin_dir_url = trailingslashit(plugins_url(dirname($this->plugin_basename)));
     $this->plugin_file_url = trailingslashit(plugins_url($this->plugin_basename));
     
-    //??? Create Core values
-//    $this->core_basename = plugin_basename($plugin_path);
-//    $this->plugin_core_dir_path = trailingslashit(dirname(trailingslashit(WP_PLUGIN_DIR) . $this->plugin_basename));
-//    $this->plugin_file_path = trailingslashit(WP_PLUGIN_DIR) . $this->plugin_basename;
-//    $this->plugin_dir_url = trailingslashit(plugins_url(dirname($this->plugin_basename)));
-//    $this->plugin_file_url = trailingslashit(plugins_url($this->plugin_basename));
   }
 
   function APL_install()
   {
     $APLOptions = $this->APL_options_set_to_default();
     $this->APL_options_save($APLOptions);
-    //add_option(array($this->_APL_OPTION_NAME), $APLOptions);
   }
   function APL_activation_handler()
   {
-    //$APLOptions = get_option($this->_APL_OPTION_NAME);
     $APLOptions = $this->APL_options_load();
     if ($APLOptions === false)
     {
@@ -89,36 +85,28 @@ class APLCore
   function APL_deactivation_handler()
   {
     $APLOptions = $this->APL_options_load();
-    //if user set cleanup to true, remove all options and post meta data
+    //if user set cleanup/delete to true, remove all options and post meta data
     if ($APLOptions['delete_core_db'] === true)
     {
       
       delete_option($this->_APL_OPTION_NAME);
-      //TODO create a get presets array/names
-      //$presetOptionsName = get_presets_option_name();
-      //foreach ($presetOptionsName as $key)
-      //{
-      //  delete_option($presetOptionName[$key]);
-      //}
+      //TODO create a method for deleting presets as well
     }
   }
   function APL_uninstall_handler()
   {
     //deactivation hook. Clear all traces of Post List
     $adminOptions = $this->APL_options_load();
-    //if user set cleanup to true, remove all options and post meta data
+    //if user set cleanup/delete to true, remove all options and post meta data
     if ($adminOptions['doCleanup'] == 'true')
     {
       //remove all options for admin
       delete_option($this->_APL_OPTION_NAME);
-      //delete_option(array($this->_APL_OPTIONS_NAME));
+      //TODO create a method for deleting presets as well
     }
   }
-  //replacing APL_get_admin_options
-  //protected
   function APL_options_load()
   {
-    $exit_msg = 'There was no APL Core options available.';
     $APLOptions = get_option($this->_APL_OPTION_NAME);
     if ($APLOptions !== false)
     {
@@ -127,10 +115,8 @@ class APLCore
     else
     {
       return false;
-      //exit($exit_msg);
     }
   }
-  //protected
   function APL_options_save($APLOptions)
   {
     
@@ -139,22 +125,13 @@ class APLCore
       update_option($this->_APL_OPTION_NAME, $APLOptions);
     }
   }
-  //protected
   function APL_options_remove()
   {
     delete_option($this->_APL_OPTION_NAME);
   }
+  //simply returns all our default option values
   function APL_options_set_to_default()
-//protected function kalinsPost_getAdminSettings()
-  {//simply returns all our default option values
-//    $APLOptions = array();
-//    //TODO create a default OptionsDbObj out of preset_arr
-//    $APLOptions['preset_arr'] = '{"pageContentDivided_5":{"categories":"","tags":"","post_type":"page","orderby":"menu_order","order":"ASC","numberposts":"5","before":"<p><hr\/>","content":"<a href=\"[post_permalink]\">[post_title]<\/a> by [post_author] - [post_date]<br\/>[post_content]<hr\/>","after":"<\/p>","excludeCurrent":"true","includeCats":"false","includeTags":"false"},"postExcerptDivided_5":{"categories":"","tags":"","post_type":"post","orderby":"post_date","order":"DESC","numberposts":"5","before":"<p><hr\/>","content":"<a href=\"[post_permalink]\">[post_title]<\/a> by [post_author] - [post_date]<br\/>[post_excerpt]<hr\/>","after":"<\/p>","excludeCurrent":"true","includeCats":"false","includeTags":"false"},"simpleAttachmentList_10":{"categories":"","tags":"","post_type":"attachment","orderby":"post_date","order":"DESC","numberposts":"10","before":"<ul>","content":"<li><a href=\"[post_permalink]\">[post_title]<\/a><\/li>","after":"<\/ul>","excludeCurrent":"true","includeCats":"false","includeTags":"false"},"images_5":{"categories":"","tags":"","post_type":"attachment","orderby":"post_date","order":"DESC","numberposts":"5","before":"<hr \/>","content":"<p><a href=\"[post_permalink]\"><img src=\"[guid]\" \/><\/a><\/p>","after":"<hr \/>","excludeCurrent":"true","includeCats":"false","includeTags":"false"},"pageDropdown_100":{"categories":"","tags":"","post_type":"page","orderby":"menu_order","order":"ASC","numberposts":"100","before":"<p><select id=\"postList_dropdown\" style=\"width:200px; margin-right:20px\">","content":"<option value=\"[post_permalink]\">[post_title]<\/option>","after":"<\/ select> <input type=\"button\" id=\"postList_goBtn\" value=\"GO!\" onClick=\"javascript:window.location=document.getElementById(\'postList_dropdown\').value\" \/><\/p>","excludeCurrent":"true","includeCats":"false","includeTags":"false"},"simplePostList_5":{"categories":"","tags":"","post_type":"post","orderby":"date","order":"DESC","numberposts":"5","before":"<p>","content":"<a href=\"[post_permalink]\">[post_title]<\/a>[final_end], ","after":"<\/p>","excludeCurrent":"true","includeCats":"false","includeTags":"false"},"footerPageList_10":{"categories":"","tags":"","post_type":"page","orderby":"menu_order","order":"ASC","numberposts":"10","before":"<p align=\"center\">","content":"<a href=\"[post_permalink]\">[post_title]<\/a>[final_end] | ","after":"<\/p>","excludeCurrent":"true","includeCats":"false","includeTags":"false"},"everythingNumbered_200":{"categories":"","tags":"","post_type":"any","orderby":"date","order":"ASC","numberposts":"200","before":"<p>All my pages and posts (roll over for titles):<br\/>","content":"<a href=\"[post_permalink]\" title=\"[post_title]\">[item_number]<\/a>[final_end], ","after":"<\/p>","excludeCurrent":"false","includeCats":"false","includeTags":"false"},"everythingID_200":{"categories":"","tags":"","post_type":"any","orderby":"date","order":"ASC","numberposts":"200","before":"<p>All my pages and posts (roll over for titles):<br\/>","content":"<a href=\"[post_permalink]\" title=\"[post_title]\">[ID]<\/a>[final_end], ","after":"<\/p>","excludeCurrent":"false","includeCats":"false","includeTags":"false"},"relatedPosts_5":{"categories":"","tags":"","post_type":"post","orderby":"rand","order":"DESC","numberposts":"5","before":"<p>Related posts: ","content":"<a href=\"[post_permalink]\" title=\"[post_excerpt]\">[post_title]<\/a>[final_end], ","after":"<\/p>","excludeCurrent":"true","includeCats":"false","includeTags":"true"},"CSSTable":{"categories":"","tags":"","post_type":"post","orderby":"post_date","order":"DESC","numberposts":"15","before":"<style>\n.k_ul{width: 320px;text-align:center;list-style-type:none;}\n.k_li{width: 100px; height:65px; float: left; padding:3px;}\n.k_a{border:1px solid #f00;display:block;text-decoration:none;font-weight:bold;width:100%; height:65px}\n.k_a:hover{border:1px solid #00f;background:#00f;color:#fff;}\n.k_a:active{background:#f00;color:#fff;}\n<\/style><ul class=\"k_ul\">","content":"<li class=\"k_li\"><a class=\"k_a\" href=\"[post_permalink]\">[post_title]<\/a><\/li>","after":"<\/ul>","excludeCurrent":"true","post_parent":"None","includeCats":"false","includeTags":"false","requireAllCats":"false","requireAllTags":"false"}}';
-//    $APLOptions['default_preset'] = '';
-//    $APLOptions['doCleanup'] = 'true';
-//
-//    return $APLOptions;
-    ////////////////////////////////////////////////////
+  {
     //TODO CREATE A FILE VERSION AND DB VERSION TO CHECK ON
     $APLOptions = array();
     $APLOptions['version'] = APL_VERSION;
@@ -194,9 +171,6 @@ class APLCore
 
   function APL_admin_init_handler()
   {
-    //TODO Create/edit Handlers
-    //???
-    //add_action('wp_ajax_APL_save_preset', $this->APL_save_preset_handler());
     add_action('wp_ajax_APL_save_preset_handler', array($this, 'APL_save_preset_handler'));
     add_action('wp_ajax_APL_delete_preset_handler', array($this, 'APL_delete_preset_handler')); 
     add_action('wp_ajax_APL_restore_preset_handler', array($this, 'APL_restore_preset_handler'));
@@ -287,16 +261,11 @@ class APLCore
 
     $APLOptions['delete_core_db'] = $_POST['doCleanup'];
     $this->APL_options_save($APLOptions);
-    //update_option(_APL_OPTION_NAME, $APLOptions); //save options to database
 
     $outputVar->status = "success";
-    //$outputVar->preset_arr = json_decode($APLOptions['preset_arr']);
     $outputVar->preset_arr = $preset_db->_preset_db;
-
     //preview saved data
     $outputVar->previewOutput = $this->APL_run($preset_name);
-
-    //echo $kalinsPostAdminOptions['preset_arr'];
 
     echo json_encode($outputVar);
   }
@@ -305,23 +274,15 @@ class APLCore
   {
 
     check_ajax_referer("APL_delete_preset_handler");
-
-    //$APLOptions = $this->APL_options_load();
     
     $presetDbObj = new APLPresetDbObj('default');
 
-    //$valArr = json_decode($APLOptions['preset_arr']);
-    //$valArr = json_decode($APLOptions['preset_arr']);
-
     $preset_name = stripslashes($_POST['preset_name']);
     unset($presetDbObj->_preset_db->$preset_name);
-
-    //$APLOptions['preset_arr'] = json_encode($valArr);
-    //update_option(_APL_OPTIONS_NAME, $APLOptions); //save options to database
     
     $presetDbObj->options_save_db();
     echo json_encode($presetDbObj->_preset_db);
-    //echo (array) $presetDb;
+    
   }
 
   function APL_restore_preset_handler()
@@ -329,10 +290,8 @@ class APLCore
 
     check_ajax_referer("APL_restore_preset_handler");
 
-    //$APLOptions = $this->APL_options_load();
     $presetDbObj = $tmpDbObj = new APLPresetDbObj('default');
-    //TODO create or reformat function
-    //$defaultAdminOptions = kalinsPost_getAdminSettings();
+
     $tmpDbObj->set_to_defaults();
     
     foreach ($tmpDbObj->_preset_db as $key => $value)
@@ -340,23 +299,10 @@ class APLCore
       $presetDbObj->_preset_db->$key = $value;
     }
     
-    
-    
     $presetDbObj->options_save_db();
 
-//    $userValArr = json_decode($APLOptions['preset_arr']);
-//    $defValArr = json_decode($APLOptions['preset_arr']);
-//
-//    foreach ($defValArr as $key => $value)
-//    {
-//      $userValArr->$key = $value;
-//    }
-//
-//    $APLOptions['preset_arr'] = json_encode($userValArr);
-
-    //update_option(_APL_OPTIONS_NAME, $APLOptions); //save options to database
     echo json_encode($presetDbObj->_preset_db);
-    //echo $APLOptions['preset_arr'];
+    
   }
 
   /*
@@ -370,15 +316,11 @@ class APLCore
   {
     if (isset($att['name']))
     {
-      //get preset data and send it to run
-      //TODO need to get the data and set it first
       return $this->APL_display($att);
     }
     else
     {
       return '';
-      //TODO - create default missing preset message
-      //TODO - create a method for custom shortcodes
     }
   }
 
@@ -401,7 +343,6 @@ class APLCore
     //Check if there is a valid Option Database to pull preset data
     if (isset($OptionDb))
     {
-      //$presetObj = $OptionDb->load_preset($preset_name);
       $presetObj = $OptionDb->_preset_db->$preset_name;
     }
     else
@@ -489,28 +430,21 @@ class APLCore
     ////////////////////////////////////////////////////////////////////////////
     //////PRESET OPTIONS FILTER SETTINGS ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
-    /*
-     * NO NEED FOR THIS WHEN YOU CAN JUST ASSIGN -1 TO THE
-     *  get_post() FUNCTION
-      if ($newVals->requireAllCats == "true" || $newVals->requireAllTags == "true")
-      {
-      $origNumberposts = $newVals->numberposts;
-      $newVals->numberposts = -1;
-      }
-     */
-    //TODO - Change get_post() params to grab data needed
-    //TODO Change $posts; varible to $postData 
+    //TODO Change $posts; varible to $postData
+    //Questionable, may be pointless
+    //FIX ? 'numberposts=' . -1 . to 'numberposts=-1'.
     $posts = get_posts('numberposts=' . -1 .
         '&category=' . $tmpCatsSelected .
-        '&post_type=' . $presetObj->post_type .
+        '&post_type=' . $presetObj->_postType .
         '&tag=' . $tmpTagsSelected .
-        '&orderby=' . $presetObj->orderby .
-        '&order=' . $presetObj->order .
+        '&orderby=' . $presetObj->_listOrderBy .
+        '&order=' . $presetObj->_listOrder .
         '&exclude=' . $excludeList .
-        '&post_parent=' . $presetObj->post_parent);
+        '&post_parent=' . $presetObj->_postParent);
 
     //TEST ???
     //$posts = query_posts("orderby=tax_query");
+    //
 ////// Categories //////////////////////////////////////////////////////////////
     //if every post must lie in every selected category
     if ($presetObj->_catsRequired == "true")
@@ -521,9 +455,6 @@ class APLCore
       $i = sizeof($requiredCats);
       $i -= 1;
       unset($requiredCats[$i]);
-      //For some reason this didn't work
-      //unset( $requiredCats[sizeof($requiredCats - 1)] );
-      //unset( $requiredCats[sizeof($requiredCats) - 1] );
 
       foreach ($posts as $key1 => $page)
       {
@@ -605,17 +536,11 @@ class APLCore
     ////// PREPARE OUTPUT STRING ///////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
     //Shorten the posts array so that it can be used to output x number of posts
-//    if ($presetObj->_catsRequired == "true" || $presetObj->_tagsRequired == "true")
-//    {
-//      //???
-//      //$posts = array_slice($posts, 0, $origNumberposts);
-//      $posts = array_slice($posts, 0 , $presetObj->_listAmount);
-//      //$posts = array_slice($posts, 0 , 5);
-//    }
     $posts = array_slice($posts, 0 , $presetObj->_listAmount);
-    //TODO create a custom message for the user to use
+    //TODO create a custom message for the dev to use
+    //return nothing if no results
     if (count($posts) == 0)
-    {//return nothing if no results
+    {
       return "";
     }
 ////// BEFORE //////////////////////////////////////////////////////////////////
