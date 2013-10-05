@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
 Tested up to: 3.4
-Stable tag: 0.3.b2
+Stable tag: 0.3.b3
 
 Create custom post lists with easy to use advanced settings. Highly customizable for designing unique post-list designs.
 
@@ -19,8 +19,6 @@ Create custom post lists with easy to use advanced settings. Highly customizable
 		"Official bug reports, downloads, and projects."
 [wordpress kalins post list]: http://wordpress.org/extend/plugins/kalins-post-list/
 		"Kalin's plugin page"
-[version 0.3.alpha]: http://downloads.wordpress.org/plugin/advanced-post-list.0.1.0.zip
-		"Pre-Release Version of 0.3.0"
 
 
 Highly customizable plugin for designing a large variety of post lists. Allowing 
@@ -93,6 +91,10 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 
 == Changelog ==
 
+= 0.3.b3 =
+* Fixed some 'scrict' errors that were being tossed.
+* Fixed the Activation, Deactivation, and Delete/Uninstall action hooks.
+
 = 0.3.b2 =
 * Fixed issue with script interference.
 * Fixed installing/restoring default preset settings.
@@ -143,14 +145,23 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 
 == Upgrade Notice ==
 
+= 0.3.b3 =
+Beta Version. It is recommended you back up data prior to upgrading. This version 
+introduces Custom Post Type & Taxonomy support, and a few added preset settings.
+Fixed some 'strict' errors that were being tossed that could cause an issue.
+
 = 0.3.b2 =
 Beta Version. It is recommended you back up data prior to upgrading. This version 
 introduces Custom Post Type & Taxonomy support, and a few added preset settings. 
 Fixed a problem with script handling that was interfering with built-in 
 scripting.
 
-= 0.3.a1 =
+= 0.3.b1 =
 Beta Version. Please back up your plugin data prior to upgrading. This version 
+introduces custom post type and taxonomy support. Along with a few added settings.
+
+= 0.3.a1 =
+Alpha Version. Please back up your plugin data prior to upgrading. This version 
 introduces custom post type and taxonomy support. Along with a few added settings.
 
 = 0.2.0 =

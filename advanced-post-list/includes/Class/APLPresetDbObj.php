@@ -58,15 +58,15 @@ class APLPresetDbObj
         //Step 2
         $this->option_load_db();
 
-        //If data doesn't exist in options, then make one
-        if (empty($this->_preset_db) && empty($this->_delete))
-        {
-            //Step 3
-            $this->set_to_defaults();
-            //Step 4
-            $this->options_save_db();
-            //$this->option_load_db();
-        }
+//        //If data doesn't exist in options, then make one
+//        if (empty($this->_preset_db) && empty($this->_delete))
+//        {
+//            //Step 3
+//            $this->set_to_defaults();
+//            //Step 4
+//            $this->options_save_db();
+//            //$this->option_load_db();
+//        }
     }
 
     /**
@@ -88,8 +88,17 @@ class APLPresetDbObj
         //Step 1
         $DBOptions = get_option($this->_preset_db_name);
         //Step 2
-        $this->_preset_db = $DBOptions->_preset_db;
-        $this->_delete = $DBOptions->_delete;
+        if ($DBOptions == FALSE)
+        {
+            $this->set_to_defaults();
+            $this->options_save_db();
+        }
+        else
+        {
+            $this->_preset_db = $DBOptions->_preset_db;
+            $this->_delete = $DBOptions->_delete;
+        }
+        
     }
 
     /**
@@ -347,17 +356,4 @@ class APLPresetDbObj
 
 }
 
-/*
- * //Load Options if any
-  foreach ($name as $key)
-  {
-      $preset_options[$name[$key]] = get_option('APL_preset_' . $name);
-      //TODO create other options for creating groups of post
-      //      list settings.
-  }
-  if (!isset($preset_options))
-  {
-      install();
-  }
- */
 ?>

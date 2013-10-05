@@ -127,7 +127,7 @@ function APL_post_tax_get_taxonomy_section($post_type_name,
     $htmlCatTabs = '';
     $htmlCatTabsContent = '';
     $htmlTagTabs = '';
-    $htmlTagTagsContent = '';
+    $htmlTagTabsContent = '';
 
     $htmlCatTabs .= '<div id="tabs-' . $post_type_name . '-cats" style="clear: both; float: left; height: 320px; max-height: 320px; width: 49%">';
     $htmlTagTabs .= '<div id="tabs-' . $post_type_name . '-tags" style="float: left; height: 320px; max-height: 320px; width: 49%">';
@@ -419,6 +419,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
                     <td width="216" >Delete database upon deactivation.</td>
                     <td width="84"><input id="rdoDeleteDb" name="rdoDeleteDb" type="radio" value="true" 
                         <?php
+                        $a1 = $adminOptions["delete_core_db"];
                         if ($adminOptions["delete_core_db"] == "true")
                         {
                             echo "checked";

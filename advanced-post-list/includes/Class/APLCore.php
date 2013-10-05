@@ -150,13 +150,7 @@ class APLCore
         
         //////// ACTION & FILTERS HOOKS ////////
         //STEP 3
-        ////// ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS //////
-        register_activation_hook($this->plugin_file_path,
-                                 array(&$this, 'APL_handler_activation'));
-        register_deactivation_hook($this->plugin_file_path,
-                                   array(&$this, 'APL_handler_deactivation'));
-        register_uninstall_hook($this->plugin_file_path,
-                                array(&$this, 'APL_handler_uninstall'));
+        
 
         //add_action('widgets_init', array($this, 'APL_handler_widget_init'));
         //STEP 4
@@ -171,6 +165,14 @@ class APLCore
             //STEP 7
             add_action('admin_init',
                        array($this, 'APL_handler_admin_init'));
+            ////// ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS //////
+
+            register_activation_hook($this->plugin_file_path,
+                                     array('APLCore', 'APL_handler_activation'));
+            register_deactivation_hook($this->plugin_file_path,
+                                       array('APLCore', 'APL_handler_deactivation'));
+            register_uninstall_hook($this->plugin_file_path,
+                                    array('APLCore', 'APL_handler_uninstall'));
         }
     }
     /**
@@ -467,29 +469,6 @@ class APLCore
                          APL_VERSION,
                          false);
     }
-    
-    /**
-     * <p><b>Desc:</b> Set and saves the plugin's default settings</p>
-     * @access private
-     * 
-     * @since 0.1.0
-     * 
-     * @uses APLCore::APL_options_set_to_default()
-     * @uses APLCore::APL_options_save()
-     * 
-     * @tutorial 
-     * <ol>
-     * <li value="1">Set APLOptions to default.</li>
-     * <li value="2">Save APLOptions.</li>
-     * </ol>
-     */
-    private function APL_install()
-    {
-        //STEP 1
-        $APLOptions = $this->APL_options_set_to_default();
-        //STEP 2
-        $this->APL_options_save($APLOptions);
-    }
 
     /**
      * <p><b>Desc:</b> Handles the activation method when the plugin is 
@@ -511,10 +490,40 @@ class APLCore
     public function APL_handler_activation()
     {
         // Step 1
-        $APLOptions = $this->APL_options_load();
+        $APLOptions = get_option('APL_Options');
         // Step 2
-        if ($APLOptions === false)
-            $this->APL_install();
+        if ($APLOptions == false)
+        {
+            $APLOptions = array();
+        }
+        if (!isset($APLOptions['version']))
+        {
+            // Step 1
+            $APLOptions['version'] = APL_VERSION;
+        }
+        if (!isset($APLOptions['preset_db_names']))
+        {
+            // Step 2
+            $APLOptions['preset_db_names'] = array(0 => 'default');
+        }
+        if (!isset($APLOptions['delete_core_db']))
+        {
+            // Step 3
+            $APLOptions['delete_core_db'] = true;
+        }
+        if (!isset($APLOptions['jquery_ui_theme']))
+        {
+            // Step 4
+            $APLOptions['jquery_ui_theme'] = 'overcast';
+        }
+        if (!isset($APLOptions['error']))
+        {
+            // Step 5
+            $APLOptions['error'] = '';
+        }
+        update_option('APL_Options',
+                          $APLOptions);
+            
     }
 
     /**
@@ -538,11 +547,11 @@ class APLCore
     public function APL_handler_deactivation()
     {
         //STEP 1
-        $APLOptions = $this->APL_options_load();
+        $APLOptions = get_option('APL_Options');
         //STEP 2
-        if ($APLOptions['delete_core_db'] == 'true')
+        if ($APLOptions['delete_core_db'] == TRUE || ($APLOptions != FALSE && !isset($APLOptions['delete_core_db'])))
         {
-            delete_option($this->_APL_OPTION_NAME);
+            delete_option('APL_Options');
             delete_option('APL_preset_db-default');
         }
     }
@@ -566,7 +575,7 @@ class APLCore
     public function APL_handler_uninstall()
     {
         // Step 1
-        delete_option($this->_APL_OPTION_NAME);
+        delete_option('APL_Options');
         // Step 2
         //Alt uninstall that uses the 'delete upon deactivation' setting
         delete_option('APL_preset_db-default');
@@ -599,7 +608,7 @@ class APLCore
         if ($APLOptions !== false)
             return $APLOptions;
         else
-            return false;
+            return $this->APL_options_set_to_default();
     }
     /**
      * <p><b>Desc:</b></p>
@@ -770,7 +779,7 @@ class APLCore
             'taxTerms' => $taxTerms
         );
         $apl_admin_ui_settings = array(
-            'post_type_amount' => sizeof((array) $post_taxonomies),
+            //'post_type_amount' => sizeof((array) $post_taxonomies),
             'postTax' => $postTax, //issue may arise
             'postTax_parent_selector' => $postTax_parent_selector
         );
@@ -863,7 +872,7 @@ class APLCore
             foreach ($taxonomy_object->object_type as $object_type_name)
             {
                 // Step 3
-                if ($object_type_name === $post_type_name)
+                if ($object_type_name === $post_type_name && !empty($object_type_name))
                 {
                     $rtnTaxonomyArray[$taxonomy_name] = $taxonomy_name;
                 }
@@ -1432,11 +1441,11 @@ class APLCore
         // Step 3
         //// GET (GLOBAL) POST DATA OF THE CURRENT POST/PAGE THAT THE
         ////  POST LIST IS DISPLAYED ON.
-        $post_obj = $this->APL_get_post_attr($presetObj->_postTax);
+        $post_obj = $this->APL_get_post_attr();
         
         // Step 4
         //// EXCLUDE CURRENT POST FROM DISPLAYING ON THE POST LIST
-        if ($presetObj->_postExcludeCurrent == 'true')
+        if ($presetObj->_postExcludeCurrent == true)
         {
             $excludeList = $post_obj->ID;
         }
@@ -1569,17 +1578,26 @@ class APLCore
      * <li value="6">Return the data stored.</li>
      * </ol>
      */
-    private function APL_get_post_attr($postTax)
+    private function APL_get_post_attr()
     {
         $rtnObj = new stdClass();
         // Step 1
         global $post;
         
         // Step 2
-        $rtnObj->ID = $post->ID;
+        $rtnObj->ID = (int) 0;
+        if (isset($post->ID))
+        {
+            $rtnObj->ID = $post->ID;
+        }
         // Step 3
-        $rtnObj->post_type = $post->post_type;
+        $rtnObj->post_type = '';
+        if (isset($post->post_type))
+        {
+            $rtnObj->post_type = $post->post_type;
+        }
         // Step 4
+        $rtnObj->taxonomies = new stdClass();
         $taxonomies = $this->APL_get_post_type_taxonomies($rtnObj->post_type);
         foreach ($taxonomies as $taxonomy)
         {
