@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
 Tested up to: 3.4
-Stable tag: 0.3.b1
+Stable tag: 0.3.b2
 
 Create custom post lists with easy to use advanced settings. Highly customizable for designing unique post-list designs.
 
@@ -93,6 +93,10 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 
 == Changelog ==
 
+= 0.3.b2 =
+* Fixed issue with script interference.
+* Fixed installing/restoring default preset settings.
+
 = 0.3.b1 =
 * Added Custom Post Type and Taxonomy support.
 * Added JQuery UI features.
@@ -139,11 +143,19 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 
 == Upgrade Notice ==
 
+= 0.3.b2 =
+Beta Version. It is recommended you back up data prior to upgrading. This version 
+introduces Custom Post Type & Taxonomy support, and a few added preset settings. 
+Fixed a problem with script handling that was interfering with built-in 
+scripting.
+
 = 0.3.a1 =
-Beta Version. Please back up your plugin data prior to upgrading. This version introduces custom post type and taxonomy support. Along with a few added settings.
+Beta Version. Please back up your plugin data prior to upgrading. This version 
+introduces custom post type and taxonomy support. Along with a few added settings.
 
 = 0.2.0 =
-Upgrade adds a new export/import feature to back up your data, and fixes the PHP hardcode, exclude current, and TextArea element. See change log for more details.
+Upgrade adds a new export/import feature to back up your data, and fixes the PHP 
+hardcode, exclude current, and TextArea element. See change log for more details.
 
 = 0.1.1 =
 The require() functions in advanced-post-list.php didn't have a dynamic value set.

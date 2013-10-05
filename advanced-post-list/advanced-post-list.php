@@ -2,7 +2,7 @@
 
 /*
   Plugin Name: Advanced Post List
-  Version: 0.3.b1
+  Version: 0.3.b2
   Plugin URI: http://advanced-post-list.wikiforum.net/
   Description: Create highly customizable post lists with dynamic features. 
   Author: JoKeR
@@ -57,7 +57,7 @@ else
 //Define constant varibles
 define('APL_NAME',      'Advanced Post List');
 //FIX ALWAYS - Update version number
-define('APL_VERSION',   '0.3.b1');
+define('APL_VERSION',   '0.3.b2');
 //APL_DIR = C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/
 define('APL_DIR',       plugin_dir_path(__FILE__));
 //APL_URL = http://localhost/wordpress/wp-content/plugins/advanced-post-list/

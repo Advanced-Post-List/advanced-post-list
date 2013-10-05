@@ -468,12 +468,6 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
                     
                 </tr>
             </table>
-            <script type="text/javascript"
-                    src="http://jqueryui.com/themeroller/themeswitchertool/">
-            </script>
-            <!--<div id="switcher" onclick="">
-
-            </div>-->
             <div align="center" style="margin-top: 10px;">
                 <input id="btnSaveSettings" name="btnSaveSettings" type="submit" value="Save" />
 

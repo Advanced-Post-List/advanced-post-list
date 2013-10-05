@@ -168,7 +168,7 @@ class APLPresetDbObj
         //Step 1
         $this->_delete = 'true';
         //Step 2
-        $tmpPreset1 = (string) '{
+        $tmpPreset = (string) '{
                                     "pageContentDivided_5":
                                     {
                                         "_postParent":[],
