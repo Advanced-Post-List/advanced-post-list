@@ -2,7 +2,7 @@
 
 /*
   Plugin Name: Advanced Post List
-  Version: 0.1.0
+  Version: 0.1.1
   Plugin URI: http://code.google.com/p/wordpress-advanced-post-list/
   Description: Create highly customizable post lists with dynamic features. 
   Author: JoKeR
@@ -26,7 +26,7 @@
  */
 /**
  * @package advanced-post-list
- * @version 0.1.0
+ * @version 0.1.1
  * @link http://code.google.com/p/wordpress-advanced-post-list/ Advanced Post List Homepage
  */
 /*****************************************************************************/
@@ -57,17 +57,26 @@ else
 define('APL_NAME', 'Advanced Post List');
 define('APL_DIR', plugin_dir_path(__FILE__));
 define('APL_URL', plugin_dir_url(__FILE__));
-define('APL_VERSION', '0.1.0');
+define('APL_VERSION', '0.1.1');
+//require ABSPATH.'wp-content/plugins/'.dirname(plugin_basename(__FILE__)).'/pages/luc_yesterday.php'
+//require_once dirname( __FILE__ ) . '/admin.php';
+//$a = ABSPATH;
 
+//$b = ABSPATH.'wp-content/plugins/'.dirname(plugin_basename(__FILE__));
+//$c = APL_DIR . 'includes/Class/APLCore.php';
 /*****************************************************************************/
 /************************ REQUIRED FILES *************************************/
 /*****************************************************************************/
-//Include other files
-require('/includes/Class/APLCore.php');
-require('/includes/Class/APLPresetDbObj.php');
-require('/includes/Class/APLPresetObj.php');
-require('/includes/Class/APLCallback.php');
-require('/includes/APLWidget.php');
+require_once(APL_DIR . 'includes/Class/APLCore.php');
+require_once(APL_DIR . 'includes/Class/APLPresetDbObj.php');
+require_once(APL_DIR . 'includes/Class/APLPresetObj.php');
+require_once(APL_DIR . 'includes/Class/APLCallback.php');
+require_once(APL_DIR . 'includes/APLWidget.php');
+//require('/includes/Class/APLCore.php');
+//require('/includes/Class/APLPresetDbObj.php');
+//require('/includes/Class/APLPresetObj.php');
+//require('/includes/Class/APLCallback.php');
+//require('/includes/APLWidget.php');
 
 /*****************************************************************************/
 /************************ LOAD HANDLER ***************************************/
