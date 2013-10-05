@@ -21,6 +21,19 @@ $presetDb = $presetDbObj->_preset_db;
 /*var presetArr = '<?php echo json_encode($presetDb); ?>';
  *var presetArr = '<?php echo $presetDb; ?>'; 
  */
+function displayParent()
+{
+  $posts = get_posts('numberposts=-1&post_type=any&orderby=title');
+  foreach ($posts as $page)
+  {
+    //if this returns some children, show the option
+    if (get_children($page->ID))
+    {
+      $str = "<option value='" . $page->ID . "'>" . $page->post_title . "</option>";
+    }
+  }
+  return $str;
+}
 ?>
 
 <script language="javascript" type='text/javascript'>
@@ -105,7 +118,7 @@ $presetDb = $presetDbObj->_preset_db;
     {
       //$('#presetPHP').html('PHP code: <code>if(function_exists("kalinsPost_show"){kalinsPost_show("' + data.preset_name + '");}</code>');
       
-      $('#presetPHP').html('PHP code: <code>if(function_exists("kalinsPost_show")){kalinsPost_show("' + preset_name + '");}</code>');
+      $('#presetPHP').html('PHP code: <code>if(function_exists("APL_run")){APL_run("' + preset_name + '");}</code>');
     }
     
     function deletePreset(id)
@@ -454,40 +467,78 @@ $presetDb = $presetDbObj->_preset_db;
     Show count: <input type="text" size='5' name='txtNumberposts' id='txtNumberposts' value='5' />
 
     &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
-
+<?php 
+//Order by: <select id="cboOrderby" style="width:110px;">
+//      <option value="post_date">post date</option>
+//      <option value="author">author ID</option>
+//      <option value="ID">post ID</option>
+//      <option value="menu_order">menu_order</option>
+//      <option value="modified">modified date</option>
+//      <option value="parent">parent</option>
+//      <option value="rand">random</option>
+//      <option value="title">title</option>
+//    </select>
+//    Order by: <select id="cboOrderby" style="width:110px;">
+//      <option value="post_date">post date</option>
+//      <option value="author">author ID</option>
+//      <option value="category">category ID</option>
+//      <option value="date">date</option>
+//      <option value="ID">post ID</option>
+//      <option value="menu_order">menu_order</option>
+//      <option value="mime_type">mime_type</option>
+//      <option value="modified">modified date</option>
+//      <option value="post_name">name</option>
+//      <option value="parent">parent</option>
+//      <option value="rand">random</option>
+//      <option value="status">status</option>
+//      <option value="title">title</option>
+//      <option value="type">type</option>
+//    </select>
+?>
+    
     Order by: <select id="cboOrderby" style="width:110px;">
-      <option value="post_date">post date</option>
-      <option value="author">author ID</option>
-      <option value="ID">post ID</option>
-      <option value="menu_order">menu_order</option>
-      <option value="modified">modified date</option>
-      <option value="parent">parent</option>
-      <option value="rand">random</option>
-      <option value="title">title</option>
+      <option value="date">Date</option>
+      <option value="modified">Modified Date</option>
+      <option value="title">Title</option>
+      <option value="ID">ID</option>
+      <option value="author">Author ID</option>
+      <option value="parent">Parent</option>
+      <option value="menu_order">Menu Order</option>
+      <option value="rand">Random</option>
+      <option value="comment_count">Comment Count</option>
     </select>
 
     <select id="cboOrder" style="width:110px;">
-      <option value="DESC">descending</option>
-      <option value="ASC">ascending</option>
+      <option value="DESC">Descending</option>
+      <option value="ASC">Ascending</option>
     </select>
 
 </p>
 <div id="parentSelector"><p>
     Parent: <select id="cboParent" style="width:110px;">
 
-      <option value="">-any or none-</option>
-      <option value="current">-current page-</option>
+      <option value="">-Any or None-</option>
+      <option value="current">-Current Page-</option>
 
       <?php
-      $posts = get_posts('numberposts=-1&post_type=any&orderby=title');
-      foreach ($posts as $page)
+      //$posts = get_posts('numberposts=-1&post_type=any&orderby=title');      
+      //FIX Checking for children is being misread as attachments being 'page' children.
+      //Just display the pages without checking for children. Since some pages 
+      // may not have any children yet.
+      
+      $pages = get_posts('numberposts=-1&post_type=page&orderby=title');
+      foreach ($pages as $page)
       {
-        //if this returns some children, show the option
-        if (get_children($page->ID))
-        {
-          echo "<option value='" . $page->ID . "'>" . $page->post_title . "</option>";
-        }
+        echo "<option value='" . $page->ID . "'>" . $page->post_title . "</option>";
       }
+//      foreach ($pages as $page)
+//      {
+//        //if this returns some children, show the option
+//        if (get_children($page->ID))
+//        {
+//          echo "<option value='" . $page->ID . "'>" . $page->post_title . "</option>";
+//        }
+//      }
       ?>
 
     </select>
