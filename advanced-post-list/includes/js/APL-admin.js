@@ -304,7 +304,7 @@ jQuery(document).ready(function($){
                     });
                     return true;
                 }
-                else if (require_taxonomy[taxonomy_name]['count'] < 1 && require_taxonomy[taxonomy_name]['require'] == true && include_terms == false)
+                else if (require_taxonomy[taxonomy_name]['count'] < 2 && require_taxonomy[taxonomy_name]['require'] == true && include_terms == false)
                 {
                     $( "#d04" ).dialog({
                         resizable: false,

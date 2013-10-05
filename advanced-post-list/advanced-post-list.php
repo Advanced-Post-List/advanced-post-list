@@ -2,8 +2,8 @@
 
 /*
   Plugin Name: Advanced Post List
-  Version: 0.3.a1
-  Plugin URI: http://code.google.com/p/wordpress-advanced-post-list/
+  Version: 0.3.b1
+  Plugin URI: http://advanced-post-list.wikiforum.net/
   Description: Create highly customizable post lists with dynamic features. 
   Author: JoKeR
 
@@ -57,7 +57,7 @@ else
 //Define constant varibles
 define('APL_NAME',      'Advanced Post List');
 //FIX ALWAYS - Update version number
-define('APL_VERSION',   '0.3.a1');
+define('APL_VERSION',   '0.3.b1');
 //APL_DIR = C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/
 define('APL_DIR',       plugin_dir_path(__FILE__));
 //APL_URL = http://localhost/wordpress/wp-content/plugins/advanced-post-list/
@@ -70,8 +70,7 @@ require_once(APL_DIR . 'includes/class/APLPresetDbObj.php');
 require_once(APL_DIR . 'includes/class/APLPresetObj.php');
 require_once(APL_DIR . 'includes/class/APLCallback.php');
 require_once(APL_DIR . 'includes/class/APLWidget.php');
-//require_once(APL_DIR . 'includes/Class/APLExport.php');
-//require_once(APL_DIR . 'includes/Class/APLImport.php');
+require_once(APL_DIR . 'includes/class/APLQuery.php');
 
 /*****************************************************************************/
 /************************ LOAD HANDLER ***************************************/

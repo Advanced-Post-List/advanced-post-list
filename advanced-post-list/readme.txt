@@ -3,8 +3,8 @@ Contributors: jokerbr313
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4VQ6NF4CQ&lc=US&item_name=Wordpress%20%2d%20Advanced%20Post%20List&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
-Tested up to: 3.3
-Stable tag: 0.2.0
+Tested up to: 3.4
+Stable tag: 0.3.b1
 
 Create custom post lists with easy to use advanced settings. Highly customizable for designing unique post-list designs.
 
@@ -23,23 +23,46 @@ Create custom post lists with easy to use advanced settings. Highly customizable
 		"Pre-Release Version of 0.3.0"
 
 
-Highly customizable plugin for designing a large variety of post lists. Allowing the webmaster to create any design for displaying Recent Posts, Popular Posts, Related Posts, Future Posts, etc. Including Custom Post Type & Taxonomy support and allows the Webmaster to Back-Up the plugin database. 
+Highly customizable plugin for designing a large variety of post lists. Allowing 
+the Webmaster to create any design for displaying Recent Posts, Popular Posts, 
+Related Posts, Future Posts, etc. Including Custom Post Type & Taxonomy support 
+and allows the Webmaster to Back-Up the plugin database. 
 		
 [Community][forum home] - Plugin Home site
 
 [Issues/Bug Report][forum issues] - Report Issues with the plugin.
 
-[Preset Design Support][forum presetDesigns] - Browse or submit a preset design (requires registration).
+[Preset Designs][forum presetDesigns] - Browse or submit a preset design (requires registration).
 
-**Version 0.3.Alpha** - [Download link][version 0.3.alpha]
+This is an alternate/upgraded version of [Kalins Post List][wordpress kalins post list] 
+that was unfortunately declared abandoned. Most of the credit for creating an 
+extraordinary plugin like this goes to **Kalin**. As a plugin developer, I also 
+admire the uses of this plugin. So, I couldn't see a nice plugin like this get 
+left in the dark. 
 
-This is an alternate/upgraded version of [Kalins Post List][wordpress kalins post list] that was unfortunately declared abandoned. Most of the credit for creating an extraordinary plugin like this goes to **Kalin**. As a plugin developer, I also admire the uses of this plugin. So, I couldn't see a nice plugin like this get left in the dark. 
+This plugin is still in the first stages of its target design. Many of the old 
+bugs have been fixed, and new features added. Version 1.0.0 will feature many of 
+the functionalities that Kalin and others have mentioned, and will have a completely 
+new layout to accommodate for the extra tools that will be added. Right now the 
+plugin is in the pre-release versions (0.X.X).
 
-This plugin is still in the first stages of its target design. Many of the old bugs have been fixed, and new features added. Version 1.0.0 will feature many of the functionalities that Kalin and others have mentioned, and will have a completely new layout to accommodate for the extra tools that will be added. Right now the plugin is in the pre-release versions (0.X.X).
+**0.2.0 Release** - contains an export function that also supports individual 
+preset downloads. This is for two main reasons. **1)** Help with debugging 
+purposes when trying to replicate the style and some of the content. 
+**2)** Community purposes. It was a simple piece of code to add (maybe 5 lines, 
+if that) for preset downloads after all the main export functions, and I also 
+believe having a community will help with the evolution of the plug in by 
+spotting the limitations and the advances needed for the plugin. 
 
-**0.2.0 Release** - contains an export function that also supports individual preset downloads. This is for two main reasons. **1)** Help with debugging purposes when trying to replicate the style and some of the content. **2)** Community purposes. It was a simple piece of code to add (maybe 5 lines, if that) for preset downloads after all the main export functions, and I also believe having a community will help with the evolution of the plug in by spotting the limitations and the advances needed for the plugin. 
-
-**WORKING 0.3.Alpha Version - CAUTION when upgrading, back-up your plugin data in case a bug occurs**  - supports Custom Post Types & Taxonomies which provides a highly customizable post filter and can display pages from various Post Types. The new version is also setup to allow multiple Parent Pages to be used, new dialog feature for displaying errors and info, and is setup to filter by Post Status (any, publish, pending, draft, auto-draft, future, private, inherit, and trash). The scripting was changed to make use of wp_enqueue_(script/style) which also led to JQuery UI to be added and allows other future supported scripts to be added. 
+**WORKING 0.3.Beta Version - CAUTION when upgrading, back-up your plugin data 
+in case a bug occurs**  - supports Custom Post Types & Taxonomies which provides 
+a highly customizable post filter and can display pages from various Post Types. 
+The new version is also setup to allow multiple Parent Pages to be used, new 
+dialog feature for displaying errors and info, and is setup to filter by Post 
+Status (any, publish, pending, draft, auto-draft, future, private, inherit, and 
+trash). The scripting was changed to make use of wp_enqueue_(script/style) which 
+also led to JQuery UI to be added and allows other future supported scripts to 
+be added. 
 
 **Pre-Release Projects for Version 1.0.0**
 
@@ -69,6 +92,19 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 6. Export or import your plugin database data.
 
 == Changelog ==
+
+= 0.3.b1 =
+* Added Custom Post Type and Taxonomy support.
+* Added JQuery UI features.
+* Added "Post Status" setting for presets.
+* Changed "Post Parent" to carry multiple parent pages instead of just one.
+* Changed script and style handling to use wp_enqueue.
+* Changed from get_posts() to APLQuery (WP_Query) class.
+* Changed APLPresetObj class.
+* Added APLQuery class to shadow WP_Query.
+* Added a plugin database update for the change preset settings.
+* Changed import file to accommodate for new preset settings.
+
 
 = 0.2.0 =
 * Designed a 'General Settings' section for core settings.
@@ -104,7 +140,7 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 == Upgrade Notice ==
 
 = 0.3.a1 =
-Pre-release version for the beta version. This is a working version, but use caution and back up your data prior to upgrading.
+Beta Version. Please back up your plugin data prior to upgrading. This version introduces custom post type and taxonomy support. Along with a few added settings.
 
 = 0.2.0 =
 Upgrade adds a new export/import feature to back up your data, and fixes the PHP hardcode, exclude current, and TextArea element. See change log for more details.

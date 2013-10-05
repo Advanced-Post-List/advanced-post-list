@@ -108,11 +108,6 @@ function APL_convert_preset_020_030($old_presetObj)
         }
     }
 
-
-
-//    $rtnPresetObj->_postParent = (array) array();
-//    $rtnPresetObj->_postTax = (object) new stdClass();
-
     $rtnPresetObj->_listAmount = intval($old_presetObj->_listAmount);
 
     $rtnPresetObj->_listOrderBy = $old_presetObj->_listOrderBy;
@@ -149,11 +144,6 @@ function import_kalin()
 
 function convert_kalin($tmp_preset)
 {
-    
-
-
-
-
     $presetObj = new APLPresetObj();
     $presetObj->_catsSelected = $tmp_preset->categories; //replace these lines with dynamic loop like in restore_preset()?
     $presetObj->_tagsSelected = $tmp_preset->tags;
@@ -165,7 +155,6 @@ function convert_kalin($tmp_preset)
     $presetObj->_content = $tmp_preset->content;
     $presetObj->_after = $tmp_preset->after;
     $presetObj->_postExcludeCurrent = $tmp_preset->excludeCurrent;
-
 
     if (isset($tmp_preset->post_parent))
     {
@@ -183,7 +172,6 @@ function convert_kalin($tmp_preset)
     {
         $presetObj->_tagsRequired = $tmp_preset->requireAllTags;
     }
-
 
     return $presetObj;
 }
