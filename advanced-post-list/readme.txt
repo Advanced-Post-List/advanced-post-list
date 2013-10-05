@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4
 Tags: Advanced, Post List, Categories, Category, Content, Custom, Excerpt, Filter, Links, List, Links, News, Page, Pages, Post, Posts, Related, Shortcode, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
 Tested up to: 3.2
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 
 Create a large variety of post lists with easy to use advanced settings. Highly customizable for designing unique post-list designs.
 
@@ -49,6 +49,9 @@ You need to locate and copy the shortcode. Which is in the Advance Post List - S
 
 == Changelog ==
 
+= 0.1.1 =
+* Fixed including required files.
+
 = 0.1.0 =
 * Basic clean up and reorganizing.
 * Added phpdocumentation to created files.
@@ -66,6 +69,9 @@ You need to locate and copy the shortcode. Which is in the Advance Post List - S
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.1.1 =
+* The require() function in advanced-post-list.php didn't have a dynamic value set.
 
 = 0.1.0 =
 * Basic cleanup.
