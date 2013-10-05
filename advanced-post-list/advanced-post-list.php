@@ -2,7 +2,7 @@
 
 /*
   Plugin Name: Advanced Post List
-  Version: 0.1.b1
+  Version: 0.1.0
   Plugin URI: http://code.google.com/p/wordpress-advanced-post-list/
   Description: Create highly customizable post lists with dynamic features. 
   Author: JoKeR
@@ -23,6 +23,11 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+/**
+ * @package advanced-post-list
+ * @version 0.1.0
+ * @link http://code.google.com/p/wordpress-advanced-post-list/ Advanced Post List Homepage
  */
 /*****************************************************************************/
 /************************ Compatability Checks *******************************/
@@ -52,7 +57,7 @@ else
 define('APL_NAME', 'Advanced Post List');
 define('APL_DIR', plugin_dir_path(__FILE__));
 define('APL_URL', plugin_dir_url(__FILE__));
-define('APL_VERSION', '0.1.b1');
+define('APL_VERSION', '0.1.0');
 
 /*****************************************************************************/
 /************************ REQUIRED FILES *************************************/
