@@ -73,6 +73,7 @@ class APLCore
    * return none
    * 
    * @since 0.1.0
+   * @version 0.2.0
    * @filesource 
    * @uses $this->APL_load_plugin_data()
    * @uses $this->APL_options_load()
@@ -93,10 +94,33 @@ class APLCore
     $this->APL_load_plugin_data($file);
 
     //STEP 2
+    //////// DATABASE ///////
     $APLOptions = $this->APL_options_load();
-
-    //UPGRADE CODE FOR MODIFICATIONS
-    //VERSION CHECKING
+    if (isset($APLOptions['version']))
+    {
+      if ($APLOptions['version'] == '1.0.1')
+      {
+        $APLOptions['version'] = APL_VERSION;
+      }
+      
+//    //CHECKING VERSION FOR MAJOR DATABASE MODIFICATIONS
+//    BAREBONE EXAMPLE
+//    if ($APLOptions->version < X.X.X)
+//    {
+//      $this->upgrade_method();
+//    }
+      //UPGRADE VERSION
+      $oldversion = $APLOptions['version'];
+      if (version_compare($oldversion, APL_VERSION, '<'))
+      {
+          //Put upgrade database functions in here. Not before.
+          // Ex. upgrade_to_X.X.X();
+          $APLOptions['version'] = APL_VERSION;
+      }
+      $this->APL_options_save($APLOptions);
+    }
+    //Else (Nothing) -Leave it to activation hook to install plugin option data
+    
     //ACTION & FILTERS HOOKS
     //STEP 3
     register_activation_hook($this->plugin_file_path, array(&$this, 'APL_handler_activation'));
@@ -168,6 +192,11 @@ class APLCore
     add_action('wp_ajax_APL_handler_save_preset', array($this, 'APL_handler_save_preset'));
     add_action('wp_ajax_APL_handler_delete_preset', array($this, 'APL_handler_delete_preset'));
     add_action('wp_ajax_APL_handler_restore_preset', array($this, 'APL_handler_restore_preset'));
+    
+    add_action('wp_ajax_APL_handler_export', array($this, 'APL_handler_export'));
+    add_action('wp_ajax_APL_handler_import', array($this, 'APL_handler_import'));
+    
+    add_action('wp_ajax_APL_handler_save_settings', array($this, 'APL_handler_save_settings'));
   }
 
   /**
@@ -227,7 +256,7 @@ class APLCore
    * @uses $this->APL_Options_load()
    * 
    * 1) Load Options
-   * 2) If user has delete database set to true, then delete Core options
+   * 2) If user has delete database set to true, then delete All options
    * 
    */
   public function APL_handler_deactivation()
@@ -235,11 +264,11 @@ class APLCore
     //STEP 1
     $APLOptions = $this->APL_options_load();
     //STEP 2
-    if ($APLOptions['delete_core_db'] === true)
+    if ($APLOptions['delete_core_db'] == 'true')
     {
 
       delete_option($this->_APL_OPTION_NAME);
-      //TODO create a method for deleting presets as well
+      delete_option('APL_preset_db-default');
     }
   }
 
@@ -260,15 +289,17 @@ class APLCore
    */
   public function APL_handler_uninstall()
   {
-    //deactivation hook. Clear all traces of Post List
-    $adminOptions = $this->APL_options_load();
-    //if user set cleanup/delete to true, remove all options and post meta data
-    if ($adminOptions['delete_core_db'] === true)
-    {
-      //remove all options for admin
-      delete_option($this->_APL_OPTION_NAME);
-      //TODO create a method for deleting presets as well
-    }
+    //uninstall hook. Clear all traces of the Advanced Post List
+    // database options.
+    delete_option($this->_APL_OPTION_NAME);
+    delete_option('APL_preset_db-default');
+    //Alt uninstall that uses the 'delete upon deactivation' setting
+//    if ($adminOptions['delete_core_db'] == 'true')
+//    {
+//      //remove all options for admin
+//      delete_option($this->_APL_OPTION_NAME);
+//      delete_option('APL_preset_db-default');
+//    }
   }
 
   /**
@@ -285,6 +316,7 @@ class APLCore
    * 2) Return Option value
    * 
    */
+  //FIX SET TO DEFAULT THEN OVERWRITE AND RETURN
   private function APL_options_load()
   {
     $APLOptions = get_option($this->_APL_OPTION_NAME);
@@ -482,10 +514,14 @@ class APLCore
    * 1) 
    * 
    */
-  //TODO CREATE A FUNCTION TO IMPORT DATA TO THE PLUGIN
+  //TODO CREATE AN AJAX FUNCTION TO IMPORT DATA TO THE PLUGIN
+  // COULDN'T FIND A WAY TO CARRY THE $_FILES GLOBAL VARIBLE
+  // THROUGH .post TO TARGET PHP CODE
   public function APL_handler_import()
   {
+    check_ajax_referer('APL_handler_import');
     
+    echo json_encode('');
   }
 
   /**
@@ -499,11 +535,45 @@ class APLCore
    * 1) 
    * 
    */
-  //TODO CREATE A FUNCTION TO EXPORT DATA FROM THE PLUGIN
   public function APL_handler_export()
   {
+    $check_ajax_referer = check_ajax_referer("APL_handler_export");
     
+    $ajax_nonce = $_GET['_ajax_nonce'];
+    $filename = $_GET['filename'];
+    
+    $rtnData = new stdClass();
+    $rtnData->_ajax_nonce = $_GET['_ajax_nonce'];
+    $rtnData->action - $_GET['action'];
+    $rtnData->filename = $_GET['filename'];
+    $rtnData->_error = '';
+    
+    echo json_encode($rtnData);
   }
+  /**
+   * <p>Desc: </p>
+   * <ol>
+   *    <li>one</li>
+   *    <li>two</li>
+   *    <li>three</li>
+   * </ol>
+   * @since 0.2.0
+   */
+  public function APL_handler_save_settings()
+  {
+    
+    $check_ajax_referer0 = check_ajax_referer("APL_handler_save_settings");
+    $dataRtn = new stdClass();
+    $dataRtn->error = '';
+    
+    $APLOptions = $this->APL_options_load();
+    $APLOptions['delete_core_db'] = $_POST['deleteDb'];
+    
+    $this->APL_options_save($APLOptions);
+    
+    echo json_encode($dataRtn);
+  }
+  
 
   /**
    * Name: APL save preset ajax action handler
@@ -530,7 +600,7 @@ class APLCore
    */
   public function APL_handler_save_preset()
   {
-
+    
     //STEP 1
     check_ajax_referer("APL_handler_save_preset");
 
@@ -584,9 +654,8 @@ class APLCore
     $preset_db->_preset_db = $valArr;
     //STEP 5
     $preset_db->options_save_db();
-    //$APLOptions['preset_arr'] = json_encode($valArr);
     //STEP 6
-    $APLOptions['delete_core_db'] = $_POST['doCleanup'];
+    //$APLOptions['delete_core_db'] = $_POST['doCleanup'];
     $this->APL_options_save($APLOptions);
 
     //STEP 7
@@ -655,7 +724,8 @@ class APLCore
     check_ajax_referer("APL_handler_restore_preset");
 
     //STEP 2
-    $presetDbObj = $tmpDbObj = new APLPresetDbObj('default');
+    $presetDbObj = new APLPresetDbObj('default');
+    $tmpDbObj = new APLPresetDbObj('default');
 
     //STEP 3
     $tmpDbObj->set_to_defaults();
@@ -789,7 +859,7 @@ class APLCore
      */
     //get current page data that the post-list is displaying on
     global $post;
-    if ($presetObj->_postExcludeCurrent == true)
+    if ($presetObj->_postExcludeCurrent == 'true')
     {
       $excludeList = $post->ID;
     }
