@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
 Tested up to: 3.4
-Stable tag: 0.3.b4
+Stable tag: 0.3.b5
 
 Create custom post lists with easy to use advanced settings. Highly customizable 
 for designing unique post-list designs.
@@ -111,6 +111,24 @@ page/post (e.g. [post_list name='some-preset-name])'
 
 == Changelog ==
 
+= 0.3.b5 =
+
+* Added ‘Any/All’ term setting to taxonomies.
+* Changed ‘Post Status’ filter to carry multiple values.
+* Added User/Visitor Permissions.
+* Added Author filter.
+* Added Ignore Sticky Posts filter.
+* Added Exclude Posts filter.
+* Added Exclude Duplicate Posts from Current Page setting.
+* Added an Exit Message.
+* Added database upgrade for 0.3.beta5.
+* Changed Admin Dialogs.
+* Fixed Post Status grabbing private content.
+* Fixed duplicate posts bug.
+* Changed jQuery register script location.
+* Added additional support to scripts.
+* Added empty index.php files to all folders.
+
 = 0.3.b4 =
 
 * Fixed dynamics with post lists with 'Include Terms' within taxonomy and 'Current Page' post parent.
@@ -173,6 +191,10 @@ page/post (e.g. [post_list name='some-preset-name])'
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.3.b5 =
+Beta Version. Beta 5 has another database upgrade, so it is recommended you backup your data, and use a test site first. No issues with the database have been posted.
+Contains additional filter settings that are built-in the WP_Query params, and added a couple custom function. Also fixed a few issues. Look at the changelog for more details.
 
 = 0.3.b4 =
 Beta Version. It is recommended you backup, but no issues with the database have been posted.
