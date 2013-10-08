@@ -316,7 +316,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         <h2>Advanced Post List - Settings</h2>
     </div>
     <div style="float: right; margin-right: 25px;" >
-        <h3>Plugin Page (<a href="http://ekojr.com/advanced-post-list/" title="Author's site" target="_new">Plugin Page</a> / <a href="http://wordpress.org/extend/plugins/advanced-post-list/" title="Default Plugin Page" target="_new">Wordpress</a>)</h3>
+        <h3>Plugin Page (<a href="http://wordpress.org/extend/plugins/advanced-post-list/" title="Default Plugin Page" target="_new">Wordpress</a> / <a href="https://github.com/EkoJr/wp-advanced-post-list" title="" target="_new">GitHub</a> / <a href="https://github.com/EkoJr/wp-advanced-post-list/issues" title="" target="_new">Report an Issue</a>)</h3>
     </div>
 </div>
 <br style="clear:left"/>

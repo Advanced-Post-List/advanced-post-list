@@ -8,11 +8,14 @@ jQuery(document).ready(function($)
     var postTax_parent_selector = apl_admin_ui_settings.postTax_parent_selector;
 
     
-
+    // Sets everything up inside the accordian divider
+    //  -Parent Selector (MultiSelect)
+    //  -Category & Tag UI Tabs
+    //  -3 Checks (Possibly move to APL-admin.js)
     for (var post_type_name in postTax)
     {
         
-
+        //Sets the MultiSelect Post Parent Selector
         $("#slctParentSelector-" + post_type_name).multiselect({
             noneSelectedText: "Select Parent",
             selectedText: "# of # pages selected",
@@ -20,60 +23,65 @@ jQuery(document).ready(function($)
             height: 192,
             buttonWidth:230,
             menuWidth:275,
+            
+            //Function for when an option is clicked and update/refreshed the element
             click: function(event, ui)
             {
-                if (ui.value === "0")
+                
+                for (var post_type in post_types)
                 {
-                    for (var post_type in post_types)
+                    // GET/INIT Parent IDs array
+                    var parentIDs =  $("#slctParentSelector-" + post_type).val();
+                    if (parentIDs === null)
                     {
-                        var parentIDs =  $("#slctParentSelector-" + post_type).val();
-                        if (parentIDs == null)
-                        {
-                            parentIDs = new Array();
-                        }
-                        var tmp_array = new Array();
-                        var a3 = parentIDs.length;
-                        if (ui.checked == true)
-                        {
-                            tmp_array = parentIDs;
-                            tmp_array[a3] = "0";
-                            $("#slctParentSelector-" + post_type).val(tmp_array);
-                        }
-                        else
-                        {
-                            var i = 0;
-                            for (var parent_index in parentIDs)
-                            {
-                                
-                                if (parentIDs[parent_index] !== "0")
-                                {
-                                    tmp_array[i] = parentIDs[parent_index];
-                                    i++
-                                }
-                                
-                            }
-                            $("#slctParentSelector-" + post_type).val(tmp_array);
-                        }
-                        $("#slctParentSelector-" + post_type).multiselect('refresh');
+                        parentIDs = new Array();
                     }
-                }
+                    // INIT Temp Array to replace Parent Selector
+                    var tmp_array = new Array();
+                    
+                    //Going to add clicked value
+                    if (ui.checked === true)
+                    {
+                        tmp_array = parentIDs;
+                        //Add the value at the end of the Array
+                        tmp_array[parentIDs.length] = ui.value;
+                    }
+                    //Going to withhold clicked value
+                    else
+                    {
+                        var i = 0;
+                        for (var parent_index in parentIDs)
+                        {
+                            //Prevent the value from being copied to the array
+                            if (parentIDs[parent_index] !== ui.value)
+                            {
+                                tmp_array[i] = parentIDs[parent_index];
+                                i++;
+                            }
+                        }
+                    }
+                    $("#slctParentSelector-" + post_type).val(tmp_array);
+                    $("#slctParentSelector-" + post_type).multiselect('refresh');
+                }                    
             }//END of click function
         });//END of multiselect
         
-        if (postTax_parent_selector[post_type_name]['hierarchical'] == false)
+        //Disables the Parent Selector/MultiSelect if the Post Type is non-heirarchical/posts
+        if (postTax_parent_selector[post_type_name]['hierarchical'] === false)
         {
             $("#slctParentSelector-" + post_type_name).multiselect("disable");
         }
 
         //$( "#chkReq-" + post_type_name ).button();
         //$( "#chkIncld-" + post_type_name ).button();
-
+        
+        // Sets up the Categories UI Tabs
         $("#tabs-" + post_type_name + '-cats').tabs();
         $('#tabs-' + post_type_name + '-cats').children().each(function(index, domEle)
         {
             var div_size = $(this).parent().height();
             
-            if (index != 0)
+            if (index !== 0)
             {
                 var tab_size =  $(this).parent().children().first().height();
                 var change = div_size - tab_size;
@@ -86,12 +94,14 @@ jQuery(document).ready(function($)
                 
             }
         });
+        
+        // Sets up the Tags UI Tabs
         $("#tabs-" + post_type_name + '-tags').tabs();
         $('#tabs-' + post_type_name + '-tags').children().each(function(index, domEle)
         {
             var div_size = $(this).parent().height();
 
-            if (index != 0)
+            if (index !== 0)
             {
                 var tab_size =  $(this).parent().children().first().height();
                 var change = div_size - tab_size;
@@ -155,24 +165,6 @@ jQuery(document).ready(function($)
         }
     }//END of foreach post_type
 
-    $("#slctOrderBy").multiselect({
-        multiple: false,
-        header: false,
-        noneSelectedText: "Select an Option",
-        selectedList: 1,
-        buttonWidth: 132,
-        menuWidth: 192
-    });
-    $("#slctOrder").multiselect({
-        multiple: false,
-        header: false,
-        noneSelectedText: "Select an Option",
-        selectedList: 1,
-        buttonWidth: 128,
-        menuWidth: 160,
-        height: 69
-    });
-    
     $("#cboPostVisibility").multiselect({
         header: false,
         noneSelectedText: "1 Req.",
@@ -180,9 +172,47 @@ jQuery(document).ready(function($)
         buttonWidth: 96,
         menuWidth: 128,
         height: 69,
-        close:function(event,ui){
+        
+        click:function(event, ui)
+        {
+            var elemCbo = $("#cboPostVisibility").val();
+            if (elemCbo === null)
+            {
+                elemCbo = new Array();
+            }
+            var tmp_array = new Array();
+            
+            if (ui.checked === true)
+            {
+                tmp_array = elemCbo;
+                //Add the value at the end of the Array
+                tmp_array[elemCbo.length] = ui.value;
+            }
+            else 
+            {
+                var i = 0;
+                for (var elemCbo_index in elemCbo)
+                {
+                    //Prevent the value from being copied to the array
+                    if (elemCbo[elemCbo_index] !== ui.value)
+                    {
+                        tmp_array[i] = elemCbo[elemCbo_index];
+                        i++;
+                    }
+                }
+            }
+
+            $("#cboPostVisibility").val(tmp_array);
+            $("#cboPostVisibility").multiselect('refresh');
+            
+            
+        },
+                
+        //Prevents an empty value to be stored. At least 1 option must be selected
+        close:function(event,ui)
+        {
             var values = $("#cboPostVisibility").val();
-            if (values == null)
+            if (values === null)
             {
                 var default_value = new Array('public');
                 $("#cboPostVisibility").val(default_value);
@@ -195,17 +225,44 @@ jQuery(document).ready(function($)
         noneSelectedText: "Any",
         selectedList: 1,
         buttonWidth: 128,
-        menuWidth: 160
+        menuWidth: 160,
+        
+        click:function(event, ui)
+        {
+            var elemCbo = $("#cboPostStatus").val();
+            if (elemCbo === null)
+            {
+                elemCbo = new Array();
+            }
+            var tmp_array = new Array();
+            
+            if (ui.checked === true)
+            {
+                tmp_array = elemCbo;
+                //Add the value at the end of the Array
+                tmp_array[elemCbo.length] = ui.value;
+            }
+            else 
+            {
+                var i = 0;
+                for (var elemCbo_index in elemCbo)
+                {
+                    //Prevent the value from being copied to the array
+                    if (elemCbo[elemCbo_index] !== ui.value)
+                    {
+                        tmp_array[i] = elemCbo[elemCbo_index];
+                        i++;
+                    }
+                }
+            }
+
+            $("#cboPostStatus").val(tmp_array);
+            $("#cboPostStatus").multiselect('refresh');
+            
+            
+        }
     });
-    $("#slctUserPerm").multiselect({
-        multiple: false,
-        header: false,
-        noneSelectedText: false,
-        selectedList: 1,
-        buttonWidth: 96,
-        menuWidth: 128,
-        height: 69
-    });
+
     $("#slctAuthorOperator").multiselect({
         multiple: false,
         header: false,
@@ -215,7 +272,7 @@ jQuery(document).ready(function($)
         height:96,
         click:function(event, ui){
 
-            if (ui.value == "none")
+            if (ui.value === "none")
             {
                 var newArr = new Array();
                 $("#cboAuthorIDs").val(newArr);
@@ -226,6 +283,8 @@ jQuery(document).ready(function($)
             {
                 $("#cboAuthorIDs").multiselect("enable");
             }
+            $("#slctAuthorOperator").val(ui.value);
+            $("#slctAuthorOperator").multiselect('refresh');
         }
     });
     $("#cboAuthorIDs").multiselect({
@@ -233,10 +292,98 @@ jQuery(document).ready(function($)
         noneSelectedText: '-None-',
         selectedList: 1,
         buttonWidth: 128,
-        menuWidth: 256
+        menuWidth: 256,
+        
+        click:function(event, ui)
+        {
+            var elemCbo = $("#cboAuthorIDs").val();
+            if (elemCbo === null)
+            {
+                elemCbo = new Array();
+            }
+            var tmp_array = new Array();
+            
+            if (ui.checked === true)
+            {
+                tmp_array = elemCbo;
+                //Add the value at the end of the Array
+                tmp_array[elemCbo.length] = ui.value;
+            }
+            else 
+            {
+                var i = 0;
+                for (var elemCbo_index in elemCbo)
+                {
+                    //Prevent the value from being copied to the array
+                    if (elemCbo[elemCbo_index] !== ui.value)
+                    {
+                        tmp_array[i] = elemCbo[elemCbo_index];
+                        i++;
+                    }
+                }
+            }
+
+            $("#cboAuthorIDs").val(tmp_array);
+            $("#cboAuthorIDs").multiselect('refresh');
+        }
     });
     $("#cboAuthorIDs").multiselect("disable");
 
+    $("#slctUserPerm").multiselect({
+        multiple: false,
+        header: false,
+        noneSelectedText: false,
+        selectedList: 1,
+        buttonWidth: 96,
+        menuWidth: 128,
+        height: 69,
+        
+        click:function(event, ui)
+        {
+            $("#slctUserPerm").val(ui.value);
+            $("#slctUserPerm").multiselect('refresh');
+        }
+    });
+
+    //(ELEMENT - Exclude Post IDs)
+    
+    //(ELEMENT - List Amount)
+
+    $("#slctOrderBy").multiselect({
+        multiple: false,
+        header: false,
+        noneSelectedText: "Select an Option",
+        selectedList: 1,
+        buttonWidth: 132,
+        menuWidth: 192,
+        
+        click:function(event, ui)
+        {
+            $("#slctOrderBy").val(ui.value);
+            $("#slctOrderBy").multiselect('refresh');
+        }
+    });
+    $("#slctOrder").multiselect({
+        multiple: false,
+        header: false,
+        noneSelectedText: "Select an Option",
+        selectedList: 1,
+        buttonWidth: 128,
+        menuWidth: 160,
+        height: 69,
+        
+        click:function(event, ui)
+        {
+            $("#slctOrder").val(ui.value);
+            $("#slctOrder").multiselect('refresh');
+        }
+    });
+
+    //(ELEMENT - Ignore Sticky Posts)
+    
+    //(ELEMENT - Exclude Current Post)
+    
+    //(ELEMENT - Exclude Duplicates from Current Post)
 
 
     $("#btnSavePreset").button();
@@ -244,7 +391,7 @@ jQuery(document).ready(function($)
     $("#btnExport").button();
     $("#btnImport").button();
     $("#btnRestorePreset").button();
-    $(".info10").click(function()
+    $("#info10").click(function()
     {
         $("#d10").dialog({ width: 640, height: 480 });
     });
@@ -272,11 +419,13 @@ jQuery(document).ready(function($)
     {
         $("#d16").dialog({ width: 640 });
     });
-    $("#divCustomPostTaxonomyContent").accordion();
+    $("#divCustomPostTaxonomyContent").accordion({
+        icons: false
+    });
     $("#divCustomPostTaxonomyContent").children().each(function(index, domEle)
     {
 
-        if(domEle.localName == 'div')
+        if(domEle.localName === 'div')
         {
             $(domEle).height(356);
         }

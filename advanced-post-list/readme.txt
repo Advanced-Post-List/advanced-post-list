@@ -3,15 +3,17 @@ Contributors: EkoJr
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4VQ6NF4CQ&lc=US&item_name=Wordpress%20%2d%20Advanced%20Post%20List&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
-Tested up to: 3.5
-Stable tag: 0.3.b6
+Tested up to: 3.7
+Stable tag: 0.3.b7
 
 Create custom post lists with easy to use advanced settings. Highly customizable 
 for designing unique post-list designs.
 
 == Description ==
 [wordpress kalins post list]: http://wordpress.org/extend/plugins/kalins-post-list/
-		"Kalin's plugin page"
+		"Kalin's plugin"
+[github issues]: https://github.com/EkoJr/wp-advanced-post-list/issues
+		"Report any bugs here"
 
 Highly customizable plugin for designing a large variety of post lists. Allowing 
 the Webmaster to create any design for displaying Recent Posts, Related Posts, 
@@ -25,6 +27,9 @@ added to further reach alternate methods of displaying posts.
 
 When designing site with better navigation. This plugin accomplishes 3 main 
 tasks when displaying the site’s content through various lists.
+
+Discovered a bug or a feature? Please submit issues at [GitHub's version][github issues] 
+for ticket handling and contributors.
 
 **Content of the post list**
 
@@ -94,23 +99,27 @@ new layout to accommodate for the extra tools that will be added.
 == Frequently Asked Questions ==
 
 = Where is the settings page? =
-Inside your admin dashboard under Setting->Admin Post List.
+Inside your admin dashboard under Settings->Admin Post List.
 
 = How do I display the post list that I created? =
 You need to locate and copy the shortcode which is in the Advance Post List - Settings 
 page on the saved preset table. Then create a page/post and paste the shortcode on your 
-page/post (e.g. [post_list name='some-preset-name])' 
+page/post (e.g. [post_list name='some-preset-name'])
 
 
 == Screenshots ==
-1. Advanced Post List admin page.
-2. Displays an example of what the created preset will look like.
-3. Saved Post List table. Now you can download individual presets.
-4. Easy to use shortcodes to add to your page/post.
-5. Preset in action.
-6. Export or import your plugin database data.
+1. A few samples of the plugin.
+2. Insert saved presets via shortcodes to display it on a page/post.
+3. A basic view of the Admin UI
+4. General options and support.
 
 == Changelog ==
+
+= 0.3.b7 =
+* Fixed Admin UI Multiselect jQuery plugin not closing.
+* Fixed Multiselect not updating values.
+* Changed Links in the Settings page.
+* Changed Screenshots.
 
 = 0.3.b6 =
 * Fixed 'Maximum execution time of 30 seconds exceeded'.
@@ -211,8 +220,13 @@ page/post (e.g. [post_list name='some-preset-name])'
 
 == Upgrade Notice ==
 
+= 0.3.b7 =
+Beta Version. If upgrading from 0.2, make sure you back up the plugin data and/or 
+website. This update includes a couple major and blocker bugs to the Admin UI.
+Further testing is required before releasing the stable version.
+
 = 0.3.b6 =
-(Possible) Final Beta Version. As always, make sure you back up your website since 
+Beta Version. As always, make sure you back up your website since 
 0.3 has a couple of database updates. This version fixes some critical issues when 
 being used on a large site. Fixes to the Backup feature have also been included in
 this.

@@ -61,7 +61,13 @@
     cursor: help;
     font-size: 75%
 }
+
 /*
+.ui-accordion-header { cursor: none; }
+
+.ui-accordion-header { padding-left: 0 }
+
+
 .ui-button { margin-left: -1px; }
 
 .ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; }

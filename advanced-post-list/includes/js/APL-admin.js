@@ -407,7 +407,7 @@ jQuery(document).ready(function($){
                 }
 
 
-                if (require_taxonomy[taxonomy_name]['count'] < 2 && require_terms == true && include_terms == false)
+                if (require_taxonomy[taxonomy_name]['count'] < 2 && require_terms === true && include_terms === false)
                 {
                     $( "#d03" ).dialog({
                         resizable: false,
