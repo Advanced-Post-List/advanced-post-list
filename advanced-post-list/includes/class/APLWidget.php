@@ -1,13 +1,12 @@
 <?php
 class APLWidget extends WP_Widget
 {
-
   function __construct()
   {
 //    $widget_ops = array('classname' => 'widget_KalinsPostList', 'description' => __("Display a customized list of posts or pages"));
 //    $this->WP_Widget('kalinsPostList', __("Kalin's Post List"), $widget_ops);
     $widget_ops = array('classname' => 'widget_APL', 'description' => __("Display a customized list of posts or pages"));
-    $this->WP_Widget('advancedPostList', __("Advanced Post List"), $widget_ops);
+    $this->WP_Widget('advancedPostList', __("Advanced Post List"), $widget_ops);    
   }
 
   // This code displays the widget on the screen.
@@ -33,27 +32,29 @@ class APLWidget extends WP_Widget
 
   function form($instance)
   {
-
-    $adminOptions = kalinsPost_get_admin_options();
-    $presetArr = json_decode($adminOptions["preset_arr"]);
+    
+  	$APLOptions = get_option('APL_preset_db-default');
 
     echo '<div>';
     echo '<label for="' . $this->get_field_id("title") . '">Title:</label>';
     echo '<input type="text" class="widefat" ';
     echo 'name="' . $this->get_field_name("title") . '" ';
     echo 'id="' . $this->get_field_id("title") . '" ';
-    echo 'value="' . $instance["title"] . '" /><br/><br/>';
-
+    if(isset($instance["title"])){
+    	echo 'value="' . $instance["title"] . '"' ;
+    }
+    echo '/><br/><br/>';
+    
     echo '<label for="' . $this->get_field_id("k_preset") . '">Preset Name:</ label>';
     echo '<select class="widefat" ';
     echo 'name="' . $this->get_field_name("k_preset") . '" ';
     echo 'id="' . $this->get_field_id("k_preset") . '" >';
 
-    $selectVal = $instance['k_preset'];
+    //$selectVal = $instance['k_preset'];
 
-    foreach ($presetArr as $key => $value)
+    foreach ($APLOptions->_preset_db as $key => $value)
     {
-      if ($key == $instance['k_preset'])
+      if (isset($instance['k_preset']) && $key == $instance['k_preset'])
       {
         echo '<option value="' . $key . '" selected="yes" >' . $key . '</ option>';
       }
