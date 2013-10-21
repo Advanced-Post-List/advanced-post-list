@@ -19,6 +19,8 @@ class APLWidget extends WP_Widget
       echo $before_title . $instance['title'] . $after_title;
     }
 
+	//Old function for displaying post lists? It's...
+	//APLCore::APL_display($preset_name);
     kalinsPost_show($instance['k_preset']);
 
     echo $after_widget;
@@ -33,7 +35,7 @@ class APLWidget extends WP_Widget
   function form($instance)
   {
     
-  	$APLOptions = get_option('APL_preset_db-default');
+  	$APLPresetDbObj = new APLPresetDbObj('default');
 
     echo '<div>';
     echo '<label for="' . $this->get_field_id("title") . '">Title:</label>';
@@ -52,7 +54,7 @@ class APLWidget extends WP_Widget
 
     //$selectVal = $instance['k_preset'];
 
-    foreach ($APLOptions->_preset_db as $key => $value)
+    foreach ($APLPresetDbObj->_preset_db as $key => $value)
     {
       if (isset($instance['k_preset']) && $key == $instance['k_preset'])
       {
@@ -65,8 +67,8 @@ class APLWidget extends WP_Widget
     }
 
     echo '</select><br/><br/></div>';
-  }
+  }// end function form
 
-// end function form
+
 }
 ?>
