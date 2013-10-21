@@ -3,10 +3,18 @@ class APLWidget extends WP_Widget
 {
   function __construct()
   {
-//    $widget_ops = array('classname' => 'widget_KalinsPostList', 'description' => __("Display a customized list of posts or pages"));
-//    $this->WP_Widget('kalinsPostList', __("Kalin's Post List"), $widget_ops);
-    $widget_ops = array('classname' => 'widget_APL', 'description' => __("Display a customized list of posts or pages"));
-    $this->WP_Widget('advancedPostList', __("Advanced Post List"), $widget_ops);    
+    
+    //STEP 1
+    //init
+    $id_base        = 'advanced-post-list_default';
+    $name           = __('Advanced Post Lists', 'APL-text_domain');
+    $widget_options = array('description' => __( 'Display preset post lists', 'APL-text_domain' ));
+    //$control_options = array();
+    
+    //STEP 2
+    //Use Parent/WP_Widget's constructor
+    parent::__construct($id_base, $name, $widget_options);
+       
   }
 
   // This code displays the widget on the screen.
