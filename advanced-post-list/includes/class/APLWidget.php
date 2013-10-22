@@ -20,6 +20,7 @@ class APLWidget extends WP_Widget
   // This code displays the widget on the screen.
   function widget($args, $instance)
   {
+    global $advanced_post_list;
     extract($args);
     echo $before_widget;
     if (!empty($instance['title']))
@@ -29,7 +30,8 @@ class APLWidget extends WP_Widget
 
 	//Old function for displaying post lists? It's...
 	//APLCore::APL_display($preset_name);
-    kalinsPost_show($instance['k_preset']);
+    //kalinsPost_show($instance['k_preset']);
+	echo $advanced_post_list->APL_display($instance['k_preset']);
 
     echo $after_widget;
   }
