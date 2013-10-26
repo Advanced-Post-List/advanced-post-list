@@ -774,6 +774,11 @@ class APLCore
       [label] => string
       )
      */
+    
+    //TODO Change this possibly...being too clever. Use wp_list_pluck( $list, $field )
+    //      to keep the same concept.
+    //Note: This was put into place while trying to fix a memory leak. Cool idea,
+    //       but there is no 'need' for this.
     private function APL_get_post_types($attr_names = array())
     {
         $rtnObj = array();

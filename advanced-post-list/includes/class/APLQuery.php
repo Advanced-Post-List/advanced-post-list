@@ -2,8 +2,15 @@
 //TODO COMPLETELY REDO THIS CLASS AND SET IT UP TO HAVE A HANDLER AND CHILD CLASS
 //PLEASE NOTE: MAKING A CHILD CLASS OF WP_QUERY MAY BE SOMETHING RESERVED LATER 
 //  FOR PREMIUM USE. THE OPTION IS STILL UP FOR DEBATE, BUT IF FOLLOWED THROUGH
-//  SOME FEATURES MAY REQUIRE CONSTANT SUPPORT.
+//  SOME FEATURES MAY REQUIRE CONTINUAL SUPPORT.
+//LIST OF POSSIBLE FIXES AND FEATURES EXTENDING COULD OFFER
+// * Better sticky support
+// * Can add additional sorting methods
 
+class WP_Query_child extends WP_Query
+{
+    
+}
 class APLQuery
 {
     /**
@@ -33,9 +40,41 @@ class APLQuery
      * <li value="2"></li>
      * </ol>
      */
-    public function __construct($presetObj)
+    
+    
+    //// Notes for apl_query_mod Oct 2013 ////
+    
+    //Name: Constructor
+    //1) Store/set query settings from the presetObj to be used for WP_Query
+    //2) Query Posts
+    //3) Return ??? - Final WP_Query object, Posts Array
+    //   OR Set - Posts
+    
+    //Name: Set Query 
+    //1) For each post type, do step 2
+    //2) Set query according to taxonomies/terms and other params
+    //3) Set any global variable
+    //4) Return query string/array/object
+    //
+    //REF: (wp_query_ref) https://gist.github.com/luetkemj/2023628
+    //
+    
+    //Name: Query Posts
+    //1) For each post type, do step 2
+    //2) Get post according to taxonomies/terms and other params
+    //3) Check 
+    //
+    
+    private function set_query()
     {
         
+        
+        
+        
+    }
+    public function __construct($presetObj)
+    {
+        //Get the appropriet 
         $post_type_names = get_post_types('',
                                           'names');
         $skip_post_types = array('attachment', 'revision', 'nav_menu_item');
@@ -68,6 +107,8 @@ class APLQuery
         
         $public_posts = array();
         $private_posts = array();
+        //WHY IS THIS HERE?!? Why do they need to be split? Is it because of
+        // issues combining the two?
         foreach ($presetObj->_postVisibility as $visible)
         {
             if ($visible === 'private')
