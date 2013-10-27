@@ -84,22 +84,22 @@ class APLQuery
         //This construct allows you to query multiple taxonomies by using the 
         // relation parameter in the first (outer) array to describe the boolean 
         // relationship between the taxonomy queries.
-        'tax_query' => array(                   //(array) - use taxonomy parameters (available with Version 3.1).
-        'relation' => 'OR',                     //(string) - Possible values are 'AND' or 'OR' and is the equivalent of ruuning a JOIN for each taxonomy
-          array(
-            'taxonomy' => 'color',              //(string) - Taxonomy.
-            'field' => 'id',                    //ID//(string) - Select taxonomy term by ('id' or 'slug')
-            'terms' => array( 103, 115, 206 ),  //ARRAY(INT)//(int/string/array) - Taxonomy term(s).
-            'include_children' => false,        //FALSE     //(bool) - Whether or not to include children for hierarchical taxonomies. Defaults to true.
-            'operator' => 'IN'                  //IN        //(string) - Operator to test. Possible values are 'IN', 'NOT IN', 'AND'.
-          ),
-          array(
-            'taxonomy' => 'actor',
-            'field' => 'id',
-            'terms' => array( 103, 115, 206 ),
-            'include_children' => false,
-            'operator' => 'AND'
-          )
+        'tax_query' => array(                       //(array) - use taxonomy parameters (available with Version 3.1).
+            'relation' => 'OR',                     //(string) - Possible values are 'AND' or 'OR' and is the equivalent of ruuning a JOIN for each taxonomy
+            array(
+                'taxonomy' => 'color',              //(string) - Taxonomy.
+                'field' => 'id',                    //ID//(string) - Select taxonomy term by ('id' or 'slug')
+                'terms' => array( 103, 115, 206 ),  //ARRAY(INT)//(int/string/array) - Taxonomy term(s).
+                'include_children' => false,        //FALSE     //(bool) - Whether or not to include children for hierarchical taxonomies. Defaults to true.
+                'operator' => 'IN'                  //IN        //(string) - Operator to test. Possible values are 'IN', 'NOT IN', 'AND'.
+            ),
+            array(
+                'taxonomy' => 'actor',
+                'field' => 'id',
+                'terms' => array( 103, 115, 206 ),
+                'include_children' => false,
+                'operator' => 'AND'
+             )
         ),
 
     //////Post & Page Parameters - Display content based on post and page parameters.
@@ -182,6 +182,7 @@ class APLQuery
 
 
     //////Time Parameters - Show posts associated with a certain time period.
+        //NOTE: May need meta_query
         'year' => 2012,                         //(int) - 4 digit year (e.g. 2011).
         'monthnum' => 3,                        //(int) - Month number (from 1 to 12).
         'w' =>  25,                             //(int) - Week of the year (from 0 to 53). Uses the MySQL WEEK command. The mode is dependenon the "start_of_week" option.
@@ -228,10 +229,12 @@ class APLQuery
         //author
         //page_id
         //status
+        //sort
         
         //what requires additional queries?
         //Post Types
         //Req Taxonomies
+        //Private (do last to dup)
         
         
         return $query_str_array;
@@ -240,7 +243,11 @@ class APLQuery
     {
         
         //if there is more than one query string
-        //then repeat this.
+        // then repeat this.
+        //Needs a custom post__not_in design. This will enable the use to include
+        // and exclude posts/pages with exclude being done manually.
+        //
+        //
         
     }
     public function __construct($presetObj)
@@ -287,7 +294,7 @@ class APLQuery
         // issues combining the two?
         //Post Status Filter
         // There's post_status, but there is also 'post_status visibility'. All
-        // the values can't cross reference eachother except for 'private' (and public).
+        // the values can't be cross referenced except for 'private' (and public).
         // The problem is, you have to create an additional query if both public
         // and private is selected from the APL Admin UI, because there is no 
         // 'public' value. Only the 'private' value, and in turn acts as a switch.
@@ -347,6 +354,7 @@ class APLQuery
         
         //// SORT
         //THIS IS SIMPLE BUT EFFECTIVE WAY TO SORT ALL THE POSTS
+        // Also pretty unnessecary and garbage.
         $tmp_posts = array();
         $tmp_count = 0;
         
