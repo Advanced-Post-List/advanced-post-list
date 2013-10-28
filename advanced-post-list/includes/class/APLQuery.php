@@ -16,6 +16,7 @@ class APLQuery
     /**
      * @var array
      * @since 0.3.0
+     * @todo Remove this...
      */
     public $_posts;
     /**
@@ -224,16 +225,86 @@ class APLQuery
     private function set_query($presetObj)
     {
         $query_str_array = array();
+        //\\vv  EXAMPLE  vv////
+        $arg_example = array(
+            'author' => '1,2,-3,',//this will need to be passed to other queries
+            'tax_query' => array(
+                'relation' => 'OR',
+                array(
+                    'taxonomy' => 'color',
+                    'field' => 'id',
+                    'terms' => array( 103, 115, 206 ),
+                    'include_children' => false,
+                    'operator' => 'IN'
+                ),
+                array(
+                    'taxonomy' => 'actor',
+                    'field' => 'id',
+                    'terms' => array( 103, 115, 206 ),
+                    'include_children' => false,
+                    'operator' => 'AND'
+                 )
+            ),
+            'post_parent' => 1,
+            'post__in' => array(1,2,3),
+            'post__not_in' => array(1,2,3),//DO NOT USE - there will be a manual function at the end
+            'post_type' => array(//Passes remaining post types
+                    'post',
+                    'page',
+                    'revision',
+                    'attachment',
+                    'my-custom-post-type',
+                    ),
+            'post_status' => array(//passed
+                    'publish',
+                    'pending',
+                    'draft',
+                    'auto-draft',
+                    'future',
+                    'private',
+                    'inherit',
+                    'trash'
+                    ),
+            'nopaging' => true,//Final or ALL
+            'order' => 'DESC',//Final or Pass for trimmings?
+            'orderby' => 'date',//Final or Pass for trimmings?
+            'ignore_sticky_posts' => false,//Maybe Final, or may be passed
+            'perm' => 'readable',//Passed
+            
+        );////^^  EXAMPLE  ^^\\//
         
-        //start with values that carry across all strings
+        
+        
+        //foreach post type
+        //  (catch array) if there exists another (post_type) string, do this function, and send remaining strings
+        //if there is a page parent (including current). Set ID
+        //  (catch array) if there is more parents, do this function, and send remaining IDs
+        //foreach taxonomy
+        //  Check if require taxonomy is selected
+        //  Add terms
+        //  Check if required terms is selected
+        //  Check if include current page is selected, and taxonomy matches. Add terms if any.
+        //
+        //Fill in query
+        //
+        //Set public or private
+        // if both are selected, just duplicate 
+        //
+        
+        
+        
+        //PASSED - start with values that are passed across all strings
         //author
         //page_id
         //status
         //sort
+        //FINAL
+        //
+        //
         
         //what requires additional queries?
         //Post Types
-        //Req Taxonomies
+        //Parent
         //Private (do last to dup)
         
         
@@ -243,16 +314,27 @@ class APLQuery
     {
         
         //if there is more than one query string
-        // then repeat this.
+        // (Catch IDs) then repeat this.
+        //Include any IDs
+        //Use Wp_Query
         //Needs a custom post__not_in design. This will enable the use to include
         // and exclude posts/pages with exclude being done manually.
+        //Return all post/page IDs if $repeated is TRUE
+        //Return WP_Query Object
         //
+        
+    }
+    private function post__not_in()
+    {
+        
+        //for each exclude ID
+        // if ID maches posts, then unset
         //
         
     }
     public function __construct($presetObj)
     {
-        
+        var_dump($presetObj);
         $query_str_array = $this->set_query($presetObj);
         
         //Get the correct/useable post types 
