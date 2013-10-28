@@ -220,11 +220,53 @@ class APLQuery
     );
     }
     
+//  object(APLPresetObj)[282]
+//  public '_postParents' => 
+//    array (size=1)
+//      0 => string '26' (length=2)
+//  public '_postTax' => 
+//    object(stdClass)[283]
+//      public 'post' => 
+//        object(stdClass)[284]
+//          public 'taxonomies' => 
+//            object(stdClass)[285]
+//              ...
+//      public 'cpt02' => 
+//        object(stdClass)[288]
+//          public 'taxonomies' => 
+//            object(stdClass)[289]
+//              ...
+//  public '_listCount' => int 5
+//  public '_listOrderBy' => string 'date' (length=4)
+//  public '_listOrder' => string 'DESC' (length=4)
+//  public '_postVisibility' => 
+//    array (size=1)
+//      0 => string 'public' (length=6)
+//  public '_postStatus' => 
+//    array (size=1)
+//      0 => string 'publish' (length=7)
+//  public '_userPerm' => string 'readable' (length=8)
+//  public '_postAuthorOperator' => string 'include' (length=7)
+//  public '_postAuthorIDs' => 
+//    array (size=0)
+//      empty
+//  public '_listIgnoreSticky' => boolean false
+//  public '_listExcludePosts' => 
+//    array (size=1)
+//      0 => int 42
+//  public '_listExcludeDuplicates' => boolean false
+//  public '_listExcludeCurrent' => boolean true
+//  public '_exit' => string '' (length=0)
+//  public '_before' => string '<p><hr/>' (length=8)
+//  public '_content' => string '<a href="[post_permalink]">[post_title]</a> by [post_author] - [post_date]<br/>[post_excerpt]<hr/>' (length=98)
+//  public '_after' => string '</p>' (length=4)
+    
+    
     
     //Create an INIT function to set defaults?
     private function set_query($presetObj)
     {
-        $query_str_array = array();
+        
         //\\vv  EXAMPLE  vv////
         $arg_example = array(
             'author' => '1,2,-3,',//this will need to be passed to other queries
@@ -277,13 +319,13 @@ class APLQuery
         
         //foreach post type
         //  (catch array) if there exists another (post_type) string, do this function, and send remaining strings
-        //if there is a page parent (including current). Set ID
-        //  (catch array) if there is more parents, do this function, and send remaining IDs
-        //foreach taxonomy
-        //  Check if require taxonomy is selected
-        //  Add terms
-        //  Check if required terms is selected
-        //  Check if include current page is selected, and taxonomy matches. Add terms if any.
+        //  if there is a page parent (including current). Set ID
+        //    (catch array) if there is more parents, do this function, and send remaining IDs
+        //  foreach taxonomy
+        //    Check if require taxonomy is selected
+        //    Add terms
+        //    Check if required terms is selected
+        //    Check if include current page is selected, and taxonomy matches. Add terms if any.
         //
         //Fill in query
         //
@@ -291,8 +333,51 @@ class APLQuery
         // if both are selected, just duplicate 
         //
         
+        $a1 ='';
+        $query_str_arrays = array();//array(array) - Multi-Dimensional
+        $query_str = array(); 
         
+        foreach ($presetObj->_postTax as $post_type => $post_type_value)
+        {
+            for ($i = 0; $i > sizeof($presetObj->_postParents); $i++)
+            {
+                
+            }
+            foreach ($presetObj->_postParents as $key => $post_id)
+            {
+                //if matches post type then set post parent ID
+                if (has_term('', $taxonomy, $post_id))
+                {
+                    $query_str['post_parent'] = $post_id;
+                    unset($presetObj->_postParents->$key);
+                }
+                //if (!empty())
+                
+                
+                //unset
+                //if not empty, then repeat this function
+                
+            }
+            
+            foreach ($post_type_value->taxonomies as $taxonomy => $taxonomy_value)
+            {
+                
+                if ($taxonomy_value->include_terms === TRUE)
+                {
+                    //check current page if taxonomy matches.
+                }
+                
+            }
+            
+            unset($presetObj->_postTax->$post_type);
+            $query_str_arrays[] = $this->set_query($presetObj);
+            $query_str['post_type'] = $post_type;
+        }
         
+        foreach ($presetObj->_postParents as $parent_index => $parentID)
+        {
+            
+        }
         //PASSED - start with values that are passed across all strings
         //author
         //page_id
@@ -308,7 +393,7 @@ class APLQuery
         //Private (do last to dup)
         
         
-        return $query_str_array;
+        //return $query_str_array;
     }
     private function query($query_str_array, $repeated = FALSE)
     {
@@ -334,8 +419,14 @@ class APLQuery
     }
     public function __construct($presetObj)
     {
-        var_dump($presetObj);
+        //var_dump($presetObj);
         $query_str_array = $this->set_query($presetObj);
+        
+        
+        
+        ////////////////////////////////////////////////////////////////////////
+        //-vv- REMOVE -vv-//////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
         
         //Get the correct/useable post types 
         //-vv- Use this when nothing is selected instead of the 'any' option
