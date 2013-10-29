@@ -261,11 +261,57 @@ class APLQuery
 //  public '_content' => string '<a href="[post_permalink]">[post_title]</a> by [post_author] - [post_date]<br/>[post_excerpt]<hr/>' (length=98)
 //  public '_after' => string '</p>' (length=4)
     
-    
+    private function default_query_str()
+    {
+        $post_type_list = get_post_types('', 'names');
+        $skip_post_types = array('attachment', 'revision', 'nav_menu_item');
+        foreach($skip_post_types as $value)
+        {
+            unset($post_type_list[$value]);
+        }
+        unset($value);
+        unset($skip_post_types);
+
+        //\\vv  EXAMPLE  vv////
+        $arg_example = array(
+            'author' => '',//this will need to be passed to other queries
+            
+            'post__in' => array(1,2,3),
+            'post__not_in' => array(1,2,3),//DO NOT USE - there will be a manual function at the end
+            'post_type' => array(//Passes remaining post types
+                    'post',
+                    'page',
+                    'revision',
+                    'attachment',
+                    'my-custom-post-type',
+                    ),
+            'post_status' => array(//passed
+                    'publish',
+                    'pending',
+                    'draft',
+                    'auto-draft',
+                    'future',
+                    'private',
+                    'inherit',
+                    'trash'
+                    ),
+            
+            'order' => 'DESC',//Final or Pass for trimmings?
+            'orderby' => 'date',//Final or Pass for trimmings?
+            
+            'perm' => 'readable',//Passed
+            
+            'nopaging' => true,//Final or ALL
+            'ignore_sticky_posts' => false,//Maybe Final, or may be passed
+            
+        );////^^  EXAMPLE  ^^\\//
+    }
     
     //Create an INIT function to set defaults?
     private function set_query($presetObj)
     {
+        
+        
         
         //\\vv  EXAMPLE  vv////
         $arg_example = array(
@@ -332,40 +378,94 @@ class APLQuery
         //Set public or private
         // if both are selected, just duplicate 
         //
+        $post_type_list = get_post_types('',
+                                          'names');
+        $skip_post_types = array('attachment', 'revision', 'nav_menu_item');
+        foreach($skip_post_types as $value)
+        {
+            unset($post_type_list[$value]);
+        }
+        unset($value);
+        unset($skip_post_types);
         
         $a1 ='';
         $query_str_arrays = array();//array(array) - Multi-Dimensional
         $query_str = array(); 
         
-        foreach ($presetObj->_postTax as $post_type => $post_type_value)
+        //DON'T USE A FOR LOOP  for post_types
+        //How to get key from object? Hmm
+        //$post_type = key(array);//?
+        //
+        //if (!empty(_postTax) OR Post_parent) //
+        $post_type_key = key((array) $presetObj->_postTax);
+        if ($post_type_key !== null)
         {
+            // add foreach content here
             for ($i = 0; $i > sizeof($presetObj->_postParents); $i++)
             {
                 
-            }
-            foreach ($presetObj->_postParents as $key => $post_id)
-            {
-                //if matches post type then set post parent ID
-                if (has_term('', $taxonomy, $post_id))
+                //if post type matches
+                if (get_post_type($presetObj->_postParents[$i]) == $post_type)
                 {
-                    $query_str['post_parent'] = $post_id;
-                    unset($presetObj->_postParents->$key);
+                    //-vv- This would eliminate the 3 lines of code
+                    //$query_str['post_parent'] = array_shift($presetObj->_postParents);
+                    $query_str['post_parent'] = $presetObj->_postParents[$i];
+                    unset($presetObj->_postParents[$i]);
+                    $presetObj->_postParents = array_values($presetObj->_postParents);
+                    
+                    if ($i > sizeof($presetObj->_postParents)) // +1?
+                    {
+                        //merge array function may be needed
+                        ////$query_str_arrays[] = $this->set_query($presetObj);
+                    }
                 }
-                //if (!empty())
-                
-                
-                //unset
-                //if not empty, then repeat this function
-                
+
             }
+//            foreach ($presetObj->_postParents as $key => $post_id)
+//            {
+//                //if matches post type then set post parent ID
+//                if (has_term('', $taxonomy, $post_id))
+//                {
+//                    $query_str['post_parent'] = $post_id;
+//                    unset($presetObj->_postParents->$key);
+//                }
+//                //if (!empty())
+//                
+//                
+//                //unset
+//                //if not empty, then repeat this function
+//                
+//            }
+//            if (!empty($presetObj->_postParents))
+//            {
+//                //-vv- This would eliminate the next 3 lines of code
+//                //$query_str['post_parent'] = array_shift($presetObj->_postParents);
+//                
+//                $query_str['post_parent'] = $presetObj->_postParents[0];
+//                unset($presetObj->_postParents[0]);
+//                $presetObj->_postParents = array_values($presetObj->_postParents);
+//                
+//                
+//                if (!empty($presetObj->_postParents))
+//                {
+//                    $query_str_arrays[] = $this->set_query($presetObj);
+//                }
+//            }
             
             foreach ($post_type_value->taxonomies as $taxonomy => $taxonomy_value)
             {
                 
+                //check if include current page is selected AND if taxonomy matches.
                 if ($taxonomy_value->include_terms === TRUE)
                 {
-                    //check current page if taxonomy matches.
+                    if (has_term('', $taxonomy, $post_id))
+                    {
+                        //add terms from post's matched taxonomy
+                    }
                 }
+                //Set defaults
+                
+                //if required terms, change IN/OR to AND
                 
             }
             
@@ -373,11 +473,37 @@ class APLQuery
             $query_str_arrays[] = $this->set_query($presetObj);
             $query_str['post_type'] = $post_type;
         }
-        
-        foreach ($presetObj->_postParents as $parent_index => $parentID)
+        elseif (sizeof($presetObj->_postParents) > 0)//catches the remaining
         {
-            
+            if (!empty($query_str['post_parent']))
+            {
+                $this->set_query($presetObj);
+            }
+            elseif (sizeof($query_str['post_parent']) > 1)
+            {
+                $query_str['post_parent'] = $presetObj->_postParents[0];
+                //unset();
+                $this->set_query($presetObj);
+            }
+            else
+            {
+                $query_str['post_parent'] = $presetObj->_postParents[0];
+            }
         }
+        else
+        {
+            return;
+        }
+        
+        $query_str = $this->set_query_base_val($query_str, $presetObj);
+        
+        
+        
+        // If it is private and is the only visability, change/add private.
+        // else if both visability status exists.
+        // 
+        
+        
         //PASSED - start with values that are passed across all strings
         //author
         //page_id
@@ -394,6 +520,56 @@ class APLQuery
         
         
         //return $query_str_array;
+    }
+    private function set_query_base_val($query_str, $presetObj)
+    {
+        //\\vv  EXAMPLE  vv////
+        $arg_example = array(
+            'author' => '1,2,-3,',//this will need to be passed to other queries
+            'tax_query' => array(
+                'relation' => 'OR',
+                array(
+                    'taxonomy' => 'color',
+                    'field' => 'id',
+                    'terms' => array( 103, 115, 206 ),
+                    'include_children' => false,
+                    'operator' => 'IN'
+                ),
+                array(
+                    'taxonomy' => 'actor',
+                    'field' => 'id',
+                    'terms' => array( 103, 115, 206 ),
+                    'include_children' => false,
+                    'operator' => 'AND'
+                 )
+            ),
+            'post_parent' => 1,
+            'post__in' => array(1,2,3),
+            'post__not_in' => array(1,2,3),//DO NOT USE - there will be a manual function at the end
+            'post_type' => array(//Passes remaining post types
+                    'post',
+                    'page',
+                    'revision',
+                    'attachment',
+                    'my-custom-post-type',
+                    ),
+            'post_status' => array(//passed
+                    'publish',
+                    'pending',
+                    'draft',
+                    'auto-draft',
+                    'future',
+                    'private',
+                    'inherit',
+                    'trash'
+                    ),
+            'nopaging' => true,//Final or ALL
+            'order' => 'DESC',//Final or Pass for trimmings?
+            'orderby' => 'date',//Final or Pass for trimmings?
+            'ignore_sticky_posts' => false,//Maybe Final, or may be passed
+            'perm' => 'readable',//Passed
+            
+        );////^^  EXAMPLE  ^^\\//
     }
     private function query($query_str_array, $repeated = FALSE)
     {
