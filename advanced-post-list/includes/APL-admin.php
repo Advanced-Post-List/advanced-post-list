@@ -557,14 +557,14 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
             <div style="float:right">
                 <input type="radio" id="rdoDefaultExitMsgTRUE" name="rdoDefaultExitMsg" value="true" 
                     <?php
-                    if ($adminOptions["default_exit"] === TRUE)
+                    if (isset($adminOptions["default_exit"]) && $adminOptions["default_exit"] === TRUE)
                     {
                         echo "checked";
                     }
                     ?>
                 /><label for="rdoDefaultExitMsgTRUE"> Yes </label><input type="radio" id="rdoDefaultExitMsgFALSE" name="rdoDefaultExitMsg" value="false" 
                     <?php
-                    if ($adminOptions["default_exit"] === FALSE || !isset($adminOptions["default_exit"]))
+                    if (!isset($adminOptions["default_exit"]) || $adminOptions["default_exit"] === FALSE)
                     {
                         echo "checked";
                     }
