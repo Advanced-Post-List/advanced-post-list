@@ -261,8 +261,9 @@ class APLQuery
 //  public '_content' => string '<a href="[post_permalink]">[post_title]</a> by [post_author] - [post_date]<br/>[post_excerpt]<hr/>' (length=98)
 //  public '_after' => string '</p>' (length=4)
     
-    private function default_query_str()
+    private function set_query_init()
     {
+        //Instead of using 'any' in $arg['post_type'], use $post_type_list below.
         $post_type_list = get_post_types('', 'names');
         $skip_post_types = array('attachment', 'revision', 'nav_menu_item');
         foreach($skip_post_types as $value)
@@ -273,7 +274,7 @@ class APLQuery
         unset($skip_post_types);
 
         //\\vv  EXAMPLE  vv////
-        $arg_example = array(
+        $arg = array(
             'author' => '',//this will need to be passed to other queries
             
             'post__in' => array(1,2,3),
@@ -398,7 +399,7 @@ class APLQuery
         //
         //if (!empty(_postTax) OR Post_parent) //
         $post_type_key = key((array) $presetObj->_postTax);
-        if ($post_type_key !== null)
+        if ($post_type_key !== null) //or use !empty()?
         {
             // add foreach content here
             for ($i = 0; $i > sizeof($presetObj->_postParents); $i++)
@@ -523,53 +524,93 @@ class APLQuery
     }
     private function set_query_base_val($query_str, $presetObj)
     {
-        //\\vv  EXAMPLE  vv////
-        $arg_example = array(
-            'author' => '1,2,-3,',//this will need to be passed to other queries
-            'tax_query' => array(
-                'relation' => 'OR',
-                array(
-                    'taxonomy' => 'color',
-                    'field' => 'id',
-                    'terms' => array( 103, 115, 206 ),
-                    'include_children' => false,
-                    'operator' => 'IN'
-                ),
-                array(
-                    'taxonomy' => 'actor',
-                    'field' => 'id',
-                    'terms' => array( 103, 115, 206 ),
-                    'include_children' => false,
-                    'operator' => 'AND'
-                 )
-            ),
-            'post_parent' => 1,
-            'post__in' => array(1,2,3),
-            'post__not_in' => array(1,2,3),//DO NOT USE - there will be a manual function at the end
-            'post_type' => array(//Passes remaining post types
-                    'post',
-                    'page',
-                    'revision',
-                    'attachment',
-                    'my-custom-post-type',
-                    ),
-            'post_status' => array(//passed
-                    'publish',
-                    'pending',
-                    'draft',
-                    'auto-draft',
-                    'future',
-                    'private',
-                    'inherit',
-                    'trash'
-                    ),
-            'nopaging' => true,//Final or ALL
+        //INIT
+        $arg = array(
+            'author' => '',//this will need to be passed to other queries
+            'post_status' => array(),
             'order' => 'DESC',//Final or Pass for trimmings?
             'orderby' => 'date',//Final or Pass for trimmings?
-            'ignore_sticky_posts' => false,//Maybe Final, or may be passed
             'perm' => 'readable',//Passed
-            
-        );////^^  EXAMPLE  ^^\\//
+            //'post__in' => array(),
+            'post__not_in' => array(),//DO NOT USE w/ WP_Query - there will be a manual function at the end
+            'ignore_sticky_posts' => false,//Maybe Final, or may be passed
+            'nopaging' => true,//Final or ALL   
+        );
+        
+        ////AUTHOR FILTER////
+        if ($presetObj->_postAuthorOperator != 'none' && !empty($presetObj->_postAuthorIDs))
+        {
+            $author_filter = '';
+            $author_operator = '';
+            if ($presetObj->_postAuthorOperator === 'exclude')
+            {
+                $author_operator = '-';
+            }
+            foreach ($presetObj->_postAuthorIDs as $i => $author_id)
+            {
+                $author_filter .= $author_operator . $author_id;
+                //adds a comma if there is more IDs
+                if ($i < (count($presetObj->_postAuthorIDs) - 1))
+                {
+                    $author_filter .= ',';
+                }
+            }
+            $arg['author'] = $author_filter;
+        }//END of Author Filter
+        
+        
+        ////POST STATUS////
+        //Don't need to worry about private value, it's in _postVisibility,
+        // and will be used in set_query
+        foreach ($presetObj->_postStatus as $key => $value)
+        {
+            $arg['post_status'][] = $value;
+        }
+        
+        //Order/Sort
+        if (!empty($presetObj->_listOrder))
+        {
+            $arg['order'] = $presetObj->_listOrder;
+        }
+        if (!empty($presetObj->_listOrderBy))
+        {
+            $arg['orderby'] = $presetObj->_listOrderBy;
+        }
+        
+        //Permissions
+        if (!empty($presetObj->_userPerm))
+        {
+            $arg['perm'] = $presetObj->_userPerm;
+        }
+        
+        //posts in
+        //not in use with presetObj yet, but will be used in the query
+        
+        //posts not in
+        if (!empty($presetObj->_listExcludePosts))
+        {
+            foreach ($presetObj->_listExcludePosts as $i => $post_id)
+            {
+                if ($post_id !== 0)
+                {
+                    $arg['post__not_in'] = $post_id;
+                }
+            }
+        }
+        
+        //Ignore Stickies
+        if (!empty($presetObj->_listIgnoreSticky))
+        {
+            $arg['ignore_sticky_posts'] = $presetObj->_listIgnoreSticky;
+        }
+        
+        return $arg;
+    }
+    //instead of querying or using the global, just grab the post once and add it
+    // to string.
+    private function set_query_current_post_vals()
+    {
+        
     }
     private function query($query_str_array, $repeated = FALSE)
     {
@@ -577,6 +618,7 @@ class APLQuery
         //if there is more than one query string
         // (Catch IDs) then repeat this.
         //Include any IDs
+        //Remove and store posts__not_in for manual exclude
         //Use Wp_Query
         //Needs a custom post__not_in design. This will enable the use to include
         // and exclude posts/pages with exclude being done manually.
