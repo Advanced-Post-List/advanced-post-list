@@ -379,25 +379,17 @@ class APLQuery
         //Set public or private
         // if both are selected, just duplicate 
         //
-        $post_type_list = get_post_types('',
-                                          'names');
-        $skip_post_types = array('attachment', 'revision', 'nav_menu_item');
-        foreach($skip_post_types as $value)
-        {
-            unset($post_type_list[$value]);
-        }
-        unset($value);
-        unset($skip_post_types);
+
         
         $a1 ='';
+        //Used for colecting and returning an array of $query_str
         $query_str_arrays = array();//array(array) - Multi-Dimensional
+        //Used for this current instance of set_query
         $query_str = array(); 
         
-        //DON'T USE A FOR LOOP  for post_types
-        //How to get key from object? Hmm
-        //$post_type = key(array);//?
-        //
-        //if (!empty(_postTax) OR Post_parent) //
+        
+        ////POST_TYPES & TAXONOMIES + POST_PARENTS
+        //DON'T USE A FOR LOOP for post_types
         $post_type_key = key((array) $presetObj->_postTax);
         if ($post_type_key !== null) //or use !empty()?
         {
@@ -414,14 +406,68 @@ class APLQuery
                     unset($presetObj->_postParents[$i]);
                     $presetObj->_postParents = array_values($presetObj->_postParents);
                     
+                    $a = sizeof($presetObj->_postParents);
                     if ($i > sizeof($presetObj->_postParents)) // +1?
                     {
                         //merge array function may be needed
-                        ////$query_str_arrays[] = $this->set_query($presetObj);
+                        $query_str_arrays[] = $this->set_query($presetObj);
                     }
                 }
 
             }
+
+            $tax_operator = 'OR';
+            foreach ($presetObj->_postTax->$post_type_key->taxonomies as $taxonomy_slug => $taxonomy_value)
+            {
+                
+//                'tax_query' => array(
+//                    'relation' => 'OR',
+//                    array(
+//                        'taxonomy' => 'color',
+//                        'field' => 'id',
+//                        'terms' => array( 103, 115, 206 ),
+//                        'include_children' => false,
+//                        'operator' => 'IN'
+                $terms = array();
+                foreach($taxonomy_value->terms as $key => $term_id)
+                {
+                    $terms[] = $term_id;
+                }
+                $term_operator = 'IN';
+                if ($taxonomy_value->require_terms === TRUE)
+                {
+                    $term_operator = 'AND';
+                }
+                if ($taxonomy_value->require_taxonomy === TRUE)
+                {
+                    $tax_operator = 'AND';
+                }
+                //Set defaults
+                $query_str['tax_query'][] = array(
+                    'taxonomy' => $taxonomy_slug,
+                    'field' => 'id',
+                    'terms' => $terms,
+                    'include_children' => false,
+                    'operator' => $term_operator
+                );
+                //if required terms, change IN/OR to AND
+//                //check if include current page is selected AND if taxonomy matches.
+//                //Save/move this to it's own function so that a query or global is
+//                // used only once. If include is selected and no terms are selected,
+//                // then create the taxonomy anyways, and current page function will
+//                // delete it if it is still empty.
+//                if ($taxonomy_value->include_terms === TRUE)
+//                {
+//                    if (has_term('', $taxonomy, $post_id))
+//                    {
+//                        //add terms from post's matched taxonomy
+//                    }
+//                }
+                
+            }
+            $query_str['tax_query']['relation'] = $tax_operator;
+            
+            
 //            foreach ($presetObj->_postParents as $key => $post_id)
 //            {
 //                //if matches post type then set post parent ID
@@ -453,29 +499,15 @@ class APLQuery
 //                }
 //            }
             
-            foreach ($post_type_value->taxonomies as $taxonomy => $taxonomy_value)
-            {
-                
-                //check if include current page is selected AND if taxonomy matches.
-                if ($taxonomy_value->include_terms === TRUE)
-                {
-                    if (has_term('', $taxonomy, $post_id))
-                    {
-                        //add terms from post's matched taxonomy
-                    }
-                }
-                //Set defaults
-                
-                //if required terms, change IN/OR to AND
-                
-            }
-            
             unset($presetObj->_postTax->$post_type);
             $query_str_arrays[] = $this->set_query($presetObj);
             $query_str['post_type'] = $post_type;
         }
+        ////POST PARENTS without a Post_Type/Taxonomy
         elseif (sizeof($presetObj->_postParents) > 0)//catches the remaining
         {
+            //Overwrites the default/init post_type
+            $query_str['post_type'] = array();
             if (!empty($query_str['post_parent']))
             {
                 $this->set_query($presetObj);
@@ -502,7 +534,18 @@ class APLQuery
         
         // If it is private and is the only visability, change/add private.
         // else if both visability status exists.
-        // 
+        //
+        // Use as FINAL? 
+        //
+        if (count($presetObj->_postVisibility) === 2)
+        {
+            //duplicate
+        }
+        else if ($presetObj->_postVisibility[0] === 'private')
+        {
+            $query_str['post_status'][] = 'private';
+        }
+        //Otherwise leave alone.
         
         
         //PASSED - start with values that are passed across all strings
@@ -638,10 +681,16 @@ class APLQuery
     public function __construct($presetObj)
     {
         //var_dump($presetObj);
+        //$this->set_query_init();
+        //$this->set_query_base_val($query_str, $presetObj);
         $query_str_array = $this->set_query($presetObj);
+        //$this->set_query_current_post_vals();
         
         
         
+        ////////////////////////////////////////////////////////////////////////
+        //-^^- NEW -^^-/////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
         //-vv- REMOVE -vv-//////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
