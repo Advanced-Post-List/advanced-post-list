@@ -224,6 +224,18 @@ class APLCallback
 
     return $commentString . $matches[4];
   }
+  
+  function postAuthorCallback($matches)
+  {
+    $userInfo = get_userdata($this->page->post_author);
+
+    if(!$matches[2])
+    {
+      return $userInfo->display_name;  
+    }
+
+    return $userInfo->$matches[2];
+  }
 
   function postParentCallback($matches)
   {

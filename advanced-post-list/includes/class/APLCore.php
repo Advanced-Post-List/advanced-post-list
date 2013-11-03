@@ -2222,11 +2222,7 @@ function APLInternalShortcodeReplace($str,
                            $page->$scName,
                            $str);
     }
-    //post_author requires an extra function call to convert the
-    // userID into a name so we can't do it in the loop above
-    $str = str_replace("[post_author]",
-                       get_userdata($page->post_author)->user_login,
-                                    $str);
+
     $str = str_replace("[post_permalink]",
                        get_permalink($page->ID),
                                      $str);
@@ -2304,6 +2300,9 @@ function APLInternalShortcodeReplace($str,
     $str = preg_replace_callback('#\[ *post_comments *(before=[\'|\"]([^\'\"]*)[\'|\"])? *(after=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'commentCallback'),
                                  $str);
+    $str = preg_replace_callback('#\[ *post_author *(type=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
+    							array(&$postCallback, 'postAuthorCallback'),
+    							$str);
     $str = preg_replace_callback('#\[ *post_parent *(link=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'postParentCallback'),
                                  $str);
