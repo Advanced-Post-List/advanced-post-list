@@ -683,7 +683,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         <li><b>[post_categories delimeter=", " links="true"]</b> - post categories list. Parameters work like tag shortcode.</li>
         <li><b>[post_parent link="true"]</b> - post parent. Use optional 'link' parameter to turn off link</li>
         <li><b>[post_comments before="" after=""]</b> - post comments. Parameters represent text/HTML that will be inserted before and after comment list but will not be displayed if there are no comments. PHP coders: <a href="http://kalinbooks.com/2011/customize-comments-pdf-creation-station">learn how to customize comment display (kalinbooks site).</a></li>
-        <li><b>[post_thumb]</b> - URL to the page/post's featured image (requires theme support)</li>
+        <li><b>[post_thumb size="full"]</b> - URL to the page/post's featured image (requires theme support). Possible size paramaters: thumbnail, medium, large or full</li>
         <li><b>[php_function name="function_name" param=""]</b> - call a user-defined custom function. Refer to <a href="http://kalinbooks.com/2011/custom-php-functions/">this blog post (kalinbooks site)</a> for instructions.</li>
     </ul>
     <p style="width: 720px"><b>*</b> Time shortcodes have an optional format parameter. Format your dates using these possible tokens: m=month, M=text month, F=full text month, d=day, D=short text Day Y=4 digit year, y=2 digit year, H=hour, i=minute, s=seconds. More tokens listed here: <a href="http://php.net/manual/en/function.date.php" target="_blank">http://php.net/manual/en/function.date.php.</a> </p>
