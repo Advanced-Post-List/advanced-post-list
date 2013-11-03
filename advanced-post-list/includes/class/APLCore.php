@@ -154,7 +154,7 @@ class APLCore
 
         //////// ACTION & FILTERS HOOKS ////////
         //STEP 3
-        //add_action('widgets_init', array($this, 'APL_handler_widget_init'));
+        add_action('widgets_init', array($this, 'APL_handler_widget_init'));
         //STEP 4
         add_shortcode('post_list',
                       array($this, 'APL_handler_shortcode'));
