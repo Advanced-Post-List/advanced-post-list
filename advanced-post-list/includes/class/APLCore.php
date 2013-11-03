@@ -2278,15 +2278,6 @@ function APLInternalShortcodeReplace($str,
                                  array(&$postCallback, 'postPDFCallback'),
                                  $str);
 
-    if (current_theme_supports('post-thumbnails'))
-    {
-        $arr = wp_get_attachment_image_src(get_post_thumbnail_id($page->ID),
-                                                                 'single-post-thumbnail');
-        $str = str_replace("[post_thumb]",
-                           $arr[0],
-                           $str);
-    }
-
     $postCallback->page = $page;
     $str = preg_replace_callback('#\[ *post_meta *(name=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'postMetaCallback'),
@@ -2301,8 +2292,17 @@ function APLInternalShortcodeReplace($str,
                                  array(&$postCallback, 'commentCallback'),
                                  $str);
     $str = preg_replace_callback('#\[ *post_author *(type=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-    							array(&$postCallback, 'postAuthorCallback'),
-    							$str);
+    							               array(&$postCallback, 'postAuthorCallback'),
+    							               $str);
+    
+    if (current_theme_supports('post-thumbnails'))
+    {
+    	 
+    	$str = preg_replace_callback('#\[ *post_thumb *(size=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
+    			array(&$postCallback, 'postThumbCallback'),
+    			$str);
+    }
+    
     $str = preg_replace_callback('#\[ *post_parent *(link=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'postParentCallback'),
                                  $str);

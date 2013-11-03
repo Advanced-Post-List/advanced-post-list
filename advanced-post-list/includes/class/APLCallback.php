@@ -236,6 +236,24 @@ class APLCallback
 
     return $userInfo->$matches[2];
   }
+  
+  function postThumbCallback($matches)
+  {
+  	if(isset($matches[2]))
+  	{
+  		$imageSize = $matches[2];
+  	}
+  	else
+  	{
+  		$imageSize = "full";
+  	}
+  	 
+  	//the documentation for wp_get_attachment_image_src says you can pass in an array of width and height but that didn't seem to work.
+  	//It just returned the size closest to the values I passed in so we are stuck with the four options: thumbnail, medium, large or full
+  	$arr = wp_get_attachment_image_src(get_post_thumbnail_id($this->page->ID), $imageSize);
+  	 
+  	return $arr[0];
+  }
 
   function postParentCallback($matches)
   {
