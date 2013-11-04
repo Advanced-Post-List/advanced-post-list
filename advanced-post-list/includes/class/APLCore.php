@@ -1984,11 +1984,11 @@ class APLCore
 
         // Step 4
         //// EXCLUDE CURRENT POST FROM DISPLAYING ON THE POST LIST
-        if ($presetObj->_listExcludeCurrent === TRUE)
+        if (isset($presetObj->_listExcludeCurrent) && $presetObj->_listExcludeCurrent === TRUE)
         {
             $presetObj->_listExcludePosts[] = $post_obj->ID;
         }
-        if ($presetObj->_listExcludeDuplicates === TRUE)
+        if (isset($presetObj->_listExcludeDuplicates) && $presetObj->_listExcludeDuplicates === TRUE)
         {
             foreach ($this->_remove_duplicates as $postID)
             {
@@ -2164,8 +2164,12 @@ class APLCore
         foreach ($taxonomies as $taxonomy)
         {
             // Step 5
-            $terms = wp_get_post_terms($post->ID,
+            if(isset($post->ID))
+            {
+              $terms = wp_get_post_terms($post->ID,
                                        $taxonomy);
+            }
+            
             if (!empty($terms))
             {
                 //$tmp_terms = array();
