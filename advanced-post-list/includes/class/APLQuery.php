@@ -198,7 +198,7 @@ class APLQuery
         'perm' => 'readable',                   //(string) Possible values are 'readable', 'editable' (possible more ie all capabilitiealthough I have not tested)
 
     //////Parameters relating to caching
-        //'no_found_rows' => false,             //(bool) Default is false. WordPress uses SQL_CALC_FOUND_ROWS in most queries in order timplement pagination. Even when you don’t need pagination at all. By Setting this parameter to true you are telling wordPress not tcount the total rows and reducing load on the DB. Pagination will NOT WORK when this parameter is set to true. For more informatiosee: http://flavio.tordini.org/speed-up-wordpress-get_posts-and-query_posts-functions
+        //'no_found_rows' => false,             //(bool) Default is false. WordPress uses SQL_CALC_FOUND_ROWS in most queries in order timplement pagination. Even when you don?t need pagination at all. By Setting this parameter to true you are telling wordPress not tcount the total rows and reducing load on the DB. Pagination will NOT WORK when this parameter is set to true. For more informatiosee: http://flavio.tordini.org/speed-up-wordpress-get_posts-and-query_posts-functions
         //'cache_results' => true,              //(bool) Default is true
         //'update_post_term_cache' => true,     //(bool) Default is true
         //'update_post_meta_cache' => true,     //(bool) Default is true
@@ -381,11 +381,13 @@ class APLQuery
         //
 
         
-        $a1 ='';
+        
         //Used for colecting and returning an array of $query_str
         $query_str_arrays = array();//array(array) - Multi-Dimensional
         //Used for this current instance of set_query
         $query_str = array(); 
+        
+        //REPLACE Current Page Parent WITH CURRENT ID
         
         
         ////POST_TYPES & TAXONOMIES + POST_PARENTS
@@ -393,46 +395,38 @@ class APLQuery
         $post_type_key = key((array) $presetObj->_postTax);
         if ($post_type_key !== null) //or use !empty()?
         {
-            // add foreach content here
-            for ($i = 0; $i > sizeof($presetObj->_postParents); $i++)
+            //Cycle through the Page* Parent array and match the Post Type
+            //Use this type of FOR loop in order to use the index as a counter
+            for ($i = 0; $i < count($presetObj->_postParents); $i++)
             {
                 
-                //if post type matches
-                if (get_post_type($presetObj->_postParents[$i]) == $post_type)
+                
+                //If post type matches
+                if (get_post_type($presetObj->_postParents[$i]) == $post_type_key)
                 {
-                    //-vv- This would eliminate the 3 lines of code
+                    //-vv- This would eliminate the 3 lines of code -vv-//
                     //$query_str['post_parent'] = array_shift($presetObj->_postParents);
                     $query_str['post_parent'] = $presetObj->_postParents[$i];
                     unset($presetObj->_postParents[$i]);
                     $presetObj->_postParents = array_values($presetObj->_postParents);
                     
-                    $a = sizeof($presetObj->_postParents);
-                    if ($i > sizeof($presetObj->_postParents)) // +1?
+                    //cycle through rest to check for a match before deciding to repeat this function.
+                    //Does $index need to be modified?
+                    for ($i; $i < count($presetObj->_postParents); $i++)
                     {
-                        //merge array function may be needed
-                        $query_str_arrays[] = $this->set_query($presetObj);
+                        if (get_post_type($presetObj->_postParents[$i]) == $post_type_key)
+                        {
+                            $query_str_arrays = array_merge($query_str_arrays, 
+                                                            $this->set_query($presetObj));
+                        }
                     }
                 }
-
             }
 
             $tax_operator = 'OR';
             foreach ($presetObj->_postTax->$post_type_key->taxonomies as $taxonomy_slug => $taxonomy_value)
             {
                 
-//                'tax_query' => array(
-//                    'relation' => 'OR',
-//                    array(
-//                        'taxonomy' => 'color',
-//                        'field' => 'id',
-//                        'terms' => array( 103, 115, 206 ),
-//                        'include_children' => false,
-//                        'operator' => 'IN'
-                $terms = array();
-                foreach($taxonomy_value->terms as $key => $term_id)
-                {
-                    $terms[] = $term_id;
-                }
                 $term_operator = 'IN';
                 if ($taxonomy_value->require_terms === TRUE)
                 {
@@ -442,93 +436,61 @@ class APLQuery
                 {
                     $tax_operator = 'AND';
                 }
-                //Set defaults
+                //Set query string's tax_query
                 $query_str['tax_query'][] = array(
                     'taxonomy' => $taxonomy_slug,
                     'field' => 'id',
-                    'terms' => $terms,
+                    'terms' => $taxonomy_value->terms,
                     'include_children' => false,
                     'operator' => $term_operator
                 );
-                //if required terms, change IN/OR to AND
-//                //check if include current page is selected AND if taxonomy matches.
-//                //Save/move this to it's own function so that a query or global is
-//                // used only once. If include is selected and no terms are selected,
-//                // then create the taxonomy anyways, and current page function will
-//                // delete it if it is still empty.
-//                if ($taxonomy_value->include_terms === TRUE)
-//                {
-//                    if (has_term('', $taxonomy, $post_id))
-//                    {
-//                        //add terms from post's matched taxonomy
-//                    }
-//                }
+
                 
             }
             $query_str['tax_query']['relation'] = $tax_operator;
             
             
-//            foreach ($presetObj->_postParents as $key => $post_id)
-//            {
-//                //if matches post type then set post parent ID
-//                if (has_term('', $taxonomy, $post_id))
-//                {
-//                    $query_str['post_parent'] = $post_id;
-//                    unset($presetObj->_postParents->$key);
-//                }
-//                //if (!empty())
-//                
-//                
-//                //unset
-//                //if not empty, then repeat this function
-//                
-//            }
-//            if (!empty($presetObj->_postParents))
-//            {
-//                //-vv- This would eliminate the next 3 lines of code
-//                //$query_str['post_parent'] = array_shift($presetObj->_postParents);
-//                
-//                $query_str['post_parent'] = $presetObj->_postParents[0];
-//                unset($presetObj->_postParents[0]);
-//                $presetObj->_postParents = array_values($presetObj->_postParents);
-//                
-//                
-//                if (!empty($presetObj->_postParents))
-//                {
-//                    $query_str_arrays[] = $this->set_query($presetObj);
-//                }
-//            }
             
-            unset($presetObj->_postTax->$post_type);
-            $query_str_arrays[] = $this->set_query($presetObj);
-            $query_str['post_type'] = $post_type;
+            $query_str['post_type'] = $post_type_key;
+            unset($presetObj->_postTax->$post_type_key);
+            if (count((array) $presetObj->_postTax) > 0)
+            {
+                $query_str_arrays = array_merge($query_str_arrays, $this->set_query($presetObj));
+            }
+            
+            
         }
-        ////POST PARENTS without a Post_Type/Taxonomy
-        elseif (sizeof($presetObj->_postParents) > 0)//catches the remaining
+        ////POST PARENTS reamining when there's no Post_Type/Taxonomy 
+        //// help in presetObj.
+        elseif (count($presetObj->_postParents) > 0)//catches the remaining
         {
-            //Overwrites the default/init post_type
-            $query_str['post_type'] = array();
+            //Overwrites the default/init post_type (Any need to?)
+            //$query_str['post_type'] = array();
+            //If a Post Parents just happens to be set, then repeat this funtion
             if (!empty($query_str['post_parent']))
             {
-                $this->set_query($presetObj);
+                
+                $query_str_arrays = array_merge($query_str_arrays, $this->set_query($presetObj));
             }
-            elseif (sizeof($query_str['post_parent']) > 1)
+            //Set and continues adding the rest if any.
+            elseif (count($presetObj->_postParents) > 1)
             {
-                $query_str['post_parent'] = $presetObj->_postParents[0];
-                //unset();
-                $this->set_query($presetObj);
+                $query_str['post_parent'] = intval(array_shift($presetObj->_postParents));
+                
+                $query_str_arrays = array_merge($query_str_arrays, $this->set_query($presetObj));
             }
             else
             {
-                $query_str['post_parent'] = $presetObj->_postParents[0];
+                $query_str['post_parent'] = intval(array_shift($presetObj->_postParents));
             }
+            
         }
         else
         {
             return;
         }
         
-        $query_str = $this->set_query_base_val($query_str, $presetObj);
+        $query_str = array_merge($query_str, $this->set_query_base_val($presetObj));
         
         
         
@@ -537,6 +499,10 @@ class APLQuery
         //
         // Use as FINAL? 
         //
+//        if (!empty($presetObj->_postVisibility))
+//        {
+//            
+//        }
         if (count($presetObj->_postVisibility) === 2)
         {
             //duplicate
@@ -546,6 +512,9 @@ class APLQuery
             $query_str['post_status'][] = 'private';
         }
         //Otherwise leave alone.
+        $query_str_arrays[] = $query_str;
+        return $query_str_arrays;
+        //return array_merge($query_str_arrays, $query_str);
         
         
         //PASSED - start with values that are passed across all strings
@@ -565,11 +534,11 @@ class APLQuery
         
         //return $query_str_array;
     }
-    private function set_query_base_val($query_str, $presetObj)
+    private function set_query_base_val($presetObj)
     {
         //INIT
         $arg = array(
-            'author' => '',//this will need to be passed to other queries
+            //'author' => '',//this will need to be passed to other queries
             'post_status' => array(),
             'order' => 'DESC',//Final or Pass for trimmings?
             'orderby' => 'date',//Final or Pass for trimmings?
@@ -627,7 +596,7 @@ class APLQuery
         }
         
         //posts in
-        //not in use with presetObj yet, but will be used in the query
+        //not in use with presetObj yet, but will be used in $this->query
         
         //posts not in
         if (!empty($presetObj->_listExcludePosts))
@@ -650,9 +619,33 @@ class APLQuery
         return $arg;
     }
     //instead of querying or using the global, just grab the post once and add it
-    // to string.
-    private function set_query_current_post_vals()
+    // to string(s).
+    private function set_presetObj_current_page_vals($presetObj)
     {
+        //Current post/page ID
+        $current_ID = get_the_ID();
+        
+        //Determines whether the current post is capable of having children (page capabilities).
+        $current_hierarchical = is_post_type_hierarchical(get_post_type($current_ID));
+        //Replace Current Page Parent indicator with real current ID 
+        
+        foreach ($presetObj->_postParents as $key => $value)
+        {
+            if (intval($value) === 0)
+            {
+                if ($current_hierarchical)
+                {
+                    $presetObj->_postParents[$key] = $current_ID;
+                }
+                else
+                {
+                    unset($presetObj->_postParents[$key]);
+                    $presetObj->_postParents = array_values($presetObj->_postParents);
+                }
+                
+            }
+        }
+        
         
     }
     private function query($query_str_array, $repeated = FALSE)
@@ -680,11 +673,19 @@ class APLQuery
     }
     public function __construct($presetObj)
     {
+        //DUPLICATE/CLONE FOR TESTING
+        $presetObj2 = clone $presetObj;
+        
         //var_dump($presetObj);
         //$this->set_query_init();
         //$this->set_query_base_val($query_str, $presetObj);
-        $query_str_array = $this->set_query($presetObj);
-        //$this->set_query_current_post_vals();
+        ////TODO Complete this function, but also go into APLCore::APL_run
+        //// and remove the simular design.
+        $this->set_presetObj_current_page_vals($presetObj2);
+        $query_str_array = $this->set_query($presetObj2);
+        
+        //MERGE SIMULAR QUERIES? - would merge matches and lessen the amount of queries.
+        //$this->query($query_str_array);
         
         
         
