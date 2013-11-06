@@ -135,7 +135,7 @@ class APLQuery
 
         //NOTE: The 'any' keyword available to both post_type and post_status 
         // queries cannot be used within an array.
-        //DO NOT USE
+        //DO NOT USE 'any'
         //'post_type' => 'any',                 // - retrieves any type except revisions and types with 'exclude_from_search' set to true.
         //'post_status' => 'any',               // - retrieves any status except those from post types with 'exclude_from_search' set to true.
 
@@ -219,7 +219,9 @@ class APLQuery
 
     );
     }
-    
+////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE OF presetObj ////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //  object(APLPresetObj)[282]
 //  public '_postParents' => 
 //    array (size=1)
@@ -260,7 +262,9 @@ class APLQuery
 //  public '_before' => string '<p><hr/>' (length=8)
 //  public '_content' => string '<a href="[post_permalink]">[post_title]</a> by [post_author] - [post_date]<br/>[post_excerpt]<hr/>' (length=98)
 //  public '_after' => string '</p>' (length=4)
+////////////////////////////////////////////////////////////////////////////////
     
+    //CURRENTLY NOT IN USE
     private function set_query_init()
     {
         //Instead of using 'any' in $arg['post_type'], use $post_type_list below.
@@ -382,10 +386,10 @@ class APLQuery
         //Clone since this is a repeating function and the variable keeps acting
         // like a pointer...to my surprise. I don't know if it is just objects that
         // are effected or I'm using 5.3 atm, but I thought you had to return the 
-        // value if you wanted it changed. Not the ability to modify it a 
+        // value/object if you wanted it changed. Not the ability to modify it a 
         // multitude of stacks in a repeating method.
         //Would making this method static prevent the presetObj acting like 
-        // a pointer?
+        // a pointer? Problem is fixed by just cloning objects.
         //$preset = new APLPresetObj();
         $preset = clone $presetObj;
         $preset->_postTax = clone $presetObj->_postTax;
@@ -393,9 +397,7 @@ class APLQuery
         //Used for colecting and returning an array of $query_str
         $query_str_arrays = array();//array(array) - Multi-Dimensional
         //Used for this current instance of set_query
-        $query_str = array(); 
-        
-        //REPLACE Current Page Parent WITH CURRENT ID
+        $query_str = array();
         
         
         ////POST_TYPES & TAXONOMIES + POST_PARENTS
@@ -471,30 +473,28 @@ class APLQuery
             
             
         }
-        ////POST PARENTS reamining when there's no Post_Type/Taxonomy 
-        //// help in presetObj.
+        ////POST PARENTS (w/o post_type/Tax) - remaining when there's no 
+        //// Post_Type/Taxonomy in presetObj.
         elseif (count($preset->_postParents) > 0)//catches the remaining
         {
             //Overwrites the default/init post_type (Any need to?)
             //$query_str['post_type'] = array();
-            //If a Post Parents just happens to be set, then repeat this funtion
+            //If a Post Parent arg is already set, then repeat this query. This
+            // is in case it just happens to be set and to prevent overwriting.
             if (!empty($query_str['post_parent']))
             {
-                
                 $query_str_arrays = array_merge($query_str_arrays, $this->set_query($preset));
             }
-            //Set and continues adding the rest if any.
+            //Set and continues adding the rest of the page parents, if any.
             elseif (count($preset->_postParents) > 1)
             {
                 $query_str['post_parent'] = intval(array_shift($preset->_postParents));
-                
                 $query_str_arrays = array_merge($query_str_arrays, $this->set_query($preset));
             }
             else
             {
                 $query_str['post_parent'] = intval(array_shift($preset->_postParents));
             }
-            
         }
         else
         {
@@ -633,26 +633,36 @@ class APLQuery
         
         return $arg;
     }
-    //instead of querying or using the global, just grab the post once and add it
-    // to string(s).
-    private function set_presetObj_current_page_vals($presetObj)
+    //Instead of querying or using the global post, just grab the post ID and let
+    // WP do the work.
+    private function set_presetObj_page_vals($presetObj)
     {
         //Current post/page ID
-        $current_ID = get_the_ID();
+        $post_ID = get_the_ID();
         
-        //Determines whether the current post is capable of having children (page capabilities).
-        //If there is no page, it will return false no matter what.
-        $current_hierarchical = is_post_type_hierarchical(get_post_type($current_ID));
-        //Replace Current Page Parent indicator with real current ID 
-        
+        ////////////////////////////////////////////////////////////////////////
+        //// PAGE PARENTS //////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        //Is the current post's post_type hierarchical? (page capabilities)
+        //If there is no page, it will return false no matter what. Would have 
+        // added an IF statement to the FOREACH loop to prevent unnecessary looping,
+        // but the dynamic indicator, zero (0), still needs to be removed if the 
+        // global post is not from a hierarchical post type.
+        $post_hierarchical = is_post_type_hierarchical(get_post_type($post_ID));
         foreach ($presetObj->_postParents as $key => $value)
         {
+            //If include current post is enabled. Looks for the dynamic value, zero (0),
+            // and replaces it with the global post ID if it is hierarchical (pages).
+            // Otherwise it is removed to prevent any bugs.
             if (intval($value) === 0)
             {
-                if ($current_hierarchical)
+                //If the post is a valid page parent, then replace 0 with page ID
+                if ($post_hierarchical)
                 {
-                    $presetObj->_postParents[$key] = $current_ID;
+                    //Replace Current Page Parent indicator with the (real) page ID 
+                    $presetObj->_postParents[$key] = $post_ID;
                 }
+                //Otherwise remove the invalid entry (value 0)
                 else
                 {
                     unset($presetObj->_postParents[$key]);
@@ -660,72 +670,55 @@ class APLQuery
                 }
             }
         }
-        //Removes and duplicates by using array_unique()
+        //Removes any duplicates by using array_unique()
         $presetObj->_postParents = array_unique($presetObj->_postParents);
         
         
-        
-        ////POST TYPE & TAXONOMIES -> TERMS
-        
-        
-        $current_taxonomies = get_post_taxonomies($current_ID);
-        
-        $args = array('orderby' => 'term_id', 
-                      'order' => 'ASC', 
-                      'fields' => 'ids');
-        $current_taxonomy_terms = wp_get_object_terms($current_ID, $current_taxonomies, $args);
-        
-        
-        foreach($presetObj->_postTax as $post_type => $pt_value)
+        ////////////////////////////////////////////////////////////////////////
+        //// POST TYPE & TAXONOMIES -> TERMS ///////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        $post_taxonomies = get_post_taxonomies($post_ID);
+        $args_post_terms = array('orderby'  => 'term_id', 
+                                 'order'    => 'ASC', 
+                                 'fields'   => 'ids');
+        foreach($presetObj->_postTax as $preset_post_type => $preset_pt_value)
         {
-            foreach ($pt_value->taxonomies as $taxonomy => $tax_value)
+            //ADD? - Match post_types with (current) page/post for more strict
+            // filtering. Right now terms will be added to taxonomies from any 
+            // post_type that is selected to include terms...so it won't spread
+            // to all post_types unless the user selects it.
+            //if ($current_ID === $post_type)
+            
+            foreach ($preset_pt_value->taxonomies as $preset_taxonomy => $preset_tax_value)
             {
-                if ($tax_value->include_terms === TRUE)
+                if ($preset_tax_value->include_terms === TRUE)
                 {
-                    
+                    foreach ($post_taxonomies as $post_taxonomy_value)
+                    {
+                        if ($preset_taxonomy === $post_taxonomy_value)
+                        {
+                            //ALTERNATE FOR NEXT 3(5) LINES - Shorter but complex
+                            //$preset_tax_value->terms = array_unique(
+                            //    array_merge(
+                            //        $preset_tax_value->terms, 
+                            //        wp_get_object_terms(
+                            //            $post_ID, 
+                            //            $post_taxonomy_value, 
+                            //            $args_post_terms
+                            //        )
+                            //    )
+                            //);
+                            $post_taxonomy_terms = wp_get_object_terms($post_ID, 
+                                                                       $post_taxonomy_value, 
+                                                                       $args_post_terms);
+                            $preset_tax_value->terms = array_merge($preset_tax_value->terms, 
+                                                                   (array) $post_taxonomy_terms);
+                            $preset_tax_value->terms = array_unique($preset_tax_value->terms);
+                        }
+                    }
                 }
             }
         }
-//        Description
-//        This function can be used within the loop. It will also return an array of the taxonomies with links to the taxonomy and name.
-//
-//        Usage
-//
-//        get_the_taxonomies();
-//
-//        Parameters
-//        post
-//        (int) (optional) The post ID to get taxonomies of.
-//        Default: 0
-//        args
-//        (array) (optional) Overrides the defaults.
-//        Default: None
-//        Return Values
-//        (Array) 
-//        Array ( [taxnomy_slug] => Taxonomy Name: <a href='http://yourdomain.com/Term_Slug/'>Term Name</a>. )
-//        //// ADD OTHER TAXONOMY TERMS IF INCLUDED IS CHECKED
-//        $post_obj_post_type = $post_obj->post_type;
-//
-//        if (isset($presetObj->_postTax->$post_obj_post_type))
-//        {
-//
-//            //$a = $presetObj->_postTax->$post_obj_post_type;
-//            foreach ($post_obj->taxonomies as $taxonomy_name=>$taxonomy_object)
-//            {
-//                //$a = $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->include_terms;
-//                if ($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->include_terms == true)
-//                {
-//                    $count = count($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms);
-//                    foreach ($taxonomy_object->terms as $term_ID)
-//                    {
-//                        $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms[$count] = $term_ID;
-//                        $count++;
-//                    }
-//                    //REMOVES ANY DUPLICATES THAT MAY HAVE BEEN ADDED
-//                    $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms = array_unique($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms);
-//                }
-//            }
-//        }
         
         return $presetObj;
     }
@@ -757,12 +750,10 @@ class APLQuery
         //DUPLICATE/CLONE FOR TESTING
         $presetObj2 = clone $presetObj;
         
-        //var_dump($presetObj);
         //$this->set_query_init();
         //$this->set_query_base_val($query_str, $presetObj);
-        ////TODO Complete this function, but also go into APLCore::APL_run
-        //// and remove the simular design.
-        $this->set_presetObj_current_page_vals($presetObj2);
+        // TODO REMOVE SIMULAR CODE IN APLCore::APL_run THEN ENABLE NEXT LINE
+        $presetObj2 = $this->set_presetObj_page_vals($presetObj2);
         $query_str_array = $this->set_query($presetObj2);
         
         //MERGE SIMULAR QUERIES? - would merge matches and lessen the amount of queries.
@@ -903,7 +894,13 @@ class APLQuery
         {
             foreach ($rtnPosts as $rtnPost)
             {
-                if ($post->ID === $rtnPost->ID)
+                if ($post->ID === $rtnPost)
+                {
+                    $tmp_posts[$tmp_count] = $post;
+                    $tmp_count++;
+                    break;
+                }
+                else if ($post->ID === $rtnPost->ID)
                 {
                     $tmp_posts[$tmp_count] = $post;
                     $tmp_count++;
