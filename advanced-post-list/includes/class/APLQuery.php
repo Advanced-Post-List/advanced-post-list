@@ -7,6 +7,7 @@
 // * Better sticky support
 // * Can add additional sorting methods
 
+
 class WP_Query_child extends WP_Query
 {
     
@@ -69,202 +70,8 @@ class APLQuery
     //
     //4) Return Final WP_Query Object or Page/Post IDs
     //
-    private function arg_example()
-    {
-        
     
-    $args = array( 
-
-    //////Author Parameters - Show posts associated with certain author.
-        'author' => '1,2,-3,',                     //(int) - use author id [use minus (-) to exclude authors by ID ex. 'author' => '-1,-2,-3,']
-
-
-    //////Taxonomy Parameters - Show posts associated with certain taxonomy.
-        //Important Note: tax_query takes an array of tax query arguments 
-        // arrays (it takes an array of arrays)
-        //This construct allows you to query multiple taxonomies by using the 
-        // relation parameter in the first (outer) array to describe the boolean 
-        // relationship between the taxonomy queries.
-        'tax_query' => array(                       //(array) - use taxonomy parameters (available with Version 3.1).
-            'relation' => 'OR',                     //(string) - Possible values are 'AND' or 'OR' and is the equivalent of ruuning a JOIN for each taxonomy
-            array(
-                'taxonomy' => 'color',              //(string) - Taxonomy.
-                'field' => 'id',                    //ID//(string) - Select taxonomy term by ('id' or 'slug')
-                'terms' => array( 103, 115, 206 ),  //ARRAY(INT)//(int/string/array) - Taxonomy term(s).
-                'include_children' => false,        //FALSE     //(bool) - Whether or not to include children for hierarchical taxonomies. Defaults to true.
-                'operator' => 'IN'                  //IN        //(string) - Operator to test. Possible values are 'IN', 'NOT IN', 'AND'.
-            ),
-            array(
-                'taxonomy' => 'actor',
-                'field' => 'id',
-                'terms' => array( 103, 115, 206 ),
-                'include_children' => false,
-                'operator' => 'AND'
-             )
-        ),
-
-    //////Post & Page Parameters - Display content based on post and page parameters.
-        //'p' => 1,                             //(int) - use post id.
-        //'name' => 'hello-world',              //(string) - use post slug.
-        //'page_id' => 1,                       //(int) - use page id.
-        //'pagename' => 'sample-page',          //(string) - use page slug.
-        //'pagename' => 'contact_us/canada',    //(string) - Display child page using the slug of the parent and the child page, separated ba slash
-        'post_parent' => 1,                     //(int) - use page id. Return just the child Pages. (Only works with heirachical post types.) 
-        'post__in' => array(1,2,3),             //(array) - use post ids. Specify posts to retrieve.
-        'post__not_in' => array(1,2,3),         //(array) - use post ids. Specify post NOT to retrieve.
-        //NOTE: you cannot combine 'post__in' and 'post__not_in' in the same query
-
-    //////Type & Status Parameters - Show posts associated with certain type or status.
-        'post_type' => array(                   //(string / array) - use post types. Retrieves posts by Post Types, default value is 'post';
-                'post',                         // - a post.
-                'page',                         // - a page.
-                'revision',                     // - a revision.
-                'attachment',                   // - an attachment. The default WP_Query sets 'post_status'=>'published', but atchments default to 'post_status'=>'inherit' so you'll need to set the status to 'inherit' or 'any'.
-                'my-custom-post-type',          // - Custom Post Types (e.g. movies)
-                ),  
-        'post_status' => array(                 //(string / array) - use post status. Retrieves posts by Post Status, default value i'publish'.         
-                'publish',                      // - a published post or page.
-                'pending',                      // - post is pending review.
-                'draft',                        // - a post in draft status.
-                'auto-draft',                   // - a newly created post, with no content.
-                'future',                       // - a post to publish in the future.
-                'private',                      // - not visible to users who are not logged in.
-                'inherit',                      // - a revision. see get_children.
-                'trash'                         // - post is in trashbin (available with Version 2.9).
-                ),
-
-        //NOTE: The 'any' keyword available to both post_type and post_status 
-        // queries cannot be used within an array.
-        //DO NOT USE 'any'
-        //'post_type' => 'any',                 // - retrieves any type except revisions and types with 'exclude_from_search' set to true.
-        //'post_status' => 'any',               // - retrieves any status except those from post types with 'exclude_from_search' set to true.
-
-
-
-    //////Pagination Parameters
-        //'posts_per_page' => 10,               //(int) - number of post to show per page (available with Version 2.1). Use 'posts_per_page'=1 to show all posts. Note if the query is in a feed, wordpress overwrites this parameter with the stored 'posts_per_rss' option. Treimpose the limit, try using the 'post_limits' filter, or filter 'pre_option_posts_per_rss' and return -1
-        //'posts_per_archive_page' => 10,       //(int) - number of posts to show per page - on archive pages only. Over-rides showposts anposts_per_page on pages where is_archive() or is_search() would be true
-        'nopaging' => true,                     //(bool) - show all posts or use pagination. Default value is 'false', use paging.
-        //'paged' => get_query_var('paged'),    ////(int) - number of page. Show the posts that would normally show up just on page X when usinthe "Older Entries" link.
-                                                //NOTE: Use get_query_var('page'); if you want your query to work in a Page template that you've set as your static front page. The query variable 'page' holds the pagenumber for a single paginated Post or Page that includes the <!--nextpage--> Quicktag in the post content.
-
-
-
-    //////Offset Parameter
-        'offset' => 3,                          //(int) - number of post to displace or pass over.
-
-    //////Order & Orderby Parameters - Sort retrieved posts.
-        'order' => 'DESC',                      //(string) - Designates the ascending or descending order of the 'orderby' parameter. Defaultto 'DESC'.
-                                                //  Possible Values:
-                                                //  'ASC' - ascending order from lowest to highest values (1, 2, 3; a, b, c).
-                                                //  'DESC' - descending order from highest to lowest values (3, 2, 1; c, b, a).
-        'orderby' => 'date',                    //(string) - Sort retrieved posts by parameter. Defaults to 'date'.
-                                                //Possible Values://
-                                                //  'none' - No order (available with Version 2.8).
-                                                //  'ID' - Order by post id. Note the captialization.
-                                                //  'author' - Order by author.
-                                                //  'title' - Order by title.
-                                                //  'date' - Order by date.
-                                                //  'modified' - Order by last modified date.
-                                                //  'parent' - Order by post/page parent id.
-                                                //  'rand' - Random order.
-                                                //  'comment_count' - Order by number of comments (available with Version 2.9).
-                                                //  'menu_order' - Order by Page Order. Used most often for Pages (Order field in the EdiPage Attributes box) and for Attachments (the integer fields in the Insert / Upload MediGallery dialog), but could be used for any post type with distinct 'menu_order' values (theall default to 0).
-                                                //  'meta_value' - Note that a 'meta_key=keyname' must also be present in the query. Note alsthat the sorting will be alphabetical which is fine for strings (i.e. words), but can bunexpected for numbers (e.g. 1, 3, 34, 4, 56, 6, etc, rather than 1, 3, 4, 6, 34, 56 as yomight naturally expect).
-                                                //  'meta_value_num' - Order by numeric meta value (available with Version 2.8). Also notthat a 'meta_key=keyname' must also be present in the query. This value allows for numericasorting as noted above in 'meta_value'.
-                                                //  'title menu_order' - Order by both menu_order AND title at the same time. For more info see: http://wordpress.stackexchange.com/questions/2969/order-by-menu-order-and-title
-                                                //  'post__in' - Preserve post ID order given in the post__in array (available with Version 3.5).
-
-
-    //////Sticky Post Parameters - Show Sticky Posts or ignore them.
-        'ignore_sticky_posts' => false,         //(bool) - ignore sticky posts or not. Default value is false, don't ignore. Ignore/excludsticky posts being included at the beginning of posts returned, but the sticky post will still be returned in the natural order othat list of posts returned.
-        //NOTE: For more info on sticky post queries see: 
-        //http://codex.wordpress.org/Class_Reference/WP_Query#Sticky_Post_Parameters
-
-
-    //////Time Parameters - Show posts associated with a certain time period.
-        //NOTE: May need meta_query
-        'year' => 2012,                         //(int) - 4 digit year (e.g. 2011).
-        'monthnum' => 3,                        //(int) - Month number (from 1 to 12).
-        'w' =>  25,                             //(int) - Week of the year (from 0 to 53). Uses the MySQL WEEK command. The mode is dependenon the "start_of_week" option.
-        'day' => 17,                            //(int) - Day of the month (from 1 to 31).
-        'hour' => 13,                           //(int) - Hour (from 0 to 23).
-        'minute' => 19,                         //(int) - Minute (from 0 to 60).
-        'second' => 30,                         //(int) - Second (0 to 60).
-
-
-    //////Permission Parameters - Display published posts, as well as private 
-    ////// posts, if the user has the appropriate capability:
-        'perm' => 'readable',                   //(string) Possible values are 'readable', 'editable' (possible more ie all capabilitiealthough I have not tested)
-
-    //////Parameters relating to caching
-        //'no_found_rows' => false,             //(bool) Default is false. WordPress uses SQL_CALC_FOUND_ROWS in most queries in order timplement pagination. Even when you don�t need pagination at all. By Setting this parameter to true you are telling wordPress not tcount the total rows and reducing load on the DB. Pagination will NOT WORK when this parameter is set to true. For more informatiosee: http://flavio.tordini.org/speed-up-wordpress-get_posts-and-query_posts-functions
-        //'cache_results' => true,              //(bool) Default is true
-        //'update_post_term_cache' => true,     //(bool) Default is true
-        //'update_post_meta_cache' => true,     //(bool) Default is true
-        //NOTE Caching is a good thing. Setting these to false is generally not advised. For more info on usage see: http://codex.wordpresorg/Class_Reference/WP_Query#Permission_Parameters
-
-    //////Search Parameter
-        's' => $s,                              //(string) - Passes along the query string variable from a search. For example usage see: http://www.wprecipes.com/how-to-display-the-number-of-results-in-wordpress-search 
-        'exact' => true,                        //(bool) - flag to make it only match whole titles/posts - Default value is false. For more information see: https://gist.github.com/2023628#gistcomment-285118
-        'sentence' => true,                     //(bool) - flag to make it do a phrase search - Default value is false. For more information see: https://gist.github.com/2023628#gistcomment-285118 NOTE: Previously 'sentence' was spelled 'sentance' per the gist comment linked above. I believe that was a typo. Have not tested personaly.
-
-    //////Post Field Parameters
-        //Not sure what these do. For more info see: 
-        // http://codex.wordpress.org/Class_Reference/WP_Query#Post_Field_Parameters
-
-    //////Filters
-        //For more information on available Filters see: 
-        // http://codex.wordpress.org/Class_Reference/WP_Query#Filters
-
-    );
-    }
-////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE OF presetObj ////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-//  object(APLPresetObj)[282]
-//  public '_postParents' => 
-//    array (size=1)
-//      0 => string '26' (length=2)
-//  public '_postTax' => 
-//    object(stdClass)[283]
-//      public 'post' => 
-//        object(stdClass)[284]
-//          public 'taxonomies' => 
-//            object(stdClass)[285]
-//              ...
-//      public 'cpt02' => 
-//        object(stdClass)[288]
-//          public 'taxonomies' => 
-//            object(stdClass)[289]
-//              ...
-//  public '_listCount' => int 5
-//  public '_listOrderBy' => string 'date' (length=4)
-//  public '_listOrder' => string 'DESC' (length=4)
-//  public '_postVisibility' => 
-//    array (size=1)
-//      0 => string 'public' (length=6)
-//  public '_postStatus' => 
-//    array (size=1)
-//      0 => string 'publish' (length=7)
-//  public '_userPerm' => string 'readable' (length=8)
-//  public '_postAuthorOperator' => string 'include' (length=7)
-//  public '_postAuthorIDs' => 
-//    array (size=0)
-//      empty
-//  public '_listIgnoreSticky' => boolean false
-//  public '_listExcludePosts' => 
-//    array (size=1)
-//      0 => int 42
-//  public '_listExcludeDuplicates' => boolean false
-//  public '_listExcludeCurrent' => boolean true
-//  public '_exit' => string '' (length=0)
-//  public '_before' => string '<p><hr/>' (length=8)
-//  public '_content' => string '<a href="[post_permalink]">[post_title]</a> by [post_author] - [post_date]<br/>[post_excerpt]<hr/>' (length=98)
-//  public '_after' => string '</p>' (length=4)
-////////////////////////////////////////////////////////////////////////////////
-    
-    //CURRENTLY NOT IN USE
+    //More INFO on the $arg go to https://gist.github.com/7352549.git
     private function set_query_init()
     {
         //Instead of using 'any' in $arg['post_type'], use $post_type_list below.
@@ -276,113 +83,54 @@ class APLQuery
         }
         unset($value);
         unset($skip_post_types);
-
-        //\\vv  EXAMPLE  vv////
+        
         $arg = array(
-            'author' => '',//this will need to be passed to other queries
-            
-            'post__in' => array(1,2,3),
-            'post__not_in' => array(1,2,3),//DO NOT USE - there will be a manual function at the end
-            'post_type' => array(//Passes remaining post types
-                    'post',
-                    'page',
-                    'revision',
-                    'attachment',
-                    'my-custom-post-type',
-                    ),
-            'post_status' => array(//passed
+            'author' => '',
+            'tax_query' => array(),
+            //'post_parent' => 0,
+            'post__in' => array(),
+            'post__not_in' => array(),//DO NOT USE IN WP_Query - there will be a manual function at the end
+            'post_type' => $post_type_list,
+            'post_status' => array(
                     'publish',
-                    'pending',
-                    'draft',
-                    'auto-draft',
-                    'future',
-                    'private',
-                    'inherit',
-                    'trash'
                     ),
-            
-            'order' => 'DESC',//Final or Pass for trimmings?
-            'orderby' => 'date',//Final or Pass for trimmings?
-            
-            'perm' => 'readable',//Passed
-            
-            'nopaging' => true,//Final or ALL
-            'ignore_sticky_posts' => false,//Maybe Final, or may be passed
-            
-        );////^^  EXAMPLE  ^^\\//
+            'nopaging' => true,
+            'order' => 'DESC',
+            'orderby' => 'date',
+            'ignore_sticky_posts' => false,
+            'perm' => 'readable',
+        );
+        
+        return $arg;
+        
     }
     
-    //Create an INIT function to set defaults?
+    ////////////////////////////////////////////////////////////////////////////
+    //DRAFT STEPS
+    //foreach post type
+    //  (catch array) if there exists another (post_type) string, do this function, and send remaining strings
+    //  if there is a page parent (including current). Set ID
+    //    (catch array) if there is more parents, do this function, and send remaining IDs
+    //  foreach taxonomy
+    //    Check if require taxonomy is selected
+    //    Add terms
+    //    Check if required terms is selected
+    //    Check if include current page is selected, and taxonomy matches. Add terms if any.
+    //
+    //Fill in query
+    //
+    //Set public or private
+    // if both are selected, just duplicate 
+    ////////////////////////////////////////////////////////////////////////////
+    //TODO - WRITE FINAL STEPS
+    //
+    
+    //CHANGE?  To set_query_str_arrays
+    //            set_query_strs
+    //            set_query_arrays
+    //It's set to set_query since it's the main query
     private function set_query($presetObj)
     {
-        
-        //\\vv  EXAMPLE  vv////
-        $arg_example = array(
-            'author' => '1,2,-3,',//this will need to be passed to other queries
-            'tax_query' => array(
-                'relation' => 'OR',
-                array(
-                    'taxonomy' => 'color',
-                    'field' => 'id',
-                    'terms' => array( 103, 115, 206 ),
-                    'include_children' => false,
-                    'operator' => 'IN'
-                ),
-                array(
-                    'taxonomy' => 'actor',
-                    'field' => 'id',
-                    'terms' => array( 103, 115, 206 ),
-                    'include_children' => false,
-                    'operator' => 'AND'
-                 )
-            ),
-            'post_parent' => 1,
-            'post__in' => array(1,2,3),
-            'post__not_in' => array(1,2,3),//DO NOT USE - there will be a manual function at the end
-            'post_type' => array(//Passes remaining post types
-                    'post',
-                    'page',
-                    'revision',
-                    'attachment',
-                    'my-custom-post-type',
-                    ),
-            'post_status' => array(//passed
-                    'publish',
-                    'pending',
-                    'draft',
-                    'auto-draft',
-                    'future',
-                    'private',
-                    'inherit',
-                    'trash'
-                    ),
-            'nopaging' => true,//Final or ALL
-            'order' => 'DESC',//Final or Pass for trimmings?
-            'orderby' => 'date',//Final or Pass for trimmings?
-            'ignore_sticky_posts' => false,//Maybe Final, or may be passed
-            'perm' => 'readable',//Passed
-            
-        );////^^  EXAMPLE  ^^\\//
-        
-        
-        
-        //foreach post type
-        //  (catch array) if there exists another (post_type) string, do this function, and send remaining strings
-        //  if there is a page parent (including current). Set ID
-        //    (catch array) if there is more parents, do this function, and send remaining IDs
-        //  foreach taxonomy
-        //    Check if require taxonomy is selected
-        //    Add terms
-        //    Check if required terms is selected
-        //    Check if include current page is selected, and taxonomy matches. Add terms if any.
-        //
-        //Fill in query
-        //
-        //Set public or private
-        // if both are selected, just duplicate 
-        //
-
-        
         //Clone since this is a repeating function and the variable keeps acting
         // like a pointer...to my surprise. I don't know if it is just objects that
         // are effected or I'm using 5.3 atm, but I thought you had to return the 
@@ -397,20 +145,19 @@ class APLQuery
         //Used for colecting and returning an array of $query_str
         $query_str_arrays = array();//array(array) - Multi-Dimensional
         //Used for this current instance of set_query
-        $query_str = array();
-        
+        $query_str = $this->set_query_init();
+        //$query_str = array();
         
         ////POST_TYPES & TAXONOMIES + POST_PARENTS
         //DON'T USE A FOR LOOP for post_types
         $post_type_key = key((array) $preset->_postTax);
         if ($post_type_key !== null) //or use !empty()?
         {
+            $query_str['post_type'] = array();
             //Cycle through the Page* Parent array and match the Post Type
             //Use this type of FOR loop in order to use the index as a counter
             for ($i = 0; $i < count($preset->_postParents); $i++)
             {
-                
-                
                 //If post type matches
                 if (get_post_type($preset->_postParents[$i]) == $post_type_key)
                 {
@@ -439,15 +186,14 @@ class APLQuery
             $tax_operator = 'OR';
             foreach ($preset->_postTax->$post_type_key->taxonomies as $taxonomy_slug => $taxonomy_value)
             {
-                
+                if ($taxonomy_value->require_taxonomy === TRUE)
+                {
+                    $tax_operator = 'AND';
+                }
                 $term_operator = 'IN';
                 if ($taxonomy_value->require_terms === TRUE)
                 {
                     $term_operator = 'AND';
-                }
-                if ($taxonomy_value->require_taxonomy === TRUE)
-                {
-                    $tax_operator = 'AND';
                 }
                 //Set query string's tax_query
                 $query_str['tax_query'][] = array(
@@ -462,9 +208,7 @@ class APLQuery
             }
             $query_str['tax_query']['relation'] = $tax_operator;
             
-            
-            
-            $query_str['post_type'] = $post_type_key;
+            $query_str['post_type'] = array($post_type_key);
             unset($preset->_postTax->$post_type_key);
             if (count((array) $preset->_postTax) > 0)
             {
@@ -478,7 +222,7 @@ class APLQuery
         elseif (count($preset->_postParents) > 0)//catches the remaining
         {
             //Overwrites the default/init post_type (Any need to?)
-            //$query_str['post_type'] = array();
+            $query_str['post_type'] = array();
             //If a Post Parent arg is already set, then repeat this query. This
             // is in case it just happens to be set and to prevent overwriting.
             if (!empty($query_str['post_parent']))
@@ -496,14 +240,13 @@ class APLQuery
                 $query_str['post_parent'] = intval(array_shift($preset->_postParents));
             }
         }
-        else
-        {
-            return;
-        }
+//        else
+//        {
+//            
+//            return;
+//        }
         
         $query_str = array_merge($query_str, $this->set_query_base_val($preset));
-        
-        
         
         // If it is private and is the only visability, change/add private.
         // else if both visability status exists.
@@ -517,7 +260,7 @@ class APLQuery
         if (count((array)$preset->_postVisibility) === 2)
         {
             //duplicate
-            $query_str_arrays[] = clone $query_str;
+            $query_str_arrays[] = $query_str;
             $query_str['post_status'][] = 'private';
             //$query_str_arrays[] = $query_str;
         }
@@ -527,41 +270,25 @@ class APLQuery
         }
         //Otherwise leave alone.
         $query_str_arrays[] = $query_str;
+        
         return $query_str_arrays;
-        //return array_merge($query_str_arrays, $query_str);
         
-        
-        //PASSED - start with values that are passed across all strings
-        //author
-        //page_id
-        //status
-        //sort
-        //FINAL
-        //
-        //
-        
-        //what requires additional queries?
-        //Post Types
-        //Parent
-        //Private (do last to dup)
-        
-        
-        //return $query_str_array;
     }
     private function set_query_base_val($presetObj)
     {
         //INIT
-        $arg = array(
-            //'author' => '',//this will need to be passed to other queries
-            'post_status' => array(),
-            'order' => 'DESC',//Final or Pass for trimmings?
-            'orderby' => 'date',//Final or Pass for trimmings?
-            'perm' => 'readable',//Passed
-            //'post__in' => array(),
-            'post__not_in' => array(),//DO NOT USE w/ WP_Query - there will be a manual function at the end
-            'ignore_sticky_posts' => false,//Maybe Final, or may be passed
-            'nopaging' => true,//Final or ALL   
-        );
+        $arg = array();
+        //$arg = array(
+        //    'author' => '',//this will need to be passed to other queries
+        //    'post_status' => array(),
+        //    'order' => 'DESC',//Final or Pass for trimmings?
+        //    'orderby' => 'date',//Final or Pass for trimmings?
+        //    'perm' => 'readable',//Passed
+        //    //'post__in' => array(),
+        //    'post__not_in' => array(),//DO NOT USE w/ WP_Query - there will be a manual function at the end
+        //    'ignore_sticky_posts' => false,//Maybe Final, or may be passed
+        //    'nopaging' => true,//Final or ALL   
+        //);
         
         ////AUTHOR FILTER////
         if ($presetObj->_postAuthorOperator != 'none' && !empty($presetObj->_postAuthorIDs))
@@ -584,16 +311,21 @@ class APLQuery
             $arg['author'] = $author_filter;
         }//END of Author Filter
         
-        
         ////POST STATUS////
         //Don't need to worry about private value, it's in _postVisibility,
         // and will be used in set_query
-        foreach ($presetObj->_postStatus as $key => $value)
+        if (!empty($presetObj->_postStatus))
         {
-            $arg['post_status'][] = $value;
+            $post_status_filter = array();
+            foreach ($presetObj->_postStatus as $value)
+            {
+                $post_status_filter[] = $value;
+            }
+            $arg['post_status'] = $post_status_filter;
         }
+            
         
-        //Order/Sort
+        ////Order/Sort////
         if (!empty($presetObj->_listOrder))
         {
             $arg['order'] = $presetObj->_listOrder;
@@ -603,16 +335,16 @@ class APLQuery
             $arg['orderby'] = $presetObj->_listOrderBy;
         }
         
-        //Permissions
+        ////Permissions////
         if (!empty($presetObj->_userPerm))
         {
             $arg['perm'] = $presetObj->_userPerm;
         }
         
-        //posts in
+        ////posts in////
         //not in use with presetObj yet, but will be used in $this->query
         
-        //posts not in
+        ////posts not in////
         if (!empty($presetObj->_listExcludePosts))
         {
             foreach ($presetObj->_listExcludePosts as $i => $post_id)
@@ -622,19 +354,124 @@ class APLQuery
                     $arg['post__not_in'][] = $post_id;
                 }
             }
+            $arg['post__not_in'] = array_unique($arg['post__not_in']);
         }
-        $arg['post__not_in'] = array_unique($arg['post__not_in']);
         
-        //Ignore Stickies
+        ////Ignore Stickies////
         if (!empty($presetObj->_listIgnoreSticky))
         {
             $arg['ignore_sticky_posts'] = $presetObj->_listIgnoreSticky;
         }
         
         return $arg;
+        
+    }
+    private function query_str_consolidate($query_str_array)
+    {
+        
+        //What can be Merged
+        // Post_Types that have Terms that match
+        // Match Post Visibility/Status
+        
+        //What exempts from Merging
+        // Post Parents
+        // Public and Private Duplicates
+        // Dif. Require Taxonomy
+        // Dir. Require Terms
+        // 
+        // 
+        for ($i = 0; $i < count($query_str_array); $i++)
+        {
+            if (empty($query_str_array[$i]['post_parent']))
+            {
+                for ($j = $i + 1; $j < count($query_str_array); $j++)
+                {
+                    //IF there isn't a post_parent that would void a merge and
+                    // IF both query_str have or not have private post_status
+                    //$c1 = $this->tax_query_match($query_str_array[$i]['tax_query'], $query_str_array[$j]['tax_query']);
+                    if (empty($query_str_array[$j]['post_parent']) &&
+                        in_array('private', $query_str_array[$i]['post_status']) === in_array('private', $query_str_array[$j]['post_status']) &&
+                        $this->tax_query_match($query_str_array[$i]['tax_query'], $query_str_array[$j]['tax_query']))
+                    {
+                        $query_str_array[$i] = $this->query_str_merge($query_str_array[$i], $query_str_array[$j]);
+                        unset($query_str_array[$j]);
+                        $query_str_array = array_values($query_str_array);
+                        $i--;
+                    }
+                }
+            }
+        }
+        //$query_str_array = array_values($query_str_array);
+        
+//        foreach ($query_str_array as $key => $query_str1)
+//        {
+//            
+//            if (empty($query_str1['post_parent']))
+//            {
+//
+//            }
+//            foreach ($query_str_array as $key2 => $query_str2)
+//            {
+//                
+//                foreach ($query_str2['tax_query'] as $key3 => $value3);
+//                
+//            }
+//            
+//        }
+        return $query_str_array;
+    }
+    
+    private function query_str_merge($query_str1, $query_str2)
+    {
+        $query_str1['post_type'] = array_merge($query_str1['post_type'], $query_str2['post_type']);
+        return $query_str1;
+    }
+    
+    private function tax_query_match($tax_query1, $tax_query2)
+    {
+        // Init? Any variable needed?
+        if ($tax_query1['relation'] === $tax_query2['relation'])
+        {
+            //Add/Skip one because of the 'relation' key
+            for ($i = 0; $i < (count($tax_query1) - 1); $i++)
+            {
+                for ($j = 0; $j < (count($tax_query2) - 1); $j++)
+                {
+                    //Would have included the next IF statement if the 2 weren't
+                    // required to have and not have an else return false.
+                    if ($tax_query1[$i]['taxonomy'] === $tax_query2[$j]['taxonomy'])
+                    {
+                        $tax_match_found = TRUE;
+                        if ($tax_query1[$i]['operator'] === $tax_query2[$j]['operator'])
+                        {
+                            foreach ($tax_query1[$i]['terms'] as $key => $value)
+                            {
+                                if (!in_array($value, $tax_query2[$j]['terms']))
+                                {
+                                    return FALSE;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return FALSE;
+                        }
+                    }
+                }
+                if (!$tax_match_found)
+                {
+                    return FALSE;
+                }
+            }
+        }
+        else
+        {
+            return FALSE;
+        }
+        return TRUE;
     }
     //Instead of querying or using the global post, just grab the post ID and let
-    // WP do the work.
+    // WP do that type of work.
     private function set_presetObj_page_vals($presetObj)
     {
         //Current post/page ID
@@ -673,7 +510,6 @@ class APLQuery
         //Removes any duplicates by using array_unique()
         $presetObj->_postParents = array_unique($presetObj->_postParents);
         
-        
         ////////////////////////////////////////////////////////////////////////
         //// POST TYPE & TAXONOMIES -> TERMS ///////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
@@ -688,7 +524,6 @@ class APLQuery
             // post_type that is selected to include terms...so it won't spread
             // to all post_types unless the user selects it.
             //if ($current_ID === $post_type)
-            
             foreach ($preset_pt_value->taxonomies as $preset_taxonomy => $preset_tax_value)
             {
                 if ($preset_tax_value->include_terms === TRUE)
@@ -721,6 +556,7 @@ class APLQuery
         }
         
         return $presetObj;
+        
     }
     private function query($query_str_array, $repeated = FALSE)
     {
@@ -754,9 +590,11 @@ class APLQuery
         //$this->set_query_base_val($query_str, $presetObj);
         // TODO REMOVE SIMULAR CODE IN APLCore::APL_run THEN ENABLE NEXT LINE
         $presetObj2 = $this->set_presetObj_page_vals($presetObj2);
+        //TODO Account for Any/All for taxonomies. May have to get_terms. TEST FIRST
         $query_str_array = $this->set_query($presetObj2);
         
         //MERGE SIMULAR QUERIES? - would merge matches and lessen the amount of queries.
+        $query_str_array = $this->query_str_consolidate($query_str_array);
         //$this->query($query_str_array);
         
         
