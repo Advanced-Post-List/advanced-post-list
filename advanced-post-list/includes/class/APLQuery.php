@@ -146,7 +146,12 @@ class APLQuery
         $query_str_arrays = array();//array(array) - Multi-Dimensional
         //Used for this current instance of set_query
         $query_str = $this->set_query_init();
-        //$query_str = array();
+        //This is used to prevent repeating when the scope of the presetObj has
+        // already been finished. This is caused by post_parents that have 
+        // post_types/taxonomies and causes the possibility of using set_query 
+        // twice in one instance. Could add another main elseif, but this probably
+        // allows for less code. New function?
+        $set_query_used = FALSE;
         
         ////POST_TYPES & TAXONOMIES + POST_PARENTS
         //DON'T USE A FOR LOOP for post_types
@@ -176,6 +181,7 @@ class APLQuery
                         {
                             $query_str_arrays = array_merge($query_str_arrays, 
                                                             $this->set_query($preset));
+                            $set_query_used = TRUE;
                             $i = count($preset->_postParents);
                         }
                     }
@@ -210,7 +216,7 @@ class APLQuery
             
             $query_str['post_type'] = array($post_type_key);
             unset($preset->_postTax->$post_type_key);
-            if (count((array) $preset->_postTax) > 0)
+            if (count((array) $preset->_postTax) > 0 && $set_query_used === FALSE)
             {
                 $query_str_arrays = array_merge($query_str_arrays, $this->set_query($preset));
             }
