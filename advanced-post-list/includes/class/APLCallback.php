@@ -237,20 +237,56 @@ class APLCallback
   
   function postThumbCallback($matches)
   {
-  	if(isset($matches[2]))
+  	$imageUrl = "";
+  	$mode = "none";
+  	
+  	if(isset($matches[4]))
   	{
-  		$imageSize = $matches[2];
+  		switch(strtolower($matches[4]))
+  		{
+  			case "force":
+  			case "on":
+  				$mode = strtolower($matches[4]);
+  				break;
+  		}
   	}
-  	else
+  	
+  	if ($mode != "force" && current_theme_supports('post-thumbnails'))
   	{
-  		$imageSize = "full";
+  	  if(isset($matches[2]))
+  	  {
+  		  $imageSize = $matches[2];
+  	  }
+  	  else
+  	  {
+  		  $imageSize = "full";
+  	  }
+  	 
+  	  //the documentation for wp_get_attachment_image_src says you can pass in an array of width and height but that didn't seem to work.
+  	  //It just returned the size closest to the values I passed in so we are stuck with the four options: thumbnail, medium, large or full
+  	  $arr = wp_get_attachment_image_src(get_post_thumbnail_id($this->page->ID), $imageSize);
+    
+  	  $imageUrl = $arr[0];
+  	}
+
+  	//if we couldn't find an image and we have an "extract" paramater, search the page content for an image tag and extract its url
+  	if ($imageUrl == "" && $mode != "none")
+  	{
+  		//found two regex's to do this. Not sure which is better so I randomly picked the second one
+  		//both only grab the first image in the page so I'm not able to do the option where it can randomly select an image from the page instead of just the first one
+  		//$postImages = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $this->page->post_content, $postMatches);
+  		$postImages = preg_match_all("/<img .*?(?=src)src=\"([^\"]+)\"/si", $this->page->post_content, $postMatches);
+  		
+  		//I couldn't find a way to get the image ID without doing a whole other query so unfortunately we are stuck with the image as it appears in the page and the size parameter does not work here
+
+  		//if we found an image tag with url
+  		if(isset($postMatches[1]) && isset($postMatches[1][0]))
+  		{
+  		  $imageUrl = $postMatches[1][0];
+  		}
   	}
   	 
-  	//the documentation for wp_get_attachment_image_src says you can pass in an array of width and height but that didn't seem to work.
-  	//It just returned the size closest to the values I passed in so we are stuck with the four options: thumbnail, medium, large or full
-  	$arr = wp_get_attachment_image_src(get_post_thumbnail_id($this->page->ID), $imageSize);
-  	 
-  	return $arr[0];
+  	return $imageUrl;
   }
 
   function postParentCallback($matches)

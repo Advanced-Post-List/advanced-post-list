@@ -1376,6 +1376,9 @@ class APLCore
             $presetName = $_POST["filename"];
             $rtnData->filename = 'APL.' . $presetName . '.' . date('Y-m-d');
             
+            $TMP_export_dataOutput->presetDbObj = new stdClass();
+            $TMP_export_dataOutput->presetDbObj->_preset_db = new stdClass();
+            
             $TMP_export_dataOutput->presetDbObj->_preset_db->$presetName = $presetDbObj->_preset_db->$presetName;
         }
         else 
@@ -2299,13 +2302,21 @@ function APLInternalShortcodeReplace($str,
     							               array(&$postCallback, 'postAuthorCallback'),
     							               $str);
     
-    if (current_theme_supports('post-thumbnails'))
-    {
-    	 
-    	$str = preg_replace_callback('#\[ *post_thumb *(size=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-    			array(&$postCallback, 'postThumbCallback'),
-    			$str);
-    }
+
+    	/* 
+    $str = preg_replace_callback('#\[ *post_thumb *(size=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
+                              		array(&$postCallback, 'postThumbCallback'),
+    			                        $str);
+    			                        */
+    
+    $str = preg_replace_callback('#\[ *post_thumb *(size=[\'|\"]([^\'\"]*)[\'|\"])? *(extract=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
+    		array(&$postCallback, 'postThumbCallback'),
+    		$str);
+    
+    
+    
+    
+    
     
     $str = preg_replace_callback('#\[ *post_parent *(link=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'postParentCallback'),
