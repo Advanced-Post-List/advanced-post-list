@@ -3,6 +3,7 @@
 //PLEASE NOTE: MAKING A CHILD CLASS OF WP_QUERY MAY BE SOMETHING RESERVED LATER 
 //  FOR PREMIUM USE. THE OPTION IS STILL UP FOR DEBATE, BUT IF FOLLOWED THROUGH
 //  SOME FEATURES MAY REQUIRE CONTINUAL SUPPORT.
+//
 //LIST OF POSSIBLE FIXES AND FEATURES EXTENDING COULD OFFER
 // * Better sticky support
 // * Can add additional sorting methods
@@ -201,6 +202,13 @@ class APLQuery
                 {
                     $term_operator = 'AND';
                 }
+                //For the Any/All setting
+                if (in_array(0, $taxonomy_value->terms))
+                {
+                    //Does this need all terms added or leave empty
+                    $taxonomy_value->terms = array();
+                    
+                }
                 //Set query string's tax_query
                 $query_str['tax_query'][] = array(
                     'taxonomy' => $taxonomy_slug,
@@ -284,17 +292,6 @@ class APLQuery
     {
         //INIT
         $arg = array();
-        //$arg = array(
-        //    'author' => '',//this will need to be passed to other queries
-        //    'post_status' => array(),
-        //    'order' => 'DESC',//Final or Pass for trimmings?
-        //    'orderby' => 'date',//Final or Pass for trimmings?
-        //    'perm' => 'readable',//Passed
-        //    //'post__in' => array(),
-        //    'post__not_in' => array(),//DO NOT USE w/ WP_Query - there will be a manual function at the end
-        //    'ignore_sticky_posts' => false,//Maybe Final, or may be passed
-        //    'nopaging' => true,//Final or ALL   
-        //);
         
         ////AUTHOR FILTER////
         if ($presetObj->_postAuthorOperator != 'none' && !empty($presetObj->_postAuthorIDs))
@@ -578,6 +575,63 @@ class APLQuery
         //Return WP_Query Object
         //
         
+        $post_in_IDs = array();
+        $post_not_in_IDs = array();
+        $query_str = array_shift($query_str_array);
+        
+        if (!empty($query_str_array))
+        {
+            $post_in_IDs = $this->query($query_str_array, TRUE);
+            $query_str['post__in'] = array_merge($query_str['post__in'], $post_in_IDs);
+        }
+        
+        if (!empty($query_str['post__not_in']))
+        {
+            $post_not_in_IDs = $query_str['post__not_in'];
+            
+        }
+        unset($query_str['post__not_in']);
+        
+        if ($repeated === TRUE)
+        {
+            
+            $query_str['fields'] = 'ids';
+            $Query_Obj = new WP_Query($query_str);
+            
+            return $Query_Obj->posts;
+            
+        }
+        else
+        {
+            $Query_Obj = new WP_Query($query_str);
+            
+            $this->post__not_in();
+            
+            return $Query_Obj;
+        }
+        
+        
+        
+        
+//        $query_str_array_key = key((array) $query_str_array);
+//        if (!empty($query_str_array_key) && !empty($query_str_array))
+//        {
+//            $query_str = $query_str_array[$query_str_array_key];
+//            if (count($query_str_array) > 1)
+//            {
+//                unset($query_str_array[$query_str_array_key]);
+//                $this->query($query_str_array, TRUE);
+//            }
+//        }
+            
+        
+        ////////////////////////////////////////////////////////////////////////
+//        $temp = array();
+//        while ( $wp_query->have_posts() ) : $wp_query->the_post();
+//            $temp[] = get_the_ID();
+//        endwhile;
+//
+//        print_r($temp);
     }
     private function post__not_in()
     {
@@ -592,8 +646,6 @@ class APLQuery
         //DUPLICATE/CLONE FOR TESTING
         $presetObj2 = clone $presetObj;
         
-        //$this->set_query_init();
-        //$this->set_query_base_val($query_str, $presetObj);
         // TODO REMOVE SIMULAR CODE IN APLCore::APL_run THEN ENABLE NEXT LINE
         $presetObj2 = $this->set_presetObj_page_vals($presetObj2);
         //TODO Account for Any/All for taxonomies. May have to get_terms. TEST FIRST
@@ -601,13 +653,15 @@ class APLQuery
         
         //MERGE SIMULAR QUERIES? - would merge matches and lessen the amount of queries.
         $query_str_array = $this->query_str_consolidate($query_str_array);
-        //$this->query($query_str_array);
+        //QUERY ARG ARRAY
+        $this->query($query_str_array);
         
         
         
         ////////////////////////////////////////////////////////////////////////
         //-^^- NEW -^^-/////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
+        //--------------------------------------------------------------------//
         ////////////////////////////////////////////////////////////////////////
         //-vv- REMOVE -vv-//////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
