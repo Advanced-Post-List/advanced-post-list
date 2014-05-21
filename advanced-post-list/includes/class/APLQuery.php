@@ -13,6 +13,9 @@ class WP_Query_child extends WP_Query
 {
     
 }
+////////////////////////////////////////////////////////////////////////////////
+//****************************************************************************//
+////////////////////////////////////////////////////////////////////////////////
 class APLQuery
 {
     /**
@@ -21,6 +24,12 @@ class APLQuery
      * @todo Remove this...
      */
     public $_posts;
+    
+    /**
+     * @var array
+     * @since 0.3.b7
+     */
+    public $_query_str_array;
     /**
      * <p><b>Desc:</b> Plugin's shadowed version of WP_Query Class. This class
      *                 was created to add additional funtions that WP_Query
@@ -236,9 +245,10 @@ class APLQuery
         elseif (count($preset->_postParents) > 0)//catches the remaining
         {
             //Overwrites the default/init post_type (Any need to?)
-            $query_str['post_type'] = array();
+            //$query_str['post_type'] = array();
+            
             //If a Post Parent arg is already set, then repeat this query. This
-            // is in case it just happens to be set and to prevent overwriting.
+            // is just in case it happens to be set and to prevent overwriting.
             if (!empty($query_str['post_parent']))
             {
                 $query_str_arrays = array_merge($query_str_arrays, $this->set_query($preset));
@@ -247,11 +257,13 @@ class APLQuery
             elseif (count($preset->_postParents) > 1)
             {
                 $query_str['post_parent'] = intval(array_shift($preset->_postParents));
+                $query_str['post_type'] = get_post_type($query_str['post_parent']);
                 $query_str_arrays = array_merge($query_str_arrays, $this->set_query($preset));
             }
             else
             {
                 $query_str['post_parent'] = intval(array_shift($preset->_postParents));
+                $query_str['post_type'] = get_post_type($query_str['post_parent']);
             }
         }
 //        else
@@ -480,6 +492,10 @@ class APLQuery
         //Current post/page ID
         $post_ID = get_the_ID();
         
+        if ($presetObj->_listExcludeCurrent === TRUE)
+        {
+            $presetObj->_listExcludePosts[] = $post_ID;
+        }
         ////////////////////////////////////////////////////////////////////////
         //// PAGE PARENTS //////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
@@ -488,7 +504,8 @@ class APLQuery
         // added an IF statement to the FOREACH loop to prevent unnecessary looping,
         // but the dynamic indicator, zero (0), still needs to be removed if the 
         // global post is not from a hierarchical post type.
-        $post_hierarchical = is_post_type_hierarchical(get_post_type($post_ID));
+        $post_post_type = get_post_type($post_ID);
+        $post_hierarchical = is_post_type_hierarchical($post_post_type);
         foreach ($presetObj->_postParents as $key => $value)
         {
             //If include current post is enabled. Looks for the dynamic value, zero (0),
@@ -497,7 +514,7 @@ class APLQuery
             if (intval($value) === 0)
             {
                 //If the post is a valid page parent, then replace 0 with page ID
-                if ($post_hierarchical)
+                if ($post_hierarchical && !empty($post_ID))
                 {
                     //Replace Current Page Parent indicator with the (real) page ID 
                     $presetObj->_postParents[$key] = $post_ID;
@@ -511,7 +528,7 @@ class APLQuery
             }
         }
         //Removes any duplicates by using array_unique()
-        $presetObj->_postParents = array_unique($presetObj->_postParents);
+        $presetObj->_postParents = array_values(array_unique($presetObj->_postParents));
         
         ////////////////////////////////////////////////////////////////////////
         //// POST TYPE & TAXONOMIES -> TERMS ///////////////////////////////////
@@ -561,7 +578,7 @@ class APLQuery
         return $presetObj;
         
     }
-    private function query($query_str_array, $repeated = FALSE)
+    public function query_wp($query_str_array, $repeated = FALSE)
     {
         
         //if there is more than one query string
@@ -579,12 +596,16 @@ class APLQuery
         $post_not_in_IDs = array();
         $query_str = array_shift($query_str_array);
         
+        //If more query strings exist, then repeat this function. When returned
+        // merge post ids for final query.
         if (!empty($query_str_array))
         {
-            $post_in_IDs = $this->query($query_str_array, TRUE);
+            $post_in_IDs = $this->query_wp($query_str_array, TRUE);
             $query_str['post__in'] = array_merge($query_str['post__in'], $post_in_IDs);
         }
         
+        //Since post__in and post__not_in don't mix and post__in is used to
+        // collect ids. There has to be a seperate variable.
         if (!empty($query_str['post__not_in']))
         {
             $post_not_in_IDs = $query_str['post__not_in'];
@@ -592,6 +613,8 @@ class APLQuery
         }
         unset($query_str['post__not_in']);
         
+        //if this is a repeated function, not final, then return only the ids
+        // to be added to post__in
         if ($repeated === TRUE)
         {
             
@@ -605,7 +628,9 @@ class APLQuery
         {
             $Query_Obj = new WP_Query($query_str);
             
-            $this->post__not_in();
+            //TODO finish the function to exclude posts
+            
+            $Query_Obj = $this->post__not_in($Query_Obj, $post_not_in_IDs);
             
             return $Query_Obj;
         }
@@ -633,13 +658,22 @@ class APLQuery
 //
 //        print_r($temp);
     }
-    private function post__not_in()
+    private function post__not_in($Query_Obj, $post_not_in_IDs)
     {
+        //$posts = $Query_Obj->posts;
+        foreach ($Query_Obj->posts as $i => $post)
+        {
+            foreach ($post_not_in_IDs as $post_not_ID)
+            {
+                if ($post->ID === $post_not_ID)
+                {
+                    unset($Query_Obj->posts[$i]);
+                }
+            }
+        }
+        $Query_Obj->posts = array_values($Query_Obj->posts);
         
-        //for each exclude ID
-        // if ID maches posts, then unset
-        //
-        
+        return $Query_Obj;
     }
     public function __construct($presetObj)
     {
@@ -649,12 +683,12 @@ class APLQuery
         // TODO REMOVE SIMULAR CODE IN APLCore::APL_run THEN ENABLE NEXT LINE
         $presetObj2 = $this->set_presetObj_page_vals($presetObj2);
         //TODO Account for Any/All for taxonomies. May have to get_terms. TEST FIRST
-        $query_str_array = $this->set_query($presetObj2);
+        $_query_str_array = $this->set_query($presetObj2);
         
         //MERGE SIMULAR QUERIES? - would merge matches and lessen the amount of queries.
-        $query_str_array = $this->query_str_consolidate($query_str_array);
+        $this ->_query_str_array = $this->query_str_consolidate($_query_str_array);
         //QUERY ARG ARRAY
-        $this->query($query_str_array);
+        //return $this->query_wp($query_str_array);
         
         
         
@@ -665,7 +699,7 @@ class APLQuery
         ////////////////////////////////////////////////////////////////////////
         //-vv- REMOVE -vv-//////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
-        
+        /*
         //Get the correct/useable post types 
         //-vv- Use this when nothing is selected instead of the 'any' option
         $post_type_names = get_post_types('',
@@ -826,9 +860,11 @@ class APLQuery
                                     $presetObj->_listCount);
         }
         
-        $this->_posts = $rtnPosts;
+        //$this->_posts = $rtnPosts;
         //var_dump($this->_posts);
         //return $rtnPosts;
+        
+         */
     }
     
     

@@ -1985,14 +1985,20 @@ class APLCore
         // Step 3
         //// GET (GLOBAL) POST DATA OF THE CURRENT POST/PAGE THAT THE
         ////  POST LIST IS DISPLAYED ON.
-        $post_obj = $this->APL_get_post_attr();
-
+        
+        ////vv****DELETE****vv////
+        //$post_obj = $this->APL_get_post_attr();
+        
         // Step 4
         //// EXCLUDE CURRENT POST FROM DISPLAYING ON THE POST LIST
-        if ($presetObj->_listExcludeCurrent === TRUE)
-        {
-            $presetObj->_listExcludePosts[] = $post_obj->ID;
-        }
+//        if ($presetObj->_listExcludeCurrent === TRUE)
+//        {
+//            $presetObj->_listExcludePosts[] = $post_obj->ID;
+//        }
+        ////^^****DELETE****^^////
+        
+        
+        //Removes post ids from other post lists
         if ($presetObj->_listExcludeDuplicates === TRUE)
         {
             foreach ($this->_remove_duplicates as $postID)
@@ -2007,66 +2013,104 @@ class APLCore
         //// IF POSTPARENT IS NOT SET THEN CREATE AN EMPTY DEFAULT. OR IF THERE'S  
         ////  ONE OR MORE PARENT IDS, THEN ADD THOSE PAGE IDS TO THE PARENT ARRAY 
         ////  AND IF CURRENT PAGE IS SELECTED THEN ADD CURRENT PAGE ID IF. 
-        $count = count($presetObj->_postParents);
-        if (!isset($presetObj->_postParents))
-        {
-            $presetObj->_postParents = array();
-            $count = count($presetObj->_postParents);
-        }
-        else if ($count > 0)
-        {
-            foreach ($presetObj->_postParents as $index => $value)
-            {
-                // Zero is a ID representation of the current page ID
-                if ($value === "0")
-                {
-                    $presetObj->_postParents[$index] = strval($post_obj->ID);
-                }
-                else
-                {
-                    $presetObj->_postParents[$index] = $value;
-                }
-            }
-
-            $presetObj->_postParents = array_unique($presetObj->_postParents);
-        }
-
+        ////vv****DELETE****vv////
+//        $count = count($presetObj->_postParents);
+//        if (!isset($presetObj->_postParents))
+//        {
+//            $presetObj->_postParents = array();
+//            $count = count($presetObj->_postParents);
+//        }
+//        else if ($count > 0)
+//        {
+//            foreach ($presetObj->_postParents as $index => $value)
+//            {
+//                // Zero is a ID representation of the current page ID
+//                if ($value === "0")
+//                {
+//                    $presetObj->_postParents[$index] = strval($post_obj->ID);
+//                }
+//                else
+//                {
+//                    $presetObj->_postParents[$index] = $value;
+//                }
+//            }
+//
+//            $presetObj->_postParents = array_unique($presetObj->_postParents);
+//        }
+        ////^^****DELETE****^^////
+        ////vv****DELETE****vv////
         // Step 6
         //// ADD OTHER TAXONOMY TERMS IF INCLUDED IS CHECKED
-        $post_obj_post_type = $post_obj->post_type;
-
-        if (isset($presetObj->_postTax->$post_obj_post_type))
-        {
-
-            //$a = $presetObj->_postTax->$post_obj_post_type;
-            foreach ($post_obj->taxonomies as $taxonomy_name=>$taxonomy_object)
-            {
-                //$a = $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->include_terms;
-                if ($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->include_terms == true)
-                {
-                    $count = count($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms);
-                    foreach ($taxonomy_object->terms as $term_ID)
-                    {
-                        $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms[$count] = $term_ID;
-                        $count++;
-                    }
-                    //REMOVES ANY DUPLICATES THAT MAY HAVE BEEN ADDED
-                    $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms = array_unique($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms);
-                }
-            }
-        }
-
+//        $post_obj_post_type = $post_obj->post_type;
+//
+//        if (isset($presetObj->_postTax->$post_obj_post_type))
+//        {
+//
+//            //$a = $presetObj->_postTax->$post_obj_post_type;
+//            foreach ($post_obj->taxonomies as $taxonomy_name=>$taxonomy_object)
+//            {
+//                //$a = $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->include_terms;
+//                if ($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->include_terms == true)
+//                {
+//                    $count = count($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms);
+//                    foreach ($taxonomy_object->terms as $term_ID)
+//                    {
+//                        $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms[$count] = $term_ID;
+//                        $count++;
+//                    }
+//                    //REMOVES ANY DUPLICATES THAT MAY HAVE BEEN ADDED
+//                    $presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms = array_unique($presetObj->_postTax->$post_obj_post_type->taxonomies->$taxonomy_name->terms);
+//                }
+//            }
+//        }
+        ////^^****DELETE****^^////
+        
         // Step 7
-        //$APL_posts = $this->APL_Query($presetObj);
+        //The constructor will do most of the initial settings, like setting
+        // multiple query strings according to APL. The class will still need to use a
+        // public function to return a WP_Query class; until 'inheritance' becomes
+        // more of a possibility.
         $APLQuery = new APLQuery($presetObj);
+        $wp_query_class = $APLQuery->query_wp($APLQuery->_query_str_array);
 
 
-
-
-        //STEP 8
-        //TODO create a custom message for the dev to use
-        //return nothing if no results
-        if (count($APLQuery->_posts) === 0)
+        // The Loop
+        if ( $wp_query_class->have_posts() ) 
+        {
+            $output = '';
+            //Before
+            $output .= $presetObj->_before;
+            
+            //Content
+            $count = 0;
+            
+            while ( $wp_query_class->have_posts() ) 
+            {
+                $wp_query_class->the_post();
+                $this->_remove_duplicates[] = $APL_post->ID;
+                $output .= APLInternalShortcodeReplace($presetObj->_content,
+                                                 $wp_query_class->post,
+                                                 $count);
+                $count++;
+            }
+            $finalPos = strrpos($output,
+                            "[final_end]");
+            //if ending exists (the last item where we don't want to add any 
+            // more commas or ending brackets or whatever)
+            if ($finalPos > 0)
+            {
+                //Cut everything off at the final position of {final_end}
+                $output = substr($output, 0, $finalPos);
+                //Replace all the other instances of {final_end}, 
+                // since we only care about the last one
+                $output = str_replace("[final_end]", "", $output);
+            }
+            
+            
+            //After
+            $output .= $presetObj->_after;
+        } 
+        else 
         {
             $APL_options = $this->APL_options_load();
             if (!empty($presetObj->_exit))
@@ -2081,48 +2125,73 @@ class APLCore
             {
                 return "";
             }
-            
-            
         }
-        //STEP 9
-////// BEFORE //////////////////////////////////////////////////////////////////
-        $output = $presetObj->_before;
-
-///// CONTENT //////////////////////////////////////////////////////////////////
-        $count = 0;
+        /* Restore original Post Data */
+        wp_reset_postdata();
         
-        foreach ($APLQuery->_posts as $APL_post)
-        {
-            //STEP 8
-            $this->_remove_duplicates[] = $APL_post->ID;
-            $output = $output . APLInternalShortcodeReplace($presetObj->_content,
-                                                            $APL_post,
-                                                            $count);
-            $count++;
-        }
-
-        $finalPos = strrpos($output,
-                            "[final_end]");
-        //if ending exists (the last item where we don't want to add any 
-        // more commas or ending brackets or whatever)
-        if ($finalPos > 0)
-        {
-            //Cut everything off at the final position of {final_end}
-            $output = substr($output,
-                             0,
-                             $finalPos);
-            //Replace all the other instances of {final_end}, 
-            // since we only care about the last one
-            $output = str_replace("[final_end]",
-                                  "",
-                                  $output);
-        }
-
-////// AFTER ///////////////////////////////////////////////////////////////////
-        $output = $output . $presetObj->_after;
-
-        //STEP 10
         return $output;
+
+
+//        //STEP 8
+//        //TODO create a custom message for the dev to use
+//        //return nothing if no results
+//        if (count($APLQuery->_posts) === 0)//CHANGE/BUG - NO LONGER USED THE SAME
+//        {
+//            $APL_options = $this->APL_options_load();
+//            if (!empty($presetObj->_exit))
+//            {
+//                return $presetObj->_exit;
+//            }
+//            else if ($APL_options['default_exit'] === TRUE && !empty($APL_options['default_exit_msg']))
+//            {
+//                return $APL_options['default_exit_msg'];
+//            }
+//            else
+//            {
+//                return "";
+//            }
+//            
+//            
+//        }
+//        //STEP 9
+//////// BEFORE //////////////////////////////////////////////////////////////////
+//        $output = $presetObj->_before;
+//
+/////// CONTENT //////////////////////////////////////////////////////////////////
+//        $count = 0;
+//        
+//        foreach ($APLQuery->_posts as $APL_post)
+//        {
+//            //STEP 8
+//            $this->_remove_duplicates[] = $APL_post->ID;
+//            $output = $output . APLInternalShortcodeReplace($presetObj->_content,
+//                                                            $APL_post,
+//                                                            $count);
+//            $count++;
+//        }
+//
+//        $finalPos = strrpos($output,
+//                            "[final_end]");
+//        //if ending exists (the last item where we don't want to add any 
+//        // more commas or ending brackets or whatever)
+//        if ($finalPos > 0)
+//        {
+//            //Cut everything off at the final position of {final_end}
+//            $output = substr($output,
+//                             0,
+//                             $finalPos);
+//            //Replace all the other instances of {final_end}, 
+//            // since we only care about the last one
+//            $output = str_replace("[final_end]",
+//                                  "",
+//                                  $output);
+//        }
+//
+//////// AFTER ///////////////////////////////////////////////////////////////////
+//        $output = $output . $presetObj->_after;
+//
+//        //STEP 10
+//        return $output;
     }
 
     /**
