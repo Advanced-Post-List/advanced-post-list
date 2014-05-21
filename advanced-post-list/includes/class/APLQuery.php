@@ -578,6 +578,7 @@ class APLQuery
         return $presetObj;
         
     }
+    
     public function query_wp($query_str_array, $repeated = FALSE)
     {
         
@@ -594,69 +595,82 @@ class APLQuery
         
         $post_in_IDs = array();
         $post_not_in_IDs = array();
-        $query_str = array_shift($query_str_array);
+        $final_query_str = array();
         
-        //If more query strings exist, then repeat this function. When returned
-        // merge post ids for final query.
-        if (!empty($query_str_array))
-        {
-            $post_in_IDs = $this->query_wp($query_str_array, TRUE);
-            $query_str['post__in'] = array_merge($query_str['post__in'], $post_in_IDs);
-        }
-        
-        //Since post__in and post__not_in don't mix and post__in is used to
-        // collect ids. There has to be a seperate variable.
-        if (!empty($query_str['post__not_in']))
-        {
-            $post_not_in_IDs = $query_str['post__not_in'];
-            
-        }
-        unset($query_str['post__not_in']);
-        
-        //if this is a repeated function, not final, then return only the ids
-        // to be added to post__in
         if ($repeated === TRUE)
         {
+            
+            $query_str = array_shift($query_str_array);
+            
+            //If more query strings exist, then repeat this function. When returned
+            // merge post ids for final query.
+            if (!empty($query_str_array))
+            {
+                $post_in_IDs = array_merge($this->query_wp($query_str_array, TRUE), $post_in_IDs);
+                //$query_str['post__in'] = array_merge($query_str['post__in'], $post_in_IDs);
+            }
+            
+            
+            
+            //Since post__in and post__not_in don't mix at all while querying. The
+            // 2 variables are stored seperately.
+            if (!empty($query_str['post__not_in']))
+            {
+                $post_not_in_IDs = $query_str['post__not_in'];
+
+            }
+            unset($query_str['post__not_in']);
+            
+            if (!empty($query_str['post__in']))
+            {
+                $post_in_IDs = array_merge($post_in_IDs, $query_str['post__in']);
+
+            }
+            unset($query_str['post__in']);
+            
+            
             
             $query_str['fields'] = 'ids';
             $Query_Obj = new WP_Query($query_str);
             
-            return $Query_Obj->posts;
+            $post_IDs = array();
+            foreach ($Query_Obj->posts as $i => $post_ID)
+            {
+                $post_IDs[] = intval($post_ID);
+            }
+            
+            $post_IDs = array_merge($post_IDs, $post_in_IDs);
+            wp_reset_postdata();
+            return $post_IDs;
             
         }
-        else
+        else //$repeated === FALSE
         {
-            $Query_Obj = new WP_Query($query_str);
+            $post_in_IDs = array_merge($this->query_wp($query_str_array, TRUE));
+            
+            $query_str = array_shift($query_str_array);
+            
+            $final_query_str['post__in'] = $post_in_IDs;
+            $final_query_str['post_type'] = 'any';
+            $final_query_str['nopaging'] = TRUE;
+            $final_query_str['order'] = $query_str['order'];
+            $final_query_str['orderby'] = $query_str['orderby'];
+            $final_query_str['ignore_sticky_posts'] = $query_str['ignore_sticky_posts'];
+            
+            $final_Query_Obj = new WP_Query($final_query_str);
             
             //TODO finish the function to exclude posts
+            if (!empty($query_str['post__not_in']))
+            {
+                $post_not_in_IDs = $query_str['post__not_in'];
+
+            }
+            $final_Query_Obj = $this->post__not_in($final_Query_Obj, $post_not_in_IDs);
             
-            $Query_Obj = $this->post__not_in($Query_Obj, $post_not_in_IDs);
+            return $final_Query_Obj;
             
-            return $Query_Obj;
         }
         
-        
-        
-        
-//        $query_str_array_key = key((array) $query_str_array);
-//        if (!empty($query_str_array_key) && !empty($query_str_array))
-//        {
-//            $query_str = $query_str_array[$query_str_array_key];
-//            if (count($query_str_array) > 1)
-//            {
-//                unset($query_str_array[$query_str_array_key]);
-//                $this->query($query_str_array, TRUE);
-//            }
-//        }
-            
-        
-        ////////////////////////////////////////////////////////////////////////
-//        $temp = array();
-//        while ( $wp_query->have_posts() ) : $wp_query->the_post();
-//            $temp[] = get_the_ID();
-//        endwhile;
-//
-//        print_r($temp);
     }
     private function post__not_in($Query_Obj, $post_not_in_IDs)
     {
@@ -668,10 +682,17 @@ class APLQuery
                 if ($post->ID === $post_not_ID)
                 {
                     unset($Query_Obj->posts[$i]);
+                    $Query_Obj->post_count -= 1;
+                    $Query_Obj->found_posts -= 1;
+                    if ($Query_Obj->post->ID === $post_not_ID)
+                    {
+                        $Query_Obj->post = $Query_Obj->posts[$i + 1];
+                    }
                 }
             }
         }
         $Query_Obj->posts = array_values($Query_Obj->posts);
+        //rewind_posts(); //no work
         
         return $Query_Obj;
     }
