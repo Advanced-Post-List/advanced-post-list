@@ -1979,7 +1979,7 @@ class APLCore
         //STEP 2 - If Exclude Duplicates (w/ multiple post lists) is checked, then
         //          add any post IDs collected to the preset post list object's
         //          exclude post array to be filter out.
-        if ($presetObj->_listExcludeDuplicates === TRUE)
+        if (isset($presetObj->_listExcludeDuplicates) && $presetObj->_listExcludeDuplicates === TRUE)
         {
             foreach ($this->_remove_duplicates as $postID)
             {
