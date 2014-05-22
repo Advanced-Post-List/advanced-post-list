@@ -1967,30 +1967,6 @@ class APLCore
             // the name isn't set right
             return'';
         }
-        ////////////////////////////////////////////////////////////////////////////
-        ////// POST/PAGE FILTER SETTINGS ///////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////
-        /*
-          What does this do???
-          //if we're not showing a list of anything, only show the content,
-          // ignore everything else, and apply the shortcodes to the page
-          // being currently viewed
-          if ($newVals->post_type == "none")
-          {
-          $output = APLInternalShortcodeReplace($newVals->content, $post, 0);
-          }
-         */
-        // Step 3
-        //// GET (GLOBAL) POST DATA OF THE CURRENT POST/PAGE THAT THE
-        ////  POST LIST IS DISPLAYED ON.
-        $post_obj = $this->APL_get_post_attr();
-
-        // Step 4
-        //// EXCLUDE CURRENT POST FROM DISPLAYING ON THE POST LIST
-        if (isset($presetObj->_listExcludeCurrent) && $presetObj->_listExcludeCurrent === TRUE)
-        {
-            $presetObj->_listExcludePosts[] = $post_obj->ID;
-        }
         if (isset($presetObj->_listExcludeDuplicates) && $presetObj->_listExcludeDuplicates === TRUE)
         {
             foreach ($this->_remove_duplicates as $postID)
