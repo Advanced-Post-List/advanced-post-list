@@ -17,19 +17,19 @@ for designing unique post-list designs.
 
 Highly customizable plugin for designing a large variety of post lists. Allowing 
 the Webmaster to create any design for displaying Recent Posts, Related Posts, 
-Future Posts, etc., and easily placing it with a shortcode inside a Page or Post. 
-All that is required is that you know HTML, but the plugin can also use CSS, 
+Future Posts, etc., and easily positioning it with a shortcode inside a Page or Post. 
+All that is required is you know HTML, but the plugin can also use CSS, 
 JavaScript, and PHP.
 
 Version 0.3 post query was switch to WP_Query to take advantage of the Custom Post 
 Types and Taxonomies featured within WordPress, and also has additional filter settings 
 added to further reach alternate methods of displaying posts.
 
-When designing site with better navigation. This plugin accomplishes 3 main 
-tasks when displaying the site’s content through various lists.
-
 Discovered a bug or a feature? Please submit issues at [GitHub's version][github issues] 
 for ticket handling and contributors.
+
+When designing site with better navigation. This plugin accomplishes 3 main 
+tasks when displaying the site’s content through various lists.
 
 **Content of the post list**
 
@@ -114,6 +114,13 @@ page/post (e.g. [post_list name='some-preset-name'])
 4. General options and support.
 
 == Changelog ==
+
+= 0.3.b8 =
+* Added Widget support.
+* Fixed some errors with WP's debug enabled.
+* Added param label to author shortcode.
+* Added param size to post_thumb.
+* Changed APLQuery class to fix memory load, and nested code.
 
 = 0.3.b7 =
 * Fixed Admin UI Multiselect jQuery plugin not closing.
