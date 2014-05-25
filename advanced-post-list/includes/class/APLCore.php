@@ -2202,7 +2202,7 @@ function APLInternalShortcodeReplace($str,
     $str = preg_replace_callback('#\[ *post_comments *(before=[\'|\"]([^\'\"]*)[\'|\"])? *(after=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'commentCallback'),
                                  $str);
-    $str = preg_replace_callback('#\[ *post_author *(type=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
+    $str = preg_replace_callback('#\[ *post_author *(label=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
     							               array(&$postCallback, 'postAuthorCallback'),
     							               $str);
     

@@ -211,7 +211,7 @@
         </p>
         <ul style="margin: auto 16px;">
             <li><b>[ID]</b> - the ID number of the page/post</li>
-            <li><b>[post_author type="display_name"]</b> - post author information. Possible types: ID, user_login, user_pass, user_nicename, user_email, user_url, display_name, user_firstname, user_lastname, nickname, description, primary_blog</li>
+            <li><b>[post_author label="display_name"]</b> - post author information. Possible types: ID, user_login, user_pass, user_nicename, user_email, user_url, display_name, user_firstname, user_lastname, nickname, description, primary_blog</li>
             <li><b>[post_permalink]</b> - the page permalink</li>
             <li><b>[post_date format="m-d-Y"]</b> - date page/post was created <b>*</b></li>
             <li><b>[post_date_gmt format="m-d-Y"]</b> - date page/post was created in gmt time <b>*</b></li>
