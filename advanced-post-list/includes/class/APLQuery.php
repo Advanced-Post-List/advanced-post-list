@@ -128,7 +128,7 @@ class APLQuery
             'post_status' => array(
                     'publish',
                     ),
-            'nopaging' => true,
+            'nopaging' => FALSE,
             'order' => 'DESC',
             'orderby' => 'date',
             'ignore_sticky_posts' => false,
@@ -400,7 +400,7 @@ class APLQuery
         {
             foreach ($presetObj->_listExcludePosts as $i => $post_id)
             {
-                if ($post_id !== 0)
+                if ($post_id !== 0 && !empty($post_id))
                 {
                     $arg['post__not_in'][] = $post_id;
                 }
@@ -413,6 +413,11 @@ class APLQuery
         if (!empty($presetObj->_listIgnoreSticky))
         {
             $arg['ignore_sticky_posts'] = $presetObj->_listIgnoreSticky;
+        }
+        
+        if (!empty($presetObj->_listCount))
+        {
+            $arg['posts_per_page'] = $presetObj->_listCount + count($arg['post__not_in']);
         }
         
         //STEP 7 - Return query_str's base variable values.
@@ -571,8 +576,9 @@ class APLQuery
         //Current post/page ID
         $post_ID = get_the_ID();
         
+        
         //STEP 2 - If excluding current post/page is checked, then add post_ID
-        if ($presetObj->_listExcludeCurrent === TRUE)
+        if ($presetObj->_listExcludeCurrent === TRUE && !empty($post_ID))
         {
             $presetObj->_listExcludePosts[] = $post_ID;
         }
@@ -625,7 +631,7 @@ class APLQuery
                     {
                         foreach ($post_taxonomies as $post_taxonomy_value)
                         {
-                            if ($preset_taxonomy === $post_taxonomy_value)
+                            if ($preset_taxonomy === $post_taxonomy_value && !empty($post_ID))
                             {
                                 //ALTERNATE FOR NEXT 3(5) LINES - Shorter but complex
                                 //$preset_tax_value->terms = array_unique(
@@ -739,25 +745,46 @@ class APLQuery
         else //$repeated === FALSE
         {
             $post_in_IDs = array_merge($this->query_wp($query_str_array, TRUE));
+            $query_str = array_shift($query_str_array);
+            
+            //$tmp_post_in_IDs = array();
+            foreach ($query_str['post__not_in'] as $post_not_value)
+            {
+                foreach ($post_in_IDs as $key => $post_in_value)
+                {
+                    if ($post_in_value === $post_not_value)
+                    {
+                        unset($post_in_IDs[$key]);
+                    }
+                }
+            }
+            $post_in_IDs = array_merge($post_in_IDs);
+            
+            if (empty($post_in_IDs))
+            {
+                $post_in_IDs[] = 0;
+            }
             
             //Set FINAL query_str with post IDs
-            $query_str = array_shift($query_str_array);
+            
             
             $final_query_str['post__in'] = $post_in_IDs;
             $final_query_str['post_type'] = 'any';
-            $final_query_str['nopaging'] = TRUE;
+            $final_query_str['nopaging'] = FALSE;
             $final_query_str['order'] = $query_str['order'];
             $final_query_str['orderby'] = $query_str['orderby'];
             $final_query_str['ignore_sticky_posts'] = $query_str['ignore_sticky_posts'];
             
+            $final_query_str['posts_per_page'] = $query_str['posts_per_page'] - count($query_str['post__not_in']);
+            
             //Get FINAL Query Object
             $final_Query_Obj = new WP_Query($final_query_str);
             
-            if (!empty($query_str['post__not_in']))
-            {
-                $post_not_in_IDs = $query_str['post__not_in'];
-            }
-            $final_Query_Obj = $this->post__not_in($final_Query_Obj, $post_not_in_IDs);
+//            if (!empty($query_str['post__not_in']))
+//            {
+//                $post_not_in_IDs = $query_str['post__not_in'];
+//            }
+//            $final_Query_Obj = $this->post__not_in($final_Query_Obj, $post_not_in_IDs);
             
             return $final_Query_Obj;
         }

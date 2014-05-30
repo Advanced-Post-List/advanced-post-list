@@ -133,12 +133,19 @@ function APL_post_tax_get_taxonomy_section($post_type_name,
     foreach ($taxonomy_names as $taxonomy_name)
     {
         $taxonomy_object = get_taxonomy($taxonomy_name);
+        
+        $taxonomy_label = $taxonomy_name;
+        if (!empty($taxonomy_object->labels->singular_name))
+        {
+            $taxonomy_label = $taxonomy_object->labels->singular_name;
+        }
+        
 
         if ($taxonomy_object->hierarchical == true)
         {
 
             //// TAB SECTION
-            $htmlCatTabs .= '<li><a href="#tab-' . $post_type_name . '-' . $taxonomy_name . '">' . $taxonomy_object->labels->singular_name . '</a></li>';
+            $htmlCatTabs .= '<li><a href="#tab-' . $post_type_name . '-' . $taxonomy_name . '">' . $taxonomy_label . '</a></li>';
 
             //// CONTENT SECTION
             $htmlCatTabsContent .= '<div id="tab-' . $post_type_name . '-' . $taxonomy_name . '" style="overflow:scroll; overflow-x:hidden; border:ridge;">';
@@ -162,7 +169,7 @@ function APL_post_tax_get_taxonomy_section($post_type_name,
             //htmlTagTabs
             //htmlTagTabsContent
             //// TAB SECTION
-            $htmlTagTabs .= '<li><a href="#tab-' . $post_type_name . '-' . $taxonomy_name . '">' . $taxonomy_object->labels->singular_name . '</a></li>';
+            $htmlTagTabs .= '<li><a href="#tab-' . $post_type_name . '-' . $taxonomy_name . '">' . $taxonomy_label . '</a></li>';
 
             //// CONTENT SECTION
             $htmlTagTabsContent .= '<div id="tab-' . $post_type_name . '-' . $taxonomy_name . '" style="overflow:scroll; overflow-x:hidden; border:ridge;">';

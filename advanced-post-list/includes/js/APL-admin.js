@@ -527,7 +527,7 @@ jQuery(document).ready(function($){
         var data = {
             action: 'APL_handler_save_preset',
             _ajax_nonce : savePresetNonce
-        }
+        };
         //css style bug fix
         var btn_height = $('#btnSavePreset').height() + 2;
         var btn_width = $('#btnSavePreset').width() + 2;
@@ -549,7 +549,7 @@ jQuery(document).ready(function($){
         data.postVisibility = $('#cboPostVisibility').val();//array
         data.postVisibility = JSON.stringify(data.postVisibility);
         data.postStatus = $("#cboPostStatus").val();//MODIFIED //array
-        if (data.postStatus == null)
+        if (data.postStatus === null)
         {
             data.postStatus = new Array('any');
         }
@@ -574,7 +574,7 @@ jQuery(document).ready(function($){
         data.authorOperator = $("#slctAuthorOperator").val();//ADDED //string
         
         data.authorIDs = $("#cboAuthorIDs").val();//ADDED //array
-        if (data.authorIDs == null)
+        if (data.authorIDs === null)
         {
             data.authorIDs =  new Array();
         }
@@ -597,6 +597,10 @@ jQuery(document).ready(function($){
             //alert(response);
 
             var startPosition = response.indexOf("{");
+            if (startPosition > 10)
+            {
+                apl_alert(response, 'Error');
+            }
             var responseObjString = response.substr(startPosition, response.lastIndexOf("}") - startPosition + 1);
 
             //alert(responseObjString);
@@ -837,7 +841,7 @@ jQuery(document).ready(function($){
         
         $("<div></div>").html(output_msg).dialog({
             title: title_msg,
-            resizable: false,
+            resizable: true,
             modal: true,
             buttons: {
                 "Ok": function() 

@@ -1665,6 +1665,16 @@ class APLCore
         {
             foreach ($post_type_value->taxonomies as $taxonomy_name => $taxonomy_value)
             {
+                if (!is_object($tmp_postTax->$post_type_name))
+                {
+                    $tmp_postTax->$post_type_name = new stdClass();
+                }
+                if (!is_object($tmp_postTax->$post_type_name->taxonomies))
+                {
+                    $tmp_postTax->$post_type_name->taxonomies = new stdClass();
+                }
+                $tmp_postTax->$post_type_name->taxonomies->$taxonomy_name = new stdClass();
+                
                 $tmp_postTax->$post_type_name->taxonomies->$taxonomy_name->require_taxonomy = $taxonomy_value->require_taxonomy;
                 $tmp_postTax->$post_type_name->taxonomies->$taxonomy_name->require_terms = $taxonomy_value->require_terms;
                 $tmp_postTax->$post_type_name->taxonomies->$taxonomy_name->include_terms = $taxonomy_value->include_terms;
@@ -1709,18 +1719,16 @@ class APLCore
         }
         
         $tmp_listExcludePosts = array();
-        $presetObj->_listExcludePosts = json_decode(stripslashes($_POST['excludePosts'])); //(array) => (int) /ADDED
-        foreach ($presetObj->_listExcludePosts as $postID)
+        $presetObj->_listExcludePosts = array();
+        $tmp_listExcludePosts = json_decode(stripslashes($_POST['excludePosts'])); //(array) => (int) /ADDED
+        foreach ($tmp_listExcludePosts as $postID)
         {
-            $tmp_listExcludePosts[] = intval($postID);
+            if (!empty($postID))
+            {
+                $presetObj->_listExcludePosts[] = intval($postID);
+            }
         }
-        $presetObj->_listExcludePosts = array_unique($tmp_listExcludePosts);
-        $tmp_listExcludePosts = array();
-        foreach ($presetObj->_listExcludePosts as $postID)
-        {
-            $tmp_listExcludePosts[] = $postID;
-        }
-        $presetObj->_listExcludePosts = $tmp_listExcludePosts;
+        $presetObj->_listExcludePosts = array_unique($presetObj->_listExcludePosts);
         
         // Step 9
         $presetObj->_exit = stripslashes($_POST['exit']);
