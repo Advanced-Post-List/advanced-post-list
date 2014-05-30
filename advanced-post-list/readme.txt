@@ -117,10 +117,17 @@ page/post (e.g. [post_list name='some-preset-name'])
 
 = 0.3.b8 =
 * Added Widget support.
-* Fixed some errors with WP's debug enabled.
+* Fixed warning errors with WP's debug config enabled.
 * Added param label to author shortcode.
 * Added param size to post_thumb.
-* Changed APLQuery class to fix memory load, and nested code.
+* Changed APLQuery class to reduce memory load, and remove nested code.
+* Fixed Taxonomy Tabs not showing category/tag text.
+* Fixed AJAX Save Preset Button not updating text.
+* Fixed Save Preset Button enlarging each click.
+* Fixed Admin Preview not showing.
+* Fixed (preview) post list dynamics on admin side.
+* Fixed Delete Database Upon Deactivation no saving to APL database.
+* Fixed jQuery UI CSS file not loading with https sites.
 
 = 0.3.b7 =
 * Fixed Admin UI Multiselect jQuery plugin not closing.
@@ -226,6 +233,11 @@ page/post (e.g. [post_list name='some-preset-name'])
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.3.b8 =
+Beta Version. If upgrading from 0.2, make sure you back up the plugin data and/or 
+website. This update includes a couple major and blocker bugs to the Admin UI.
+Further development may be required before releasing the stable version (0.3.0).
 
 = 0.3.b7 =
 Beta Version. If upgrading from 0.2, make sure you back up the plugin data and/or 
