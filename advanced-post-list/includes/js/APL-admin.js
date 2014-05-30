@@ -749,16 +749,16 @@ jQuery(document).ready(function($){
             _ajax_nonce : saveSettingsNonce
         }
       
-        var deleteDB = false;
+        var deleteDb = false;
         if ($("#rdoDeleteDbTRUE").is(':checked'))
         {
-            deleteDB = true;
+            deleteDb = true;
         }
         else if ($("#rdoDeleteDbFALSE").is(':checked'))
         {
-            deleteDB = false;
+            deleteDb = false;
         }
-        data.deleteDB = deleteDB;
+        data.deleteDb = deleteDb;
         
         data.theme = $('#slctUITheme').val();
         
