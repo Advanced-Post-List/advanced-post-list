@@ -360,7 +360,7 @@ class APLCore
                          false);
 
         wp_enqueue_style('apl-admin-ui-css',
-                         'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/' . $APLOptions['jquery_ui_theme'] . '/jquery-ui.css',
+                         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/' . $APLOptions['jquery_ui_theme'] . '/jquery-ui.css',
                          false,
                          APL_VERSION,
                          false);
@@ -1580,7 +1580,7 @@ class APLCore
         // Step 4
         $APLOptions['jquery_ui_theme'] = $_POST['theme'];
         wp_enqueue_style('apl-admin-ui-css',
-                         'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/' . $APLOptions['jquery_ui_theme'] . '/jquery-ui.css',
+                         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/' . $APLOptions['jquery_ui_theme'] . '/jquery-ui.css',
                          false,
                          APL_VERSION,
                          false);
