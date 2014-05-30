@@ -529,8 +529,8 @@ jQuery(document).ready(function($){
             _ajax_nonce : savePresetNonce
         };
         //css style bug fix
-        var btn_height = $('#btnSavePreset').height() + 2;
-        var btn_width = $('#btnSavePreset').width() + 2;
+        var btn_height = $('#btnSavePreset').height();
+        var btn_width = $('#btnSavePreset').width();
         $('#btnSavePreset').html("Saving...");
         $('#btnSavePreset').height(btn_height);
         $('#btnSavePreset').width(btn_width);
