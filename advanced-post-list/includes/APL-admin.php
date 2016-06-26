@@ -342,7 +342,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
     <div style="clear: both; height: 26px; margin: 3px 0px;" >
         <div style="float: left;" >
             <label for="cboPostStatus">Post Status:</label>
-            <select id="cboPostVisibility" multiple="multiple" style="width:128px;">
+            <select id="cboPostVisibility" multiple="multiple" style="width:96px;">
                 <option value="public" selected="selected" >Public</option>
                 <option value="private">Private</option>
             </select>

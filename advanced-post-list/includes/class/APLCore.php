@@ -360,13 +360,14 @@ class APLCore
                          false);
 
         wp_enqueue_style('apl-admin-ui-css',
-                         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/' . $APLOptions['jquery_ui_theme'] . '/jquery-ui.css',
+                         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/' . $APLOptions['jquery_ui_theme'] . '/jquery-ui.css',
                          false,
                          APL_VERSION,
                          false);
 
         wp_enqueue_style('apl-jquery-ui-multiselect-css',
-                         plugins_url() . '/advanced-post-list/includes/css/jquery-ui-multiselect-widget.css',
+                         //plugins_url() . '/advanced-post-list/includes/css/jquery-ui-multiselect-widget.css',
+                         plugins_url() . '/advanced-post-list/includes/css/jquery.multiselect.css',
                          false,
                          APL_VERSION,
                          false);
@@ -1991,6 +1992,8 @@ class APLCore
             while ( $wp_query_class->have_posts() ) 
             {
                 $wp_query_class->the_post();
+                //TODO
+                //FIX
                 $this->_remove_duplicates[] = $APL_post->ID;
                 $output .= APLInternalShortcodeReplace($presetObj->_content,
                                                        $wp_query_class->post,
