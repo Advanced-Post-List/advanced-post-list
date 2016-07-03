@@ -154,7 +154,7 @@ function APL_post_tax_get_taxonomy_section($post_type_name,
             //$htmlCatTabsContent .= APL_add_other_post_types($post_type_name, $taxonomy_name, $taxonomy_object->other_post_types);
             $htmlCatTabsContent .= '<input type=checkbox id="chkReqTaxonomy-' . $post_type_name . '-' . $taxonomy_name . '" name="chkReqTaxonomy-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Require Taxonomy</b> within post_type.<br />';
             $htmlCatTabsContent .= '<input type=checkbox id="chkReqTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkReqTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Require Terms</b> selected.<br />';
-            $htmlCatTabsContent .= '<input type=checkbox id="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Include Terms</b> according to current page.<br />';
+            $htmlCatTabsContent .= '<input type=checkbox id="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Include Terms</b> from Current Post/Page.<br />';
             $htmlCatTabsContent .= '<hr />';
 
             //// ADD TERMS
@@ -177,7 +177,7 @@ function APL_post_tax_get_taxonomy_section($post_type_name,
             //$htmlTagTabsContent .= APL_add_other_post_types($post_type_name, $taxonomy_name, $taxonomy_object->other_post_types);
             $htmlTagTabsContent .= '<input type=checkbox id="chkReqTaxonomy-' . $post_type_name . '-' . $taxonomy_name . '" name="chkReqTaxonomy-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Require Taxonomy</b> within post_type.<br />';
             $htmlTagTabsContent .= '<input type=checkbox id="chkReqTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkReqTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Require Terms</b> selected.<br />';
-            $htmlTagTabsContent .= '<input type=checkbox id="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Include Terms</b> according to current page.<br />';
+            $htmlTagTabsContent .= '<input type=checkbox id="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Include Terms</b> from Current Post/Page.<br />';
             $htmlTagTabsContent .= '<hr />';
 
 
@@ -342,7 +342,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
     <div style="clear: both; height: 26px; margin: 3px 0px;" >
         <div style="float: left;" >
             <label for="cboPostStatus">Post Status:</label>
-            <select id="cboPostVisibility" multiple="multiple" style="width:128px;">
+            <select id="cboPostVisibility" multiple="multiple" style="width:96px;">
                 <option value="public" selected="selected" >Public</option>
                 <option value="private">Private</option>
             </select>
@@ -436,7 +436,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         </div>
         <div style="float: right;">
             <input type=checkbox id="chkExcldDuplicates" name="chkExcldDuplicates" />
-            <label for="chkExcldDuplicates" >Exclude Duplicates from Current Post.</label>
+            <label for="chkExcldDuplicates" >Exclude Duplicate Posts from Multiple Post_Lists.</label>
         </div>
     </div>
 </div>
@@ -688,6 +688,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         <li><b>[post_meta name="custom_field_name"]</b> - page/post custom field value. Correct 'name' parameter required</li>
         <li><b>[post_tags delimeter=", " links="true"]</b> - post tags list. Optional 'delimiter' parameter sets separator text. Use optional 'links' parameter to turn off links to tag pages</li>
         <li><b>[post_categories delimeter=", " links="true"]</b> - post categories list. Parameters work like tag shortcode.</li>
+        <li><b>[post_terms taxonomy="category" delimiter=", " links="true" max="0" empty_message=""]</b> - displays a list of post/page terms list. Required/Optional 'taxonomy' parameter sets what taxonomy terms to return; uses taxonomy slug as param value. Optional 'delimiter' parameter sets separator text. Optional 'links' parameter to turn off links to term pages/permalinks. Optional 'max' parameter to set the maximum amount of terms to list; Values Zero or less are infinite values. Optional 'empty_message' parameter to set a custom message to return if none of the taxonomy's terms exist in the post/page.</li>
         <li><b>[post_parent link="true"]</b> - post parent. Use optional 'link' parameter to turn off link</li>
         <li><b>[post_comments before="" after=""]</b> - post comments. Parameters represent text/HTML that will be inserted before and after comment list but will not be displayed if there are no comments. PHP coders: <a href="http://kalinbooks.com/2011/customize-comments-pdf-creation-station">learn how to customize comment display (kalinbooks site).</a></li>
         <li><b>[post_thumb size="full" extract="none"]</b> - URL to the page/post's featured image (requires theme support). Possible size paramaters: "thumbnail", "medium", "large" or "full". Possible xtract prameters: "on" or "force". Setting extract to "on" will cause the shortcode to attempt to pull the first image from within the post if it cannot find a featured image. Using "force" will cause it to ignore the featured image altogether. Extracted images always return at the same size they appear in the post.</li>

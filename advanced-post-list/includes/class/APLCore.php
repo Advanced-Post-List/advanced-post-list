@@ -360,13 +360,14 @@ class APLCore
                          false);
 
         wp_enqueue_style('apl-admin-ui-css',
-                         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/themes/' . $APLOptions['jquery_ui_theme'] . '/jquery-ui.css',
+                         'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/' . $APLOptions['jquery_ui_theme'] . '/jquery-ui.css',
                          false,
                          APL_VERSION,
                          false);
 
         wp_enqueue_style('apl-jquery-ui-multiselect-css',
-                         plugins_url() . '/advanced-post-list/includes/css/jquery-ui-multiselect-widget.css',
+                         //plugins_url() . '/advanced-post-list/includes/css/jquery-ui-multiselect-widget.css',
+                         plugins_url() . '/advanced-post-list/includes/css/jquery.multiselect.css',
                          false,
                          APL_VERSION,
                          false);
@@ -1991,6 +1992,8 @@ class APLCore
             while ( $wp_query_class->have_posts() ) 
             {
                 $wp_query_class->the_post();
+                //TODO
+                //FIX
                 $this->_remove_duplicates[] = $APL_post->ID;
                 $output .= APLInternalShortcodeReplace($presetObj->_content,
                                                        $wp_query_class->post,
@@ -2131,8 +2134,8 @@ function APLInternalShortcodeReplace($str,
 
     $l = count($SCList);
     for ($i = 0;
-            $i < $l;
-            $i++)
+         $i < $l;
+         $i++)
     {//loop through all possible shortcodes
         $scName = substr($SCList[$i],
                          1,
@@ -2207,6 +2210,11 @@ function APLInternalShortcodeReplace($str,
     $str = preg_replace_callback('#\[ *post_tags *(delimeter=[\'|\"]([^\'\"]*)[\'|\"])? *(links=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'postTagsCallback'),
                                  $str);
+                                 
+    $str = preg_replace_callback("#\[post_terms *(taxonomy=['|\"]([^'\"]*)['|\"])? *(delimiter=['|\"]([^'\"]*)['|\"])? *(links=['|\"]([^'\"]*)['|\"])? *(empty_message=['|\"]([^'\"]*)['|\"])? *(max=['|\"]([^'\"]*)['|\"])? *\]#",
+                                 array(&$postCallback, 'postTermsCallback'),
+                                 $str);
+    
     $str = preg_replace_callback('#\[ *post_comments *(before=[\'|\"]([^\'\"]*)[\'|\"])? *(after=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'commentCallback'),
                                  $str);
