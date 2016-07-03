@@ -154,7 +154,7 @@ function APL_post_tax_get_taxonomy_section($post_type_name,
             //$htmlCatTabsContent .= APL_add_other_post_types($post_type_name, $taxonomy_name, $taxonomy_object->other_post_types);
             $htmlCatTabsContent .= '<input type=checkbox id="chkReqTaxonomy-' . $post_type_name . '-' . $taxonomy_name . '" name="chkReqTaxonomy-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Require Taxonomy</b> within post_type.<br />';
             $htmlCatTabsContent .= '<input type=checkbox id="chkReqTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkReqTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Require Terms</b> selected.<br />';
-            $htmlCatTabsContent .= '<input type=checkbox id="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Include Terms</b> according to current page.<br />';
+            $htmlCatTabsContent .= '<input type=checkbox id="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Include Terms</b> from Current Post/Page.<br />';
             $htmlCatTabsContent .= '<hr />';
 
             //// ADD TERMS
@@ -177,7 +177,7 @@ function APL_post_tax_get_taxonomy_section($post_type_name,
             //$htmlTagTabsContent .= APL_add_other_post_types($post_type_name, $taxonomy_name, $taxonomy_object->other_post_types);
             $htmlTagTabsContent .= '<input type=checkbox id="chkReqTaxonomy-' . $post_type_name . '-' . $taxonomy_name . '" name="chkReqTaxonomy-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Require Taxonomy</b> within post_type.<br />';
             $htmlTagTabsContent .= '<input type=checkbox id="chkReqTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkReqTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Require Terms</b> selected.<br />';
-            $htmlTagTabsContent .= '<input type=checkbox id="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Include Terms</b> according to current page.<br />';
+            $htmlTagTabsContent .= '<input type=checkbox id="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" name="chkIncldTerms-' . $post_type_name . '-' . $taxonomy_name . '" /><b>Include Terms</b> from Current Post/Page.<br />';
             $htmlTagTabsContent .= '<hr />';
 
 
@@ -436,7 +436,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         </div>
         <div style="float: right;">
             <input type=checkbox id="chkExcldDuplicates" name="chkExcldDuplicates" />
-            <label for="chkExcldDuplicates" >Exclude Duplicates from Current Post.</label>
+            <label for="chkExcldDuplicates" >Exclude Duplicate Posts from Multiple Post_Lists.</label>
         </div>
     </div>
 </div>
