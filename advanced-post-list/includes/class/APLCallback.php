@@ -191,6 +191,73 @@ class APLCallback
 
     return $catString;
   }
+  function postTermsCallback($matches)
+  {
+    //Add Empty Message param
+    //Add Taxonomy param
+    $taxonomy = 'category';
+    if (isset($matches[2]) && taxonomy_exists($matches[2]))
+    {
+        $taxonomy = $matches[2];
+    }
+    
+    $terms = get_the_terms($this->page->ID, $taxonomy);
+    
+    //If no terms exist, then return an Empty Message
+    if (!$terms)
+    {
+        $empty = '';
+        if (isset($matches[8]))
+        {
+            $empty = $matches[8];
+        }
+        return $empty;
+    }
+
+    $last_item = end($terms);
+    
+    $delimiter = ', ';
+    if (isset($matches[4]))
+    {
+      $delimiter = $matches[4];
+    }
+    
+    $links = true;
+    if (isset($matches[6]) && strtolower($matches[6]) == 'false')
+    {
+      $links = false;
+    }
+    
+    $termString = "";
+    $i = -1;
+    if (isset($matches[10]))
+    {
+        $i = intval($matches[10]) - 1;
+    }
+    foreach ($terms as $term)
+    {
+      if ($links)
+      {
+        $termString = $termString . '<a href="' . get_tag_link($term->term_id) . '" >' . $term->name . '</a>';
+      }
+      else
+      {
+        $termString = $termString . $term->name;
+      }
+
+      if ($term != $last_item && ($i > 0 || $i < 0))
+      {
+        $termString = $termString . $delimiter;
+      }
+      if ($i == 0)
+      {
+          return $termString;
+      }
+      $i--;
+    }
+
+    return $termString;
+  }
 
   function commentCallback($matches)
   {

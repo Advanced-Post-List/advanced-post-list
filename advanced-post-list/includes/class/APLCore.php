@@ -2134,8 +2134,8 @@ function APLInternalShortcodeReplace($str,
 
     $l = count($SCList);
     for ($i = 0;
-            $i < $l;
-            $i++)
+         $i < $l;
+         $i++)
     {//loop through all possible shortcodes
         $scName = substr($SCList[$i],
                          1,
@@ -2210,6 +2210,11 @@ function APLInternalShortcodeReplace($str,
     $str = preg_replace_callback('#\[ *post_tags *(delimeter=[\'|\"]([^\'\"]*)[\'|\"])? *(links=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'postTagsCallback'),
                                  $str);
+                                 
+    $str = preg_replace_callback("#\[post_terms *(taxonomy=['|\"]([^'\"]*)['|\"])? *(delimiter=['|\"]([^'\"]*)['|\"])? *(links=['|\"]([^'\"]*)['|\"])? *(empty_message=['|\"]([^'\"]*)['|\"])? *(max=['|\"]([^'\"]*)['|\"])? *\]#",
+                                 array(&$postCallback, 'postTermsCallback'),
+                                 $str);
+    
     $str = preg_replace_callback('#\[ *post_comments *(before=[\'|\"]([^\'\"]*)[\'|\"])? *(after=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
                                  array(&$postCallback, 'commentCallback'),
                                  $str);
