@@ -6,14 +6,18 @@ Requires at least: 2.0.2
 Tested up to: 3.9
 Stable tag: 0.3.b8
 
-Create custom post lists with easy to use advanced settings. Highly customizable 
-for designing unique post-list designs.
+Create custom post lists to display various content. Easy to use Filter & Design 
+as well as highly configurable and extensive.
 
 == Description ==
+[wordpress forum]: https://wordpress.org/support/plugin/advanced-post-list
+                "Default WordPress Support"
 [wordpress kalins post list]: http://wordpress.org/extend/plugins/kalins-post-list/
-		"Kalin's plugin"
+		"Kalin's Plugin"
 [github issues]: https://github.com/EkoJr/wp-advanced-post-list/issues
-		"Report any bugs here"
+		"Ticket Handling"
+[github wiki]: https://github.com/EkoJr/wp-advanced-post-list/wiki
+		"Contribute or Learn about APL"
 
 Highly customizable plugin for designing a large variety of post lists. Allowing 
 the Webmaster to create any design for displaying Recent Posts, Related Posts, 
@@ -25,8 +29,10 @@ Version 0.3 post query was switch to WP_Query to take advantage of the Custom Po
 Types and Taxonomies featured within WordPress, and also has additional filter settings 
 added to further reach alternate methods of displaying posts.
 
-Discovered a bug or a feature? Please submit issues at [GitHub's version][github issues] 
-for ticket handling and contributors.
+APL's Documentation/Wiki is located on [GitHub Wiki][github wiki].
+
+Discovered a bug or an enhancement? Please submit thread/ticket at 
+[WordPress][wordpress forum] or [GitHub Issue Tickets][github issues].
 
 When designing site with better navigation. This plugin accomplishes 3 main 
 tasks when displaying the site’s content through various lists.
@@ -110,10 +116,16 @@ page/post (e.g. [post_list name='some-preset-name'])
 == Screenshots ==
 1. A few samples of the plugin.
 2. Insert saved presets via shortcodes to display it on a page/post.
-3. A basic view of the Admin UI
+3. A basic view of the Admin UI.
 4. General options and support.
 
 == Changelog ==
+
+= 0.3.b9 =
+* Changed Google APIs jQuery UI CSS version 1.8.21 to 1.11.4 to match WP 4.5.3 jQuery UI JS version.
+* Changed jQuery MultiSelect UI Widget files version 1.12 to 1.14.
+* Fixed MultiSelect Button Width using default width.
+* Added '[post_terms]' Internal Shortcode function to add Custom Taxonomy Terms.
 
 = 0.3.b8 =
 * Added Widget support.
