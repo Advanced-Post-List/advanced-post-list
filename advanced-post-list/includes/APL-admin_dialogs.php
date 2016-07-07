@@ -173,12 +173,12 @@
     ?>
     <div id="d12" title="Post List content styling.">
         <p>
-            <strong>Exit Message</strong> - This container holds the HTML & CSS content
+            <strong>Empty Message</strong> - This container holds the HTML & CSS content
             and if no posts are found to be listed in the preset. Then the preset post list will display
-            this message. If no Exit Message is found, then the post list will use
-            the Default Exit Message if enabled in the Plugin's Admin Settings. 
+            this message. If no Empty Message is found, then the post list will use
+            the Default Empty Message if enabled in the Plugin's Admin Settings. 
             Otherwise, the plugin will display nothing like it was originally set as.
-            <b>Please Note:</b> if you are using the Default Exit Message but you
+            <b>Please Note:</b> if you are using the Default Empty Message but you
             don't want to display anything in a certain preset post list. Then simple
             create an empty element to fall back on. For example, an empty 'span' HTML element.
         </p>
@@ -295,15 +295,15 @@
             change the appearance that the jQuery UI will display as.
         </p>
         <p style="margin-bottom: 6px; margin-left: 16px;">
-            <strong>Enable Default Exit Message</strong> - Used as a default option
-            to use if no posts are found and the Exit Message is empty within the
+            <strong>Enable Default Empty Message</strong> - Used as a default option
+            to use if no posts are found and the Empty Message is empty within the
             preset post list.
         
         </p>
         <ul style="margin-top: auto; margin-left: 32px;">
             <li><strong>Enable Global Exit (boolean)</strong> - If enabled (yes),
-            the all presets will fallback on the global/default Exit Message.</li>
-            <li><strong>Exit Message</strong> - Contains the message that will be 
+            the all presets will fallback on the global/default Empty Message.</li>
+            <li><strong>Empty Message</strong> - Contains the message that will be 
             displayed if no posts are found. HTML and CSS can be used.</li>
         </ul>
     </div>
