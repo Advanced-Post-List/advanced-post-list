@@ -447,22 +447,22 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         </div>
     </div>
     <div id="divExitMsg" style="clear:both; white-space:nowrap;" >
-        <label for="txtExitMsg" style="float:left; width: 96px;">Exit Message:</label>
+        <label for="txtExitMsg" style="float:left; width: 99px;">Empty Message:</label>
         <textarea name="txtExitMsg" id="txtExitMsg" style="float:inherit; min-width:544px; max-width: 874px; min-height:70px;"></textarea>
     </div>
     <div id="divBefore" class="noneHide" style="clear:both; white-space:nowrap;" >
-        <label for="txtBeforeList" style="float:left; width: 96px;" >Before list:</label>
+        <label for="txtBeforeList" style="float:left; width: 99px;" >Before list:</label>
         <textarea name="txtBeforeList" id="txtBeforeList" style="float:inherit; min-width:544px; max-width: 874px; min-height:70px;"></textarea>
     </div>
     <div id="divContent" style="clear: both; white-space:nowrap;" >
-        <div style="float:left; width: 96px;">
-            <label for="txtContent" style="float:left; width:96px;" >List content:</label>
+        <div style="float:left; width: 99px;">
+            <label for="txtContent" style="float:left; width:99px;" >List content:</label>
             <a id="info13" class="info_a_link" style="float:left;" >Shortcodes<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>
         </div>
         <textarea name='txtContent' id='txtContent' style="float: inherit; min-width:544px; max-width: 874px; min-height: 70px;" ></textarea>
     </div>
     <div id="divAfter" class="noneHide" style="clear: both; white-space:nowrap;" >
-        <label for="txtAfterList" style="float:left; width:96px;" >After list:</label>
+        <label for="txtAfterList" style="float:left; width:99px;" >After list:</label>
         <textarea name='txtAfterList' id='txtAfterList'  style="float: inherit; min-width:544px; max-width: 874px; min-height: 70px;" ></textarea>
     </div>
 </div>
@@ -559,7 +559,7 @@ function APL_get_cat_hierchy($post_tax_settings = array('post_type_name' => 'pos
         </div>
         <div class="optionL-row">
             <div style="float:left">
-                Enable Default Exit Message:
+                Enable Default Empty Message:
             </div>
             <div style="float:right">
                 <input type="radio" id="rdoDefaultExitMsgTRUE" name="rdoDefaultExitMsg" value="true" 
