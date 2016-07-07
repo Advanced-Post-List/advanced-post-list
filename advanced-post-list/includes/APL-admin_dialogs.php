@@ -173,12 +173,12 @@
     ?>
     <div id="d12" title="Post List content styling.">
         <p>
-            <strong>Exit Message</strong> - This container holds the HTML & CSS content
+            <strong>Empty Message</strong> - This container holds the HTML & CSS content
             and if no posts are found to be listed in the preset. Then the preset post list will display
-            this message. If no Exit Message is found, then the post list will use
-            the Default Exit Message if enabled in the Plugin's Admin Settings. 
+            this message. If no Empty Message is found, then the post list will use
+            the Default Empty Message if enabled in the Plugin's Admin Settings. 
             Otherwise, the plugin will display nothing like it was originally set as.
-            <b>Please Note:</b> if you are using the Default Exit Message but you
+            <b>Please Note:</b> if you are using the Default Empty Message but you
             don't want to display anything in a certain preset post list. Then simple
             create an empty element to fall back on. For example, an empty 'span' HTML element.
         </p>
@@ -229,6 +229,7 @@
             <li><b>[post_meta name="custom_field_name"]</b> - page/post custom field value. Correct 'name' parameter required</li>
             <li><b>[post_tags delimeter=", " links="true"]</b> - post tags list. Optional 'delimiter' parameter sets separator text. Use optional 'links' parameter to turn off links to tag pages</li>
             <li><b>[post_categories delimeter=", " links="true"]</b> - post categories list. Parameters work like tag shortcode.</li>
+            <li><b>[post_terms taxonomy="category" delimiter=", " links="true" max="0" empty_message=""]</b> - displays a list of post/page terms list. Required/Optional 'taxonomy' parameter sets what taxonomy terms to return; uses taxonomy slug as param value. Optional 'delimiter' parameter sets separator text. Optional 'links' parameter to turn off links to term pages/permalinks. Optional 'max' parameter to set the maximum amount of terms to list; Values Zero or less are infinite values. Optional 'empty_message' parameter to set a custom message to return if none of the taxonomy's terms exist in the post/page.</li>
             <li><b>[post_parent link="true"]</b> - post parent. Use optional 'link' parameter to turn off link</li>
             <li><b>[post_comments before="" after=""]</b> - post comments. Parameters represent text/HTML that will be inserted before and after comment list but will not be displayed if there are no comments. PHP coders: <a href="http://kalinbooks.com/2011/customize-comments-pdf-creation-station">learn how to customize comment display (kalinbooks site).</a></li>
             <li><b>[post_thumb size="full" extract="none"]</b> - URL to the page/post's featured image (requires theme support). Possible size paramaters: "thumbnail", "medium", "large" or "full". Possible xtract prameters: "on" or "force". Setting extract to "on" will cause the shortcode to attempt to pull the first image from within the post if it cannot find a featured image. Using "force" will cause it to ignore the featured image altogether. Extracted images always return at the same size they appear in the post.</li>
@@ -294,15 +295,15 @@
             change the appearance that the jQuery UI will display as.
         </p>
         <p style="margin-bottom: 6px; margin-left: 16px;">
-            <strong>Enable Default Exit Message</strong> - Used as a default option
-            to use if no posts are found and the Exit Message is empty within the
+            <strong>Enable Default Empty Message</strong> - Used as a default option
+            to use if no posts are found and the Empty Message is empty within the
             preset post list.
         
         </p>
         <ul style="margin-top: auto; margin-left: 32px;">
             <li><strong>Enable Global Exit (boolean)</strong> - If enabled (yes),
-            the all presets will fallback on the global/default Exit Message.</li>
-            <li><strong>Exit Message</strong> - Contains the message that will be 
+            the all presets will fallback on the global/default Empty Message.</li>
+            <li><strong>Empty Message</strong> - Contains the message that will be 
             displayed if no posts are found. HTML and CSS can be used.</li>
         </ul>
     </div>

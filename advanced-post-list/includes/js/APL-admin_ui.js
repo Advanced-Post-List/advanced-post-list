@@ -169,7 +169,8 @@ jQuery(document).ready(function($)
         header: false,
         noneSelectedText: "1 Req.",
         selectedList: 1,
-        buttonWidth: 96,
+        //buttonWidth: 96, Does NOTHING now.
+        minWidth: 96,
         menuWidth: 128,
         height: 69,
         
@@ -224,7 +225,8 @@ jQuery(document).ready(function($)
         header: false,
         noneSelectedText: "Any",
         selectedList: 1,
-        buttonWidth: 128,
+        //buttonWidth: 128,
+        minWidth: 128,
         menuWidth: 160,
         
         click:function(event, ui)
@@ -267,7 +269,8 @@ jQuery(document).ready(function($)
         multiple: false,
         header: false,
         selectedList: 1,
-        buttonWidth: 96,
+        //buttonWidth: 96,
+        minWidth: 96,
         menuWidth: 128,
         height:96,
         click:function(event, ui){
@@ -291,7 +294,8 @@ jQuery(document).ready(function($)
         header: false,
         noneSelectedText: '-None-',
         selectedList: 1,
-        buttonWidth: 128,
+        //buttonWidth: 128,
+        minWidth: 128,
         menuWidth: 256,
         
         click:function(event, ui)
@@ -334,7 +338,8 @@ jQuery(document).ready(function($)
         header: false,
         noneSelectedText: false,
         selectedList: 1,
-        buttonWidth: 96,
+        //buttonWidth: 96,
+        minWidth: 96,
         menuWidth: 128,
         height: 69,
         
@@ -354,7 +359,8 @@ jQuery(document).ready(function($)
         header: false,
         noneSelectedText: "Select an Option",
         selectedList: 1,
-        buttonWidth: 132,
+        //buttonWidth: 132,
+        minWidth: 132,
         menuWidth: 192,
         
         click:function(event, ui)
@@ -368,7 +374,8 @@ jQuery(document).ready(function($)
         header: false,
         noneSelectedText: "Select an Option",
         selectedList: 1,
-        buttonWidth: 128,
+        //buttonWidth: 128,
+        minWidth: 128,
         menuWidth: 160,
         height: 69,
         
