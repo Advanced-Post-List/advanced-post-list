@@ -5,6 +5,8 @@ Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Conte
 Requires at least: 2.0.2
 Tested up to: 4.5.3
 Stable tag: 0.3.b9
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Create custom post lists to display various content. Easy to use Filter & Design 
 as well as highly configurable and extensive.
@@ -245,6 +247,10 @@ page/post (e.g. [post_list name='some-preset-name'])
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.3.b9 =
+Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make sure 
+you back up the plugin data and/or website.
 
 = 0.3.b8 =
 Beta Version. If upgrading from 0.2, make sure you back up the plugin data and/or 
