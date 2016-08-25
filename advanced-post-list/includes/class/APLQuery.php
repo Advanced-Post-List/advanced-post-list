@@ -414,7 +414,7 @@ class APLQuery
         {
             $arg['ignore_sticky_posts'] = $presetObj->_listIgnoreSticky;
         }
-        
+        //FIX #34 - List Amount: -1 Returns Nothing.
         if (!empty($presetObj->_listCount))
         {
             $arg['posts_per_page'] = $presetObj->_listCount + count($arg['post__not_in']);
@@ -511,6 +511,9 @@ class APLQuery
             
             for ($i = 0; $i < (count($tax_query1) - 1); $i++)
             {
+                //FIXED #36 (0.3) - Undefined Variable.
+                //https://github.com/EkoJr/wp-advanced-post-list/issues/36
+                $tax_match_found = FALSE;
                 for ($j = 0; $j < (count($tax_query2) - 1); $j++)
                 {
                     //Would have included the next IF statement if the 2 weren't
@@ -534,6 +537,7 @@ class APLQuery
                         }
                     }
                 }
+                //FIXED #36 (0.3) - Undefined Variable 
                 if (!$tax_match_found)
                 {
                     return FALSE;
