@@ -238,7 +238,12 @@ class APLQuery
                 if (in_array(0, $taxonomy_value->terms))
                 {
                     //Does this need all terms added or leave empty
-                    $taxonomy_value->terms = array();
+                    //Note: An empty array with a -1 list amount returns zero posts
+                    //$taxonomy_value->terms = array();
+                    $taxonomy_value->terms = get_terms(array(
+                                                       'taxonomy' => $taxonomy_slug,
+                                                       'fields' => 'ids'
+                    ));
                     
                 }
                 //Set query string's tax_query
@@ -339,8 +344,8 @@ class APLQuery
         //INIT
         $arg = array();
         
-        //// AUTHOR FILTER ////
         //STEP 1 - Add author filter settings.
+        //// AUTHOR FILTER ////
         if ($presetObj->_postAuthorOperator != 'none' && !empty($presetObj->_postAuthorIDs))
         {
             $author_filter = '';
