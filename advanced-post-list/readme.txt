@@ -3,8 +3,8 @@ Contributors: EkoJr
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4VQ6NF4CQ&lc=US&item_name=Wordpress%20%2d%20Advanced%20Post%20List&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
-Tested up to: 4.5.3
-Stable tag: 0.3.b9
+Tested up to: 4.6
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -122,6 +122,13 @@ page/post (e.g. [post_list name='some-preset-name'])
 4. General options and support.
 
 == Changelog ==
+
+= 0.3.0 =
+* Fixed error 'Un-Defined Variables and Non-Objects' with Excluding Duplicates.
+* Fixed List Amount '-1' Returning Nothing.
+* Fixed Any/All Selection not properly querying Terms within the Taxonomy.
+* Changed Admin Header Links in APL Admin Settings Page.
+* Updated GPLv2 Information.
 
 = 0.3.b9 =
 * Added '[post_terms]' Internal Shortcode function to add Custom Taxonomy Terms.
@@ -251,6 +258,10 @@ page/post (e.g. [post_list name='some-preset-name'])
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.3.0 =
+Stable Release. If upgrading from 0.2, make sure to back up the plugin data 
+and website.
 
 = 0.3.b9 =
 Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make 
