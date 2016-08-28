@@ -7,12 +7,11 @@
 //LIST OF POSSIBLE FIXES AND FEATURES EXTENDING COULD OFFER
 // * Better sticky support
 // * Can add additional sorting methods
+//class WP_Query_child extends WP_Query
+//{
+//    
+//}
 
-
-class WP_Query_child extends WP_Query
-{
-    
-}
 ////////////////////////////////////////////////////////////////////////////////
 //****************************************************************************//
 ////////////////////////////////////////////////////////////////////////////////
@@ -379,7 +378,7 @@ class APLQuery
         }
             
         //STEP 3 - Add order by settings.
-        ////Order/Sort////
+        //// Order/Sort ////
         if (!empty($presetObj->_listOrder))
         {
             $arg['order'] = $presetObj->_listOrder;
@@ -390,7 +389,7 @@ class APLQuery
         }
         
         //STEP 4 - Add user's read perm filter.
-        ////Permissions////
+        //// Permissions ////
         if (!empty($presetObj->_userPerm))
         {
             $arg['perm'] = $presetObj->_userPerm;
@@ -613,6 +612,8 @@ class APLQuery
         //          see if the post is hierarchical and add it to post parents array.
         $post_post_type = get_post_type($post_ID);
         $post_hierarchical = is_post_type_hierarchical($post_post_type);
+        //FIX #50
+        //$presetObj->_postParents is being stored as a string instead of an int.
         foreach ($presetObj->_postParents as $key => $value)
         {
             //If dynamic/current post is enabled, zero (0)
@@ -634,6 +635,8 @@ class APLQuery
             }
         }
         //Removes any duplicates by using array_unique()
+        //FIX #50
+        //array_values() returns the values and indexes the array NUMERICALLY.
         $presetObj->_postParents = array_values(array_unique($presetObj->_postParents));
         
         ////////////////////////////////////////////////////////////////////////
@@ -645,6 +648,8 @@ class APLQuery
         $args_post_terms = array('orderby'  => 'term_id', 
                                  'order'    => 'ASC', 
                                  'fields'   => 'ids');
+        //FIX #50
+        //String issue?
         foreach($presetObj->_postTax as $preset_post_type => $preset_pt_value)
         {
             if ($post_post_type === $preset_post_type)

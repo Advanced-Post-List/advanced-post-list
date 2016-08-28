@@ -249,59 +249,64 @@ page/post (e.g. [post_list name='some-preset-name'])
 == Upgrade Notice ==
 
 = 0.3.b9 =
-Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make sure 
-you back up the plugin data and/or website.
+Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make 
+sure you back up the plugin data and/or website.
 
 = 0.3.b8 =
-Beta Version. If upgrading from 0.2, make sure you back up the plugin data and/or 
-website. This update includes a couple major and blocker bugs to the Admin UI.
-Further development may be required before releasing the stable version (0.3.0).
+Beta Version. If upgrading from 0.2, make sure you back up the plugin data 
+and/or website. This update includes a couple major and blocker bugs to the 
+Admin UI. Further development may be required before releasing the stable 
+version (0.3.0).
 
 = 0.3.b7 =
-Beta Version. If upgrading from 0.2, make sure you back up the plugin data and/or 
-website. This update includes a couple major and blocker bugs to the Admin UI.
-Further testing is required before releasing the stable version.
+Beta Version. If upgrading from 0.2, make sure you back up the plugin data 
+and/or website. This update includes a couple major and blocker bugs to the 
+Admin UI. Further testing is required before releasing the stable version.
 
 = 0.3.b6 =
 Beta Version. As always, make sure you back up your website since 
-0.3 has a couple of database updates. This version fixes some critical issues when 
-being used on a large site. Fixes to the Backup feature have also been included in
-this.
+0.3 has a couple of database updates. This version fixes some critical issues 
+when being used on a large site. Fixes to the Backup feature have also been 
+included in this.
 
 = 0.3.b5 =
-Beta Version. Beta 5 has another database upgrade, so it is recommended you backup 
-your data, and use a test site first. No issues with the database have been posted. 
-Contains additional filter settings that are built-in the WP_Query params, and added 
-a couple custom function. Also fixed a few issues. Look at the changelog for more 
-details.
+Beta Version. Beta 5 has another database upgrade, so it is recommended you 
+backup your data, and use a test site first. No issues with the database have 
+been posted. Contains additional filter settings that are built-in the WP_Query 
+params, and added a couple custom function. Also fixed a few issues. Look at 
+the changelog for more details.
 
 = 0.3.b4 =
-Beta Version. It is recommended you backup, but no issues with the database have been posted.
-Contains fixes for querying posts, and deactivation.
+Beta Version. It is recommended you backup, but no issues with the database 
+have been posted. Contains fixes for querying posts, and deactivation.
 
 = 0.3.b3 =
-Beta Version. It is recommended you back up data prior to upgrading.Fixed some 'strict' 
-errors that were being tossed that could cause an issue.
+Beta Version. It is recommended you back up data prior to upgrading.Fixed some 
+'strict' errors that were being tossed that could cause an issue.
 
 = 0.3.b2 =
-Beta Version. It is recommended you back up data prior to upgrading. A few added preset 
-settings. Fixed a problem with script handling that was interfering with built-in 
-scripting.
+Beta Version. It is recommended you back up data prior to upgrading. A few 
+added preset settings. Fixed a problem with script handling that was 
+interfering with built-in scripting.
 
 = 0.3.b1 =
 Beta Version. Please back up your plugin data prior to upgrading. This version 
-introduces custom post type and taxonomy support. Along with a few added settings.
+introduces custom post type and taxonomy support. Along with a few added 
+settings.
 
 = 0.3.a1 =
 Alpha Version. Please back up your plugin data prior to upgrading. This version 
-introduces custom post type and taxonomy support. Along with a few added settings.
+introduces custom post type and taxonomy support. Along with a few added 
+settings.
 
 = 0.2.0 =
-Upgrade adds a new export/import feature to back up your data, and fixes the PHP 
-hardcode, exclude current, and TextArea element. See change log for more details.
+Upgrade adds a new export/import feature to back up your data, and fixes the 
+PHP hardcode, exclude current, and TextArea element. See change log for more 
+details.
 
 = 0.1.1 =
-The require() functions in advanced-post-list.php didn't have a dynamic value set.
+The require() functions in advanced-post-list.php didn't have a dynamic value 
+set.
 
 = 0.1.0 =
 First stable version.
