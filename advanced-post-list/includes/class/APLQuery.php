@@ -7,12 +7,11 @@
 //LIST OF POSSIBLE FIXES AND FEATURES EXTENDING COULD OFFER
 // * Better sticky support
 // * Can add additional sorting methods
+//class WP_Query_child extends WP_Query
+//{
+//    
+//}
 
-
-class WP_Query_child extends WP_Query
-{
-    
-}
 ////////////////////////////////////////////////////////////////////////////////
 //****************************************************************************//
 ////////////////////////////////////////////////////////////////////////////////
@@ -238,7 +237,12 @@ class APLQuery
                 if (in_array(0, $taxonomy_value->terms))
                 {
                     //Does this need all terms added or leave empty
-                    $taxonomy_value->terms = array();
+                    //Note: An empty array with a -1 list amount returns zero posts
+                    //$taxonomy_value->terms = array();
+                    $taxonomy_value->terms = get_terms(array(
+                                                       'taxonomy' => $taxonomy_slug,
+                                                       'fields' => 'ids'
+                    ));
                     
                 }
                 //Set query string's tax_query
@@ -330,7 +334,8 @@ class APLQuery
      * <li value="4">Add user's read perm filter.</li>
      * <li value="5">Add or Remove post ids</li>
      * <li value="6">Add whether to ignore sticky settings.</li>
-     * <li value="7">Return query_str's base variable values.</li>
+     * <li value="7">Set List Amount.</li>
+     * <li value="8">Return query_str's base variable values.</li>
      * </ol>
      */
     private function set_query_base_val($presetObj)
@@ -338,8 +343,8 @@ class APLQuery
         //INIT
         $arg = array();
         
-        ////AUTHOR FILTER////
         //STEP 1 - Add author filter settings.
+        //// AUTHOR FILTER ////
         if ($presetObj->_postAuthorOperator != 'none' && !empty($presetObj->_postAuthorIDs))
         {
             $author_filter = '';
@@ -358,10 +363,10 @@ class APLQuery
                 }
             }
             $arg['author'] = $author_filter;
-        }//END of Author Filter
+        }
         
-        ////POST STATUS////
         //STEP 2 - Add post status filter settings.
+        //// POST STATUS ////
         if (!empty($presetObj->_postStatus))
         {
             $post_status_filter = array();
@@ -372,9 +377,8 @@ class APLQuery
             $arg['post_status'] = $post_status_filter;
         }
             
-        
-        ////Order/Sort////
         //STEP 3 - Add order by settings.
+        //// Order/Sort ////
         if (!empty($presetObj->_listOrder))
         {
             $arg['order'] = $presetObj->_listOrder;
@@ -385,17 +389,16 @@ class APLQuery
         }
         
         //STEP 4 - Add user's read perm filter.
-        ////Permissions////
+        //// Permissions ////
         if (!empty($presetObj->_userPerm))
         {
             $arg['perm'] = $presetObj->_userPerm;
         }
         
-        //STEP 5 - Add or Remove post ids
-        ////posts in////
-        //not in use with presetObj yet, but will be used in $this->query
-        
-        ////posts not in////
+        //STEP 5 - Add any Excluded posts to an array of IDs.
+        //When adding posts, check if there are any invalid post IDs, and then
+        // filter out any duplicates. This prevents any conflicts that may occur
+        // with some of the dynamic settings/input. 
         if (!empty($presetObj->_listExcludePosts))
         {
             foreach ($presetObj->_listExcludePosts as $i => $post_id)
@@ -409,18 +412,34 @@ class APLQuery
         }
         
         //STEP 6 - Add whether to ignore sticky settings.
-        ////Ignore Stickies////
+        //// Ignore Stickies ////
+        //Default WP: False
         if (!empty($presetObj->_listIgnoreSticky))
         {
             $arg['ignore_sticky_posts'] = $presetObj->_listIgnoreSticky;
         }
         
-        if (!empty($presetObj->_listCount))
+        //STEP 7 - Set List Amount.
+        //// List Amount ////
+        //IF set to -1 (unlimited), preserve the setting.
+        //Otherwise,add List Count/Amount plus the amount of excluded posts
+        //  in order to balance out the total number of posts remaining.
+        //TODO - Look for possible bug with excluding X amount that dont get queried.
+        //FIX #34 - List Amount: -1 Returns Nothing.
+        if (isset($presetObj->_listCount))
         {
-            $arg['posts_per_page'] = $presetObj->_listCount + count($arg['post__not_in']);
+            if ($presetObj->_listCount == -1)
+            {
+                $arg['posts_per_page'] = $presetObj->_listCount;
+            }
+            else
+            {
+                $arg['posts_per_page'] = $presetObj->_listCount + count($arg['post__not_in']);
+            }
+            
         }
         
-        //STEP 7 - Return query_str's base variable values.
+        //STEP 8 - Return query_str's base variable values.
         return $arg;
         
     }
@@ -511,6 +530,9 @@ class APLQuery
             
             for ($i = 0; $i < (count($tax_query1) - 1); $i++)
             {
+                //FIXED #36 (0.3) - Undefined Variable.
+                //https://github.com/EkoJr/wp-advanced-post-list/issues/36
+                $tax_match_found = FALSE;
                 for ($j = 0; $j < (count($tax_query2) - 1); $j++)
                 {
                     //Would have included the next IF statement if the 2 weren't
@@ -534,6 +556,7 @@ class APLQuery
                         }
                     }
                 }
+                //FIXED #36 (0.3) - Undefined Variable 
                 if (!$tax_match_found)
                 {
                     return FALSE;
@@ -589,6 +612,8 @@ class APLQuery
         //          see if the post is hierarchical and add it to post parents array.
         $post_post_type = get_post_type($post_ID);
         $post_hierarchical = is_post_type_hierarchical($post_post_type);
+        //FIX #50
+        //$presetObj->_postParents is being stored as a string instead of an int.
         foreach ($presetObj->_postParents as $key => $value)
         {
             //If dynamic/current post is enabled, zero (0)
@@ -610,6 +635,8 @@ class APLQuery
             }
         }
         //Removes any duplicates by using array_unique()
+        //FIX #50
+        //array_values() returns the values and indexes the array NUMERICALLY.
         $presetObj->_postParents = array_values(array_unique($presetObj->_postParents));
         
         ////////////////////////////////////////////////////////////////////////
@@ -621,6 +648,8 @@ class APLQuery
         $args_post_terms = array('orderby'  => 'term_id', 
                                  'order'    => 'ASC', 
                                  'fields'   => 'ids');
+        //FIX #50
+        //String issue?
         foreach($presetObj->_postTax as $preset_post_type => $preset_pt_value)
         {
             if ($post_post_type === $preset_post_type)
@@ -697,22 +726,32 @@ class APLQuery
         $post_not_in_IDs = array();
         $final_query_str = array();
         
+        
+        //TODO Create function for the repeated query_wp function
         //STEP 1 - If this is NOT the first and last instance of this function. 
         //        Then repeat this function if more queries are present, and 
         //        query/collect the posts IDs.
+        //Normally a recursive function will have an exit statement setup first,
+        // however, it needs to check if it is a repeated instance first before
+        // moving on to the first/last instance.
         if ($repeated === TRUE)
         {
+            //STEP
+            //Copy the first Query String Array, and delete it, then shift 
+            //  any additional arrays.
             $query_str = array_shift($query_str_array);
             
-            //If more query strings exist, then repeat this function. When returned
-            // merge post ids for final query.
+            //If more Query Strings Arrays exist, then repeat this function. 
+            //  When returned, merge post ids for pre-final query.
             if (!empty($query_str_array))
             {
                 $post_in_IDs = array_merge($this->query_wp($query_str_array, TRUE), $post_in_IDs);
             }
             
-            //Since post__in and post__not_in don't mix at all while querying. The
-            // 2 variables are stored seperately.
+            //STEP
+            //Since post__in and post__not_in don't mix at all. The 2 variables 
+            //  are stored seperately.
+            //TODO Create function for Post Include/Exclude
             if (!empty($query_str['post__not_in']))
             {
                 $post_not_in_IDs = $query_str['post__not_in'];
@@ -726,28 +765,47 @@ class APLQuery
             }
             unset($query_str['post__in']);
             
+            //STEP
+            //If Posts Per Page is set to -1/Unlimited, then set nopaging to true
+            if ($query_str['posts_per_page'] == -1)
+            {
+                $query_str['nopaging'] = TRUE;
+            }
+            //STEP
             //Sets the query string to just query IDs
             $query_str['fields'] = 'ids';
             $Query_Obj = new WP_Query($query_str);
             
+            //STEP
+            //Collect an array of Post IDs
             $post_IDs = array();
             foreach ($Query_Obj->posts as $i => $post_ID)
             {
                 $post_IDs[] = intval($post_ID);
             }
-            
             $post_IDs = array_merge($post_IDs, $post_in_IDs);
+            
+            //STEP
             wp_reset_postdata();
+            //STEP
             return $post_IDs;
             
         }
         //STEP 2 - FINAL Query and order the post IDs collected. Return results
+        //This is the Initial and Final Query. This is used to collect IDs first
+        // with 1 or more query_str (that couldn't be consolidated/merged), and
+        // then do one last query here to return. This allows sorting with other
+        // custom post types that couldn't be queried together, and allows 
+        // compatability with posts_in & posts_not_in.
         else //$repeated === FALSE
         {
+            //STEP
             $post_in_IDs = array_merge($this->query_wp($query_str_array, TRUE));
+            //STEP
             $query_str = array_shift($query_str_array);
             
-            //$tmp_post_in_IDs = array();
+            //STEP 
+            //Filter out excluded posts.
             foreach ($query_str['post__not_in'] as $post_not_value)
             {
                 foreach ($post_in_IDs as $key => $post_in_value)
@@ -760,14 +818,14 @@ class APLQuery
             }
             $post_in_IDs = array_merge($post_in_IDs);
             
+            //STEP
             if (empty($post_in_IDs))
             {
                 $post_in_IDs[] = 0;
             }
             
+            //STEP
             //Set FINAL query_str with post IDs
-            
-            
             $final_query_str['post__in'] = $post_in_IDs;
             $final_query_str['post_type'] = 'any';
             $final_query_str['nopaging'] = FALSE;
@@ -775,16 +833,14 @@ class APLQuery
             $final_query_str['orderby'] = $query_str['orderby'];
             $final_query_str['ignore_sticky_posts'] = $query_str['ignore_sticky_posts'];
             
+            if ($query_str['posts_per_page'] == -1)
+            {
+                $final_query_str['nopaging'] = TRUE;
+            }
             $final_query_str['posts_per_page'] = $query_str['posts_per_page'] - count($query_str['post__not_in']);
             
             //Get FINAL Query Object
             $final_Query_Obj = new WP_Query($final_query_str);
-            
-//            if (!empty($query_str['post__not_in']))
-//            {
-//                $post_not_in_IDs = $query_str['post__not_in'];
-//            }
-//            $final_Query_Obj = $this->post__not_in($final_Query_Obj, $post_not_in_IDs);
             
             return $final_Query_Obj;
         }
@@ -807,6 +863,8 @@ class APLQuery
      * <li value="3">Return WP_Query class.</li>
      * </ol>
      */
+    //TODO Remove? Seems like a bulky method for using as an exclude post 
+    //  function in the future.
     private function post__not_in($Query_Obj, $post_not_in_IDs)
     {
         //$posts = $Query_Obj->posts;

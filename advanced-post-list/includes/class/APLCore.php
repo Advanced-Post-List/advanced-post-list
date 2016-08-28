@@ -1637,6 +1637,8 @@ class APLCore
      */
     public function APL_handler_save_preset()
     {
+        //TODO - Create a function to decode preset, and/or handle postTax structure.
+        //TODO - Change to filter_input() instead of $_POST http://php.net/manual/en/function.filter-input.php
         // Step 1
         check_ajax_referer("APL_handler_save_preset");
 
@@ -1992,9 +1994,11 @@ class APLCore
             while ( $wp_query_class->have_posts() ) 
             {
                 $wp_query_class->the_post();
-                //TODO
-                //FIX
-                $this->_remove_duplicates[] = $APL_post->ID;
+                //FIXED #36 (0.3) - Trying to get property of non-object.
+                //https://github.com/EkoJr/wp-advanced-post-list/issues/36
+                //FIXED (0.3) - Exclude Duplicates Not Working
+                //https://wordpress.org/support/topic/exclude-duplicates-not-working
+                $this->_remove_duplicates[] = $wp_query_class->post->ID;// $APL_post->ID;
                 $output .= APLInternalShortcodeReplace($presetObj->_content,
                                                        $wp_query_class->post,
                                                        $count);
