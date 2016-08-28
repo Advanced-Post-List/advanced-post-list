@@ -2,19 +2,20 @@
 
 /*
   Plugin Name: Advanced Post List
-  Version: 0.3.b9
+  Version: 0.3.0
   Plugin URI: http://wordpress.org/plugins/advanced-post-list/
   Description: Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies. 
-  Author: EkoJr
+  Author: EkoJR
 
   == Copyright ==
-  Advanced Post List by EkoJr (email: ekojr1337@gmail.com)
+  Advanced Post List by EkoJR (email: ekojr1337@gmail.com)
+  Copyright (C) 2016 EkoJR
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+  
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -22,7 +23,7 @@
 
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /**
  * @package advanced-post-list
@@ -30,7 +31,6 @@
  * @version 0.2.0 - Added more require functions for additional pages.
  * @version 0.3.0 - Added APLQuery Class, APLUpdater Class
  * 
- * @link http://ekojr.com/advanced-post-list/ Advanced Post List Homepage
  */
 /*****************************************************************************/
 /************************ Compatability Checks *******************************/
@@ -61,7 +61,7 @@ else
 //Define constant varibles
 define('APL_NAME',      'Advanced Post List');
 //FIX ALWAYS - Update version number
-define('APL_VERSION',   '0.3.b9');
+define('APL_VERSION',   '0.3.0');
 //APL_DIR = C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/
 define('APL_DIR',       plugin_dir_path(__FILE__));
 //APL_URL = http://localhost/wordpress/wp-content/plugins/advanced-post-list/
