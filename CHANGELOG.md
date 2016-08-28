@@ -1,20 +1,23 @@
 == Changelog ==
 
 = 0.3.0 = 08/29/2016
-* 
+* Fixed error 'Un-Defined Variables and Non-Objects' with Excluding Duplicates.
+* Fixed List Amount '-1' Returning Nothing.
+* Fixed Any/All Selection not properly querying Terms within the Taxonomy.
+* Changed Admin Header Links in APL Admin Settings Page.
+* Updated GPLv2 Information.
 
 = 0.3.b9 = 07/07/2016
-* Changed Google APIs jQuery UI CSS version 1.8.21 to 1.11.4 to match WP 4.5.3 jQuery UI JS version.
-* Changed jQuery MultiSelect UI Widget files version 1.12 to 1.14.
-* Fixed MultiSelect Button Width using default width.
 * Added '[post_terms]' Internal Shortcode function to add Custom Taxonomy Terms.
+* Fixed MultiSelect Button Width using default width.
+* Updated Google APIs jQuery UI CSS version 1.8.21 to 1.11.4 to match WP 4.5.3 jQuery UI JS version.
+* Updated jQuery MultiSelect UI Widget files version 1.12 to 1.14.
 
 = 0.3.b8 = 05/31/2014
 * Added Widget support.
-* Fixed warning errors with WP's debug config enabled.
 * Added param label to author shortcode.
 * Added param size to post_thumb.
-* Changed APLQuery class to reduce memory load, and remove nested code.
+* Fixed warning errors with WP's debug config enabled.
 * Fixed Taxonomy Tabs not showing category/tag text.
 * Fixed AJAX Save Preset Button not updating text.
 * Fixed Save Preset Button enlarging each click.
@@ -22,36 +25,36 @@
 * Fixed (preview) post list dynamics on admin side.
 * Fixed Delete Database Upon Deactivation no saving to APL database.
 * Fixed jQuery UI CSS file not loading with https sites.
+* Changed APLQuery class to reduce memory load, and remove nested code.
 
 = 0.3.b7 = 10/08/2013
 * Fixed Admin UI Multiselect jQuery plugin not closing.
 * Fixed Multiselect not updating values.
-* Changed Links in the Settings page.
+* Changed Admin Header Links in the Settings page.
 * Changed Screenshots.
 
 = 0.3.b6 = 12/04/2012
-* Fixed 'Maximum execution time of 30 seconds exceeded'.
-* Fixed Issue with jQuery UI 'Current Page' Parent Selector.
 * Added Label Elements to Admin Option Settings.
-* Changed jQuery UI Dialog Messages to use a Dynamic JS Function. 
 * Added Info Dialogs to the General Options Section.
 * Added Updater Class Object.
-* Changed APLCore Constructor/Init & Import Upgrading Process.
 * Added Backwards Compatibility to APLPresetDbObj & APLPresetObj Class.
-* Changed APLPresetDbObj Constructor to Optionally Create an Empty Class.
+* Added More Security to the Backup Feature.
+* Added Version Variable to Export Output File.
+* Added an Overwrite Confirmation Before Finalizing the Import Operation.
+* Fixed 'Maximum execution time of 30 seconds exceeded'.
+* Fixed Issue with jQuery UI 'Current Page' Parent Selector.
 * Fixed/Changed Import/Export Layout & Elements. 
 * Fixed Backup (Export/Download/Import) Feature.
-* Changed Back-up Procedures to Use Both a Handler and a Final Function. 
-* Added More Security to the Backup Feature.
 * Fixed JSON Converter to Display PHP Errors Instead of Breaking.
-* Added Version Variable to Export Output File.
 * Fixed Import to Update Preset(s) being imported.
+* Changed jQuery UI Dialog Messages to use a Dynamic JS Function.
+* Changed APLCore Constructor/Init & Import Upgrading Process.
+* Changed APLPresetDbObj Constructor to Optionally Create an Empty Class.
+* Changed Back-up Procedures to Use Both a Handler and a Final Function.
 * Changed Import File Uploads from Single to Multiple Files.
-* Added an Overwrite Confirmation Before Finalizing the Import Operation.
 
 = 0.3.b5 = 08/17/2012
 * Added ‘Any/All’ term setting to taxonomies.
-* Changed ‘Post Status’ filter to carry multiple values.
 * Added User/Visitor Permissions.
 * Added Author filter.
 * Added Ignore Sticky Posts filter.
@@ -59,18 +62,19 @@
 * Added Exclude Duplicate Posts from Current Page setting.
 * Added an Exit Message.
 * Added database upgrade for 0.3.beta5.
-* Changed Admin Dialogs.
-* Fixed Post Status grabbing private content.
-* Fixed duplicate posts bug.
-* Changed jQuery register script location.
 * Added additional support to scripts.
 * Added empty index.php files to all folders.
+* Fixed Post Status grabbing private content.
+* Fixed duplicate posts bug.
+* Changed ‘Post Status’ filter to carry multiple values.
+* Changed Admin Dialogs.
+* Changed jQuery register script location.
 
 = 0.3.b4 = 07/17/2012
 * Fixed dynamics with post lists with 'Include Terms' within taxonomy and 'Current Page' post parent.
 * Fixed excluding current page.
-* Changed 'get' functions for post_types, taxonomies, and terms.
 * Fixed always deleting database upon deactivation.
+* Changed 'get' functions for post_types, taxonomies, and terms.
 * Changed primary author.
 * Changed Plugin Page URL on admin page.
 
@@ -86,28 +90,28 @@
 * Added Custom Post Type and Taxonomy support.
 * Added JQuery UI features.
 * Added "Post Status" setting for presets.
+* Added APLQuery class to shadow WP_Query.
+* Added a plugin database update for the change preset settings.
 * Changed "Post Parent" to carry multiple parent pages instead of just one.
 * Changed script and style handling to use wp_enqueue.
 * Changed from get_posts() to APLQuery (WP_Query) class.
 * Changed APLPresetObj class.
-* Added APLQuery class to shadow WP_Query.
-* Added a plugin database update for the change preset settings.
 * Changed import file to accommodate for new preset settings.
 
 = 0.3.a1 =  04/05/2012
 * Initial v0.3 Release
 
 = 0.2.0 = 12/16/2011
-* Designed a 'General Settings' section for core settings.
-* Changed 'Upon plugin deactivation clean up all database entries' to a yes/no ratio.
+* Added a 'General Settings' section for core settings.
 * Added Import/Export feature.
 * Added a preset download feature.
 * Added admin.css to separate styles from admin.php file.
-* Designed a new default css style button.
+* Added a new default css style button.
 * Fixed database version checking.
 * Fixed PHP hardcode string that was displayed to the admin.
 * Fixed 'Exclude Current'.
-* Fixed Before, Content, and After TextArea to expand correctly
+* Fixed Before, Content, and After TextArea to expand correctly.
+* Changed 'Upon plugin deactivation clean up all database entries' to a yes/no ratio.
 
 = 0.1.1 = 10/03/2011
 * Fixed including required files.
@@ -131,6 +135,10 @@
 
 //VV// REMOVE, INCLUDE, or MOVE? //VV//
 == Upgrade Notice ==
+
+= 0.3.0 =
+Stable Release. If upgrading from 0.2, make sure to back up the plugin data 
+and website.
 
 = 0.3.b9 =
 Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make sure 
