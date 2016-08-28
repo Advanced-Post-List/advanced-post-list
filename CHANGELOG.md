@@ -1,5 +1,34 @@
 == Changelog ==
 
+= 0.3.0 = 08/29/2016
+* 
+
+= 0.3.b9 = 07/07/2016
+* Changed Google APIs jQuery UI CSS version 1.8.21 to 1.11.4 to match WP 4.5.3 jQuery UI JS version.
+* Changed jQuery MultiSelect UI Widget files version 1.12 to 1.14.
+* Fixed MultiSelect Button Width using default width.
+* Added '[post_terms]' Internal Shortcode function to add Custom Taxonomy Terms.
+
+= 0.3.b8 = 05/31/2014
+* Added Widget support.
+* Fixed warning errors with WP's debug config enabled.
+* Added param label to author shortcode.
+* Added param size to post_thumb.
+* Changed APLQuery class to reduce memory load, and remove nested code.
+* Fixed Taxonomy Tabs not showing category/tag text.
+* Fixed AJAX Save Preset Button not updating text.
+* Fixed Save Preset Button enlarging each click.
+* Fixed Admin Preview not showing.
+* Fixed (preview) post list dynamics on admin side.
+* Fixed Delete Database Upon Deactivation no saving to APL database.
+* Fixed jQuery UI CSS file not loading with https sites.
+
+= 0.3.b7 = 10/08/2013
+* Fixed Admin UI Multiselect jQuery plugin not closing.
+* Fixed Multiselect not updating values.
+* Changed Links in the Settings page.
+* Changed Screenshots.
+
 = 0.3.b6 = 12/04/2012
 * Fixed 'Maximum execution time of 30 seconds exceeded'.
 * Fixed Issue with jQuery UI 'Current Page' Parent Selector.
@@ -21,8 +50,8 @@
 * Added an Overwrite Confirmation Before Finalizing the Import Operation.
 
 = 0.3.b5 = 08/17/2012
-* Added ‘Any/All’ term setting to taxonomies.
-* Changed ‘Post Status’ filter to carry multiple values.
+* Added â€˜Any/Allâ€™ term setting to taxonomies.
+* Changed â€˜Post Statusâ€™ filter to carry multiple values.
 * Added User/Visitor Permissions.
 * Added Author filter.
 * Added Ignore Sticky Posts filter.
@@ -102,6 +131,20 @@
 
 //VV// REMOVE, INCLUDE, or MOVE? //VV//
 == Upgrade Notice ==
+
+= 0.3.b9 =
+Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make sure 
+you back up the plugin data and/or website.
+
+= 0.3.b8 =
+Beta Version. If upgrading from 0.2, make sure you back up the plugin data and/or 
+website. This update includes a couple major and blocker bugs to the Admin UI.
+Further development may be required before releasing the stable version (0.3.0).
+
+= 0.3.b7 =
+Beta Version. If upgrading from 0.2, make sure you back up the plugin data and/or 
+website. This update includes a couple major and blocker bugs to the Admin UI.
+Further testing is required before releasing the stable version.
 
 = 0.3.b6 =
 (Possible) Final Beta Version. As always, make sure you back up your website since 
