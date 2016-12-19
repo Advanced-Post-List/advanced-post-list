@@ -2,14 +2,18 @@
 
 /*
   Plugin Name: Advanced Post List
-  Version: 0.3.0
   Plugin URI: http://wordpress.org/plugins/advanced-post-list/
-  Description: Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies. 
+  Description: Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies.
+  Version: 0.3.1 
   Author: EkoJR
+  Author URI: http://ekojr.com
+  License: GPLv2
+  License: URI: https://www.gnu.org/licenses/gpl-2.0.html
+  Text Domain: advanced-post-list
 
   == Copyright ==
   Advanced Post List by EkoJR (email: ekojr1337@gmail.com)
-  Copyright (C) 2016 EkoJR
+  Copyright (C) 2017 EkoJR
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -54,18 +58,23 @@ else
 }
 
 
-
+//TODO MOVE constants into APL_Core Class in APL_Constants
+//TODO ADD versions number for 3rd party CDN sources.
+//jQuery, jQuery UI, (jQuery) Multiselect 
+//  Note: Try grabbing WP jQuery version number for CSS files on Google.
 /*****************************************************************************/
 /************************ CONSTANTS ******************************************/
 /*****************************************************************************/
 //Define constant varibles
 define('APL_NAME',      'Advanced Post List');
 //FIX ALWAYS - Update version number
-define('APL_VERSION',   '0.3.0');
+define('APL_VERSION',   '0.3.1');
 //APL_DIR = C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/
 define('APL_DIR',       plugin_dir_path(__FILE__));
 //APL_URL = http://localhost/wordpress/wp-content/plugins/advanced-post-list/
 define('APL_URL',       plugin_dir_url(__FILE__));
+
+//TODO Create a better Init method for this. APL_include()
 /*****************************************************************************/
 /************************ REQUIRED FILES *************************************/
 /*****************************************************************************/
