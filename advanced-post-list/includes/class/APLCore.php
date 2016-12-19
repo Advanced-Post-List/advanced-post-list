@@ -2215,7 +2215,7 @@ function APLInternalShortcodeReplace($str,
                                  array(&$postCallback, 'postTagsCallback'),
                                  $str);
                                  
-    $str = preg_replace_callback("#\[post_terms *(taxonomy=['|\"]([^'\"]*)['|\"])? *(delimiter=['|\"]([^'\"]*)['|\"])? *(links=['|\"]([^'\"]*)['|\"])? *(empty_message=['|\"]([^'\"]*)['|\"])? *(max=['|\"]([^'\"]*)['|\"])? *\]#",
+    $str = preg_replace_callback("#\[post_terms *(taxonomy=['|\"]([^'\"]*)['|\"])? *(delimiter=['|\"]([^'\"]*)['|\"])? *(links=['|\"]([^'\"]*)['|\"])? *(max=['|\"]([^'\"]*)['|\"])? *(empty_message=['|\"]([^'\"]*)['|\"])? *\]#",
                                  array(&$postCallback, 'postTermsCallback'),
                                  $str);
     
