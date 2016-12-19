@@ -1922,6 +1922,11 @@ class APLCore
      * <li value="6">Return output string.</li>
      * </ol>
      */
+    //TODO Change the implimentation of executing the query function. For
+    //  example: Move some lines to APLQuery->run OR Query. There still needs to 
+    //  be a concept here to handle the LOOP
+    //  Note: There needs to be a median to convert user friendly data
+    //        to query_str friendly.
     private function APL_run($preset_name)
     {
         /*
@@ -2215,7 +2220,7 @@ function APLInternalShortcodeReplace($str,
                                  array(&$postCallback, 'postTagsCallback'),
                                  $str);
                                  
-    $str = preg_replace_callback("#\[post_terms *(taxonomy=['|\"]([^'\"]*)['|\"])? *(delimiter=['|\"]([^'\"]*)['|\"])? *(links=['|\"]([^'\"]*)['|\"])? *(empty_message=['|\"]([^'\"]*)['|\"])? *(max=['|\"]([^'\"]*)['|\"])? *\]#",
+    $str = preg_replace_callback("#\[post_terms *(taxonomy=['|\"]([^'\"]*)['|\"])? *(delimiter=['|\"]([^'\"]*)['|\"])? *(links=['|\"]([^'\"]*)['|\"])? *(max=['|\"]([^'\"]*)['|\"])? *(empty_message=['|\"]([^'\"]*)['|\"])? *\]#",
                                  array(&$postCallback, 'postTermsCallback'),
                                  $str);
     
