@@ -191,6 +191,9 @@ class APLCallback
 
     return $catString;
   }
+  //FIX Bug when using params that are not in order.
+  //  Current idea is to check the first 4 chars and grab the value from the 
+  //   next Array Variable.
   function postTermsCallback($matches)
   {
     //Add Empty Message param
@@ -207,9 +210,9 @@ class APLCallback
     if (!$terms)
     {
         $empty = '';
-        if (isset($matches[8]))
+        if (isset($matches[10]))
         {
-            $empty = $matches[8];
+            $empty = $matches[10];
         }
         return $empty;
     }
@@ -228,11 +231,12 @@ class APLCallback
       $links = false;
     }
     
+    //FIX Check if value is an int
     $termString = "";
     $i = -1;
-    if (isset($matches[10]))
+    if (isset($matches[8]))
     {
-        $i = intval($matches[10]) - 1;
+        $i = intval($matches[8]) - 1;
     }
     foreach ($terms as $term)
     {
