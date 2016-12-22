@@ -62,17 +62,6 @@ else
 //TODO ADD versions number for 3rd party CDN sources.
 //jQuery, jQuery UI, (jQuery) Multiselect 
 //  Note: Try grabbing WP jQuery version number for CSS files on Google.
-/*****************************************************************************/
-/************************ CONSTANTS ******************************************/
-/*****************************************************************************/
-//Define constant varibles
-define('APL_NAME',      'Advanced Post List');
-//FIX ALWAYS - Update version number
-define('APL_VERSION',   '0.3.1');
-//APL_DIR = C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/
-define('APL_DIR',       plugin_dir_path(__FILE__));
-//APL_URL = http://localhost/wordpress/wp-content/plugins/advanced-post-list/
-define('APL_URL',       plugin_dir_url(__FILE__));
 
 //TODO Create a better Init method for this. APL_include()
 /*****************************************************************************/

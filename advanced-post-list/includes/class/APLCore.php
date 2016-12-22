@@ -124,6 +124,9 @@ class APLCore
     public function __construct($file)
     {
         //STEP 1
+        
+        $this->define_constants($file);
+        
         $this->APL_load_plugin_data($file);
 
         //STEP 2
@@ -177,7 +180,36 @@ class APLCore
                                     array('APLCore', 'APL_handler_uninstall'));
         }
     }
-
+    private function define_constants($plugin_file)
+    {
+        $default_headers = array(
+                "Name" => "Plugin Name",
+                "Slug" => "Text Domain",
+                "Version" => "Version"
+        );
+        //Get plugin-file-data from advanced-post-list.php, and grab 
+        //  the plugin's meta default_headers
+        $plugin_data = get_file_data($plugin_file, $default_headers);
+        
+        //APL_NAME = 'Advanced Post List'
+        define('APL_NAME',      $plugin_data['Name']);
+        
+        //APL_SLUG = 'advanced-post-list'
+        define('APL_SLUG',      $plugin_data['Slug']);
+        
+        //APL_VERSION = '1.2.3'
+        define('APL_VERSION',   $plugin_data['Version']);
+        
+        //APL_URL = 'http://localhost/wordpress/wp-content/plugins/advanced-post-list/'
+        define('APL_URL',       plugin_dir_url($plugin_file));
+        
+        //APL_DIR = 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'
+        define('APL_DIR',       plugin_dir_path($plugin_file));
+        
+        //TODO ADD versions number for 3rd party CDN sources.
+        //jQuery, jQuery UI, (jQuery) Multiselect 
+        //  Note: Try grabbing WP jQuery version number for CSS files on Google.
+    }
     private function APL_updater($APLOptions)
     {
         
