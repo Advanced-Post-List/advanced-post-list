@@ -63,25 +63,14 @@ else
 //jQuery, jQuery UI, (jQuery) Multiselect 
 //  Note: Try grabbing WP jQuery version number for CSS files on Google.
 
-//TODO Create a better Init method for this. APL_include()
-/*****************************************************************************/
-/************************ REQUIRED FILES *************************************/
-/*****************************************************************************/
-require_once(APL_DIR . 'includes/class/APLCore.php');
-require_once(APL_DIR . 'includes/class/APLPresetDbObj.php');
-require_once(APL_DIR . 'includes/class/APLPresetObj.php');
-require_once(APL_DIR . 'includes/class/APLCallback.php');
-require_once(APL_DIR . 'includes/class/APLWidget.php');
-require_once(APL_DIR . 'includes/class/APLQuery.php');
-require_once(APL_DIR . 'includes/class/APLUpdater.php');
-require_once(APL_DIR . 'includes/import.php');
-require_once(APL_DIR . 'includes/export.php');
 
 /*****************************************************************************/
-/************************ LOAD HANDLER ***************************************/
+/************************ Singleton ******************************************/
 /*****************************************************************************/
 
 //Load Handler
+//TODO change to APLCore->Run
+//  Basically attempt to remove the need for a variable.
 $advanced_post_list = new APLCore(__FILE__);
 
 // A LIST DEBUGGIN METHODS THAT USERS MAY USE OR BE 

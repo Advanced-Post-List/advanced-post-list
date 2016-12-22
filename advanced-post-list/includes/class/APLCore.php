@@ -126,6 +126,7 @@ class APLCore
         //STEP 1
         
         $this->define_constants($file);
+        $this->requires();
         
         $this->APL_load_plugin_data($file);
 
@@ -209,6 +210,18 @@ class APLCore
         //TODO ADD versions number for 3rd party CDN sources.
         //jQuery, jQuery UI, (jQuery) Multiselect 
         //  Note: Try grabbing WP jQuery version number for CSS files on Google.
+    }
+    private function requires()
+    {
+        require_once(APL_DIR . 'includes/class/APLCore.php');
+        require_once(APL_DIR . 'includes/class/APLPresetDbObj.php');
+        require_once(APL_DIR . 'includes/class/APLPresetObj.php');
+        require_once(APL_DIR . 'includes/class/APLCallback.php');
+        require_once(APL_DIR . 'includes/class/APLWidget.php');
+        require_once(APL_DIR . 'includes/class/APLQuery.php');
+        require_once(APL_DIR . 'includes/class/APLUpdater.php');
+        require_once(APL_DIR . 'includes/import.php');
+        require_once(APL_DIR . 'includes/export.php');
     }
     private function APL_updater($APLOptions)
     {
