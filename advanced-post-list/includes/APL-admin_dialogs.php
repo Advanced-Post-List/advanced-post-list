@@ -199,11 +199,14 @@
             still open, or to display a final message to the users/visitors. 
         </p>
     </div>
+	<div id="d13" title="List of internal post list shortcodes.">
+		<?php include(APL_DIR . "/admin/admin_dialog_shortcodes.php"); ?>
+	</div>
     <?php
     //////////////////////////////////////////////////////////////////////
     //////////////////////// POST LIST SHORTCODES ////////////////////////
     //////////////////////////////////////////////////////////////////////
-    ?>
+    /*
     <div id="d13" title="List of internal post list shortcodes.">
         <p>
             <b>Shortcodes:</b> Use these codes inside the list item content (will 
@@ -246,6 +249,8 @@
             Note: these shortcodes only work in the List item content box on this page.
         </p>
     </div>
+     */
+    ?>
     <?php
     //////////////////////////////////////////////////////////////////////
     //////////////////////// PRESET PREVIEW ISSUE DETAILS ////////////////
