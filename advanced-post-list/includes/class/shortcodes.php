@@ -15,6 +15,7 @@ class APL_InternalShortcodes
         add_shortcode('test', array($this, 'test_func'));
         add_shortcode('post_name', array($this, 'post_name'));
         add_shortcode('post_slug', array($this, 'post_slug'));
+        add_shortcode('post_title', array($this, 'post_title'));
         add_shortcode('post_terms', array($this, 'post_terms'));
         
     }
@@ -25,6 +26,7 @@ class APL_InternalShortcodes
         remove_shortcode('test');
         remove_shortcode('post_name');
         remove_shortcode('post_slug');
+        remove_shortcode('post_title');
         remove_shortcode('post_terms');
     }
     
@@ -181,6 +183,17 @@ class APL_InternalShortcodes
         
         $return_str = '';
         $return_str .= $this->_post->post_name;
+    }
+    //FIX Characters not showing correctly in Chinese
+    //TODO Create compatability with UNICODE
+    public function post_title($atts)
+    {
+        $atts_value = shortcode_atts( array() , $atts, 'post_title');
+        
+        $return_str = '';
+        $return_str .= htmlspecialchars($this->_post->post_title);
+        
+        return $return_str;
     }
     /*
     public function test_func($atts)
