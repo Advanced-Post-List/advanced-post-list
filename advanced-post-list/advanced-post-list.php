@@ -58,12 +58,6 @@ else
 }
 
 
-//TODO MOVE constants into APL_Core Class in APL_Constants
-//TODO ADD versions number for 3rd party CDN sources.
-//jQuery, jQuery UI, (jQuery) Multiselect 
-//  Note: Try grabbing WP jQuery version number for CSS files on Google.
-
-
 /*****************************************************************************/
 /************************ Singleton ******************************************/
 /*****************************************************************************/
@@ -71,6 +65,7 @@ else
 //Load Handler
 //TODO change to APLCore->Run
 //  Basically attempt to remove the need for a variable.
+require_once(plugin_dir_path(__FILE__) . 'includes/class/APLCore.php');
 $advanced_post_list = new APLCore(__FILE__);
 
 // A LIST DEBUGGIN METHODS THAT USERS MAY USE OR BE 

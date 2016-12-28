@@ -213,7 +213,6 @@ class APLCore
     }
     private function requires()
     {
-        require_once(APL_DIR . 'includes/class/APLCore.php');
         require_once(APL_DIR . 'includes/class/APLPresetDbObj.php');
         require_once(APL_DIR . 'includes/class/APLPresetObj.php');
         require_once(APL_DIR . 'includes/class/APLCallback.php');
