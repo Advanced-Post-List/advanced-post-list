@@ -1934,7 +1934,14 @@ class APLCore
      */
     public function APL_display($preset_name)
     {
+        //TEST
+        require_once(APL_DIR . 'includes/class/shortcodes.php');
+        
+        //\TEST
+        
         return $this->APL_run($preset_name);
+        
+        
     }
 
     /**
@@ -2040,6 +2047,10 @@ class APLCore
             //// Content ///////////////////////////////////////////////////////
             $count = 0;
             
+            ////TEST
+            $b = new APL_InternalShortcodes();
+            //\\TEST
+            
             while ( $wp_query_class->have_posts() ) 
             {
                 $wp_query_class->the_post();
@@ -2051,7 +2062,16 @@ class APLCore
                 $output .= APLInternalShortcodeReplace($presetObj->_content,
                                                        $wp_query_class->post,
                                                        $count);
+                
+                ////TEST
+                //do_shortcode('[test]');
+                //$a = get_shortcode_regex(array('test'));
+                
+                $output_test = $b->replace($presetObj->_content, $wp_query_class->post);
+                //\\TEST
+                
                 $count++;
+                
             }
             $finalPos = strrpos($output, "[final_end]");
             //if ending exists (the last item where we don't want to add any 
@@ -2178,24 +2198,16 @@ class APLCore
  * <li value="3"></li>
  * </ol>
  */
-function APLInternalShortcodeReplace($str,
-                                     $page,
-                                     $count)
+function APLInternalShortcodeReplace($str, $page, $count)
 {
     //not much left of this array, since there's so little post data that I can still just grab unmodified
     $SCList = array("[ID]", "[post_name]", "[guid]", "[post_content]", "[comment_count]");
 
     $l = count($SCList);
-    for ($i = 0;
-         $i < $l;
-         $i++)
+    for ($i = 0; $i < $l; $i++)
     {//loop through all possible shortcodes
-        $scName = substr($SCList[$i],
-                         1,
-                         count($SCList[$i]) - 2);
-        $str = str_replace($SCList[$i],
-                           $page->$scName,
-                           $str);
+        $scName = substr($SCList[$i], 1, count($SCList[$i]) - 2);
+        $str = str_replace($SCList[$i], $page->$scName, $str);
     }
 
     $str = str_replace("[post_permalink]",
