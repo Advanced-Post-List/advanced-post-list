@@ -149,6 +149,15 @@ class APL_InternalShortcodes
         */
         
     }
+    public function ID($atts)
+    {
+        $atts_value = shortcode_atts( array() , $atts, 'ID');
+        
+        $return_str = '';
+        $return_str .= $this->_post->ID;
+        
+        return $return_str;
+    }
     /*
     public function test_func($atts)
     {
