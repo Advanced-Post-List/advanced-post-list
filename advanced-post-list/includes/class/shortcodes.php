@@ -13,6 +13,8 @@ class APL_InternalShortcodes
         add_shortcode('ID', array($this, 'ID'));
         
         add_shortcode('test', array($this, 'test_func'));
+        add_shortcode('post_name', array($this, 'post_name'));
+        add_shortcode('post_slug', array($this, 'post_slug'));
         add_shortcode('post_terms', array($this, 'post_terms'));
         
     }
@@ -21,6 +23,8 @@ class APL_InternalShortcodes
         remove_shortcode('ID');
         
         remove_shortcode('test');
+        remove_shortcode('post_name');
+        remove_shortcode('post_slug');
         remove_shortcode('post_terms');
     }
     
@@ -65,6 +69,7 @@ class APL_InternalShortcodes
         $list = array(
             'ID',
             'post_name',
+            'post_slug',
             'post_title',
             
             'post_author',
@@ -161,6 +166,21 @@ class APL_InternalShortcodes
         $return_str .= $this->_post->ID;
         
         return $return_str;
+    }
+    //TODO Try to combine [post_name] & [post_slug]
+    public function post_name($atts)
+    {
+        $atts_value = shortcode_atts( array() , $atts, 'post_name');
+        
+        $return_str = '';
+        $return_str .= $this->_post->post_name;
+    }
+    public function post_slug($atts)
+    {
+        $atts_value = shortcode_atts( array() , $atts, 'post_slug');
+        
+        $return_str = '';
+        $return_str .= $this->_post->post_name;
     }
     /*
     public function test_func($atts)
