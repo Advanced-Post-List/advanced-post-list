@@ -10,12 +10,16 @@ class APL_InternalShortcodes
     //TODO ADD post object to construct OR keep in replace function?
     public function __construct()
     {
+        add_shortcode('ID', array($this, 'ID'));
+        
         add_shortcode('test', array($this, 'test_func'));
         add_shortcode('post_terms', array($this, 'post_terms'));
         
     }
     public function __destruct() 
     {
+        remove_shortcode('ID');
+        
         remove_shortcode('test');
         remove_shortcode('post_terms');
     }
