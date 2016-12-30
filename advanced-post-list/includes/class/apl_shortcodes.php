@@ -10,24 +10,21 @@ class APL_InternalShortcodes
     //TODO ADD post object to construct OR keep in replace function?
     public function __construct()
     {
-        add_shortcode('ID', array($this, 'ID'));
-        
-        add_shortcode('test', array($this, 'test_func'));
-        add_shortcode('post_name', array($this, 'post_name'));
-        add_shortcode('post_slug', array($this, 'post_slug'));
-        add_shortcode('post_title', array($this, 'post_title'));
-        add_shortcode('post_terms', array($this, 'post_terms'));
-        
+        $shortcode_list = $this->shortcode_list();
+        foreach ($shortcode_list as $tag)
+        {
+            add_shortcode($tag, array($this, $tag));
+        }
+        global $post;
     }
     public function remove() 
     {
-        remove_shortcode('ID');
-        
-        remove_shortcode('test');
-        remove_shortcode('post_name');
-        remove_shortcode('post_slug');
-        remove_shortcode('post_title');
-        remove_shortcode('post_terms');
+        $shortcode_list = $this->shortcode_list();
+        foreach ($shortcode_list as $tag)
+        {
+            remove_shortcode($tag);
+        }
+        unset($this->_post);
     }
     
     /*
@@ -68,7 +65,7 @@ class APL_InternalShortcodes
      */
     private function shortcode_list()
     {
-        $list = array(
+        $return_array = array(
             'ID',
             'post_name',
             'post_slug',
@@ -81,39 +78,35 @@ class APL_InternalShortcodes
             
             'post_date',
             'post_date_gmt',
-            'post_modified',
-            'post_modified_gmt',
+            //'post_modified',
+            //'post_modified_gmt',
             
-            'post_thumb',
+            //'post_thumb',
             
-            'post_content',
-            'post_excerpt',
+            //'post_content',
+            //'post_excerpt',
             
-            'comment_count',
-            'post_comments',
+            //'comment_count',
+            //'post_comments',
             
+            //'post_parent',
             
+            //'post_tags',
+            //'post_categories',
+            'post_terms'
             
+            //'post_meta',
             
-            'post_parent',
+            //'item_number',
+            //'final_end',
+            //'php_function',
             
-            'post_tags',
-            'post_categories',
-            'post_terms',
-            
-            'post_meta',
-            
-            
-            
-            //Kalin's PDF Plugin (obsolete?)
-            'post_pdf',
-            
-            'item_number',
-            'final_end',
-            'php_function',
-            'test' //TEST
+            //Extensions
+            //'post_pdf' //Kalin's PDF Plugin (obsolete?)
         );
         //TODO - Extension support for additional functionality
+        
+        return $return_array;
     }
     public function replace($preset_content, $post_content)
     {
@@ -121,7 +114,6 @@ class APL_InternalShortcodes
         $return_str = $preset_content;
         $this->_post = $post_content;
         
-        /*
         $shortcode_tags = $this->shortcode_list();
         foreach ($shortcode_tags as $tag) 
         {
@@ -132,16 +124,17 @@ class APL_InternalShortcodes
                                             $str);
             }
         }
-        */
+        return $return_str;
         
         
+        /*
         while (preg_match('#\[post_terms *(.+?) ?\]#', $return_str, $matches_default))
         {
             $return_str = preg_replace('#\[post_terms *(.+?) ?\]#',
                                         do_shortcode($matches_default[0]),
                                         $return_str);
         }
-        return $return_str;
+        */
         
         //$default1 = preg_match('#\[test *(.+?) ?\]#', $str, $matches_default);
         ////$default_out = do_shortcode($matches_default[0]);
