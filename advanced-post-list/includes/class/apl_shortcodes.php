@@ -192,6 +192,85 @@ class APL_InternalShortcodes
         
         return $return_str;
     }
+    /**
+     * <p><b>Desc:</b> <p>
+     * @access public
+     * @param array $atts Shortcode Attributes. 
+     * @return string $return_str Author data from post/page.
+     * 
+     * @since 0.4.0
+     * @version 0.4.0
+     * 
+     * @uses 
+     * 
+     * @tutorial 
+     * <ol>
+     * <li value="1"></li>
+     * <li value="2"></li>
+     * <li value="3"></li>
+     * <li value="4"></li>
+     * <li value="5">If, do <b>Step 6</b></li>
+     * <li value="6"></li>
+     * </ol>
+     */
+    
+    
+    //ADDED user_name (Alias) 
+    //ADDED user_description (Alias)
+    //REMOVED user_pass
+    //REMOVED nickname
+    //REMOVED primary_blog
+    public function post_author($atts)
+    {
+        $atts_value = shortcode_atts( array(
+            'label' => 'display_name'
+        ), $atts, 'post_author');
+        
+        //Set Label Value and User Variables registered with APL
+        $label_type = array(
+            //'ID' => 'ID',
+            
+            //Data Object (WP's Standard)
+            'ID'            => 'ID',
+            'user_login'    => 'user_login',
+            'user_name'     => 'user_login',
+            'user_nicename' => 'user_nicename',
+            'display_name'  => 'display_name',
+            'user_email'    => 'user_email',
+            'user_url'      => 'user_url',
+            //TODO ADD data->user_registered for "Member Since: xx-xx-xxxx xx:xx:xx
+            //TODO ADD/FIX user_registered date format
+            
+            //Back_Compat_Keys Array (Legacy)
+            'description'       => 'user_description',
+            'user_description'  => 'user_description',
+            'user_firstname'    => 'user_firstname',
+            'user_lastname'     => 'user_lastname'
+            
+            //TODO ADD roles (array)
+            
+            //TODO ADD Extension Hook
+        );
+        
+        $return_str = '';
+        $userData = get_userdata($this->_post->post_author);
+        
+        //Check to see IF an Author Label is valid with APL and IF key/prop even 
+        //  exist on WP, including extension labels registered with APL & AP.
+        //Otherwise, IF no variable exists, return default display_name.
+        if (isset($label_type[$atts_value['label']]) && 
+            $userData->has_prop($label_type[$atts_value['label']]))
+        {
+            $return_str .= $userData->get($label_type[$atts_value['label']]);
+        }
+        else
+        {
+            //TODO ADD Admin Error
+            $return_str .= $userData->data->display_name;
+        }
+        
+        return $return_str;
+    }
     /*
     public function test_func($atts)
     {
