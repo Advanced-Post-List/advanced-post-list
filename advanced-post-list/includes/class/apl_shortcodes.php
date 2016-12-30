@@ -291,6 +291,29 @@ class APL_InternalShortcodes
         
         return $return_str;
     }
+    public function post_date($atts)
+    {
+        
+    }
+    //'post_date_gmt',
+    //'post_modified',
+    //'post_modified_gmt',
+
+    //'post_thumb',
+
+    //'post_content',
+    //'post_excerpt',
+
+    //'comment_count',
+    //'post_comments',
+
+    //'post_parent',
+
+    //'post_tags',
+    //'post_categories',
+    ////////////////////////////////////////////////////////////////////////////
+    ///////// TESTING //////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     /*
     public function test_func($atts)
     {
