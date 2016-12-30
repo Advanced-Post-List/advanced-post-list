@@ -281,6 +281,16 @@ class APL_InternalShortcodes
         
         return $return_str;
     }
+    
+    public function guid($atts)
+    {
+        $atts_value = shortcode_atts( array() , $atts, 'post_guid');
+        
+        $return_str = '';
+        $return_str .= $this->_post->guid;
+        
+        return $return_str;
+    }
     /*
     public function test_func($atts)
     {
