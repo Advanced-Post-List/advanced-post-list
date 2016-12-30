@@ -19,7 +19,7 @@ class APL_InternalShortcodes
         add_shortcode('post_terms', array($this, 'post_terms'));
         
     }
-    public function __destruct() 
+    public function remove() 
     {
         remove_shortcode('ID');
         

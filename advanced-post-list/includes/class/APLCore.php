@@ -2048,7 +2048,8 @@ class APLCore
             $count = 0;
             
             ////TEST
-            $b = new APL_InternalShortcodes();
+            $test_shortcodes = new APL_InternalShortcodes();
+            $test_output = '';
             //\\TEST
             
             while ( $wp_query_class->have_posts() ) 
@@ -2064,10 +2065,8 @@ class APLCore
                                                        $count);
                 
                 ////TEST
-                //do_shortcode('[test]');
-                //$a = get_shortcode_regex(array('test'));
                 
-                $output_test = $b->replace($presetObj->_content, $wp_query_class->post);
+                $test_output .= $test_shortcodes->replace($presetObj->_content, $wp_query_class->post);
                 //\\TEST
                 
                 $count++;
@@ -2106,6 +2105,9 @@ class APLCore
         }
         /* Restore Global Post Data */
         wp_reset_postdata();
+        ////TEST
+        $test_shortcodes->remove();
+        //\\TEST
         
         //STEP 6 - Return output string.
         return $output;
