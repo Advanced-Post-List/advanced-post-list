@@ -1790,7 +1790,7 @@ class APLCore
         $rtnData = new stdClass();
         $rtnData->status = "success";
         $rtnData->preset_arr = $presetDbObj->_preset_db;
-        $rtnData->previewOutput = $this->APL_run($preset_name);
+        $rtnData->previewOutput = $this->APL_display($preset_name);
 
         // Step 12
         echo json_encode($rtnData);
@@ -1935,7 +1935,7 @@ class APLCore
     public function APL_display($preset_name)
     {
         //TEST
-        require_once(APL_DIR . 'includes/class/shortcodes.php');
+        require_once(APL_DIR . 'includes/class/apl_shortcodes.php');
         
         //\TEST
         
