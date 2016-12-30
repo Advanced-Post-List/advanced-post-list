@@ -271,6 +271,16 @@ class APL_InternalShortcodes
         
         return $return_str;
     }
+    //TODO ADD [post_link] (Alias)
+    public function post_permalink($atts)
+    {
+        $atts_value = shortcode_atts( array() , $atts, 'post_permalink');
+        
+        $return_str = '';
+        $return_str .= get_permalink($this->_post->ID);
+        
+        return $return_str;
+    }
     /*
     public function test_func($atts)
     {
