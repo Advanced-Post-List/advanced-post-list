@@ -117,11 +117,11 @@ class APL_InternalShortcodes
         $shortcode_tags = $this->shortcode_list();
         foreach ($shortcode_tags as $tag) 
         {
-            while (preg_match('#\['.$tag.' *(.+?) ?\]#', $str, $matches_default))
+            while (preg_match('#\[' . $tag . '(.*?)?\]#', $return_str, $matches_default))
             {
-                $default_out = preg_replace('#\['.$tag.' *(.+?) ?\]#',
+                $return_str = preg_replace('#\[' . $tag . '(.*?)?\]#',
                                             do_shortcode($matches_default[0]),
-                                            $str);
+                                            $return_str);
             }
         }
         return $return_str;
@@ -169,6 +169,8 @@ class APL_InternalShortcodes
         
         $return_str = '';
         $return_str .= $this->_post->post_name;
+        
+        return $return_str;
     }
     public function post_slug($atts)
     {
@@ -176,6 +178,8 @@ class APL_InternalShortcodes
         
         $return_str = '';
         $return_str .= $this->_post->post_name;
+        
+        return $return_str;
     }
     //FIX Characters not showing correctly in Chinese
     //TODO Create compatability with UNICODE
