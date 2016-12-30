@@ -299,11 +299,11 @@ class APLCallback
   function postAuthorCallback($matches)
   {
     $userInfo = get_userdata($this->page->post_author);
-    if(isset($matches[2]))
-    {
-    	return $userInfo->$matches[2];   
-    }
-    return $userInfo->display_name;
+    //if(isset($matches[2]))
+    //{
+    //	return $userInfo->$matches[2];   
+    //}
+    return $userInfo->data->display_name;
   }
   
   function postThumbCallback($matches)
