@@ -153,7 +153,6 @@ class APL_InternalShortcodes
             
             'post_author',
             
-            //'post_content',
             //'post_excerpt',
             'post_thumb',
             
