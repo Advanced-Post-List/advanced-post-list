@@ -1,8 +1,51 @@
 <?php
+/**
+ * APL (Internal) Shortcode API: APL_InternalShortcodes class
+ * 
+ * @package WP Advanced Post List
+ * @subpackage Internal Shortcodes
+ * @version 0.4.0
+ */
+
+/**
+ * Advanced Post List - Internal Shortcodes
+ * 
+ * Handles all internal do_shortcodes when preset post lists are called. Each time
+ * the class object is created, shortcodes are added, replace function used to
+ * do_shortcodes, and ends by removing shortcodes (currently manual $this->remove).
+ *
+ * @since 0.4.0
+ */
 class APL_Shortcodes
 {
-    
+    /**
+     * Destruct Shortcode Remove
+     * 
+     * Desc: Description HERE.
+     * 
+     * 1. Step 1 
+     * 2. Step 2, do _Step 3_ 
+     * 3. Step 3 
+     * 
+     * Conclusion.
+     * 
+     * @since 0.4.0
+     * @version 0.4.0
+     * @access public
+     * 
+     * @global WP_Post $post Used to store in $this->_post.
+     * 
+     * @param string $preset_content The design content for List Content 
+     * @param string $post_content WP Post object.
+     * @param array $terms Terms to check.
+     * @return array Terms that are not stopwords.
+     */
 }
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 class APL_InternalShortcodes
 {
     private $_post;
