@@ -67,6 +67,16 @@ class APL_InternalShortcodes
      */
     private $_post;
     
+    /**
+     * Post Index in Post Lists to display a digit.  
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Added to Class Object. 
+     * @access private
+     * @var object $_item_count Preset Post List index/count.
+     */
+    private $_item_count;
+    
     //TODO ADD post object to construct OR keep in replace function?
     /**
      * APL (Internal) Shortcode Constructor
@@ -200,10 +210,12 @@ class APL_InternalShortcodes
      * @param string $post_content WP Post object.
      * @return string Preset Content with shortcodes replaced. 
      */
+    public function replace($preset_content, $wp_post)
     {
         //INIT
         $return_str = $preset_content;
         $this->_post = $post_content;
+        $this->_post = $wp_post;
         
         //STEP 1
         $shortcode_tags = $this->shortcode_list();
@@ -215,9 +227,12 @@ class APL_InternalShortcodes
                 //STEP 3
                 $return_str = preg_replace('#\[' . $tag . '(.*?)?\]#',
                                             do_shortcode($matches_default[0]),
-                                            $return_str);
+                                            $return_str,
+                                            1);
             }
         }
+        
+        $this->_item_count++;
         //STEP 4
         return $return_str;
         
