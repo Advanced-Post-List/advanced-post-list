@@ -972,6 +972,56 @@ class APL_InternalShortcodes
     //'post_tags',
     //'post_categories',
     /*
+    'name' => array( _x('Posts', 'post type general name'), _x('Pages', 'post type general name') ),
+	                'singular_name' => array( _x('Post', 'post type singular name'), _x('Page', 'post type singular name') ),
+	                'add_new' => array( _x('Add New', 'post'), _x('Add New', 'page') ),
+	                'add_new_item' => array( __('Add New Post'), __('Add New Page') ),
+	                'edit_item' => array( __('Edit Post'), __('Edit Page') ),
+	                'new_item' => array( __('New Post'), __('New Page') ),
+	                'view_item' => array( __('View Post'), __('View Page') ),
+	                'view_items' => array( __('View Posts'), __('View Pages') ),
+	                'search_items' => array( __('Search Posts'), __('Search Pages') ),
+	                'not_found' => array( __('No posts found.'), __('No pages found.') ),
+	                'not_found_in_trash' => array( __('No posts found in Trash.'), __('No pages found in Trash.') ),
+	                'parent_item_colon' => array( null, __('Parent Page:') ),
+	                'all_items' => array( __( 'All Posts' ), __( 'All Pages' ) ),
+	                'archives' => array( __( 'Post Archives' ), __( 'Page Archives' ) ),
+	                'attributes' => array( __( 'Post Attributes' ), __( 'Page Attributes' ) ),
+	                'insert_into_item' => array( __( 'Insert into post' ), __( 'Insert into page' ) ),
+	                'uploaded_to_this_item' => array( __( 'Uploaded to this post' ), __( 'Uploaded to this page' ) ),
+	                'featured_image' => array( __( 'Featured Image' ), __( 'Featured Image' ) ),
+	                'set_featured_image' => array( __( 'Set featured image' ), __( 'Set featured image' ) ),
+	                'remove_featured_image' => array( __( 'Remove featured image' ), __( 'Remove featured image' ) ),
+	                'use_featured_image' => array( __( 'Use as featured image' ), __( 'Use as featured image' ) ),
+	                'filter_items_list' => array( __( 'Filter posts list' ), __( 'Filter pages list' ) ),
+	                'items_list_navigation' => array( __( 'Posts list navigation' ), __( 'Pages list navigation' ) ),
+	                'items_list' => array( __( 'Posts list' ), __( 'Pages list' ) ),
+    */
+    
+    //ADDED Shortcode [post_type label="name"]
+    public function post_type($atts)
+    {
+        $atts_value = shortcode_atts( array(
+            'label' => 'name'
+        ), $atts, 'post_type');
+        $return_str = '';
+        
+        $post_type_obj = get_post_type_object($this->_post->post_type);
+        $label = $atts_value['label']; 
+        if ( isset($post_type_obj->labels->$label) )
+        {
+            
+            $return_str .= $post_type_obj->labels->$label;
+        }
+        else if ( isset($post_type_obj->labels->name) )
+        {
+            $return_str .= $post_type_obj->labels->name;
+        }
+        
+        return $return_str;
+    }
+    
+    public function post_tags($atts)
     {
     public function post_terms($atts)
     {
