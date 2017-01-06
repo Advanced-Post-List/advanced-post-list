@@ -151,7 +151,7 @@ class APL_InternalShortcodes
             'post_modified',
             'post_modified_gmt',
             
-            //'post_thumb',
+            'post_thumb',
             'post_author',
             
             //'post_content',
@@ -647,11 +647,91 @@ class APL_InternalShortcodes
         //STEP 5
         return $return_str;
     }
-    //TODO ADD [post_link] (Alias)
-    public function post_permalink($atts)
+    
+    //ADDED Custom Sizes
+    //FIXED RegEx not matching any img src in post_content
+    //TODO ADD Default Text?
+    //TODO ADD Improved method for checking for site media on page, and then
+    //         adding images [post_attachments]. Thus preventing outside images 
+    //         that can't be changed into a "Thumbnail" in WP.
+    //Note: Create a shortcode designed specifically for grabbing <img> from
+    //      post_content.
+    /**
+     * Post Thumb Shortcode. 
+     * 
+     * Desc: Adds a Post Thumb/Featured Image associated with the post, but will
+     * fall back on an image located within WP_Post->post_content. 
+     * 
+     * 1. If 'size' is numeric, then convert 'size' to an array(xx, yy).
+     * 2. Grab Featured Image from Post/Page w/ 'size'.
+     * 3. If 'extract' is 'on' OR 'force', add to return the src URL in img tag 
+     *    from $post->post_content.
+     * 4. Return string.
+     * 
+     * @since 0.1.0
+     * @version 0.3.0 - Added 'extract' attribute. 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $size      Sets the image size used by WP's function. 
+     *                              (thumbnail,  medium, large, full, and 
+     *                              custom "XX, XX"). 
+     *      @type string $extract   Extract from post_content (none, on, & force). 
+     * }
+     * @return string URL to Post's Featured Image OR Post_Content.
+     */
+    public function post_thumb($atts)
     {
-        $atts_value = shortcode_atts( array() , $atts, 'post_permalink');
+        //INIT
+        $atts_value = shortcode_atts( array(
+            'size'      => 'full',
+            'extract'   => 'none'
+        ), $atts, 'post_thumb');
+        $return_str ='';
         
+        //STEP 1
+        if (is_numeric(substr($atts_value['size'], 0, 1)) && substr($atts_value['size'], 0, 1) != '0')
+        {
+            $atts_value['size'] = explode(',', $atts_value['size']);
+            foreach ($atts_value['size'] as $key => $value)
+            {
+                $atts_value['size'][$key] = intval($value);
+            }
+        }
+        
+        //STEP 2
+        if ( strtolower($atts_value['extract']) != "force" && current_theme_supports('post-thumbnails'))
+        {
+            $featured_image = wp_get_attachment_image_src(get_post_thumbnail_id($this->_post->ID), $atts_value['size']);
+            if ($featured_image)
+            {
+                $return_str .= $featured_image[0];
+            }
+        }
+        
+        
+        
+        //FALLBACK IMAGE (No Featured Image)
+        //STEP 3
+        if ( strtolower($atts_value['extract']) != 'none' && empty($return_str) )
+        {
+            //Parse and grab src="{}"
+            preg_match_all('/src="([^"]+)"/', $this->_post->post_content, $matches);
+            if (!empty($matches[1]))
+            {
+                //TODO ADD Offset? OR save for post_attachments
+                $return_str .= $matches[1][0];
+            }
+        }
+        
+        //STEP 4
+        return $return_str;
+    }
+    
         $return_str = '';
         $return_str .= get_permalink($this->_post->ID);
         
