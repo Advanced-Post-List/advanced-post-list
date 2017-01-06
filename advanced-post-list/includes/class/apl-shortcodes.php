@@ -1186,5 +1186,28 @@ class APL_InternalShortcodes
         return $return_str;
         
     }
+    
+    
+    public function post_meta($atts)
+    {
+        $atts_value = shortcode_atts( array(
+            'name' => ''
+        ), $atts);
+        $return_str = '';
+        
+        if(!empty($atts_value['name']) && metadata_exists('post', $this->_post->ID, $atts_value['name']))
+        {
+            $post_meta_arr = get_post_meta($this->_post->ID, $atts_value['name'], FALSE);
+            foreach ($post_meta_arr as $meta)
+            {
+                $return_str .= $meta;
+            }
+        }
+        //TODO ADD Else Alert to Admin that metadata is invalid or doesn't exist.
+        
+        return $return_str;
+        
+    }
+    
 }
 ?>
