@@ -733,30 +733,19 @@ class APL_InternalShortcodes
     }
     
         $return_str = '';
-        $return_str .= get_permalink($this->_post->ID);
         
         return $return_str;
     }
     
-    public function guid($atts)
     {
-        $atts_value = shortcode_atts( array() , $atts, 'post_guid');
         
         $return_str = '';
-        $return_str .= $this->_post->guid;
         
         return $return_str;
     }
-    public function post_date($atts)
     {
         
     }
-    //'post_date_gmt',
-    //'post_modified',
-    //'post_modified_gmt',
-
-    //'post_thumb',
-
     //'post_content',
     //'post_excerpt',
 
@@ -767,21 +756,8 @@ class APL_InternalShortcodes
 
     //'post_tags',
     //'post_categories',
-    ////////////////////////////////////////////////////////////////////////////
-    ///////// TESTING //////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
     /*
-    public function test_func($atts)
     {
-        //$att = shortcode_atts( array(
-        //    'a' => 'apple',
-        //    'b' => 'banana'
-        //), $atts, 'test' );
-        $a = "hello world";
-        $b = $a;
-        return $a;
-    }*/
-    //TODO Add public do_[shortcode] function?
     public function post_terms($atts)
     {
         $atts_value = shortcode_atts( array(
@@ -857,7 +833,5 @@ class APL_InternalShortcodes
         return $return_str;
         
     }
-            
-            
 }
 ?>
