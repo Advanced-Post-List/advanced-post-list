@@ -2072,6 +2072,16 @@ class APLCore
                 $count++;
                 
             }
+            
+            //// TEST ////
+            
+            if (strrpos($output, "[final_end]"))
+            {
+                $test_shortcodes->final_end();
+            }
+            
+            //\\ TEST \\\\
+            
             $finalPos = strrpos($output, "[final_end]");
             //if ending exists (the last item where we don't want to add any 
             // more commas or ending brackets or whatever)

@@ -166,30 +166,33 @@ class APL_InternalShortcodes
             'post_thumb',
             
             'post_content',
+            'post_excerpt',
             
-            //'comment_count',
-            //'post_comments',
+            'comment_count',
+            'post_comments',
             
-            //'post_parent',
+            'post_parent',
             
-            //'post_tags',
-            //'post_categories',
-            'post_terms'
+            'post_type',
+            'post_tags',
+            'post_categories',
+            'post_terms',
             
-            //'post_meta',
+            'post_meta',
             
-            //'item_number',
-            //'final_end',
-            //'php_function',
+            'php_function',
             
-            //Extensions
-            //'post_pdf' //Kalin's PDF Plugin (obsolete?)
+            //LOOP SHORTCODE FUNCTIONS for $this->replace()
+            'item_number', 
+            //'final_end', //executed outside of class.
+            
+            //Extensions/Hook
+            'post_pdf' //Kalin's PDF Plugin (obsolete?)
         );
-        //TODO - Extension support for additional functionality
+        
         
         return $return_array;
     }
-    public function replace($preset_content, $post_content)
     
     /**
      * Shortcode Replace
@@ -214,7 +217,6 @@ class APL_InternalShortcodes
     {
         //INIT
         $return_str = $preset_content;
-        $this->_post = $post_content;
         $this->_post = $wp_post;
         
         //STEP 1
