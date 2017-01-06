@@ -143,8 +143,6 @@ class APL_InternalShortcodes
             'post_slug',
             'post_title',
             
-            'post_author',
-            
             'post_permalink',
             'guid',
             
@@ -154,6 +152,7 @@ class APL_InternalShortcodes
             'post_modified_gmt',
             
             //'post_thumb',
+            'post_author',
             
             //'post_content',
             //'post_excerpt',
@@ -603,11 +602,10 @@ class APL_InternalShortcodes
         $atts_value = shortcode_atts( array(
             'label' => 'display_name'
         ), $atts, 'post_author');
+        $return_str = '';
         
         //STEP 1
         $label_type = array(
-            //'ID' => 'ID',
-            
             //// Data Object (WP's Standard)
             'ID'            => 'ID',
             'user_login'    => 'user_login',
@@ -626,11 +624,9 @@ class APL_InternalShortcodes
             'user_lastname'     => 'user_lastname'
             
             //TODO ADD roles (array)
-            
             //TODO ADD Extension Hook
         );
         
-        $return_str = '';
         //STEP 2
         $userData = get_userdata($this->_post->post_author);
         
