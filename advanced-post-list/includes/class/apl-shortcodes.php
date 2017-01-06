@@ -853,8 +853,89 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
+    //TODO ADD Sort (OrderBy & Order)
+    //TODO ADD Include/Exclude (Author?) User_ID Filter
+    //TODO ADD Date Filter
+    //TODO ADD Preset Design. Default would use this, but a custom preset would
+    //         have its own design.
+    /* HTML Ready Shortcode
+     * @link https://codex.wordpress.org/Function_Reference/get_comments
+     */
+    
+    /**
+     * Post Excerpt Shortcode. 
+     * 
+     * Desc:  
+     * 
+     * 1. IF Post_Excerpt is empty, then use Post_Content with X amount of 
+     *    characters (Default 250.). Otherwise skip to STEP 4.
+     * 2. Convert 'length' Varible Type to Int.
+     * 3. Add a substring from Post_Content to return. X amount of length and
+     *    with shortcodes stripped out.
+     * 4. Add Post_Excerpt to return.
+     * 5. Return String.
+     * 
+     * @since 0.1.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     *                  Also changed substr() to mp_substr() for unicode compatability.
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $length    Sets the character length.  
+     * }
+     * @return string Post Excerpt OR formatted Post_Content.
+     */
+    public function post_comments($atts)
+    {
+        
+        $atts_value = shortcode_atts( array(
+            'before' => '',
+            'after' => ''
+        ), $atts, 'post_comments');
         $return_str = '';
         
+        //Use plugin/extension function. 
+        if (defined("KALINS_PDF_COMMENT_CALLBACK"))
+        {
+          return call_user_func(KALINS_PDF_COMMENT_CALLBACK);
+        }
+        
+        //Get 'approved' comments from post ID.
+        $args = array(
+            'status' => 'approve',
+            'post_id' => $this->_post->ID
+        );
+        $post_comments = get_comments($args, $this->_post->ID);
+        
+        //Add to return the Before Attribute.
+        $return_str .= $atts_value['before'];
+        foreach ($post_comments as $comment)
+        {
+            //Set string to contain Author URL or NOT.
+            if ($comment->comment_author_url == "")
+            {
+              $comment_author = $comment->comment_author;
+            }
+            else
+            {
+              $comment_author = '<a href="' . $comment->comment_author_url . '" >' . $comment->comment_author . "</a>";
+            }
+            
+            //Add to return the comment content.
+            $return_str .= '<p>' . $comment_author . 
+                           " - " . $comment->comment_author_email . 
+                           " - " . get_comment_date(null, $comment->comment_ID) . 
+                           " @ " . get_comment_date(get_option('time_format'), $comment->comment_ID) . 
+                           "<br />" . $comment->comment_content . "</p>";
+        
+        }
+        //Add to return the After Attribute.
+        $return_str .= $atts_value['after'];
+        
+        //Return string. 
         return $return_str;
     }
     {
