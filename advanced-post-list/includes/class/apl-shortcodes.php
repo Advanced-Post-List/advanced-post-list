@@ -151,7 +151,7 @@ class APL_InternalShortcodes
             'post_date',
             'post_date_gmt',
             'post_modified',
-            //'post_modified_gmt',
+            'post_modified_gmt',
             
             //'post_thumb',
             
@@ -524,6 +524,44 @@ class APL_InternalShortcodes
         
         //STEP 1
         $return_str .= mysql2date($atts_value['format'], $this->_post->post_modified);
+        
+        //STEP 2
+        return $return_str;
+    }
+    
+    /**
+     * Post Date Modified GMT Shortcode. 
+     * 
+     * Desc: Adds the post/page modified date GMT.
+     * 
+     * 1. Get & Add to return Post's Formatted Modified Date GMT.  
+     * 2. Return string. 
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @link http://php.net/manual/en/function.date.php
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes.
+     *      
+     *      @type string $format Used to format date via PHP function.
+     *      
+     * }
+     * @return string Post Modified GMT.
+     */
+    public function post_modified_gmt($atts)
+    {
+        //INIT
+        $atts_value = shortcode_atts( array(
+            'format' => 'm-d-Y'
+        ), $atts, 'post_date');
+        $return_str = '';
+        
+        //STEP 1
+        $return_str .= mysql2date($atts_value['format'], $this->_post->post_modified_gmt);
         
         //STEP 2
         return $return_str;
