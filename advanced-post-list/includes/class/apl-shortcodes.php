@@ -1023,6 +1023,94 @@ class APL_InternalShortcodes
     
     public function post_tags($atts)
     {
+        $atts_value = shortcode_atts( array(
+            'delimiter' => ', ',
+            'links' => 'true'
+        ), $atts, 'post_tags');
+        $return_str = '';
+        
+        $atts_value['links'] = TRUE;
+        if (strtolower($atts_value['links']) == 'false')
+        {
+            $atts_value['links'] = FALSE;
+        }
+        
+        $post_tags = get_the_tags($this->_post->ID);
+        $array_total = count($post_tags);
+        $i = 1;
+        if ($post_tags)
+        {
+            foreach ($post_tags as $tag)
+            {
+                //STEP
+                if ($atts_value['links'])
+                {
+                    $return_str .= '<a href="' . get_tag_link($tag->term_id) . '" >' . $tag->name . '</a>';
+                }
+                else
+                {
+                    $return_str .= $tag->name;
+                }
+
+                //STEP
+                if ($array_total > $i)
+                {
+                    $return_str .= $atts_value['delimiter'];
+                }
+                $i++;
+            }
+        }
+        
+        
+        //STEP
+        return $return_str;
+    }
+    public function post_categories($atts)
+    {
+        $atts_value = shortcode_atts( array(
+            'delimiter' => ', ',
+            'links' => 'true'
+        ), $atts, 'post_categories');
+        $return_str = '';
+        
+        $atts_value['links'] = TRUE;
+        if (strtolower($atts_value['links']) == 'false')
+        {
+            $atts_value['links'] = FALSE;
+        }
+        
+        $post_categories = get_the_category($this->_post->ID);
+        $array_total = count($post_categories);
+        $i = 1;
+        
+        if ($post_categories)
+        {
+            foreach ($post_categories as $category)
+            {
+                //STEP
+                if ($atts_value['links'])
+                {
+                    $return_str .= '<a href="' . get_tag_link($category->term_id) . '" >' . $category->name . '</a>';
+                }
+                else
+                {
+                    $return_str .= $category->name;
+                }
+
+                //STEP
+                if ($array_total > $i)
+                {
+                    $return_str .= $atts_value['delimiter'];
+                }
+                $i++;
+            }
+        }
+        
+        
+        //STEP
+        return $return_str;
+    }
+    
     public function post_terms($atts)
     {
         $atts_value = shortcode_atts( array(
