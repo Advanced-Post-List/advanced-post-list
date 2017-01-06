@@ -389,6 +389,33 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
+    /**
+     * Post Guid (WP Default URL) Shortcode. 
+     * 
+     * Desc: Adds the post/page Guid. WP's Default URL (.com/?p=396).
+     * 
+     * 1. Add to return Post's Guid.  
+     * 2. Return string. 
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {}.
+     * @return string Post Guid.
+     */
+    public function guid($atts)
+    {
+        //INIT
+        $atts_value = shortcode_atts( array() , $atts, 'post_guid');
+        $return_str = '';
+        
+        //STEP 1
+        $return_str .= $this->_post->guid;
+        
+        //STEP 2
+        return $return_str;
+    }
     
     //ADDED user_name (Alias) 
     //ADDED user_description (Alias)
