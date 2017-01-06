@@ -151,11 +151,13 @@ class APL_InternalShortcodes
             'post_modified',
             'post_modified_gmt',
             
-            'post_thumb',
             'post_author',
             
             //'post_content',
             //'post_excerpt',
+            'post_thumb',
+            
+            'post_content',
             
             //'comment_count',
             //'post_comments',
@@ -732,8 +734,30 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
+    /**
+     * Post Content Shortcode. 
+     * 
+     * Desc:  
+     * 
+     * 1. 
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts None.
+     * @return string Post Post_Content.
+     */
+    public function post_content($atts)
+    {
+        //INIT
+        $atts_value = shortcode_atts( array() , $atts, 'post_content');
         $return_str = '';
         
+        //STEP 1
+        $return_str .= $this->_post->post_content;
+        
+        //STEP 2
         return $return_str;
     }
     
