@@ -961,16 +961,6 @@ class APL_InternalShortcodes
         
         return $return_str;
     }
-    //'post_content',
-    //'post_excerpt',
-
-    //'comment_count',
-    //'post_comments',
-
-    //'post_parent',
-
-    //'post_tags',
-    //'post_categories',
     /*
     'name' => array( _x('Posts', 'post type general name'), _x('Pages', 'post type general name') ),
 	                'singular_name' => array( _x('Post', 'post type singular name'), _x('Page', 'post type singular name') ),
@@ -1192,7 +1182,7 @@ class APL_InternalShortcodes
     {
         $atts_value = shortcode_atts( array(
             'name' => ''
-        ), $atts);
+        ), $atts, 'post_meta');
         $return_str = '';
         
         if(!empty($atts_value['name']) && metadata_exists('post', $this->_post->ID, $atts_value['name']))
@@ -1207,6 +1197,82 @@ class APL_InternalShortcodes
         
         return $return_str;
         
+    }
+    
+    //ADDED/CHANGED Constant to APL_ALLOW_PHP
+    //REMOVED WP_Post Param to pass. If the user needs the Post object in their 
+    //        custom function, then they can get_ it.
+    public function php_function($atts)
+    {
+        $atts_value = shortcode_atts( array(
+            'name' => '',
+            'param' => ''
+        ), $atts, 'php_function');
+        $return_str = '';
+        
+        if (!defined("KALINS_ALLOW_PHP") && KALINS_ALLOW_PHP !== true || 
+            !defined("APL_ALLOW_PHP") && APL_ALLOW_PHP !== true)
+        {
+            $return_str .= 'Error: add define("APL_ALLOW_PHP", true); to your '.
+                            'wp-config.php for php_function to work.';
+        }
+        else if (empty($atts_value['name']))
+        {
+            $return_str .= 'Error: Name shortcode attribute must have a name. '.
+                           'For ex. [php_function name="FUNCTION_NAME"]';
+        }
+        //TODO ADD Multi Param support.
+        //Param would have to be an array as well to handle multiple params
+        else if (!empty($atts_value['param']))
+        {
+            $return_str .= call_user_func($atts_value['name'], $atts_value['param']);
+        }
+        else
+        {
+            $return_str .= call_user_func($atts_value['name']);
+        }
+        return $return_str;
+    }
+    
+    //ADDED Check Error if atts aren't digits.
+    public function item_number()
+    {
+        $atts_value = shortcode_atts( array(
+            'offset' => '1',
+            'increment' => '1'
+        ), $atts, 'item_number');
+        $return_str = '';
+        
+        if (!is_numeric($atts_value['increment']))
+        {
+            $atts_value['increment'] = '1';
+        }
+        if (!is_numeric($atts_value['offset']))
+        {
+            $atts_value['offset'] = '1';
+        }
+        
+        $atts_value['increment'] = intval($atts_value['increment']);
+        $atts_value['offset'] = intval($atts_value['offset']);
+        
+        $return_str .= (string) (($this->_item_count * $atts_value['increment']) + $atts_value['offset']);
+        
+        
+        return $return_str;
+    }
+    
+    
+    public function final_end($content)
+    {
+        
+        $return_str = '';
+        //Get everything except everything after the last Final_End.
+        $return_str .= substr($content, 0, strrpos($content, "[final_end]"));
+        
+        //Strip all Final_End shortcodes.
+        $return_str = str_replace('[final_end]', '', $return_str);
+        
+        return $return_str;
     }
     
 }
