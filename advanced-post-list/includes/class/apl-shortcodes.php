@@ -46,65 +46,94 @@ class APL_Shortcodes
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Advanced Post List - Internal Shortcodes
+ * 
+ * Handles all internal do_shortcodes when preset post lists are called. Each time
+ * the class object is created, shortcodes are added, replace function used to
+ * do_shortcodes, and ends by removing shortcodes (currently manual $this->remove).
+ *
+ * @since 0.4.0
+ */
 class APL_InternalShortcodes
 {
+    
+    /**
+     * WP_Post object for holding post details accessed by shortcode functions. 
+     * 
+     * @since 0.4.0
+     * @access private
+     * @var object $_post WP_Post Object for holding data.
+     */
     private $_post;
     
     //TODO ADD post object to construct OR keep in replace function?
+    /**
+     * APL (Internal) Shortcode Constructor
+     * 
+     * Desc: Loads/Adds all the internal shortcodes to WordPress, and sets the 
+     * class _post to default with Global Post.
+     * 
+     * 1. Load a list of (internal) shortcode tags. 
+     * 2. Set _post to default settings with Global $post. 
+     * 
+     * @since 0.4.0
+     * @access public
+     * 
+     * @global WP_Post $post Used to store in $this->_post.
+     */
     public function __construct()
     {
+        //STEP 1
         $shortcode_list = $this->shortcode_list();
         foreach ($shortcode_list as $tag)
         {
             add_shortcode($tag, array($this, $tag));
         }
+        //STEP 2
         global $post;
+        $this->_post = $post;
+        $this->_item_count = 0;
     }
+    
+    /**
+     * Destruct Shortcode Remove. 
+     * 
+     * Desc: Removes the added shortcodes from construction, and unsets class. 
+     * 
+     * 1. Remove list of shortcodes from WordPress. 
+     * 2. Unset _post object. 
+     * 
+     * Note: Magic Method __destruct wasn't working as intented, and would called
+     * shortly after creating a new APL_Shortcode. Which occurs when more than 
+     * one [post_list] is used.
+     * 
+     * @since 0.4.0
+     * @access public
+     */
     public function remove() 
     {
+        //STEP 1
         $shortcode_list = $this->shortcode_list();
         foreach ($shortcode_list as $tag)
         {
             remove_shortcode($tag);
         }
+        //STEP 2
         unset($this->_post);
     }
     
-    /*
-     *      METHOD 1 (Current concept)
-     * 1. Find any Registered (Internal) Shortcodes, 
-     * 2. Grab the beginning and end of []
-     * 3. Filter through searching for any attributes
-     */
-    /*
-     *      METHOD 2 (Ideal)
-     * 1. Init: register (internal) shortcodes; remove at end.
-     * 2. Run shortcode function via WP function to call shortcode function.
-     *      A. Grab shortcode w/ atts from preset_content, do_shortcode with the
-     *           string, and then use the shortcode function properly.
-     * 3. Set default atts, and add any new atts from param. shortcode_atts()
-     * 4. Remove (internal) shortcodes.
-     */
+    //TODO - Extension support for additional functionality
     /**
-     * <p><b>Desc:</b> <p>
-     * @access public
-     * @param string $preset_content The design content for List Content 
-     * @param string $post_content WP Post object.
+     * List of shortcode tags. 
+     * 
+     * Desc: Returns an array of shortcode tags used when public shortcodes 
+     * are used. 
      * 
      * @since 0.4.0
-     * @version 0.4.0
+     * @access private
      * 
-     * @uses 
-     * 
-     * @tutorial 
-     * <ol>
-     * <li value="1"></li>
-     * <li value="2"></li>
-     * <li value="3"></li>
-     * <li value="4"></li>
-     * <li value="5">If, do <b>Step 6</b></li>
-     * <li value="6"></li>
-     * </ol>
+     * @return array Internal Shortcode Tags used to add, replace, remove, etc..
      */
     private function shortcode_list()
     {
@@ -152,21 +181,45 @@ class APL_InternalShortcodes
         return $return_array;
     }
     public function replace($preset_content, $post_content)
+    
+    /**
+     * Shortcode Replace
+     * 
+     * Desc: Replaces APL's internal shortcodes with RegEx and WP's Shortcode API
+     * with $this->[shortcode]. 
+     * 
+     * 1. Cycle through the list of internal shortcodes. 
+     * 2. While there is a match, grab the first match/shortcode. 
+     * 3. Do shortcode, and replace content from beginning to end. 
+     * 4. Return (Preset Content) string. 
+     * 
+     * @since 0.4.0
+     * @version 0.4.0
+     * @access public
+     * 
+     * @param string $preset_content The design content for List Content 
+     * @param string $post_content WP Post object.
+     * @return string Preset Content with shortcodes replaced. 
+     */
     {
         //INIT
         $return_str = $preset_content;
         $this->_post = $post_content;
         
+        //STEP 1
         $shortcode_tags = $this->shortcode_list();
         foreach ($shortcode_tags as $tag) 
         {
+            //STEP 2
             while (preg_match('#\[' . $tag . '(.*?)?\]#', $return_str, $matches_default))
             {
+                //STEP 3
                 $return_str = preg_replace('#\[' . $tag . '(.*?)?\]#',
                                             do_shortcode($matches_default[0]),
                                             $return_str);
             }
         }
+        //STEP 4
         return $return_str;
         
         
@@ -196,43 +249,117 @@ class APL_InternalShortcodes
         */
         
     }
+    
+    /**
+     * ID Shortcode. 
+     * 
+     * Desc: Adds the Post ID. 
+     * 
+     * 1. Add post ID to return_str. 
+     * 2. Return string. 
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts
+     * @return string Post->ID.
+     */
     public function ID($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array() , $atts, 'ID');
-        
         $return_str = '';
+        
+        //STEP 1
         $return_str .= $this->_post->ID;
         
+        //STEP 2
         return $return_str;
     }
+    
     //TODO Try to combine [post_name] & [post_slug]
+    /**
+     * Post Name Shortcode
+     * 
+     * Desc: Adds the Post Slug (post_name).
+     * 
+     * 1. Add to return the Post Post_Name.  
+     * 2. Return string.  
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts
+     * @return string WP_Post->Post_Name.
+     */
     public function post_name($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array() , $atts, 'post_name');
-        
         $return_str = '';
+        
+        //STEP 1
         $return_str .= $this->_post->post_name;
         
+        //STEP 2
         return $return_str;
     }
+    
+    /**
+     * Post Slug Shortcode
+     * 
+     * Desc: Adds the Post Slug from WP_Post->post_name.
+     * 
+     * 1. Add to return the Post Post_Name.  
+     * 2. Return string.  
+     * 
+     * @since 0.4.0
+     * 
+     * @param array $atts
+     * @return string Post->post_name.
+     */
     public function post_slug($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array() , $atts, 'post_slug');
-        
         $return_str = '';
+        
+        //STEP 1
         $return_str .= $this->_post->post_name;
         
+        //STEP 2
         return $return_str;
     }
+    
     //FIX Characters not showing correctly in Chinese
     //TODO Create compatability with UNICODE
+    /**
+     * Post Title Shortcode. 
+     * 
+     * Desc: Adds the post/page title.
+     * 
+     * 1. Add to return Post Post_Title.  
+     * 2. Return string. 
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts
+     * @return string Post->post_title.
+     */
     public function post_title($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array() , $atts, 'post_title');
-        
         $return_str = '';
+        
+        //STEP 1
         $return_str .= htmlspecialchars($this->_post->post_title);
         
+        //STEP 2
         return $return_str;
     }
     /**
@@ -263,17 +390,43 @@ class APL_InternalShortcodes
     //REMOVED user_pass
     //REMOVED nickname
     //REMOVED primary_blog
+    /**
+     * Post Author Shortcode. 
+     * 
+     * Desc: Adds the Author/User Data associated with the post. 
+     * 
+     * 1. Set Label Types used within WP, and extensions. User_Friendly => WP_Friendly. 
+     * 2. Get Author/User Data associated with WP_Post. 
+     * 3. Add User Label to return, IF Label is valid with APL and IF data/prop 
+     *    even exist in UserData (including extension labels registered with 
+     *    APL & WP). 
+     * 4. Otherwise, IF no variable exists, add default display_name to return. 
+     * 
+     * @since 0.1.0
+     * @version 0.3.0 - Changed to Callback Function, and added 'label' attribute. 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {
+     *     
+     *     Shortcode Attributes. 
+     *     
+     *     @type string 'label' Used to display user data.
+     * }
+     * @return string User Data from WP_Post.
+     */
     public function post_author($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array(
             'label' => 'display_name'
         ), $atts, 'post_author');
         
-        //Set Label Value and User Variables registered with APL
+        //STEP 1
         $label_type = array(
             //'ID' => 'ID',
             
-            //Data Object (WP's Standard)
+            //// Data Object (WP's Standard)
             'ID'            => 'ID',
             'user_login'    => 'user_login',
             'user_name'     => 'user_login',
@@ -284,7 +437,7 @@ class APL_InternalShortcodes
             //TODO ADD data->user_registered for "Member Since: xx-xx-xxxx xx:xx:xx
             //TODO ADD/FIX user_registered date format
             
-            //Back_Compat_Keys Array (Legacy)
+            //// Back_Compat_Keys Array (Legacy)
             'description'       => 'user_description',
             'user_description'  => 'user_description',
             'user_firstname'    => 'user_firstname',
@@ -296,22 +449,24 @@ class APL_InternalShortcodes
         );
         
         $return_str = '';
+        //STEP 2
         $userData = get_userdata($this->_post->post_author);
         
-        //Check to see IF an Author Label is valid with APL and IF key/prop even 
-        //  exist on WP, including extension labels registered with APL & AP.
-        //Otherwise, IF no variable exists, return default display_name.
+        //STEP 3
         if (isset($label_type[$atts_value['label']]) && 
             $userData->has_prop($label_type[$atts_value['label']]))
         {
             $return_str .= $userData->get($label_type[$atts_value['label']]);
         }
+        
+        //STEP 4
         else
         {
             //TODO ADD Admin Error
             $return_str .= $userData->data->display_name;
         }
         
+        //STEP 5
         return $return_str;
     }
     //TODO ADD [post_link] (Alias)
