@@ -938,8 +938,28 @@ class APL_InternalShortcodes
         //Return string. 
         return $return_str;
     }
+    
+    public function post_parent($atts)
     {
         
+        $atts_value = shortcode_atts( array(
+            'link' => 'true'
+        ), $atts, 'post_parent');
+        $return_str = '';
+        
+        if ($this->_post->post_parent != 0)
+        {
+            if (strtolower($atts_value['link']) == "false")
+            {
+                $return_str .= get_the_title($this->_post->post_parent);
+            }
+            else
+            {
+                $return_str .= '<a href="' . get_permalink($parentID) . '" >' . get_the_title($parentID) . '</a>';
+            }
+        }
+        
+        return $return_str;
     }
     //'post_content',
     //'post_excerpt',
