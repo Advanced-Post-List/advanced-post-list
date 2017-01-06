@@ -1290,5 +1290,27 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
+    public function post_pdf($atts)
+    {
+        $att_value = shortcode_atts( array(), $atts, 'post_pdf');
+        $return_str = '';
+        
+        if (is_plugin_active('kalins-pdf-creation-station'))
+        {
+            if ($this->_post->post_type == "post")
+            {
+                $postID = "po_" . $this->post_id;
+            }
+            else if($this->_post->post_type == "page")
+            {
+                $postID = "pg_" . $this->post_id;
+            }
+            $return_str .= get_bloginfo('wpurl') . '/wp-content/plugins/kalins-pdf-creation-station/kalins_pdf_create.php?singlepost=' . $postID;
+        }
+        
+        return $return_str;
+        
+    }
+
 }
 ?>
