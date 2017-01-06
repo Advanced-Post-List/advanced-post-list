@@ -362,27 +362,32 @@ class APL_InternalShortcodes
         //STEP 2
         return $return_str;
     }
+    
+    //TODO ADD [post_link] (Alias)
     /**
-     * <p><b>Desc:</b> <p>
-     * @access public
-     * @param array $atts Shortcode Attributes. 
-     * @return string $return_str Author data from post/page.
+     * Post Permalink (URL) Shortcode. 
      * 
-     * @since 0.4.0
-     * @version 0.4.0
+     * Desc: Adds the post/page permalink/URL.
      * 
-     * @uses 
+     * 1. Get & Add to return Post's Permalink.  
+     * 2. Return string. 
      * 
-     * @tutorial 
-     * <ol>
-     * <li value="1"></li>
-     * <li value="2"></li>
-     * <li value="3"></li>
-     * <li value="4"></li>
-     * <li value="5">If, do <b>Step 6</b></li>
-     * <li value="6"></li>
-     * </ol>
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts
+     * @return string Permalink associated with Post ID.
      */
+    public function post_permalink($atts)
+    {
+        $atts_value = shortcode_atts( array() , $atts, 'post_permalink');
+        
+        $return_str = '';
+        $return_str .= get_permalink($this->_post->ID);
+        
+        return $return_str;
+    }
     
     
     //ADDED user_name (Alias) 
