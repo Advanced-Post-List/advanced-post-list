@@ -1935,7 +1935,7 @@ class APLCore
     public function APL_display($preset_name)
     {
         //TEST
-        require_once(APL_DIR . 'includes/class/apl_shortcodes.php');
+        require_once(APL_DIR . 'includes/class/apl-shortcodes.php');
         
         //\TEST
         
