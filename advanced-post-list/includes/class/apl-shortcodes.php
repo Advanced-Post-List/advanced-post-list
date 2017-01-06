@@ -238,7 +238,6 @@ class APL_InternalShortcodes
         //                             do_shortcode($matches_default[0]),
         //                             $str);
         
-        
         /*
         //(Attempted) METHOD WITH WP REGEX FUNCTION
         $b = get_shortcode_regex(array('test'));
@@ -247,7 +246,6 @@ class APL_InternalShortcodes
                                      array($this, 'test_func'),
                                      $str);
         */
-        
     }
     
     /**
@@ -450,6 +448,44 @@ class APL_InternalShortcodes
         
         //STEP 1
         $return_str .= mysql2date($atts_value['format'], $this->_post->post_date);
+        
+        //STEP 2
+        return $return_str;
+    }
+    
+    /**
+     * Post Date GMT Shortcode. 
+     * 
+     * Desc: Adds the post/page date.
+     * 
+     * 1. Get & Add to return Post's Formatted GMT Date.  
+     * 2. Return string. 
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @link http://php.net/manual/en/function.date.php
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes.
+     *      
+     *      @type string $format Used to format date via PHP function.
+     *      
+     * }
+     * @return string Post Date GMT.
+     */
+    public function post_date_gmt($atts)
+    {
+        //INIT
+        $atts_value = shortcode_atts( array(
+            'format' => 'm-d-Y'
+        ), $atts, 'post_date');
+        $return_str = '';
+        
+        //STEP 1
+        $return_str .= mysql2date($atts_value['format'], $this->_post->post_date_gmt);
         
         //STEP 2
         return $return_str;
