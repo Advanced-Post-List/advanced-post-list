@@ -153,7 +153,6 @@ class APL_InternalShortcodes
             
             'post_author',
             
-            'post_excerpt',
             'post_thumb',
             
             'post_content',
@@ -787,11 +786,13 @@ class APL_InternalShortcodes
      * @return string Post Excerpt OR formatted Post_Content.
      */
     public function post_excerpt($atts)
+    {
         //INIT
         $atts_value = shortcode_atts( array(
             'length' => '250'
         ) , $atts, 'post_excerpt');
         $return_str = '';
+        
         //STEP 1
         if(empty($this->_post->post_excerpt))
         {
@@ -825,8 +826,33 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
+    /**
+     * Post Comment Shortcode. 
+     * 
+     * Desc:  
+     * 
+     * 1. 
+     * 
+     * @since 0.1.0
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts None.
+     * @return string Post Post_Content.
+     */
+    public function comment_count($atts)
     {
+        //INIT
+        $atts_value = shortcode_atts( array(), $atts, 'comment_count');
+        $return_str = '';
         
+        //STEP 1
+        $return_str .= $this->_post->comment_count;
+        
+        //STEP 2
+        return $return_str;
+    }
+    
         $return_str = '';
         
         return $return_str;
