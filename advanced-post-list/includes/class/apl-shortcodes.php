@@ -153,7 +153,7 @@ class APL_InternalShortcodes
             
             'post_author',
             
-            //'post_excerpt',
+            'post_excerpt',
             'post_thumb',
             
             'post_content',
@@ -757,6 +757,71 @@ class APL_InternalShortcodes
         $return_str .= $this->_post->post_content;
         
         //STEP 2
+        return $return_str;
+    }
+    
+    /**
+     * Post Excerpt Shortcode. 
+     * 
+     * Desc:  
+     * 
+     * 1. IF Post_Excerpt is empty, then use Post_Content with X amount of 
+     *    characters (Default 250.). Otherwise skip to STEP 4.
+     * 2. Convert 'length' Varible Type to Int.
+     * 3. Add a substring from Post_Content to return. X amount of length and
+     *    with shortcodes stripped out.
+     * 4. Add Post_Excerpt to return.
+     * 5. Return String.
+     * 
+     * @since 0.1.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     *                  Also changed substr() to mp_substr() for unicode compatability.
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $length    Sets the character length.  
+     * }
+     * @return string Post Excerpt OR formatted Post_Content.
+     */
+    public function post_excerpt($atts)
+        //INIT
+        $atts_value = shortcode_atts( array(
+            'length' => '250'
+        ) , $atts, 'post_excerpt');
+        $return_str = '';
+        //STEP 1
+        if(empty($this->_post->post_excerpt))
+        {
+            //STEP 2 
+            if (is_numeric($atts_value['length']))
+            {
+                $atts_value['length'] = intval($atts_value['length']);
+            }
+            else
+            {
+                $atts_value['length'] = 250;
+            }
+            
+            //BUG? Possible if length is longer than string.
+            //STEP 3
+            $encoding = mb_internal_encoding();
+            $return_str = mb_substr(strip_shortcodes(strip_tags($this->_post->post_content)), 
+                                    0, 
+                                    $atts_value['length'] , 
+                                    $encoding);
+                                    //mb_internal_encoding(DB_CHARSET));
+        }
+        
+        //STEP 4
+        else
+        {
+            $return_str .= $this->_post->post_excerpt;
+        }
+        
+        //STEP 5
         return $return_str;
     }
     
