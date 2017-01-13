@@ -46,6 +46,11 @@ class APL_Shortcodes
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+//Changed (Internal) Shortcodes from a function & callback object, to a Class 
+//  object, encapsulating majority of the functionality to it's own instance.
+//(DITTO) Changed (Internal) Shortcodes to a Class Object.
+//Fixed Shortcodes error with mixed attributes.
+//Added better default method with shortcode_atts.
 /**
  * Advanced Post List - Internal Shortcodes
  * 
@@ -588,6 +593,7 @@ class APL_InternalShortcodes
     //REMOVED user_pass
     //REMOVED nickname
     //REMOVED primary_blog
+    //CHANGED Method to match an array key rather than ->$name
     /**
      * Post Author Shortcode. 
      * 
@@ -604,6 +610,8 @@ class APL_InternalShortcodes
      * @version 0.3.0 - Changed to Callback Function, and added 'label' attribute. 
      * @version 0.4.0 - Changed to Class function, and uses WP's built-in
      *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @link https://codex.wordpress.org/Function_Reference/get_userdata
      * 
      * @param array $atts {
      *     
@@ -641,6 +649,7 @@ class APL_InternalShortcodes
             'user_lastname'     => 'user_lastname'
             
             //TODO ADD roles (array)
+            //TODO ADD A dynamic method for displaying author data.
             //TODO ADD Extension Hook
         );
         
@@ -666,20 +675,25 @@ class APL_InternalShortcodes
     }
     
     //ADDED Custom Sizes
+    //Note: Treated as max size, and only scales.
     //FIXED RegEx not matching any img src in post_content
     //TODO ADD Default Text?
     //TODO ADD Improved method for checking for site media on page, and then
     //         adding images [post_attachments]. Thus preventing outside images 
     //         that can't be changed into a "Thumbnail" in WP.
-    //Note: Create a shortcode designed specifically for grabbing <img> from
-    //      post_content.
+    //           Note: Create a shortcode designed specifically for grabbing <img> 
+    //                 from post_content.
     /**
      * Post Thumb Shortcode. 
      * 
-     * Desc: Adds a Post Thumb/Featured Image associated with the post, but will
-     * fall back on an image located within WP_Post->post_content. 
+     * Desc: Adds a Post Thumb/Featured Image URL associated with the post, but 
+     * can also grab an image within WP_Post->post_content (extract=on/force). 
+     * Image Sizes include (default) thumbnail, medium, large, full, 
+     * and custom "XX, XX".
      * 
-     * 1. If 'size' is numeric, then convert 'size' to an array(xx, yy).
+     * Note: Post_Content Images are not resizable.
+     * 
+     * 1. If 'size' string is numeric, then convert 'size' to an array(xx, yy).
      * 2. Grab Featured Image from Post/Page w/ 'size'.
      * 3. If 'extract' is 'on' OR 'force', add to return the src URL in img tag 
      *    from $post->post_content.
@@ -689,17 +703,18 @@ class APL_InternalShortcodes
      * @version 0.3.0 - Added 'extract' attribute. 
      * @version 0.4.0 - Changed to Class function, and uses WP's built-in
      *                  functions for setting default attributes & do_shortcode().
+     *                  Added Custom Size support.
      * 
      * @param array $atts {
      *      
      *      Shortcode Attributes. 
      *      
      *      @type string $size      Sets the image size used by WP's function. 
-     *                              (thumbnail,  medium, large, full, and 
+     *                              (thumbnail, medium, large, full, and 
      *                              custom "XX, XX"). 
      *      @type string $extract   Extract from post_content (none, on, & force). 
      * }
-     * @return string URL to Post's Featured Image OR Post_Content.
+     * @return string Post Image URL.
      */
     public function post_thumb($atts)
     {
@@ -730,8 +745,6 @@ class APL_InternalShortcodes
             }
         }
         
-        
-        
         //FALLBACK IMAGE (No Featured Image)
         //STEP 3
         if ( strtolower($atts_value['extract']) != 'none' && empty($return_str) )
@@ -752,16 +765,17 @@ class APL_InternalShortcodes
     /**
      * Post Content Shortcode. 
      * 
-     * Desc:  
+     * Desc: Adds the Post_Content. 
      * 
-     * 1. 
+     * 1. Add to return the Post's Post_Content. 
+     * 2. Return string. 
      * 
      * @since 0.1.0
      * @version 0.4.0 - Changed to Class function, and uses WP's built-in
      *                  functions for setting default attributes & do_shortcode().
      * 
      * @param array $atts None.
-     * @return string Post Post_Content.
+     * @return string Post->Post_Content.
      */
     public function post_content($atts)
     {
@@ -775,15 +789,15 @@ class APL_InternalShortcodes
         //STEP 2
         return $return_str;
     }
-    
+    //ADDED(Fixed) Encoding when creating a sub-string/excerpt from post_content.
     /**
      * Post Excerpt Shortcode. 
      * 
-     * Desc:  
+     * Desc: Add the Post Excerpt, or a substring of Post Content.
      * 
      * 1. IF Post_Excerpt is empty, then use Post_Content with X amount of 
      *    characters (Default 250.). Otherwise skip to STEP 4.
-     * 2. Convert 'length' Varible Type to Int.
+     * 2. Convert 'length' Variable Type to Int.
      * 3. Add a substring from Post_Content to return. X amount of length and
      *    with shortcodes stripped out.
      * 4. Add Post_Excerpt to return.
@@ -792,7 +806,7 @@ class APL_InternalShortcodes
      * @since 0.1.0 
      * @version 0.4.0 - Changed to Class function, and uses WP's built-in
      *                  functions for setting default attributes & do_shortcode().
-     *                  Also changed substr() to mp_substr() for unicode compatability.
+     *                  Also changed substr() to mp_substr() for encoding compatability.
      * 
      * @param array $atts {
      *      
@@ -800,7 +814,7 @@ class APL_InternalShortcodes
      *      
      *      @type string $length    Sets the character length.  
      * }
-     * @return string Post Excerpt OR formatted Post_Content.
+     * @return string Post->Excerpt OR Post->Post_Content substring.
      */
     public function post_excerpt($atts)
     {
@@ -847,18 +861,20 @@ class APL_InternalShortcodes
     }
     
     /**
-     * Post Comment Shortcode. 
+     * Post Comment Count Shortcode. 
      * 
-     * Desc:  
+     * Desc: Adds the Post Comment_Count, which displays the amount of comments
+     * per post.
      * 
-     * 1. 
+     * 1. Add to return Post Comment_Count.
+     * 2. Return string.
      * 
      * @since 0.1.0
      * @version 0.4.0 - Changed to Class function, and uses WP's built-in
      *                  functions for setting default attributes & do_shortcode().
      * 
      * @param array $atts None.
-     * @return string Post Post_Content.
+     * @return string Post->Comment_Count.
      */
     public function comment_count($atts)
     {
@@ -873,102 +889,125 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
+    //TODO ADD Max Amount
     //TODO ADD Sort (OrderBy & Order)
     //TODO ADD Include/Exclude (Author?) User_ID Filter
     //TODO ADD Date Filter
     //TODO ADD Preset Design. Default would use this, but a custom preset would
     //         have its own design.
-    /* HTML Ready Shortcode
-     * @link https://codex.wordpress.org/Function_Reference/get_comments
-     */
-    
     /**
-     * Post Excerpt Shortcode. 
+     * Post Comment Shortcode. 
      * 
-     * Desc:  
+     * Desc: Adds an HTML string to display comments in a set format.
      * 
-     * 1. IF Post_Excerpt is empty, then use Post_Content with X amount of 
-     *    characters (Default 250.). Otherwise skip to STEP 4.
-     * 2. Convert 'length' Varible Type to Int.
-     * 3. Add a substring from Post_Content to return. X amount of length and
-     *    with shortcodes stripped out.
-     * 4. Add Post_Excerpt to return.
-     * 5. Return String.
+     * 1. Get Kalin's PDF comments. Support old method. 
+     * 2. Get 'approved' comments from Post ID. 
+     * 3. Add to return the Before Attribute. 
+     * 4. For each Post_Comments, add formatted string to return, w/ author link 
+     *    if available.
+     * 5. Add to return the After Attribute. 
+     * 6. Return string.
      * 
      * @since 0.1.0 
      * @version 0.4.0 - Changed to Class function, and uses WP's built-in
      *                  functions for setting default attributes & do_shortcode().
-     *                  Also changed substr() to mp_substr() for unicode compatability.
+     * 
+     * @link https://codex.wordpress.org/Function_Reference/get_comments
      * 
      * @param array $atts {
      *      
      *      Shortcode Attributes. 
      *      
-     *      @type string $length    Sets the character length.  
+     *      @type string $before    Adds a string before the list. 
+     *      @type string $after     Adds a string after the list.
      * }
      * @return string Post Excerpt OR formatted Post_Content.
      */
     public function post_comments($atts)
     {
-        
+        //INIT
         $atts_value = shortcode_atts( array(
             'before' => '',
             'after' => ''
         ), $atts, 'post_comments');
         $return_str = '';
         
-        //Use plugin/extension function. 
+        //STEP 1
         if (defined("KALINS_PDF_COMMENT_CALLBACK"))
         {
-          return call_user_func(KALINS_PDF_COMMENT_CALLBACK);
+            return call_user_func(KALINS_PDF_COMMENT_CALLBACK);
         }
         
-        //Get 'approved' comments from post ID.
+        
+        //STEP 2
         $args = array(
             'status' => 'approve',
             'post_id' => $this->_post->ID
         );
         $post_comments = get_comments($args, $this->_post->ID);
         
-        //Add to return the Before Attribute.
+        //STEP 3
         $return_str .= $atts_value['before'];
+        
+        //STEP 4
         foreach ($post_comments as $comment)
         {
-            //Set string to contain Author URL or NOT.
             if ($comment->comment_author_url == "")
             {
-              $comment_author = $comment->comment_author;
+                $comment_author = $comment->comment_author;
             }
             else
             {
-              $comment_author = '<a href="' . $comment->comment_author_url . '" >' . $comment->comment_author . "</a>";
+                $comment_author = '<a href="' . $comment->comment_author_url . '" >' . $comment->comment_author . "</a>";
             }
             
-            //Add to return the comment content.
             $return_str .= '<p>' . $comment_author . 
                            " - " . $comment->comment_author_email . 
                            " - " . get_comment_date(null, $comment->comment_ID) . 
                            " @ " . get_comment_date(get_option('time_format'), $comment->comment_ID) . 
                            "<br />" . $comment->comment_content . "</p>";
-        
         }
-        //Add to return the After Attribute.
+        
+        //STEP 5
         $return_str .= $atts_value['after'];
         
-        //Return string. 
+        //STEP 6 
         return $return_str;
     }
     
+    /**
+     * Page Parent Shortcode. 
+     * 
+     * Desc: Adds Page Parent Title, and optionally with link.
+     * 
+     * 1. Check to see if Post Parent is set. 
+     * 2. Grab Post Parent Title w/ Link if set to 'true'. 
+     * 3. Return string.
+     * 
+     * @since 0.1.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $link      Returns as html link if true. 
+     * }
+     * @return string Post Parent Title OR as html link.
+     */
     public function post_parent($atts)
     {
-        
+        //INIT
         $atts_value = shortcode_atts( array(
             'link' => 'true'
         ), $atts, 'post_parent');
         $return_str = '';
         
+        //STEP 1
         if ($this->_post->post_parent != 0)
         {
+            //STEP 2
             if (strtolower($atts_value['link']) == "false")
             {
                 $return_str .= get_the_title($this->_post->post_parent);
@@ -979,36 +1018,59 @@ class APL_InternalShortcodes
             }
         }
         
+        //STEP 3
         return $return_str;
     }
-    /*
-    'name' => array( _x('Posts', 'post type general name'), _x('Pages', 'post type general name') ),
-	                'singular_name' => array( _x('Post', 'post type singular name'), _x('Page', 'post type singular name') ),
-	                'add_new' => array( _x('Add New', 'post'), _x('Add New', 'page') ),
-	                'add_new_item' => array( __('Add New Post'), __('Add New Page') ),
-	                'edit_item' => array( __('Edit Post'), __('Edit Page') ),
-	                'new_item' => array( __('New Post'), __('New Page') ),
-	                'view_item' => array( __('View Post'), __('View Page') ),
-	                'view_items' => array( __('View Posts'), __('View Pages') ),
-	                'search_items' => array( __('Search Posts'), __('Search Pages') ),
-	                'not_found' => array( __('No posts found.'), __('No pages found.') ),
-	                'not_found_in_trash' => array( __('No posts found in Trash.'), __('No pages found in Trash.') ),
-	                'parent_item_colon' => array( null, __('Parent Page:') ),
-	                'all_items' => array( __( 'All Posts' ), __( 'All Pages' ) ),
-	                'archives' => array( __( 'Post Archives' ), __( 'Page Archives' ) ),
-	                'attributes' => array( __( 'Post Attributes' ), __( 'Page Attributes' ) ),
-	                'insert_into_item' => array( __( 'Insert into post' ), __( 'Insert into page' ) ),
-	                'uploaded_to_this_item' => array( __( 'Uploaded to this post' ), __( 'Uploaded to this page' ) ),
-	                'featured_image' => array( __( 'Featured Image' ), __( 'Featured Image' ) ),
-	                'set_featured_image' => array( __( 'Set featured image' ), __( 'Set featured image' ) ),
-	                'remove_featured_image' => array( __( 'Remove featured image' ), __( 'Remove featured image' ) ),
-	                'use_featured_image' => array( __( 'Use as featured image' ), __( 'Use as featured image' ) ),
-	                'filter_items_list' => array( __( 'Filter posts list' ), __( 'Filter pages list' ) ),
-	                'items_list_navigation' => array( __( 'Posts list navigation' ), __( 'Pages list navigation' ) ),
-	                'items_list' => array( __( 'Posts list' ), __( 'Pages list' ) ),
-    */
     
+    /*
+    'Posts',                    'Posts'
+    'singular_name' =>          'Post'
+    'add_new' =>                'Add New post'
+    'add_new_item' =>           'Add New Post'
+    'edit_item' =>              'Edit Post'
+    'new_item' =>               'New Post'
+    'view_item' =>              'View Post'
+    'view_items' =>             'View Posts'
+    'search_items' =>           'Search Posts'
+    'not_found' =>              'No posts found.'
+    'not_found_in_trash' =>     'No posts found in Trash.'
+    'parent_item_colon' =>      'Parent Page:'
+    'all_items' =>              'All Posts'
+    'archives' =>               'Post Archives'
+    'attributes' =>             'Post Attributes'
+    'insert_into_item' =>       'Insert into post'
+    'uploaded_to_this_item' =>  'Uploaded to this post'
+    'featured_image' =>         'Featured Image'
+    'set_featured_image' =>     'Set featured image'
+    'remove_featured_image' =>  'Remove featured image'
+    'use_featured_image' =>     'Use as featured image'
+    'filter_items_list' =>      'Filter posts list'
+    'items_list_navigation' =>  'Posts list navigation'
+    'items_list' =>             'Posts list'
+    */
     //ADDED Shortcode [post_type label="name"]
+    //TODO ADD Array String to filter through like this->post_author
+    /**
+     * Post Type Shortcode. 
+     * 
+     * Desc: Adds the Post Type (Label) Name associated with the post/page ID.
+     * 
+     * 1. Get Post Type Object associated with the post. 
+     * 2. Get the set label from object, otherwise get name. 
+     * 3. Return string.
+     * 
+     * @since 0.4.0
+     * 
+     * @link https://codex.wordpress.org/Function_Reference/get_post_type_object
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $label     Gets post_type->labels, or defaults to 'name'.
+     * }
+     * @return string Post Type (Label) Name.
+     */
     public function post_type($atts)
     {
         $atts_value = shortcode_atts( array(
@@ -1016,11 +1078,13 @@ class APL_InternalShortcodes
         ), $atts, 'post_type');
         $return_str = '';
         
+        //STEP 1
         $post_type_obj = get_post_type_object($this->_post->post_type);
+        
+        //STEP 2
         $label = $atts_value['label']; 
         if ( isset($post_type_obj->labels->$label) )
         {
-            
             $return_str .= $post_type_obj->labels->$label;
         }
         else if ( isset($post_type_obj->labels->name) )
@@ -1028,31 +1092,59 @@ class APL_InternalShortcodes
             $return_str .= $post_type_obj->labels->name;
         }
         
+        //STEP 3
         return $return_str;
     }
     
+    /**
+     * Tags Shortcode. 
+     * 
+     * Desc: Adds Tags associated with Post/Page. 
+     * 
+     * 1. Set Attribute 'Links' to a Boolean variable. 
+     * 2. Get the tags. If none, do Step 4. 
+     * 3. For each tag there is add the tag name, w/ link if true, and add a 
+     *    delimiter except for last tag.
+     * 4. Return string.
+     * 
+     * @since 0.1.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $delimiter     Inserts a separator, default is ", ".
+     *      @type string $links         Return as an html link if true.
+     * }
+     * @return string Tags used in post/page.
+     */
     public function post_tags($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array(
             'delimiter' => ', ',
             'links' => 'true'
         ), $atts, 'post_tags');
         $return_str = '';
         
+        //STEP 1
         $atts_value['links'] = TRUE;
         if (strtolower($atts_value['links']) == 'false')
         {
             $atts_value['links'] = FALSE;
         }
         
+        //STEP 2
         $post_tags = get_the_tags($this->_post->ID);
         $array_total = count($post_tags);
         $i = 1;
         if ($post_tags)
         {
+            //STEP 3
             foreach ($post_tags as $tag)
             {
-                //STEP
                 if ($atts_value['links'])
                 {
                     $return_str .= '<a href="' . get_tag_link($tag->term_id) . '" >' . $tag->name . '</a>';
@@ -1062,7 +1154,6 @@ class APL_InternalShortcodes
                     $return_str .= $tag->name;
                 }
 
-                //STEP
                 if ($array_total > $i)
                 {
                     $return_str .= $atts_value['delimiter'];
@@ -1071,33 +1162,59 @@ class APL_InternalShortcodes
             }
         }
         
-        
-        //STEP
+        //STEP 4
         return $return_str;
     }
+    
+    /**
+     * Categories Shortcode. 
+     * 
+     * Desc: Adds Categories associated with Post/Page. 
+     * 
+     * 1. Set Attribute 'Links' to a Boolean variable. 
+     * 2. Get the categories. If none, do Step 4. 
+     * 3. For each category there is add the category name, w/ link if true, 
+     *    and add a delimiter except for last category.
+     * 4. Return string.
+     * 
+     * @since 0.1.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $delimiter     Inserts a separator, default is ", ".
+     *      @type string $links         Return as an html link if true.
+     * }
+     * @return string Categories used in post/page.
+     */
     public function post_categories($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array(
             'delimiter' => ', ',
             'links' => 'true'
         ), $atts, 'post_categories');
         $return_str = '';
         
+        //STEP 1
         $atts_value['links'] = TRUE;
         if (strtolower($atts_value['links']) == 'false')
         {
             $atts_value['links'] = FALSE;
         }
         
+        //STEP 2
         $post_categories = get_the_category($this->_post->ID);
         $array_total = count($post_categories);
         $i = 1;
-        
         if ($post_categories)
         {
+            //STEP 3
             foreach ($post_categories as $category)
             {
-                //STEP
                 if ($atts_value['links'])
                 {
                     $return_str .= '<a href="' . get_tag_link($category->term_id) . '" >' . $category->name . '</a>';
@@ -1107,7 +1224,6 @@ class APL_InternalShortcodes
                     $return_str .= $category->name;
                 }
 
-                //STEP
                 if ($array_total > $i)
                 {
                     $return_str .= $atts_value['delimiter'];
@@ -1116,8 +1232,7 @@ class APL_InternalShortcodes
             }
         }
         
-        
-        //STEP
+        //STEP 4
         return $return_str;
     }
     /**
@@ -1223,14 +1338,37 @@ class APL_InternalShortcodes
         
     }
     
-    
+    /**
+     * Post Meta Shortcode. 
+     * 
+     * Desc: Adds Post MetaData used within posts/pages. Returns empty if nothing
+     * is found.
+     * 
+     * 1. If post_meta 'name' is valid then get MetaData and add to return, 
+     *    otherwise skip to Step 2.
+     * 2. Return string.
+     * 
+     * @since 0.3.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $name      Meta Name/Label used within post.
+     * }
+     * @return string Taxonomy Terms used in post/page.
+     */
     public function post_meta($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array(
             'name' => ''
         ), $atts, 'post_meta');
         $return_str = '';
         
+        //STEP 1
         if(!empty($atts_value['name']) && metadata_exists('post', $this->_post->ID, $atts_value['name']))
         {
             $post_meta_arr = get_post_meta($this->_post->ID, $atts_value['name'], FALSE);
@@ -1241,6 +1379,7 @@ class APL_InternalShortcodes
         }
         //TODO ADD Else Alert to Admin that metadata is invalid or doesn't exist.
         
+        //STEP 2
         return $return_str;
         
     }
@@ -1317,14 +1456,40 @@ class APL_InternalShortcodes
     }
     
     //ADDED Check Error if atts aren't digits.
+    /**
+     * Post List Item Number Shortcode. 
+     * 
+     * Desc: Adds a Numeric value to each post; by X amount of increments, and 
+     * starting from where it is offset as. 
+     * 
+     * 1. If any non-digits are present, reset to default. 
+     * 2. Convert variables to integer types. 
+     * 3. Add item number with increment and added offset. 
+     * 4. Return string.
+     * 
+     * @since 0.3.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in 
+     *                  functions for setting default attributes & do_shortcode(). 
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type integer $offset       Digit to start from. 
+     *      @type integer $increment    Amount to increase by. 
+     * }
+     * @return string Index value. 
+     */
     public function item_number()
     {
+        //INIT
         $atts_value = shortcode_atts( array(
             'offset' => '1',
             'increment' => '1'
         ), $atts, 'item_number');
         $return_str = '';
         
+        //STEP 1
         if (!is_numeric($atts_value['increment']))
         {
             $atts_value['increment'] = '1';
@@ -1333,30 +1498,55 @@ class APL_InternalShortcodes
         {
             $atts_value['offset'] = '1';
         }
-        
+        //STEP 2
         $atts_value['increment'] = intval($atts_value['increment']);
         $atts_value['offset'] = intval($atts_value['offset']);
         
+        //STEP 3
         $return_str .= (string) (($this->_item_count * $atts_value['increment']) + $atts_value['offset']);
         
-        
+        //STEP 4
         return $return_str;
     }
     
-    
+    //Changed concept to a Class Method.
+    /**
+     * Final End Post List Shortcode. 
+     * 
+     * Desc: Determines the End of the Final post to display. 
+     * 
+     * 1. Get everything except everything after the last Final_End. 
+     * 2. Strip all Final_End shortcodes. 
+     * 3. Return string. 
+     * 
+     * @since 0.3.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in 
+     *                  functions for setting default attributes & do_shortcode(). 
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type integer $content      Preset Content that will be displayed. 
+     * }
+     * @return string Preset (Post List) Content. 
+     */
     public function final_end($content)
     {
-        
+        //INIT
         $return_str = '';
-        //Get everything except everything after the last Final_End.
+        
+        //STEP 1
         $return_str .= substr($content, 0, strrpos($content, "[final_end]"));
         
-        //Strip all Final_End shortcodes.
+        //STEP 2
         $return_str = str_replace('[final_end]', '', $return_str);
         
+        //STEP 3
         return $return_str;
     }
     
+    //ADDED Check if plugin is active.
     public function post_pdf($atts)
     {
         $att_value = shortcode_atts( array(), $atts, 'post_pdf');
