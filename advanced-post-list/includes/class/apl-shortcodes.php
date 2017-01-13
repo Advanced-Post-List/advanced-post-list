@@ -497,7 +497,7 @@ class APL_InternalShortcodes
         //INIT
         $atts_value = shortcode_atts( array(
             'format' => 'm-d-Y'
-        ), $atts, 'post_date');
+        ), $atts, 'post_date_gmt');
         $return_str = '';
         
         //STEP 1
@@ -535,7 +535,7 @@ class APL_InternalShortcodes
         //INIT
         $atts_value = shortcode_atts( array(
             'format' => 'm-d-Y'
-        ), $atts, 'post_date');
+        ), $atts, 'post_modified');
         $return_str = '';
         
         //STEP 1
@@ -573,7 +573,7 @@ class APL_InternalShortcodes
         //INIT
         $atts_value = shortcode_atts( array(
             'format' => 'm-d-Y'
-        ), $atts, 'post_date');
+        ), $atts, 'post_modified_gmt');
         $return_str = '';
         
         //STEP 1
@@ -705,7 +705,7 @@ class APL_InternalShortcodes
     {
         //INIT
         $atts_value = shortcode_atts( array(
-            'size'      => 'full',
+            'size'      => 'thumbnail',
             'extract'   => 'none'
         ), $atts, 'post_thumb');
         $return_str ='';
@@ -826,11 +826,14 @@ class APL_InternalShortcodes
             //BUG? Possible if length is longer than string.
             //STEP 3
             $encoding = mb_internal_encoding();
-            $return_str = mb_substr(strip_shortcodes(strip_tags($this->_post->post_content)), 
-                                    0, 
-                                    $atts_value['length'] , 
-                                    $encoding);
-                                    //mb_internal_encoding(DB_CHARSET));
+            $return_str = strip_shortcodes(mb_substr(strip_tags($this->_post->post_content),
+                                                     0,
+                                                     $atts_value['length'],
+                                                     $encoding));
+            //$return_str = mb_substr(strip_shortcodes(strip_tags($this->_post->post_content)), 
+            //                        0, 
+            //                        $atts_value['length'] , 
+            //                        $encoding);
         }
         
         //STEP 4
