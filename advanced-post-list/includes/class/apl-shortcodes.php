@@ -1120,9 +1120,42 @@ class APL_InternalShortcodes
         //STEP
         return $return_str;
     }
-    
+    /**
+     * Post Terms Shortcode. 
+     * 
+     * Desc: Adds (Custom) Taxonomy Terms associated with Post/Page. Displays both
+     * post and page types, and will display terms from taxonomies that are set 
+     * to public
+     * 
+     * 1. Get Taxonomy Terms if Taxonomy is valid, otherwise get (default) Categories. 
+     * 2. Convert $atts['links'] to a boolean variable. 
+     * 3. If terms exists format them to return, otherwise add an empty message 
+     *    and do Step 6.
+     * 4. Slice list of terms to max amount, and store array total and (i)ndex.
+     * 5. For each term there is add the term name, w/ link if true, and add a
+          delimiter except for last term.
+     * 6. Return string.
+     * 
+     * @since 0.3.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $taxonomy          [Req] Gets the terms from taxonomy, defaults to 
+     *                                      'category'. 
+     *      @type string $delimiter         Inserts a separator, default is ", ".
+     *      @type boolean $links            Return as an HTML link if true.
+     *      @type integer $max              Total amount to display. 
+     *      @type string $empty_message     Display a message if no terms are returned.
+     * }
+     * @return string Taxonomy Terms used in post/page.
+     */
     public function post_terms($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array(
             'taxonomy' => 'category',
             'delimiter' => ', ',
@@ -1130,69 +1163,62 @@ class APL_InternalShortcodes
             'max' => '0',
             'empty_message' => ''
         ), $atts, 'post_terms');
+        $return_str = '';
         
-        //DO INPUT ($atts) CHECKS
-        //Check if taxonomy slug correctly-exists, and if not,
-        //  revert to default.
+        //STEP 1
         if (!taxonomy_exists($atts_value['taxonomy']))
         {
             $atts_value['taxonomy'] = 'category';
         }
-        
-        //Grab Terms withing Taxonomy
-        //Check to see if any terms were returned (!empty), 
-        //  and if so, return empty string.
         $terms = get_the_terms($this->_post->ID, $atts_value['taxonomy']);
-        if (!$terms)
-        {
-            //TODO ADD Empty_Message
-            return $atts_value['empty_message'];
-        }
         
-        //Slice array to max amount to avoid extra steps before hand.
-        $array_total = count($terms);
-        if ($atts_value['max'] != '0')
-        {
-            if ($array_total > intval($atts_value['max']))
-            {
-                $terms = array_slice($terms, 0, intval($atts_value['max']));
-                $array_total = count($terms);
-            }
-        }
-        
-        
-        //FINAL INIT
-        $return_str = '';
-        $i = 1;
+        //STEP 2
         $links = TRUE;
-        
-        //Convert $atts['links'] to a FALSE boolion to prevent multiple calls 
-        //  to a function.
         if (strtolower($atts_value['links']) == 'false')
         {
             $links = FALSE;
         }
         
-        foreach ($terms as $term_key => $term)
+        //STEP 3
+        if ($terms)
         {
-            
-            if ($links)
+            //STEP 4
+            $i = 1;
+            $array_total = count($terms);
+            if ($atts_value['max'] != '0')
             {
-              $return_str .= '<a href="' . get_tag_link($term->term_id) . '" >' . $term->name . '</a>';
+                if ($array_total > intval($atts_value['max']))
+                {
+                    $terms = array_slice($terms, 0, intval($atts_value['max']));
+                    $array_total = count($terms);
+                }
             }
-            else
+            //STEP 5
+            foreach ($terms as $term_key => $term)
             {
-              $return_str .= $term->name;
+                if ($links)
+                {
+                  $return_str .= '<a href="' . get_tag_link($term->term_id) . '" >' . $term->name . '</a>';
+                }
+                else
+                {
+                  $return_str .= $term->name;
+                }
+
+                if ($array_total > $i)
+                {
+                    $return_str .= $atts_value['delimiter'];
+                }
+
+                $i++;
             }
-            
-            //If not last, add delimiter
-            if ($array_total > $i)
-            {
-                $return_str .= $atts_value['delimiter'];
-            }
-            
-            $i++;
         }
+        else
+        {
+            $return_str .= $atts_value['empty_message'];
+        }
+        
+        //STEP 6
         return $return_str;
         
     }
