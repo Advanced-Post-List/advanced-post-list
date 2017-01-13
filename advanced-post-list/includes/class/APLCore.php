@@ -2048,8 +2048,7 @@ class APLCore
             $count = 0;
             
             ////TEST
-            $test_shortcodes = new APL_InternalShortcodes();
-            $test_output = '';
+            $internal_shortcodes = new APL_InternalShortcodes();
             //\\TEST
             
             while ( $wp_query_class->have_posts() ) 
@@ -2060,13 +2059,13 @@ class APLCore
                 //FIXED (0.3) - Exclude Duplicates Not Working
                 //https://wordpress.org/support/topic/exclude-duplicates-not-working
                 $this->_remove_duplicates[] = $wp_query_class->post->ID;// $APL_post->ID;
-                $output .= APLInternalShortcodeReplace($presetObj->_content,
-                                                       $wp_query_class->post,
-                                                       $count);
+                //$output .= APLInternalShortcodeReplace($presetObj->_content,
+                //                                       $wp_query_class->post,
+                //                                       $count);
                 
                 ////TEST
                 
-                $test_output .= $test_shortcodes->replace($presetObj->_content, $wp_query_class->post);
+                $output .= $internal_shortcodes->replace($presetObj->_content, $wp_query_class->post);
                 //\\TEST
                 
                 $count++;
@@ -2077,11 +2076,12 @@ class APLCore
             
             if (strrpos($output, "[final_end]"))
             {
-                $test_shortcodes->final_end();
+                $internal_shortcodes->final_end();
             }
             
             //\\ TEST \\\\
             
+            /*
             $finalPos = strrpos($output, "[final_end]");
             //if ending exists (the last item where we don't want to add any 
             // more commas or ending brackets or whatever)
@@ -2093,6 +2093,7 @@ class APLCore
                 // since we only care about the last one
                 $output = str_replace("[final_end]", "", $output);
             }
+            */
             
             //// After /////////////////////////////////////////////////////////
             $output .= $presetObj->_after;
@@ -2116,7 +2117,7 @@ class APLCore
         /* Restore Global Post Data */
         wp_reset_postdata();
         ////TEST
-        $test_shortcodes->remove();
+        $internal_shortcodes->remove();
         //\\TEST
         
         //STEP 6 - Return output string.
