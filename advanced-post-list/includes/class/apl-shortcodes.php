@@ -1246,37 +1246,73 @@ class APL_InternalShortcodes
     }
     
     //ADDED/CHANGED Constant to APL_ALLOW_PHP
-    //REMOVED WP_Post Param to pass. If the user needs the Post object in their 
-    //        custom function, then they can get_ it.
+    //ADDED Check if function exists.
+    /**
+     * PHP Function Shortcode. 
+     * 
+     * Desc: Adds custom php functions within the environment/instance, and displays
+     * the returned data as a string.
+     * 
+     * 1. Check to see if Constant Variable is set, if not, add error then do Step 4. 
+     * 2. Check to see if a function 'name' is given, if empty, add error then do 
+     *    Step 4.
+     * 3. If the function exists, do the function /w 'param'.
+     * 4. Return string.
+     * 
+     * @since 0.3.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     *                  Added Constant APL_ALLOW_PHP to require.
+     *                  Added Check if function exists.
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $name      [REQ] PHP Function Name. 
+     *      @type string $param     Data to send to custom php function.
+     * }
+     * @return string Returned data from PHP Function.
+     */
     public function php_function($atts)
     {
+        //INIT
         $atts_value = shortcode_atts( array(
             'name' => '',
             'param' => ''
         ), $atts, 'php_function');
         $return_str = '';
         
+        //STEP 1
         if (!defined("KALINS_ALLOW_PHP") && KALINS_ALLOW_PHP !== true || 
             !defined("APL_ALLOW_PHP") && APL_ALLOW_PHP !== true)
         {
             $return_str .= 'Error: add define("APL_ALLOW_PHP", true); to your '.
                             'wp-config.php for php_function to work.';
         }
+        //STEP 2
         else if (empty($atts_value['name']))
         {
             $return_str .= 'Error: Name shortcode attribute must have a name. '.
                            'For ex. [php_function name="FUNCTION_NAME"]';
         }
-        //TODO ADD Multi Param support.
-        //Param would have to be an array as well to handle multiple params
-        else if (!empty($atts_value['param']))
+        //STEP 3
+        else if (function_exists($atts_value['name']))
         {
-            $return_str .= call_user_func($atts_value['name'], $atts_value['param']);
+            if (!empty($atts_value['param']))
+            {
+                $return_str .= call_user_func($atts_value['name'], 
+                                              $this->_post, 
+                                              $atts_value['param']);
+            }
+            else
+            {
+                $return_str .= call_user_func($atts_value['name'], 
+                                              $this->_post);
+            }
         }
-        else
-        {
-            $return_str .= call_user_func($atts_value['name']);
-        }
+        
+        //STEP 4
         return $return_str;
     }
     
