@@ -689,7 +689,7 @@ class APL_InternalShortcodes
      * Desc: Adds a Post Thumb/Featured Image URL associated with the post, but 
      * can also grab an image within WP_Post->post_content (extract=on/force). 
      * Image Sizes include (default) thumbnail, medium, large, full, 
-     * and custom "XX, XX".
+     * and custom "XX, XX" (closest image size available).
      * 
      * Note: Post_Content Images are not resizable.
      * 
@@ -745,7 +745,7 @@ class APL_InternalShortcodes
             }
         }
         
-        //FALLBACK IMAGE (No Featured Image)
+        //EXTRACT/FALLBACK IMAGE (No Featured Image)
         //STEP 3
         if ( strtolower($atts_value['extract']) != 'none' && empty($return_str) )
         {
