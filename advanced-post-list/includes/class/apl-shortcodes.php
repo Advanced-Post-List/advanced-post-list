@@ -588,12 +588,6 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
-    //ADDED user_name (Alias) 
-    //ADDED user_description (Alias)
-    //REMOVED user_pass
-    //REMOVED nickname
-    //REMOVED primary_blog
-    //CHANGED Method to match an array key rather than ->$name
     /**
      * Post Author Shortcode. 
      * 
@@ -674,9 +668,6 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
-    //ADDED Custom Sizes
-    //Note: Treated as max size, and only scales.
-    //FIXED RegEx not matching any img src in post_content
     //TODO ADD Default Text?
     //TODO ADD Improved method for checking for site media on page, and then
     //         adding images [post_attachments]. Thus preventing outside images 
@@ -789,11 +780,11 @@ class APL_InternalShortcodes
         //STEP 2
         return $return_str;
     }
-    //ADDED(Fixed) Encoding when creating a sub-string/excerpt from post_content.
+    
     /**
      * Post Excerpt Shortcode. 
      * 
-     * Desc: Add the Post Excerpt, or a substring of Post Content.
+     * Desc: Adds the Post Excerpt, or a substring of Post Content.
      * 
      * 1. IF Post_Excerpt is empty, then use Post_Content with X amount of 
      *    characters (Default 250.). Otherwise skip to STEP 4.
@@ -1048,7 +1039,6 @@ class APL_InternalShortcodes
     'items_list_navigation' =>  'Posts list navigation'
     'items_list' =>             'Posts list'
     */
-    //ADDED Shortcode [post_type label="name"]
     //TODO ADD Array String to filter through like this->post_author
     /**
      * Post Type Shortcode. 
@@ -1384,7 +1374,6 @@ class APL_InternalShortcodes
         
     }
     
-    //ADDED/CHANGED Constant to APL_ALLOW_PHP
     //ADDED Check if function exists.
     /**
      * PHP Function Shortcode. 
@@ -1455,7 +1444,6 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
-    //ADDED Check Error if atts aren't digits.
     /**
      * Post List Item Number Shortcode. 
      * 
@@ -1509,7 +1497,6 @@ class APL_InternalShortcodes
         return $return_str;
     }
     
-    //Changed concept to a Class Method.
     /**
      * Final End Post List Shortcode. 
      * 

@@ -123,6 +123,20 @@ page/post (e.g. [post_list name='some-preset-name'])
 
 == Changelog ==
 
+= 0.3.2 =
+* Changed Internal Shortcodes to a Class Object as the Shortcode API.
+* Removed APLCallback Class Object file.
+* Added [post_author] attributes aliases user_name & user_description.
+* Removed [post_author] attributes labels that no longer exists.
+* Added [post_thumb] custom max sizes for the size attribute. Grabs the closest image size.
+* Fixed [post_thumb] extract to correctly grab img tags.
+* Fixed [post_excerpt] encoding when creating an excerpt from post/page content.
+* Added [post_type] shortcode, and label attribute.
+* Added APL_ALLOW_PHP constant as a required varible for [php_function].
+* Added error check to [item_number].
+* Added check to [post_pdf] to see if plugin is active.
+* Internal Shortcode Atts (Attributes) don't require prior Atts, and can be added in any order.
+
 = 0.3.1 =
 * Added Assets.
 * Added Icon to Assets.
