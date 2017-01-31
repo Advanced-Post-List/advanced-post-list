@@ -1,10 +1,10 @@
 ﻿=== Advanced Post List ===
-Contributors: EkoJr
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4VQ6NF4CQ&lc=US&item_name=Wordpress%20%2d%20Advanced%20Post%20List&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
+Contributors: EkoJR
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VFUYQGQ7VXEDC
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
 Tested up to: 4.7
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,25 +77,23 @@ add it to the post list.
 section of a site.
 * **PHP Hardcode** – Add post lists where some situations require a more 
 technical use where WordPress features and functions aren’t fully present.
-* **Sidebar Widget (Coming soon)** – Originally was removed until 0.3 was 
-developed. Shortcodes have made it easy to add post lists to a text sidebar, 
-but there’s still plans to take full advantage of implementing the widget class.
+* **Sidebar Widget** – Easy to use, but shortcodes allow post lists to be added with a text sidebar.
 
 
 This is an alternate version of [Kalins Post List][wordpress kalins post list] 
 which was unfortunately declared abandoned. Most of the credit for creating an 
 extraordinary plugin like this goes to Kalin. Currently, the plugin is still in 
 the first stages of its target design. Version 1.0.0 will feature many of the 
-functionalities that Kalin and others have mentioned, and will have a completely 
+functionalities that Kalin and others have mentioned, and will have a complete 
 new layout to accommodate for the extra tools that will be added.
 
 
 **Pre-Release Projects for Version 1.0.0**
 
-* **(Completed)** Import/export - Export is broken until 0.3 stable (including importing data from Kalins Post List)
-* **(Completed)** Custom Post Type & Taxonomies Support. Available in the 0.3 release.
+* **(Completed)** Import/Export.
+* **(Completed)** Custom Post Type & Taxonomies Support.
 * Additional sort methods for 'Orderby' combo box.
-* Additional shortcodes.
+* (WIP) Additional shortcodes.
 
 
 == Installation ==
@@ -122,6 +120,22 @@ page/post (e.g. [post_list name='some-preset-name'])
 4. General options and support.
 
 == Changelog ==
+
+= 0.3.2 =
+* Changed Internal Shortcodes to a Class Object as a Shortcode API.
+* Changed support to Internal Shortcode to allow Attributes to be added in any order.
+* Added attributes aliases user_name & user_description for the Labels attribute in [post_author].
+* Removed attribute labels that no longer exist in WP for the Labels attribute in [post_author].
+* Added custom max size support for the Size attribute in [post_thumb].
+* Fixed extract to correctly grab img tags for the Extract attribute in [post_thumb].
+* Fixed encoding when creating an excerpt from post/page content in [post_excerpt].
+* Added [post_type] shortcode, and label attribute.
+* Added error check in [item_number].
+* Added check if other plugin is active in [post_pdf].
+* Added APL_ALLOW_PHP constant as a required varible for [php_function].
+* Removed APLCallback Class Object file.
+* Changed Dialog location for Internal Shortcode to a seperate file.
+* Added more encapsulation to initializing other class files.
 
 = 0.3.1 =
 * Added Assets.

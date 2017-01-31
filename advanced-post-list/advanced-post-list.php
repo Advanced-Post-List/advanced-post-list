@@ -4,7 +4,7 @@
   Plugin Name: Advanced Post List
   Plugin URI: http://wordpress.org/plugins/advanced-post-list/
   Description: Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies.
-  Version: 0.3.1 
+  Version: 0.3.2 
   Author: EkoJR
   Author URI: http://ekojr.com
   License: GPLv2
@@ -58,41 +58,14 @@ else
 }
 
 
-//TODO MOVE constants into APL_Core Class in APL_Constants
-//TODO ADD versions number for 3rd party CDN sources.
-//jQuery, jQuery UI, (jQuery) Multiselect 
-//  Note: Try grabbing WP jQuery version number for CSS files on Google.
 /*****************************************************************************/
-/************************ CONSTANTS ******************************************/
-/*****************************************************************************/
-//Define constant varibles
-define('APL_NAME',      'Advanced Post List');
-//FIX ALWAYS - Update version number
-define('APL_VERSION',   '0.3.1');
-//APL_DIR = C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/
-define('APL_DIR',       plugin_dir_path(__FILE__));
-//APL_URL = http://localhost/wordpress/wp-content/plugins/advanced-post-list/
-define('APL_URL',       plugin_dir_url(__FILE__));
-
-//TODO Create a better Init method for this. APL_include()
-/*****************************************************************************/
-/************************ REQUIRED FILES *************************************/
-/*****************************************************************************/
-require_once(APL_DIR . 'includes/class/APLCore.php');
-require_once(APL_DIR . 'includes/class/APLPresetDbObj.php');
-require_once(APL_DIR . 'includes/class/APLPresetObj.php');
-require_once(APL_DIR . 'includes/class/APLCallback.php');
-require_once(APL_DIR . 'includes/class/APLWidget.php');
-require_once(APL_DIR . 'includes/class/APLQuery.php');
-require_once(APL_DIR . 'includes/class/APLUpdater.php');
-require_once(APL_DIR . 'includes/import.php');
-require_once(APL_DIR . 'includes/export.php');
-
-/*****************************************************************************/
-/************************ LOAD HANDLER ***************************************/
+/************************ Singleton ******************************************/
 /*****************************************************************************/
 
 //Load Handler
+//TODO change to APLCore->Run
+//  Basically attempt to remove the need for a variable.
+require_once(plugin_dir_path(__FILE__) . 'includes/class/APLCore.php');
 $advanced_post_list = new APLCore(__FILE__);
 
 // A LIST DEBUGGIN METHODS THAT USERS MAY USE OR BE 
