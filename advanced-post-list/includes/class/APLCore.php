@@ -215,7 +215,6 @@ class APLCore
     {
         require_once(APL_DIR . 'includes/class/APLPresetDbObj.php');
         require_once(APL_DIR . 'includes/class/APLPresetObj.php');
-        require_once(APL_DIR . 'includes/class/APLCallback.php');
         require_once(APL_DIR . 'includes/class/APLWidget.php');
         require_once(APL_DIR . 'includes/class/APLQuery.php');
         require_once(APL_DIR . 'includes/class/APLUpdater.php');
@@ -2036,8 +2035,6 @@ class APLCore
         ////////////////////////////////////////////////////////////////////////
         //STEP 5 - If posts are present, the use the loop to display posts. Otherwise
         //          return an exit message if no posts are found.
-        //Can't use echo to display content, for some reason post content isn't
-        // being displayed yet, and causes this to display on top/above.
         if ( $wp_query_class->have_posts() ) 
         {
             $output = '';
@@ -2047,53 +2044,23 @@ class APLCore
             //// Content ///////////////////////////////////////////////////////
             $count = 0;
             
-            ////TEST
             $internal_shortcodes = new APL_InternalShortcodes();
-            //\\TEST
             
             while ( $wp_query_class->have_posts() ) 
             {
                 $wp_query_class->the_post();
-                //FIXED #36 (0.3) - Trying to get property of non-object.
-                //https://github.com/EkoJr/wp-advanced-post-list/issues/36
-                //FIXED (0.3) - Exclude Duplicates Not Working
-                //https://wordpress.org/support/topic/exclude-duplicates-not-working
                 $this->_remove_duplicates[] = $wp_query_class->post->ID;// $APL_post->ID;
-                //$output .= APLInternalShortcodeReplace($presetObj->_content,
-                //                                       $wp_query_class->post,
-                //                                       $count);
-                
-                ////TEST
                 
                 $output .= $internal_shortcodes->replace($presetObj->_content, $wp_query_class->post);
-                //\\TEST
                 
                 $count++;
                 
             }
             
-            //// TEST ////
-            
             if (strrpos($output, "[final_end]"))
             {
                 $internal_shortcodes->final_end();
             }
-            
-            //\\ TEST \\\\
-            
-            /*
-            $finalPos = strrpos($output, "[final_end]");
-            //if ending exists (the last item where we don't want to add any 
-            // more commas or ending brackets or whatever)
-            if ($finalPos > 0)
-            {
-                //Cut everything off at the final position of {final_end}
-                $output = substr($output, 0, $finalPos);
-                //Replace all the other instances of {final_end}, 
-                // since we only care about the last one
-                $output = str_replace("[final_end]", "", $output);
-            }
-            */
             
             //// After /////////////////////////////////////////////////////////
             $output .= $presetObj->_after;
@@ -2116,9 +2083,8 @@ class APLCore
         }
         /* Restore Global Post Data */
         wp_reset_postdata();
-        ////TEST
+        //Exit method for apl-shortcodes class.
         $internal_shortcodes->remove();
-        //\\TEST
         
         //STEP 6 - Return output string.
         return $output;
@@ -2192,139 +2158,5 @@ class APLCore
 
 }
 
-/**
- * <p><b>Desc:</b> (Internal) plugin shortcode function for individual posts.</p>
- * @access public
- * @param string $str 
- * @param object $page WordPress post.
- * @param int $count 
- * @return string
- * 
- * @since 0.1.0
- * @todo fix all known issues and seperate this code into a different file and
- *       encapsulate it.
- * 
- * @tutorial 
- * <ol>
- * <li value="1"></li>
- * <li value="2"></li>
- * <li value="3"></li>
- * </ol>
- */
-function APLInternalShortcodeReplace($str, $page, $count)
-{
-    //not much left of this array, since there's so little post data that I can still just grab unmodified
-    $SCList = array("[ID]", "[post_name]", "[guid]", "[post_content]", "[comment_count]");
-
-    $l = count($SCList);
-    for ($i = 0; $i < $l; $i++)
-    {//loop through all possible shortcodes
-        $scName = substr($SCList[$i], 1, count($SCList[$i]) - 2);
-        $str = str_replace($SCList[$i], $page->$scName, $str);
-    }
-
-    $str = str_replace("[post_permalink]",
-                       get_permalink($page->ID),
-                                     $str);
-    $str = str_replace("[post_title]",
-                       htmlspecialchars($page->post_title),
-                                        $str);
-
-    $postCallback = new APLCallback();
-    $postCallback->itemCount = $count;
-    $postCallback->page = $page;
-
-    $str = preg_replace_callback('#\[ *item_number *(offset=[\'|\"]([^\'\"]*)[\'|\"])? *(increment=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postCountCallback'),
-                                 $str);
-
-////// POST DATA & MODIFIED ////////////////////////////////////////////////////
-    $postCallback->curDate = $page->post_date; //change the curDate param and run the regex replace for each type of date/time shortcode
-    $str = preg_replace_callback('#\[ *post_date *(format=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postDateCallback'),
-                                 $str);
-    $postCallback->curDate = $page->post_date_gmt;
-    $str = preg_replace_callback('#\[ *post_date_gmt *(format=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postDateCallback'),
-                                 $str);
-    $postCallback->curDate = $page->post_modified;
-    $str = preg_replace_callback('#\[ *post_modified *(format=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postDateCallback'),
-                                 $str);
-    $postCallback->curDate = $page->post_modified_gmt;
-    $str = preg_replace_callback('#\[ *post_modified_gmt *(format=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postDateCallback'),
-                                 $str);
-
-    if (preg_match('#\[ *post_excerpt *(length=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                   $str))
-    {
-
-        $str = preg_replace_callback('#\[ *post_excerpt *(length=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                     array(&$postCallback, 'postExcerptCallback'),
-                                     $str);
-
-        /* if($page->post_excerpt == ""){//if there's no excerpt applied to the post, extract one
-          //$postCallback->pageContent = strip_tags($page->post_content);
-          $str = preg_replace_callback('#\[ *post_excerpt *(length=[\'|\"]([^\'\"]*)[\'|\"])? *\]#', array(&$postCallback, 'postExcerptCallback'), $str);
-          }else{//if there is a post excerpt just use it and don't generate our own
-          $str = preg_replace('#\[ *post_excerpt *(length=[\'|\"]([^\'\"]*)[\'|\"])? *\]#', $page->post_excerpt, $str);
-          } */
-    }
-
-    $postCallback->post_type = $page->post_type;
-    $postCallback->post_id = $page->ID;
-    $str = preg_replace_callback('#\[ *post_pdf *\]#',
-                                 array(&$postCallback, 'postPDFCallback'),
-                                 $str);
-
-    $postCallback->page = $page;
-    $str = preg_replace_callback('#\[ *post_meta *(name=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postMetaCallback'),
-                                 $str);
-    $str = preg_replace_callback('#\[ *post_categories *(delimeter=[\'|\"]([^\'\"]*)[\'|\"])? *(links=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postCategoriesCallback'),
-                                 $str);
-    $str = preg_replace_callback('#\[ *post_tags *(delimeter=[\'|\"]([^\'\"]*)[\'|\"])? *(links=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postTagsCallback'),
-                                 $str);
-                                 
-    $str = preg_replace_callback("#\[post_terms *(taxonomy=['|\"]([^'\"]*)['|\"])? *(delimiter=['|\"]([^'\"]*)['|\"])? *(links=['|\"]([^'\"]*)['|\"])? *(max=['|\"]([^'\"]*)['|\"])? *(empty_message=['|\"]([^'\"]*)['|\"])? *\]#",
-                                 array(&$postCallback, 'postTermsCallback'),
-                                 $str);
-    
-    $str = preg_replace_callback('#\[ *post_comments *(before=[\'|\"]([^\'\"]*)[\'|\"])? *(after=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'commentCallback'),
-                                 $str);
-    $str = preg_replace_callback('#\[ *post_author *(label=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-    							               array(&$postCallback, 'postAuthorCallback'),
-    							               $str);
-    
-
-    	/* 
-    $str = preg_replace_callback('#\[ *post_thumb *(size=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                              		array(&$postCallback, 'postThumbCallback'),
-    			                        $str);
-    			                        */
-    
-    $str = preg_replace_callback('#\[ *post_thumb *(size=[\'|\"]([^\'\"]*)[\'|\"])? *(extract=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-    		array(&$postCallback, 'postThumbCallback'),
-    		$str);
-    
-    
-    
-    
-    
-    
-    $str = preg_replace_callback('#\[ *post_parent *(link=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'postParentCallback'),
-                                 $str);
-
-    $str = preg_replace_callback('#\[ *php_function *(name=[\'|\"]([^\'\"]*)[\'|\"])? *(param=[\'|\"]([^\'\"]*)[\'|\"])? *\]#',
-                                 array(&$postCallback, 'functionCallback'),
-                                 $str);
-
-    return $str;
-}
 
 ?>
