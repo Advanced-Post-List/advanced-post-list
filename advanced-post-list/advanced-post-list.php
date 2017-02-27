@@ -10,6 +10,7 @@
   License: GPLv2
   License: URI: https://www.gnu.org/licenses/gpl-2.0.html
   Text Domain: advanced-post-list
+  Domain Path: /languages
 
   == Copyright ==
   Advanced Post List by EkoJR (email: ekojr1337@gmail.com)

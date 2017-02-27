@@ -121,6 +121,9 @@ page/post (e.g. [post_list name='some-preset-name'])
 
 == Changelog ==
 
+= 0.3.3 =
+* Added initial Localization to prep support for multiple languages.
+
 = 0.3.2 =
 * Changed Internal Shortcodes to a Class Object as a Shortcode API.
 * Changed support to Internal Shortcode to allow Attributes to be added in any order.
