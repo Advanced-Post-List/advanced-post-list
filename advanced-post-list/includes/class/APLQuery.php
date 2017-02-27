@@ -399,6 +399,7 @@ class APLQuery
         //When adding posts, check if there are any invalid post IDs, and then
         // filter out any duplicates. This prevents any conflicts that may occur
         // with some of the dynamic settings/input. 
+        $arg['post__not_in'] = array();
         if (!empty($presetObj->_listExcludePosts))
         {
             foreach ($presetObj->_listExcludePosts as $i => $post_id)
