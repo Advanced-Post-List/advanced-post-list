@@ -1,10 +1,10 @@
 ﻿=== Advanced Post List ===
-Contributors: EkoJR
+Contributors: EkoJr
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VFUYQGQ7VXEDC
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
 Tested up to: 4.7
-Stable tag: 0.3.3
+Stable tag: 0.3.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -120,6 +120,9 @@ page/post (e.g. [post_list name='some-preset-name'])
 4. General options and support.
 
 == Changelog ==
+
+= 0.3.4 =
+* Fixed [final_end] not updating output string.
 
 = 0.3.3 =
 * Fixed [final_end] missing a param.
