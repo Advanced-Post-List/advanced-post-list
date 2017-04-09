@@ -2059,7 +2059,7 @@ class APLCore
             
             if (strrpos($output, "[final_end]"))
             {
-                $internal_shortcodes->final_end($output);
+                $output = $internal_shortcodes->final_end($output);
             }
             
             //// After /////////////////////////////////////////////////////////
