@@ -1,6 +1,6 @@
 <p>
-	<b>Shortcodes:</b> Use these codes inside the list item content (will 
-	throw errors if placed in before or after HTML fields).
+	<b>__(Shortcodes:)</b> __(Use these codes inside the list item content (will 
+	throw errors if placed in before or after HTML fields).)
 </p>
 <ul style="margin: auto 16px;">
 	<li><b>[ID]</b> - the ID number of the page/post</li>
