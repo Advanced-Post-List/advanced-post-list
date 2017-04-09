@@ -1087,76 +1087,6 @@ class APL_InternalShortcodes
     }
     
     /**
-     * Tags Shortcode. 
-     * 
-     * Desc: Adds Tags associated with Post/Page. 
-     * 
-     * 1. Set Attribute 'Links' to a Boolean variable. 
-     * 2. Get the tags. If none, do Step 4. 
-     * 3. For each tag there is add the tag name, w/ link if true, and add a 
-     *    delimiter except for last tag.
-     * 4. Return string.
-     * 
-     * @since 0.1.0 
-     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
-     *                  functions for setting default attributes & do_shortcode().
-     * 
-     * @param array $atts {
-     *      
-     *      Shortcode Attributes. 
-     *      
-     *      @type string $delimiter     Inserts a separator, default is ", ".
-     *      @type string $links         Return as an html link if true.
-     * }
-     * @return string Tags used in post/page.
-     */
-    public function post_tags($atts)
-    {
-        //INIT
-        $atts_value = shortcode_atts( array(
-            'delimiter' => ', ',
-            'links' => 'true'
-        ), $atts, 'post_tags');
-        $return_str = '';
-        
-        //STEP 1
-        $atts_value['links'] = TRUE;
-        if (strtolower($atts_value['links']) == 'false')
-        {
-            $atts_value['links'] = FALSE;
-        }
-        
-        //STEP 2
-        $post_tags = get_the_tags($this->_post->ID);
-        $array_total = count($post_tags);
-        $i = 1;
-        if ($post_tags)
-        {
-            //STEP 3
-            foreach ($post_tags as $tag)
-            {
-                if ($atts_value['links'])
-                {
-                    $return_str .= '<a href="' . get_tag_link($tag->term_id) . '" >' . $tag->name . '</a>';
-                }
-                else
-                {
-                    $return_str .= $tag->name;
-                }
-
-                if ($array_total > $i)
-                {
-                    $return_str .= $atts_value['delimiter'];
-                }
-                $i++;
-            }
-        }
-        
-        //STEP 4
-        return $return_str;
-    }
-    
-    /**
      * Categories Shortcode. 
      * 
      * Desc: Adds Categories associated with Post/Page. 
@@ -1225,6 +1155,78 @@ class APL_InternalShortcodes
         //STEP 4
         return $return_str;
     }
+    
+    /**
+     * Tags Shortcode. 
+     * 
+     * Desc: Adds Tags associated with Post/Page. 
+     * 
+     * 1. Set Attribute 'Links' to a Boolean variable. 
+     * 2. Get the tags. If none, do Step 4. 
+     * 3. For each tag there is add the tag name, w/ link if true, and add a 
+     *    delimiter except for last tag.
+     * 4. Return string.
+     * 
+     * @since 0.1.0 
+     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
+     *                  functions for setting default attributes & do_shortcode().
+     * 
+     * @param array $atts {
+     *      
+     *      Shortcode Attributes. 
+     *      
+     *      @type string $delimiter     Inserts a separator, default is ", ".
+     *      @type string $links         Return as an html link if true.
+     * }
+     * @return string Tags used in post/page.
+     */
+    public function post_tags($atts)
+    {
+        //INIT
+        $atts_value = shortcode_atts( array(
+            'delimiter' => ', ',
+            'links' => 'true'
+        ), $atts, 'post_tags');
+        $return_str = '';
+        
+        
+        //STEP 1
+        $atts_value['links'] = TRUE;
+        if (strtolower($atts_value['links']) == 'false')
+        {
+            $atts_value['links'] = FALSE;
+        }
+        
+        //STEP 2
+        $post_tags = get_the_tags($this->_post->ID);
+        $array_total = count($post_tags);
+        $i = 1;
+        if ($post_tags)
+        {
+            //STEP 3
+            foreach ($post_tags as $tag)
+            {
+                if ($atts_value['links'])
+                {
+                    $return_str .= '<a href="' . get_tag_link($tag->term_id) . '" >' . $tag->name . '</a>';
+                }
+                else
+                {
+                    $return_str .= $tag->name;
+                }
+
+                if ($array_total > $i)
+                {
+                    $return_str .= $atts_value['delimiter'];
+                }
+                $i++;
+            }
+        }
+        
+        //STEP 4
+        return $return_str;
+    }
+    
     /**
      * Post Terms Shortcode. 
      * 
