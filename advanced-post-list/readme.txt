@@ -123,6 +123,7 @@ page/post (e.g. [post_list name='some-preset-name'])
 
 = 0.3.3 =
 * Fixed [final_end] missing a param.
+* Fixed Undefined index: post__not_in.
 
 = 0.3.2 =
 * Changed Internal Shortcodes to a Class Object as a Shortcode API.
