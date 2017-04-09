@@ -122,6 +122,8 @@ page/post (e.g. [post_list name='some-preset-name'])
 == Changelog ==
 
 = 0.4.0 =
+* Fixed [post_excerpt] breaking last word.
+* Fixed [post_excerpt length=""] not trimming if post excerpt is found.
 
 = 0.3.4 =
 * Fixed [final_end] not updating output string.

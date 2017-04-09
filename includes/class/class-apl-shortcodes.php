@@ -786,9 +786,9 @@ class APL_Internal_Shortcodes
      * 
      * Desc: Adds the Post Excerpt, or a substring of Post Content.
      * 
-     * 1. IF Post_Excerpt is empty, then use Post_Content with X amount of 
-     *    characters (Default 250.). Otherwise skip to STEP 4.
-     * 2. Convert 'length' Variable Type to Int.
+     * 1. Convert 'length' Variable Type to Int.
+     * 2. IF Post_Excerpt is empty, then use Post_Content with X amount of 
+     *    characters (Default 250.). Otherwise skip to STEP 4. 
      * 3. Add a substring from Post_Content to return. X amount of length and
      *    with shortcodes stripped out.
      * 4. Add Post_Excerpt to return.
@@ -815,18 +815,20 @@ class APL_Internal_Shortcodes
         ) , $atts, 'post_excerpt');
         $return_str = '';
         
-        //STEP 1
+        //STEP 1 
+        if (is_numeric($atts_value['length']))
+        {
+            $atts_value['length'] = intval($atts_value['length']);
+        }
+        else
+        {
+            $atts_value['length'] = 250;
+        }
+        
+        //STEP 2
         if(empty($this->_post->post_excerpt))
         {
-            //STEP 2 
-            if (is_numeric($atts_value['length']))
-            {
-                $atts_value['length'] = intval($atts_value['length']);
-            }
-            else
-            {
-                $atts_value['length'] = 250;
-            }
+            
             
             //BUG? Possible if length is longer than string.
             //STEP 3
@@ -835,6 +837,10 @@ class APL_Internal_Shortcodes
                                                      0,
                                                      $atts_value['length'],
                                                      $encoding));
+            if (substr($return_str, -1, 1) != ' ') 
+            {
+                $return_str = substr($return_str, 0, strrpos($return_str, " "));
+            }
             //$return_str = mb_substr(strip_shortcodes(strip_tags($this->_post->post_content)), 
             //                        0, 
             //                        $atts_value['length'] , 
@@ -844,7 +850,19 @@ class APL_Internal_Shortcodes
         //STEP 4
         else
         {
-            $return_str .= $this->_post->post_excerpt;
+            if (strlen($this->_post->post_excerpt) <= $atts_value['length'])
+            {
+                $return_str .= $this->_post->post_excerpt;
+            }
+            else
+            {
+                $return_str .= substr($this->_post->post_excerpt, 0, $atts_value['length']);
+                if (substr($return_str, -1, 1) != ' ')  
+                {
+                    $return_str = substr($return_str, 0, strrpos($return_str, " "));
+                }
+                        
+            }
         }
         
         //STEP 5
