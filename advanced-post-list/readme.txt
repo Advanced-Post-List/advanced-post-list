@@ -122,6 +122,7 @@ page/post (e.g. [post_list name='some-preset-name'])
 == Changelog ==
 
 = 0.3.3 =
+* Fixed [final_end] missing a param.
 
 = 0.3.2 =
 * Changed Internal Shortcodes to a Class Object as a Shortcode API.
