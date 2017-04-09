@@ -122,6 +122,7 @@ page/post (e.g. [post_list name='some-preset-name'])
 == Changelog ==
 
 = 0.3.4 =
+* Fixed [final_end] not updating output string.
 
 = 0.3.3 =
 * Fixed [final_end] missing a param.
