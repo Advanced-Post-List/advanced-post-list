@@ -10,10 +10,10 @@ if (!method_exists('APLCore', 'APL_admin_head'))
 }
 //
 ////////////////////////////////////////////////////////////////////////////////
-wp_enqueue_script('jquery-ui-dialog');
+wp_enqueue_script('jquery-ui-dialog-js');
 
 //Places the (hidden) dialog content within the page.
-require_once APL_DIR . 'includes/APL-admin_dialogs.php';
+require_once APL_DIR . 'admin/admin-dialogs.php';
 //For setting certain parts of the HTML coding that aren't within the 
 // php functions
 $adminOptions = $this->APL_options_load();

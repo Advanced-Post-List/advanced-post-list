@@ -66,7 +66,7 @@ else
 //Load Handler
 //TODO change to APLCore->Run
 //  Basically attempt to remove the need for a variable.
-require_once(plugin_dir_path(__FILE__) . 'includes/class/APLCore.php');
+require_once(plugin_dir_path(__FILE__) . 'includes/class/apl-core.php');
 $advanced_post_list = new APLCore(__FILE__);
 
 // A LIST DEBUGGIN METHODS THAT USERS MAY USE OR BE 

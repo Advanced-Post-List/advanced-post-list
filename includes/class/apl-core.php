@@ -213,13 +213,14 @@ class APLCore
     }
     private function requires()
     {
-        require_once(APL_DIR . 'includes/class/APLPresetDbObj.php');
-        require_once(APL_DIR . 'includes/class/APLPresetObj.php');
-        require_once(APL_DIR . 'includes/class/APLWidget.php');
-        require_once(APL_DIR . 'includes/class/APLQuery.php');
-        require_once(APL_DIR . 'includes/class/APLUpdater.php');
-        require_once(APL_DIR . 'includes/import.php');
-        require_once(APL_DIR . 'includes/export.php');
+        require_once(APL_DIR . 'includes/class/apl-preset-db-obj.php');
+        require_once(APL_DIR . 'includes/class/apl-preset-obj.php');
+        require_once(APL_DIR . 'includes/class/apl-widget.php');
+        require_once(APL_DIR . 'includes/class/apl-query.php');
+        require_once(APL_DIR . 'includes/class/apl-updater.php');
+		//TODO Move to Admin only function/method.
+        require_once(APL_DIR . 'admin/import.php');
+        require_once(APL_DIR . 'admin/export.php');
     }
     private function APL_updater($APLOptions)
     {
@@ -329,14 +330,16 @@ class APLCore
         /* ************************************************************ *
          * ************** REMOVE SCRIPTS & STYLES ********************* * 
          * ************************************************************ */
-        //wp_deregister_script('apl-jquery');
-        wp_deregister_script('apl-admin');
-        //wp_deregister_script('apl-jquery-ui');
-        wp_deregister_script('apl-admin-ui');
-        wp_deregister_script('apl-jquery-ui-multiselect');
+
+        wp_deregister_script('apl-admin-js');
+        wp_deregister_script('apl-admin-ui-js');
+        wp_deregister_script('apl-jquery-ui-multiselect-js');
 
         wp_deregister_style('apl-admin-css');
         wp_deregister_style('apl-admin-ui-css');
+		wp_deregister_style('apl-jquery-ui-multiselect');
+		wp_deregister_style('apl-jquery-ui-multiselect-css');
+		wp_deregister_style('apl-jquery-ui-multiselect-filter-css');
 
 
         // Step 3
@@ -351,43 +354,31 @@ class APLCore
         /* ************************************************************ *
          * ************** REGISTER SCRIPTS **************************** * 
          * ************************************************************ */
-//        $script_deps = array();
-//        wp_register_script('apl-jquery',
-//                           'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js',
-//                           $script_deps,
-//                           APL_VERSION,
-//                           false);
+
         $script_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-dialog');
-        wp_register_script('apl-admin',
-                           plugins_url() . '/advanced-post-list/includes/js/APL-admin.js',
+        wp_register_script('apl-admin-js',
+                           plugins_url() . '/advanced-post-list/admin/js/admin.js',
                            $script_deps,
                            APL_VERSION,
                            false);
-
-//        $script_deps = array('apl-jquery');
-//        wp_register_script('apl-jquery-ui',
-//                           'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js',
-//                           $script_deps,
-//                           APL_VERSION,
-//                           false);
 
         $script_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-accordion', 'jquery-ui-button','jquery-ui-dialog', 'jquery-ui-tabs');
-        wp_register_script('apl-admin-ui',
-                           plugins_url() . '/advanced-post-list/includes/js/APL-admin_ui.js',
+        wp_register_script('apl-admin-ui-js',
+                           plugins_url() . '/advanced-post-list/admin/js/admin-ui.js',
                            $script_deps,
                            APL_VERSION,
                            false);
-        
-        
+
         $script_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-widget');
-        wp_register_script('apl-jquery-ui-multiselect',
-                           plugins_url() . '/advanced-post-list/includes/js/jquery.multiselect.min.js',
+        wp_register_script('apl-jquery-ui-multiselect-js',
+                           plugins_url() . '/advanced-post-list/admin/js/jquery.multiselect.min.js',
                            $script_deps,
                            APL_VERSION,
                            false);
+
         $script_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-widget');
-        wp_register_script('apl-jquery-ui-multiselect-filter',
-                           plugins_url() . '/advanced-post-list/includes/js/jquery.multiselect.filter.min.js',
+        wp_register_script('apl-jquery-ui-multiselect-filter-js',
+                           plugins_url() . '/advanced-post-list/admin/js/jquery.multiselect.filter.min.js',
                            $script_deps,
                            APL_VERSION,
                            false);
@@ -397,7 +388,7 @@ class APLCore
          * ************** REGISTER STYLES ***************************** * 
          * ************************************************************ */
         wp_enqueue_style('apl-admin-css',
-                         plugins_url() . '/advanced-post-list/includes/css/APL-admin.css',
+                         plugins_url() . '/advanced-post-list/admin/css/admin.css',
                          false,
                          APL_VERSION,
                          false);
@@ -409,8 +400,12 @@ class APLCore
                          false);
 
         wp_enqueue_style('apl-jquery-ui-multiselect-css',
-                         //plugins_url() . '/advanced-post-list/includes/css/jquery-ui-multiselect-widget.css',
-                         plugins_url() . '/advanced-post-list/includes/css/jquery.multiselect.css',
+                         plugins_url() . '/advanced-post-list/admin/css/jquery.multiselect.css',
+                         false,
+                         APL_VERSION,
+                         false);
+		wp_enqueue_style('apl-jquery-ui-multiselect-filter-css',
+                         plugins_url() . '/advanced-post-list/admin/css/jquery.multiselect.filter.css',
                          false,
                          APL_VERSION,
                          false);
@@ -693,16 +688,18 @@ class APLCore
     {
         // Step 1
         //////// ADD SCRIPTS TO QUEUE LIST ////////
-        wp_enqueue_script('apl-admin');
-        wp_enqueue_script('apl-admin-ui');
-        wp_enqueue_script('apl-jquery-ui-multiselect');
-        wp_enqueue_script('apl-jquery-ui-multiselect-filter');
+        wp_enqueue_script('apl-admin-js');
+        wp_enqueue_script('apl-admin-ui-js');
+        wp_enqueue_script('apl-jquery-ui-multiselect-js');
+        wp_enqueue_script('apl-jquery-ui-multiselect-filter-js');
 
         // Step 2
         //////// ADD STYLES TO QUEUE LIST ////////
-        wp_enqueue_style('apl-jquery-ui-multiselect-css');
+        
         wp_enqueue_style('apl-admin-css');
         wp_enqueue_style('apl-admin-ui-css');
+		wp_enqueue_style('apl-jquery-ui-multiselect-css');
+		wp_enqueue_style('apl-jquery-ui-multiselect-filter-css');
 
         // Step 3
         //////// GET AND STORE PLUGIN DATA ////////
@@ -739,10 +736,10 @@ class APLCore
 
         // Step 8
         //////// SEND PLUGIN DATA TO SCRIPTS ////////
-        wp_localize_script('apl-admin',
+        wp_localize_script('apl-admin-js',
                            'apl_admin_settings',
                            $apl_admin_settings);
-        wp_localize_script('apl-admin-ui',
+        wp_localize_script('apl-admin-ui-js',
                            'apl_admin_ui_settings',
                            $apl_admin_ui_settings);
     }
@@ -1378,7 +1375,7 @@ class APLCore
     public function APL_admin_page()
     {
         // Step 1
-        require_once( $this->plugin_dir_path . 'includes/APL-admin.php');
+        require_once( $this->plugin_dir_path . 'admin/admin.php');
     }
     
     /**
