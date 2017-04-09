@@ -124,6 +124,7 @@ page/post (e.g. [post_list name='some-preset-name'])
 = 0.3.3 =
 * Fixed [final_end] missing a param.
 * Fixed Undefined index: post__not_in.
+* Added initial Localization to prep support for multiple languages.
 
 = 0.3.2 =
 * Changed Internal Shortcodes to a Class Object as a Shortcode API.
