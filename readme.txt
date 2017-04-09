@@ -124,6 +124,7 @@ page/post (e.g. [post_list name='some-preset-name'])
 = 0.4.0 =
 * Fixed [post_excerpt] breaking last word.
 * Fixed [post_excerpt length=""] not trimming if post excerpt is found.
+* Fixed [php_function] Undefined Constant with KALIN_ALLOW_PHP when APL_ALLOW_PHP is defined.
 
 = 0.3.4 =
 * Fixed [final_end] not updating output string.

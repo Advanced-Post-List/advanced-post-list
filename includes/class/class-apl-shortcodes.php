@@ -1432,14 +1432,18 @@ class APL_Internal_Shortcodes
         $return_str = '';
         
         //STEP 1
-        if (!defined("KALINS_ALLOW_PHP") && KALINS_ALLOW_PHP !== true || 
-            !defined("APL_ALLOW_PHP") && APL_ALLOW_PHP !== true)
+        if (!defined("KALINS_ALLOW_PHP") && !defined("APL_ALLOW_PHP"))
         {
-            $return_str .= 'Error: add define("APL_ALLOW_PHP", true); to your '.
+            $return_str .= 'Error: Add define("APL_ALLOW_PHP", true); to '.
+                            'wp-config.php for php_function to work.';
+        }
+        else if (APL_ALLOW_PHP !== true || APL_ALLOW_PHP !== true)
+        {
+            $return_str .= 'Error: Change define("APL_ALLOW_PHP", true); in '.
                             'wp-config.php for php_function to work.';
         }
         //STEP 2
-        else if (empty($atts_value['name']))
+        else if (empty($atts_value['name']) && is_admin())
         {
             $return_str .= 'Error: Name shortcode attribute must have a name. '.
                            'For ex. [php_function name="FUNCTION_NAME"]';
