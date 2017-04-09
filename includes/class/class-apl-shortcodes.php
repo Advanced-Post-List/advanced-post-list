@@ -625,26 +625,35 @@ class APL_Internal_Shortcodes
         
         //STEP 1
         $label_type = array(
-            //// Data Object (WP's Standard)
-            'ID'            => 'ID',
-            'user_login'    => 'user_login',
-            'user_name'     => 'user_login',
-            'user_nicename' => 'user_nicename',
-            'display_name'  => 'display_name',
-            'user_email'    => 'user_email',
-            'user_url'      => 'user_url',
-            //TODO ADD data->user_registered for "Member Since: xx-xx-xxxx xx:xx:xx
-            //TODO ADD/FIX user_registered date format
-            
-            //// Back_Compat_Keys Array (Legacy)
-            'description'       => 'user_description',
-            'user_description'  => 'user_description',
-            'user_firstname'    => 'user_firstname',
-            'user_lastname'     => 'user_lastname'
-            
-            //TODO ADD roles (array)
-            //TODO ADD A dynamic method for displaying author data.
-            //TODO ADD Extension Hook
+			//// Data Object (WP's Standard)
+			'ID'            => 'ID',
+			'user_login'    => 'user_login',
+			'user_name'     => 'user_login',
+			//'user_pass'     => 'user_pass',
+			'user_nicename' => 'user_nicename',
+			'display_name'  => 'display_name',
+			'user_email'    => 'user_email',
+			'user_url'      => 'user_url',
+			//'user_registered' => 'user_registered', //Need data format
+			//'user_activation_key' => 'user_activation_key',
+			//'user_status' => 'user_status',
+			//'spam' => 'spam', //(multisite only)
+			//'deleted' => 'deleted',//(multisite only)
+			//TODO ADD data->user_registered for "Member Since: xx-xx-xxxx xx:xx:xx
+			//TODO ADD/FIX user_registered date format
+
+			//// Back_Compat_Keys Array (Legacy)
+			'user_firstname'    => 'user_firstname',
+			'user_lastname'     => 'user_lastname',
+			'description'       => 'user_description',
+			'user_description'  => 'user_description'
+			//'user_level' => 'user_level',
+			//'wp_usersettings' => 'wp_usersettings',
+			//'wp_usersettingstime' => 'wp_usersettingstime',
+
+			//TODO ADD roles (array)
+			//TODO ADD A dynamic method for displaying author data.
+			//TODO ADD Extension Hook
         );
         
         //STEP 2
