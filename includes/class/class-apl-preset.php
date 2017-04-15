@@ -1,241 +1,337 @@
 <?php
+/**
+ * APL Preset Class
+ *
+ * Preset Object used by Preset Db.
+ *
+ * @link https://github.com/EkoJr/advanced-post-list/
+ *
+ * @package WordPress
+ * @subpackage advanced-post-list.php
+ * @since 0.1.0
+ */
 
-class APL_Preset
-{
-    //Varibles
-    //Holds the content that the user can modify
-    //TODO Create a better method for varible types. All varibles are 
-    // recieving string values when used. Nothing bad, just good practice.
-    
-    
-    /**
-     * @var array => string
-     * @since 0.1.0
-     * @version 0.3.0 - changed (string) to (array) => (string)
-     */
-    public $_postParents;
-    
-    /**
-     * @var object
-     * @since 0.3.0
-     */
-    public $_postTax;
-    
-    /**
-     * @var int
-     * @since 0.1.0
-     * @version 0.3.0  - changed (string) to (int)
-     */
-    public $_listCount;
-    
-    /**
-     * @var string
-     * @since 0.1.0
-     */
-    public $_listOrderBy;
-    
-    /**
-     * @var string
-     * @since 0.1.0
-     */
-    public $_listOrder;
-    
-    /**
-     * @var string
-     * @since 0.1.0
-     */
-    public $_postVisibility;
-    
-    /**
-     * @var array
-     * @since 0.3.0
-     * @version 0.3.b5 - Change from (string) to (array) => (string)
-     */
-    public $_postStatus;
-    
-    /**
-     * @var string
-     * @since 0.3.0 
-     */
-    public $_userPerm;
-    
-    /**
-     * @var string
-     * @since 0.3.0 
-     */
-    public $_postAuthorOperator;
-    
-    /**
-     * @var array
-     * @since 0.3.0 
-     */
-    public $_postAuthorIDs;
-    
-    /**
-     * @var boolean
-     * @since 0.3.0 
-     */
-    public $_listIgnoreSticky;
-    
-    /**
-     * @var array
-     * @since 0.3.0 
-     */
-    public $_listExcludePosts;
+/**
+ * APL Preset
+ *
+ * Preset Object that is used by Preset Db to store within the database.
+ *
+ * @since 0.1.0
+ */
+class APL_Preset {
 
-    /**
-     * @var boolean
-     * @since 0.3.0 
-     */
-    public $_listExcludeDuplicates;
-    
-    /**
-     * @var boolean
-     * @since 0.1.0
-     * @version 0.3.0 - changed (string) to (boolean)
-     */
-    public $_listExcludeCurrent; 
-    
-    /**
-     * @var string
-     * @since 0.3.0 
-     */
-    public $_exit;
-    
-    /**
-     * @var string
-     * @since 0.1.0
-     */
-    public $_before;
+	/**
+	 * Filter by Page Parents.
+	 *
+	 * @since 0.1.0
+	 * @access public
+	 * @var string
+	 */
+	public $_postParents;
 
-    /**
-     * @var string
-     * @since 0.1.0
-     */
-    public $_content;
+	/**
+	 * Filter by Post Type and Taxonomy structure.
+	 *
+	 * @since 0.3.0
+	 * @var object
+	 */
+	public $_postTax;
 
-    /**
-     * @var string
-     * @since 0.1.0
-     */
-    public $_after;
-    
-    
-    
-    
+	/**
+	 * Post List Amount.
+	 *
+	 * @since 0.1.0
+	 * @version 0.3.0  - Changed (string) to (int).
+	 * @var int
+	 */
+	public $_listCount;
 
-    public function __construct()
-    {
+	/**
+	 * Order Filter By.
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	public $_listOrderBy;
 
-        $this->_postParents = (array) array();
-        $this->_postTax = (object) new stdClass();
-        
-        $this->_listCount = (int) 5;
-        
-        $this->_listOrderBy = (string)'';
-        $this->_listOrder = (string) '';
-        
-        $this->_postVisibility = (array) array('public');
-        $this->_postStatus = (array) array('publish');//Changed
-        $this->_userPerm = (string) 'readable';//Added
-        $this->_postAuthorOperator = (string) 'none';//Added
-        $this->_postAuthorIDs = (array) array();//Added
-        $this->_listIgnoreSticky = (bool) FALSE;//Added
-        $this->_listExcludeCurrent = (bool) TRUE;
-        $this->_listExcludeDuplicates = (bool) FALSE;//Added
-        $this->_listExcludePosts = array();//Added
-        
-        $this->_exit = (string) '';
-        $this->_before = (string) '';
-        $this->_content = (string) '';
-        $this->_after = (string) '';
-        
-    }
-    
-    public function reset_to_version($version)
-    {
-        foreach ($this as $key => &$value)
-        {
-            $value = null;
-            unset($this->$key);
-        }
-        if (version_compare('0.3.a1', $version, '>'))
-        {
-            $this->reset_to_base();
-        }
-        else if (version_compare('0.3.a1', $version, '<=') && version_compare('0.3.b5', $version, '>'))
-        {
-            $this->reset_to_03a1();
-        }
-        else //if (version_compare('0.3.a1', $oldversion, '>'))
-        {
-            $this->reset_to_03b5();
-        }
-        
-    }
-    
-    private function reset_to_base()
-    {
-        $this->_before = '';
-        $this->_content = '';
-        $this->_after = '';
-        $this->_catsSelected = ''; //All//(int) array
-        $this->_tagsSelected = ''; //All
-        $this->_catsInclude = 'false'; //Boolean Unchecked
-        $this->_tagsInclude = 'false'; //Boolean Unchecked
-        $this->_catsRequired = 'false'; //Boolean Unchecked
-        $this->_tagsRequired = 'false'; //Boolean Unchecked
-        $this->_listOrder = ''; //Desc
-        $this->_listOrderBy = ''; //(string) Type
-        $this->_listAmount = ''; //(int) howmany to display
-        $this->_postType = ''; //(string) post or page
-        $this->_postParent = '';
-        $this->_postExcludeCurrent = 'false'; //Boolean Unchecked
-    }
-    
-    private function reset_to_03a1()
-    {
-        $this->_postParent = (array) array();
-        $this->_postTax = (object) new stdClass();
-        
-        $this->_listAmount = (int) 5;
-        
-        $this->_listOrderBy = (string)'';
-        $this->_listOrder = (string) '';
-        
-        $this->_postStatus = (string) '';
-        
-        $this->_postExcludeCurrent = (bool) true;
-        
-        $this->_before = (string) '';
-        $this->_content = (string) '';
-        $this->_after = (string) '';
-    }
-    private function reset_to_03b5()
-    {
-        $this->_postParents = (array) array();
-        $this->_postTax = (object) new stdClass();
-        
-        $this->_listCount = (int) 5;
-        
-        $this->_listOrderBy = (string)'';
-        $this->_listOrder = (string) '';
-        
-        $this->_postVisibility = (array) array('public');
-        $this->_postStatus = (array) array('publish');//Changed
-        $this->_userPerm = (string) 'readable';//Added
-        $this->_postAuthorOperator = (string) 'none';//Added
-        $this->_postAuthorIDs = (array) array();//Added
-        $this->_listIgnoreSticky = (bool) FALSE;//Added
-        $this->_listExcludeCurrent = (bool) TRUE;
-        $this->_listExcludeDuplicates = (bool) FALSE;//Added
-        $this->_listExcludePosts = array();//Added
-        
-        $this->_exit = (string) '';
-        $this->_before = (string) '';
-        $this->_content = (string) '';
-        $this->_after = (string) '';
-    }
+	/**
+	 * Order Filter Ascending or Descending.
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	public $_listOrder;
+
+	/**
+	 * Filter by Post Visibility.
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	public $_postVisibility;
+
+	/**
+	 * Filter by Post Status.
+	 *
+	 * @since 0.3.0
+	 * @version 0.3.b5 - Change from (string) to (array) => (string).
+	 * @var array
+	 */
+	public $_postStatus;
+
+	/**
+	 * Filter by User Permissions.
+	 *
+	 * @since 0.3.0
+	 * @var string
+	 */
+	public $_userPerm;
+
+	/**
+	 * Operator for Author ID filter.
+	 *
+	 * @since 0.3.0
+	 * @var string
+	 */
+	public $_postAuthorOperator;
+
+	/**
+	 * Filter by Author ID.
+	 *
+	 * @since 0.3.0
+	 * @var array
+	 */
+	public $_postAuthorIDs;
+
+	/**
+	 * Filter Stickies.
+	 *
+	 * @since 0.3.0
+	 * @var boolean
+	 */
+	public $_listIgnoreSticky;
+
+	/**
+	 * Filter Posts.
+	 *
+	 * @since 0.3.0
+	 * @var array
+	 */
+	public $_listExcludePosts;
+
+	/**
+	 * Filter Duplicates.
+	 *
+	 * @since 0.3.0
+	 * @var boolean
+	 */
+	public $_listExcludeDuplicates;
+
+	/**
+	 * Filter Current Post/Page.
+	 *
+	 * @since 0.1.0
+	 * @version 0.3.0 - changed (string) to (boolean).
+	 * @var boolean
+	 */
+	public $_listExcludeCurrent;
+
+	/**
+	 * Design for Exit/Empty message.
+	 *
+	 * @since 0.3.0
+	 * @var string
+	 */
+	public $_exit;
+
+	/**
+	 * Design for Before Content/Loop.
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	public $_before;
+
+	/**
+	 * Design for Content/Loop.
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	public $_content;
+
+	/**
+	 * Design for Content/Loop.
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	public $_after;
+
+	/**
+	 * Constructor.
+	 *
+	 * Object constructor.
+	 *
+	 * @since 0.1.0
+	 * @since 0.3.0 - Changed: Filter for Page Parents, Post Status.
+	 *                Added: Filter for Custom Post Type and Taxonomy support,
+	 *                       User Perms, Author IDs, Author Include/Exclude,
+	 *                       Ignore Sticky Posts, Exclude Duplicates, Exclude Posts.
+	 *                       Design for Empty Message.
+	 *
+	 * @return void
+	 */
+	public function __construct() {
+		$this->_postParents = (array) array();
+		$this->_postTax     = (object) new stdClass();
+
+		$this->_listCount   = (int) 5;
+
+		$this->_listOrderBy = (string) '';
+		$this->_listOrder   = (string) '';
+
+		$this->_postVisibility        = (array) array( 'public' );
+		$this->_postStatus            = (array) array( 'publish' );
+		$this->_userPerm              = (string) 'readable';
+		$this->_postAuthorOperator    = (string) 'none';
+		$this->_postAuthorIDs         = (array) array();
+		$this->_listIgnoreSticky      = (bool) false;
+		$this->_listExcludeCurrent    = (bool) true;
+		$this->_listExcludeDuplicates = (bool) false;
+		$this->_listExcludePosts      = array();
+
+		$this->_exit    = (string) '';
+		$this->_before  = (string) '';
+		$this->_content = (string) '';
+		$this->_after   = (string) '';
+	}
+
+	/**
+	 * Set Preset to Version.
+	 *
+	 * Sets Preset Object to a set version of variables.
+	 *
+	 * @since 0.3.0
+	 *
+	 * @param string $version A previous version number.
+	 * @return void
+	 */
+	public function reset_to_version( $version ) {
+		foreach ( $this as $key => &$value ) {
+			$value = null;
+			unset( $this->$key );
+		}
+		if ( version_compare( '0.3.a1', $version, '>' ) ) {
+			$this->reset_to_base();
+		} elseif ( version_compare( '0.3.a1', $version, '<=' ) && version_compare( '0.3.b5', $version, '>' ) ) {
+			$this->reset_to_03a1();
+		} else {
+			//if (version_compare('0.3.a1', $oldversion, '>'))
+			$this->reset_to_03b5();
+		}
+
+	}
+
+	/**
+	 * Reset to initial/base.
+	 *
+	 * Resets the object to its initial verion values.
+	 *
+	 * @since 0.3.a
+	 * @access private
+	 *
+	 * @return void
+	 */
+	private function reset_to_base() {
+		$this->_before             = '';
+		$this->_content            = '';
+		$this->_after              = '';
+		// array( int ) - All.
+		$this->_catsSelected       = '';
+		// (string) - All.
+		$this->_tagsSelected       = '';
+		// (boolean) - Unchecked.
+		$this->_catsInclude        = 'false';
+		// (boolean) - Unchecked.
+		$this->_tagsInclude        = 'false';
+		// (boolean) - Unchecked.
+		$this->_catsRequired       = 'false';
+		// (boolean) - Unchecked.
+		$this->_tagsRequired       = 'false';
+		// (string) - Desc.
+		$this->_listOrder          = '';
+		// (string) - Type.
+		$this->_listOrderBy        = '';
+		// (int) - Number of Posts.
+		$this->_listAmount         = '';
+		// (string) - Post Type. Example: post or page.
+		$this->_postType           = '';
+
+		$this->_postParent         = '';
+		// (boolean) - Unchecked.
+		$this->_postExcludeCurrent = 'false';
+	}
+
+	/**
+	 * Reset to 0.3.a1.
+	 *
+	 * Sets the object to version 0.3.a1 variables.
+	 *
+	 * @since 0.3.a1
+	 * @access private
+	 *
+	 * @return void
+	 */
+	private function reset_to_03a1() {
+		$this->_postParent         = (array) array();
+		$this->_postTax            = (object) new stdClass();
+
+		$this->_listAmount         = (int) 5;
+
+		$this->_listOrderBy        = (string) '';
+		$this->_listOrder          = (string) '';
+
+		$this->_postStatus         = (string) '';
+
+		$this->_postExcludeCurrent = (bool) true;
+
+		$this->_before             = (string) '';
+		$this->_content            = (string) '';
+		$this->_after              = (string) '';
+	}
+	/**
+	 * Reset to 0.3.a1.
+	 *
+	 * Sets the object to version 0.3.b5 variables.
+	 *
+	 * @since 0.3.b5
+	 * @access private
+	 *
+	 * @return void
+	 */
+	private function reset_to_03b5() {
+		$this->_postParents            = (array) array();
+		$this->_postTax                = (object) new stdClass();
+
+		$this->_listCount              = (int) 5;
+
+		$this->_listOrderBy            = (string) '';
+		$this->_listOrder              = (string) '';
+
+		$this->_postVisibility         = (array) array( 'public' );
+		$this->_postStatus             = (array) array( 'publish' );
+		$this->_userPerm               = (string) 'readable';
+		$this->_postAuthorOperator     = (string) 'none';
+		$this->_postAuthorIDs          = (array) array();
+		$this->_listIgnoreSticky       = (bool) false;
+		$this->_listExcludeCurrent     = (bool) true;
+		$this->_listExcludeDuplicates  = (bool) false;
+		$this->_listExcludePosts       = array();
+
+		$this->_exit                   = (string) '';
+		$this->_before                 = (string) '';
+		$this->_content                = (string) '';
+		$this->_after                  = (string) '';
+	}
 }
-
-?>

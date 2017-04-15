@@ -1,6 +1,6 @@
 <?php
 
-function APL_export()
+function apl_export()
 {
     check_ajax_referer("APL_export");
     $outputFileData = get_option('APL_TMP_export_dataOutput');

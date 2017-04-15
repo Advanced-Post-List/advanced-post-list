@@ -1,10 +1,9 @@
 <?php
-
 /*
   Plugin Name: Advanced Post List
   Plugin URI: http://wordpress.org/plugins/advanced-post-list/
   Description: Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies.
-  Version: 0.4.0 
+  Version: 0.4.0
   Author: EkoJR
   Author URI: http://ekojr.com
   License: GPLv2
@@ -20,7 +19,7 @@
   modify it under the terms of the GNU General Public License
   as published by the Free Software Foundation; either version 2
   of the License, or (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -30,48 +29,35 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-/**
- * @package advanced-post-list
- * @since 0.1.0
- * @version 0.2.0 - Added more require functions for additional pages.
- * @version 0.3.0 - Added APLQuery Class, APLUpdater Class
- * 
- */
-/*****************************************************************************/
-/************************ Compatability Checks *******************************/
-/*****************************************************************************/
-//Check wordpress version and if it exists (called directly)
+
+/******************************************************************************/
+/**** Compatability Checks ****************************************************/
+/******************************************************************************/
+
 global $wp_version;
 
-if ( isset($wp_version) )
-{
-  if (version_compare($wp_version, "2.0.2", "<"))
-  {
-    $exit_msg = "This plugin requires Wordpress 2.0.2 or higher to operate. <a href='http://codex.wordpress.org/Upgrading_WordPress'>Please update!</a>";
-    exit($exit_msg);
-  }
-}
-else
-{
-  $exit_msg = "You are attempting to access this plugin directly.";
-  exit($exit_msg);
-  echo "You are attempting to access this plugin directly.";
+if ( isset( $wp_version ) ) {
+	if ( version_compare( $wp_version, '2.0.2', '<' ) ) {
+		$error_msg = '';
+		$error_msg .= __( 'This plugin requires Wordpress 2.0.2 or higher to operate. ', 'advanced-post-list' );
+		$error_msg .= __( '<a href="http://codex.wordpress.org/Upgrading_WordPress">Please update!</a>', 'advanced-post-list' );
+		wp_die( esc_html( $error_msg ), 'Advanced Post List: Error' );
+	}
+} else {
+	$error_msg = __( 'You are attempting to access this plugin directly.', 'advanced-post-list' );
+	wp_die( esc_html( $error_msg ), 'Advanced Post List: Error' );
 }
 
+/******************************************************************************/
+/**** Core Singleton Class ****************************************************/
+/******************************************************************************/
 
-/*****************************************************************************/
-/************************ Singleton ******************************************/
-/*****************************************************************************/
+require_once( plugin_dir_path( __FILE__ ) . 'includes/class/class-apl-core.php' );
+$advanced_post_list = new APL_Core( __FILE__ );
 
-//Load Handler
-//TODO change to APL_Core->Run
-//  Basically attempt to remove the need for a variable.
-require_once(plugin_dir_path(__FILE__) . 'includes/class/class-apl-core.php');
-$advanced_post_list = new APL_Core(__FILE__);
-
-// A LIST DEBUGGIN METHODS THAT USERS MAY USE OR BE 
-//   REFERRED TO DURING ANY POSSIBLE TROUBLESHOOTING 
-//   ISSUES THAT MAY OCCURE
+// A LIST DEBUGGIN METHODS THAT USERS MAY USE OR BE
+// REFERRED TO DURING ANY POSSIBLE TROUBLESHOOTING
+// ISSUES THAT MAY OCCUR.
 /******************************************************
  *                                       |            *
  *                                       |.===.       *
@@ -84,16 +70,14 @@ $advanced_post_list = new APL_Core(__FILE__);
  * | |___/\___|_.__/\_,_\__, |   |_|\___\___|_/__/  | *
  * |                    |___/                       | *
  * | DESCRIPTIONS                                   | *
- * |   #1 - Var(iable)_Dump
+ * |   #1 - Var(iable)_Dump                         | *
  * |   #2 - Callstack                               | *
  * |________________________________________________| *
  *                                                    *
  ******************************************************/
-//Tool #1
+// Tool #1.
 //var_dump($example_variable);
 //
-//Tool #2
+// Tool #2.
 //$e = new Exception;
 //var_dump($e->getTraceAsString());
-
-?>
