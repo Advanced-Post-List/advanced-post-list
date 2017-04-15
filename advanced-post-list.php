@@ -64,10 +64,10 @@ else
 /*****************************************************************************/
 
 //Load Handler
-//TODO change to APLCore->Run
+//TODO change to APL_Core->Run
 //  Basically attempt to remove the need for a variable.
-require_once(plugin_dir_path(__FILE__) . 'includes/class/APLCore.php');
-$advanced_post_list = new APLCore(__FILE__);
+require_once(plugin_dir_path(__FILE__) . 'includes/class/class-apl-core.php');
+$advanced_post_list = new APL_Core(__FILE__);
 
 // A LIST DEBUGGIN METHODS THAT USERS MAY USE OR BE 
 //   REFERRED TO DURING ANY POSSIBLE TROUBLESHOOTING 

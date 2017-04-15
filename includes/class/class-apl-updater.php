@@ -1,6 +1,6 @@
 <?php
 
-class APLUpdater
+class APL_Updater
 {
 
     public $options;
@@ -16,7 +16,7 @@ class APLUpdater
         }
         //INIT
         $this->options = array();
-        $this->presetDbObj = new APLPresetDbObj();
+        $this->presetDbObj = new APL_Preset_Db();
         
         //FILL IN VARIABLES
         if (!empty($APLOptions))
@@ -70,11 +70,11 @@ class APLUpdater
     {
         $tmp_preset_array = json_decode($this->presetDbObj['preset_arr']);
         
-        $this->presetDbObj = new APLPresetDbObj();
+        $this->presetDbObj = new APL_Preset_Db();
         
         foreach ($tmp_preset_array as $key => $value)
         {
-            $this->presetDbObj->_preset_db->$key = new APLPresetObj();
+            $this->presetDbObj->_preset_db->$key = new APL_Preset();
             $this->presetDbObj->_preset_db->$key->reset_to_version('0.1.0');
             
             $this->presetDbObj->_preset_db->$key = $this->APL_convert_preset_kalin_to_base($value);
@@ -82,7 +82,7 @@ class APLUpdater
     }
     private function APL_convert_preset_kalin_to_base($old_presetObj)
     {
-        $rtnPresetObj = new APLPresetObj();
+        $rtnPresetObj = new APL_Preset();
         $rtnPresetObj->reset_to_version('0.1.0');
         
         $rtnPresetObj->_catsSelected            = $old_presetObj->categories;
@@ -151,7 +151,7 @@ class APLUpdater
     private function APL_upgrade_presetDbObj_base_to_03a1($old_presetObj)
     {
         
-        $rtnPresetDbObj = new APLPresetDbObj();
+        $rtnPresetDbObj = new APL_Preset_Db();
         $rtnPresetDbObj->reset_to_version('0.3.a1');
         
         foreach ($rtnPresetDbObj as $key1 => $value1)
@@ -175,7 +175,7 @@ class APLUpdater
     private function APL_upgrade_preset_base_to_03a1($old_presetObj)
     {
         
-        $rtnPresetObj = new APLPresetObj();
+        $rtnPresetObj = new APL_Preset();
         $rtnPresetObj->reset_to_version('0.3.a1');
         
         // Step 4
@@ -306,7 +306,7 @@ class APLUpdater
     private function APL_upgrade_presetDbObj_03a1_to_03b5($old_presetObj)
     {
         
-        $rtnPresetDbObj = new APLPresetDbObj();
+        $rtnPresetDbObj = new APL_Preset_Db();
         $rtnPresetDbObj->reset_to_version('0.3.b5');
         
         foreach ($rtnPresetDbObj as $key1 => $value1)
@@ -330,7 +330,7 @@ class APLUpdater
     private function APL_upgrade_preset_03a1_to_03b5($old_presetObj)
     {
         
-        $rtnPresetObj = new APLPresetObj();
+        $rtnPresetObj = new APL_Preset();
         $rtnPresetObj->reset_to_version('0.3.b5');
 
         // Step 4

@@ -1,6 +1,6 @@
 <?php
 //// REFERENCE/CODEX - http://codex.wordpress.org/Widgets_API
-class APLWidget extends WP_Widget
+class APL_Widget extends WP_Widget
 {
 
     function __construct()
@@ -29,7 +29,7 @@ class APLWidget extends WP_Widget
 
     function form($instance)
     {
-        $APLPresetDbObj = new APLPresetDbObj('default');
+        $APLPresetDbObj = new APL_Preset_Db('default');
 
         echo '<div>';
         echo '<label for="' . $this->get_field_id("title") . '">Title:</label>';

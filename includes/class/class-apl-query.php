@@ -25,7 +25,7 @@
  * @version 0.3.b8 Fixed using too many nested code. Complete overhaul.
  * 
  */
-class APLQuery
+class APL_Query
 {
     /**
      * @var array

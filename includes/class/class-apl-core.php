@@ -7,12 +7,12 @@
 /**
  * <p><b>Desc:</b> Contains all the main operations/methods for Advanced
  *                 Post List plugin.</p>
- * @package APLCore
+ * @package APL_Core
  * @since 0.1.0
  * @version 0.2.0
  * @version 0.3.0
  */
-class APLCore
+class APL_Core
 {
     //Varibles
     //???MIGHT WANT TO ADD VERSION TO OPTIONS DB
@@ -158,27 +158,27 @@ class APLCore
 
         //////// ACTION & FILTERS HOOKS ////////
         //STEP 3
-        add_action('widgets_init', array($this, 'APL_handler_widget_init'));
+        add_action('widgets_init', array($this, 'hook_action_widget_init'));
         //STEP 4
         add_shortcode('post_list',
-                      array($this, 'APL_handler_shortcode'));
+                      array($this, 'hook_shortcode_post_list'));
         //STEP 5
         if (is_admin())
         {
             //STEP 6
             add_action('admin_menu',
-                       array($this, 'APL_handler_admin_menu'));
+                       array($this, 'hook_action_admin_menu'));
             //STEP 7
             add_action('admin_init',
-                       array($this, 'APL_handler_admin_init'));
+                       array($this, 'hook_action_admin_init'));
             ////// ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS //////
 
             register_activation_hook($this->plugin_file_path,
-                                     array('APLCore', 'APL_handler_activation'));
+                                     array('APL_Core', 'APL_handler_activation'));
             register_deactivation_hook($this->plugin_file_path,
-                                       array('APLCore', 'APL_handler_deactivation'));
+                                       array('APL_Core', 'APL_handler_deactivation'));
             register_uninstall_hook($this->plugin_file_path,
-                                    array('APLCore', 'APL_handler_uninstall'));
+                                    array('APL_Core', 'APL_handler_uninstall'));
         }
     }
     private function define_constants($plugin_file)
@@ -213,19 +213,23 @@ class APLCore
     }
     private function requires()
     {
-        require_once(APL_DIR . 'includes/class/APLPresetDbObj.php');
-        require_once(APL_DIR . 'includes/class/APLPresetObj.php');
-        require_once(APL_DIR . 'includes/class/APLWidget.php');
-        require_once(APL_DIR . 'includes/class/APLQuery.php');
-        require_once(APL_DIR . 'includes/class/APLUpdater.php');
-        require_once(APL_DIR . 'includes/import.php');
-        require_once(APL_DIR . 'includes/export.php');
+        require_once(APL_DIR . 'includes/class/class-apl-preset-db.php');
+        require_once(APL_DIR . 'includes/class/class-apl-preset.php');
+        require_once(APL_DIR . 'includes/class/class-apl-widget.php');
+        require_once(APL_DIR . 'includes/class/class-apl-query.php');
+        require_once(APL_DIR . 'includes/class/class-apl-updater.php');
+		//OLD - Remove between 0.4 - 0.6
+		require_once(APL_DIR . 'includes/class/old-APLPresetDbObj.php');
+        require_once(APL_DIR . 'includes/class/old-APLPresetObj.php');
+		//TODO Move to Admin only function/method.
+        require_once(APL_DIR . 'admin/import.php');
+        require_once(APL_DIR . 'admin/export.php');
     }
     private function APL_updater($APLOptions)
     {
         
-        $APLPresetDbObj = new APLPresetDbObj('default');
-        $updater = new APLUpdater($APLOptions['version'], $APLPresetDbObj, $APLOptions);
+        $APLPresetDbObj = new APL_Preset_Db('default');
+        $updater = new APL_Updater($APLOptions['version'], $APLPresetDbObj, $APLOptions);
         //IN THIS CASE, BOTH MUST HAVE VALUES FILLED
         if ($updater->options === NULL || $updater->presetDbObj === NULL)
         {
@@ -288,8 +292,8 @@ class APLCore
      *                  in seperate files properly. Also added a theme setting
      *                  to be loaded.
      * 
-     * @uses APLCore::APL_options_load()
-     * @uses APLCore::APL_options_save($APLOptions)
+     * @uses APL_Core::APL_options_load()
+     * @uses APL_Core::APL_options_save($APLOptions)
      * 
      * @tutorial 
      * <ol>
@@ -300,7 +304,7 @@ class APLCore
      * <li value="5">Register styles</li>
      * </ol>
      */
-    public function APL_handler_admin_init()
+    public function hook_action_admin_init()
     {
         //STEP 1
         /* ************************************************************ *
@@ -329,14 +333,16 @@ class APLCore
         /* ************************************************************ *
          * ************** REMOVE SCRIPTS & STYLES ********************* * 
          * ************************************************************ */
-        //wp_deregister_script('apl-jquery');
-        wp_deregister_script('apl-admin');
-        //wp_deregister_script('apl-jquery-ui');
-        wp_deregister_script('apl-admin-ui');
-        wp_deregister_script('apl-jquery-ui-multiselect');
+
+        wp_deregister_script('apl-admin-js');
+        wp_deregister_script('apl-admin-ui-js');
+        wp_deregister_script('apl-jquery-ui-multiselect-js');
 
         wp_deregister_style('apl-admin-css');
         wp_deregister_style('apl-admin-ui-css');
+		wp_deregister_style('apl-jquery-ui-multiselect');
+		wp_deregister_style('apl-jquery-ui-multiselect-css');
+		wp_deregister_style('apl-jquery-ui-multiselect-filter-css');
 
 
         // Step 3
@@ -351,43 +357,31 @@ class APLCore
         /* ************************************************************ *
          * ************** REGISTER SCRIPTS **************************** * 
          * ************************************************************ */
-//        $script_deps = array();
-//        wp_register_script('apl-jquery',
-//                           'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js',
-//                           $script_deps,
-//                           APL_VERSION,
-//                           false);
+
         $script_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-dialog');
-        wp_register_script('apl-admin',
-                           plugins_url() . '/advanced-post-list/includes/js/APL-admin.js',
+        wp_register_script('apl-admin-js',
+                           plugins_url() . '/advanced-post-list/admin/js/admin.js',
                            $script_deps,
                            APL_VERSION,
                            false);
-
-//        $script_deps = array('apl-jquery');
-//        wp_register_script('apl-jquery-ui',
-//                           'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js',
-//                           $script_deps,
-//                           APL_VERSION,
-//                           false);
 
         $script_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-accordion', 'jquery-ui-button','jquery-ui-dialog', 'jquery-ui-tabs');
-        wp_register_script('apl-admin-ui',
-                           plugins_url() . '/advanced-post-list/includes/js/APL-admin_ui.js',
+        wp_register_script('apl-admin-ui-js',
+                           plugins_url() . '/advanced-post-list/admin/js/admin-ui.js',
                            $script_deps,
                            APL_VERSION,
                            false);
-        
-        
+
         $script_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-widget');
-        wp_register_script('apl-jquery-ui-multiselect',
-                           plugins_url() . '/advanced-post-list/includes/js/jquery.multiselect.min.js',
+        wp_register_script('apl-jquery-ui-multiselect-js',
+                           plugins_url() . '/advanced-post-list/admin/js/jquery.multiselect.min.js',
                            $script_deps,
                            APL_VERSION,
                            false);
+
         $script_deps = array('jquery', 'jquery-ui-core', 'jquery-ui-widget');
-        wp_register_script('apl-jquery-ui-multiselect-filter',
-                           plugins_url() . '/advanced-post-list/includes/js/jquery.multiselect.filter.min.js',
+        wp_register_script('apl-jquery-ui-multiselect-filter-js',
+                           plugins_url() . '/advanced-post-list/admin/js/jquery.multiselect.filter.min.js',
                            $script_deps,
                            APL_VERSION,
                            false);
@@ -397,7 +391,7 @@ class APLCore
          * ************** REGISTER STYLES ***************************** * 
          * ************************************************************ */
         wp_enqueue_style('apl-admin-css',
-                         plugins_url() . '/advanced-post-list/includes/css/APL-admin.css',
+                         plugins_url() . '/advanced-post-list/admin/css/admin.css',
                          false,
                          APL_VERSION,
                          false);
@@ -409,8 +403,12 @@ class APLCore
                          false);
 
         wp_enqueue_style('apl-jquery-ui-multiselect-css',
-                         //plugins_url() . '/advanced-post-list/includes/css/jquery-ui-multiselect-widget.css',
-                         plugins_url() . '/advanced-post-list/includes/css/jquery.multiselect.css',
+                         plugins_url() . '/advanced-post-list/admin/css/jquery.multiselect.css',
+                         false,
+                         APL_VERSION,
+                         false);
+		wp_enqueue_style('apl-jquery-ui-multiselect-filter-css',
+                         plugins_url() . '/advanced-post-list/admin/css/jquery.multiselect.filter.css',
                          false,
                          APL_VERSION,
                          false);
@@ -424,8 +422,8 @@ class APLCore
      * @since 0.1.0
      * @version versionstring [unspecified format]
      * 
-     * @uses APLCore::APL_options_load()
-     * @uses APLCore::APL_install()
+     * @uses APL_Core::APL_options_load()
+     * @uses APL_Core::APL_install()
      * 
      * @tutorial 
      * <ol>
@@ -480,7 +478,7 @@ class APLCore
      * @version 0.2.0 - Added delete_option('APL_preset_db-default')
      *                  for deleting preset database data.
      * 
-     * @uses APLCore::APL_options_load()
+     * @uses APL_Core::APL_options_load()
      * 
      * @tutorial 
      * <ol>
@@ -561,7 +559,7 @@ class APLCore
      * 
      * @since 0.1.0
      * 
-     * @uses APLCore::_APL_OPTION_NAME
+     * @uses APL_Core::_APL_OPTION_NAME
      * 
      * @tutorial 
      * <ol>
@@ -628,11 +626,11 @@ class APLCore
      * <li value="1">Register widget.</li>
      * </ol>
      */
-    public function APL_handler_widget_init()
+    public function hook_action_widget_init()
     {
         //$widget = new APLWidget();
         //register_widget($widget);
-        register_widget('APLWidget');
+        register_widget('APL_Widget');
     }
 
     /**
@@ -648,7 +646,7 @@ class APLCore
      * <li value="2">Add action scripts to that menu page.</li>
      * </ol>
      */
-    public function APL_handler_admin_menu()
+    public function hook_action_admin_menu()
     {
         //STEP 1
         $APL_admin_page_hook = add_submenu_page('options-general.php',
@@ -672,9 +670,9 @@ class APLCore
      * @since 0.1.0
      * @version 0.3.0 - Added funtions to queue scripts and styles on WordPress
      * 
-     * @uses APLCore::APL_get_postTax()
-     * @uses APLCore::APL_get_taxonomy_terms()
-     * @uses APLCore::APL_get_postTax_ui_parent_selection()
+     * @uses APL_Core::APL_get_postTax()
+     * @uses APL_Core::APL_get_taxonomy_terms()
+     * @uses APL_Core::APL_get_postTax_ui_parent_selection()
      * 
      * @tutorial 
      * <ol>
@@ -693,20 +691,22 @@ class APLCore
     {
         // Step 1
         //////// ADD SCRIPTS TO QUEUE LIST ////////
-        wp_enqueue_script('apl-admin');
-        wp_enqueue_script('apl-admin-ui');
-        wp_enqueue_script('apl-jquery-ui-multiselect');
-        wp_enqueue_script('apl-jquery-ui-multiselect-filter');
+        wp_enqueue_script('apl-admin-js');
+        wp_enqueue_script('apl-admin-ui-js');
+        wp_enqueue_script('apl-jquery-ui-multiselect-js');
+        wp_enqueue_script('apl-jquery-ui-multiselect-filter-js');
 
         // Step 2
         //////// ADD STYLES TO QUEUE LIST ////////
-        wp_enqueue_style('apl-jquery-ui-multiselect-css');
+        
         wp_enqueue_style('apl-admin-css');
         wp_enqueue_style('apl-admin-ui-css');
+		wp_enqueue_style('apl-jquery-ui-multiselect-css');
+		wp_enqueue_style('apl-jquery-ui-multiselect-filter-css');
 
         // Step 3
         //////// GET AND STORE PLUGIN DATA ////////
-        $presetDbObj = new APLPresetDbObj('default');
+        $presetDbObj = new APL_Preset_Db('default');
         // Step 4
         $postTax = $this->APL_get_post_types(array('taxonomies'));
         // Step 5
@@ -739,10 +739,10 @@ class APLCore
 
         // Step 8
         //////// SEND PLUGIN DATA TO SCRIPTS ////////
-        wp_localize_script('apl-admin',
+        wp_localize_script('apl-admin-js',
                            'apl_admin_settings',
                            $apl_admin_settings);
-        wp_localize_script('apl-admin-ui',
+        wp_localize_script('apl-admin-ui-js',
                            'apl_admin_ui_settings',
                            $apl_admin_ui_settings);
     }
@@ -905,13 +905,13 @@ class APLCore
                                     $taxonomies_attr = json_decode($attr_name_dereference);
                                 }
 
-                                $rtnObj[$post_type_name]->$attr_name = APLCore::APL_get_taxonomies($post_type_name,
+                                $rtnObj[$post_type_name]->$attr_name = APL_Core::APL_get_taxonomies($post_type_name,
                                                                                                  $taxonomies_attr);
                                 unset($attr_name_dereference);
                             }
                             else
                             {
-                                $rtnObj[$post_type_name]->$attr_name = APLCore::APL_get_taxonomies($post_type_name,
+                                $rtnObj[$post_type_name]->$attr_name = APL_Core::APL_get_taxonomies($post_type_name,
                                                                                                  '');
                             }
                             break;
@@ -1179,7 +1179,7 @@ class APLCore
         );
         if (empty($taxonomy_name))
         {
-            $taxonomy_name = APLCore::APL_get_taxonomies();
+            $taxonomy_name = APL_Core::APL_get_taxonomies();
         }
         if (!empty($args))
         {
@@ -1378,7 +1378,7 @@ class APLCore
     public function APL_admin_page()
     {
         // Step 1
-        require_once( $this->plugin_dir_path . 'includes/APL-admin.php');
+        require_once( $this->plugin_dir_path . 'admin/admin.php');
     }
     
     /**
@@ -1408,7 +1408,7 @@ class APLCore
         // Step 3
         $rtnData->filename = $_POST['filename'];
         
-        $presetDbObj = new APLPresetDbObj('default');
+        $presetDbObj = new APL_Preset_Db('default');
         $TMP_export_dataOutput = new stdClass();
         $TMP_export_dataOutput->version = APL_VERSION;
         if ($_POST['export_type'] === 'database')
@@ -1469,7 +1469,7 @@ class APLCore
         $rtnData->_preset_db = new stdClass();
         $rtnData->overwrite_preset_db = new stdClass();
 
-        $TMPpresetDbObj = new APLPresetDbObj();
+        $TMPpresetDbObj = new APL_Preset_Db();
 
         if ($_POST['import_type'] == 'kalin')
         {
@@ -1545,7 +1545,7 @@ class APLCore
 
 
         //LOAD PLUGIN PRESETS
-        $presetDbObj = new APLPresetDbObj('default');
+        $presetDbObj = new APL_Preset_Db('default');
         $overwrite_preset_db = new stdClass();
         //COMPARE PLUGIN DB WITH UPLOAD DATA
         foreach ($TMPpresetDbObj->_preset_db as $tmp_preset_name => $tmp_preset_value)
@@ -1588,8 +1588,8 @@ class APLCore
      * @since 0.2.0
      * @version 0.3.0 - Added JQuery UI Theme setting.
      * 
-     * @uses APLCore::APL_options_load()
-     * @uses APLCore::APL_options_save($APLOptions)
+     * @uses APL_Core::APL_options_load()
+     * @uses APL_Core::APL_options_save($APLOptions)
      * 
      * @tutorial 
      * <ol>
@@ -1657,8 +1657,8 @@ class APLCore
      *                  get other pages from multiple hierarchical post types.
      *                  Along with the Post Status setting.
      * 
-     * @uses APLCore::APL_run()
-     * @uses APLPresetDbObj::options_save_db()
+     * @uses APL_Core::APL_run()
+     * @uses APL_Preset_Db::options_save_db()
      * 
      * @tutorial 
      * <ol>
@@ -1686,7 +1686,7 @@ class APLCore
         check_ajax_referer("APL_handler_save_preset");
 
         //DEFAULT USE
-        $presetDbObj = new APLPresetDbObj('default');
+        $presetDbObj = new APL_Preset_Db('default');
         //MULTI PRESET OPTIONS
         /*
           foreach ($APLOptions['preset_db_names'] as $key => $value)
@@ -1698,7 +1698,7 @@ class APLCore
         // Step 2
         $preset_name = stripslashes($_POST['presetName']);
 
-        $presetObj = new APLPresetObj();
+        $presetObj = new APL_Preset();
 
         // Step 3
         $presetObj->_postParents = json_decode(stripslashes($_POST['postParents']));
@@ -1802,7 +1802,7 @@ class APLCore
      * 
      * @since 0.1.0
      * 
-     * @uses APLPresetDbObj::options_save_db()
+     * @uses APL_Preset_Db::options_save_db()
      * 
      * @tutorial 
      * <ol>
@@ -1819,7 +1819,7 @@ class APLCore
         //Step 1
         check_ajax_referer("APL_handler_delete_preset");
         //Step 2
-        $presetDbObj = new APLPresetDbObj('default');
+        $presetDbObj = new APL_Preset_Db('default');
         //Step 3
         $preset_name = stripslashes($_POST['preset_name']);
         //Step 4
@@ -1837,8 +1837,8 @@ class APLCore
      * 
      * @since 0.1.0
      * 
-     * @uses APLPresetDbObj::set_to_defaults()
-     * @uses APLPresetDbObj::options_save_db()
+     * @uses APL_Preset_Db::set_to_defaults()
+     * @uses APL_Preset_Db::options_save_db()
      * 
      * @tutorial 
      *  <ol>
@@ -1855,8 +1855,8 @@ class APLCore
         //STEP 1
         check_ajax_referer("APL_handler_restore_preset");
         //STEP 2
-        $presetDbObj = new APLPresetDbObj('default');
-        $tmpDbObj = new APLPresetDbObj('default');
+        $presetDbObj = new APL_Preset_Db('default');
+        $tmpDbObj = new APL_Preset_Db('default');
         //STEP 3
         $tmpDbObj->set_to_defaults();
         //STEP 4
@@ -1879,7 +1879,7 @@ class APLCore
      * 
      * @since 0.1.0
      * 
-     * @uses APLCore::APL_disply()
+     * @uses APL_Core::APL_disply()
      * 
      * @tutorial 
      * <ol>
@@ -1888,7 +1888,7 @@ class APLCore
      * <li value="3">otherwise <i>return an empty string</i></li>
      * </ol>
      */
-    public function APL_handler_shortcode($att)
+    public function hook_shortcode_post_list($att)
     {
         //STEP 1
         if (isset($att['name']))
@@ -1924,7 +1924,7 @@ class APLCore
      * 
      * @since 0.1.0
      * 
-     * @uses APLCore::APL_run()
+     * @uses APL_Core::APL_run()
      * 
      * @tutorial 
      * <ol>
@@ -1934,7 +1934,7 @@ class APLCore
     public function APL_display($preset_name)
     {
         //TEST
-        require_once(APL_DIR . 'includes/class/apl-shortcodes.php');
+        require_once(APL_DIR . 'includes/class/class-apl-shortcodes.php');
         
         //\TEST
         
@@ -1991,10 +1991,10 @@ class APLCore
         
         //STEP 1 - Get the preset object, and if empty, display a message
         //         to the admin.
-        $preset_db_obj = new APLPresetDbObj('default');
+        $preset_db_obj = new APL_Preset_Db('default');
         if (isset($preset_db_obj->_preset_db->$preset_name))
         {
-            $presetObj = new APLPresetObj();
+            $presetObj = new APL_Preset();
             $presetObj = $preset_db_obj->_preset_db->$preset_name;
         }
         else if (current_user_can('manage_options'))
@@ -2025,7 +2025,7 @@ class APLCore
         // multiple query strings according to APL. The class will still need to use a
         // public function to return a WP_Query class; until 'inheritance' becomes
         // more of a possibility.
-        $APLQuery = new APLQuery($presetObj);
+        $APLQuery = new APL_Query($presetObj);
         
         //STEP 4 - Query the posts to retrieve the final WP_Query class.
         $wp_query_class = $APLQuery->query_wp($APLQuery->_query_str_array);
@@ -2044,7 +2044,7 @@ class APLCore
             //// Content ///////////////////////////////////////////////////////
             $count = 0;
             
-            $internal_shortcodes = new APL_InternalShortcodes();
+            $internal_shortcodes = new APL_Internal_Shortcodes();
             
             while ( $wp_query_class->have_posts() ) 
             {
@@ -2098,7 +2098,7 @@ class APLCore
      * 
      * @since 0.3.0
      * 
-     * @uses APLCore::APL_get_post_type_taxonomies($post_type_name)
+     * @uses APL_Core::APL_get_post_type_taxonomies($post_type_name)
      * 
      * @tutorial 
      * <ol>

@@ -3,17 +3,17 @@
 // APLCore Class uses this file in method APL_admin_head, if any other
 //  method, function, or file uses this php file. Then it will exit this file.
 //
-if (!method_exists('APLCore', 'APL_admin_head'))
+if (!method_exists('APL_Core', 'APL_admin_head'))
 {
     echo "Hi there!  I'm just a plugin, not much I can do when called directly.";
     exit;
 }
 //
 ////////////////////////////////////////////////////////////////////////////////
-wp_enqueue_script('jquery-ui-dialog');
+wp_enqueue_script('jquery-ui-dialog-js');
 
 //Places the (hidden) dialog content within the page.
-require_once APL_DIR . 'includes/APL-admin_dialogs.php';
+require_once APL_DIR . 'admin/admin-dialogs.php';
 //For setting certain parts of the HTML coding that aren't within the 
 // php functions
 $adminOptions = $this->APL_options_load();

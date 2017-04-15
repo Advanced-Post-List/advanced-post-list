@@ -60,7 +60,7 @@ class APL_Shortcodes
  *
  * @since 0.4.0
  */
-class APL_InternalShortcodes
+class APL_Internal_Shortcodes
 {
     
     /**
