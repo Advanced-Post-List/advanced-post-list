@@ -352,36 +352,65 @@ class APL_Internal_Shortcodes
         return $return_str;
     }
     
-    //FIX Characters not showing correctly in Chinese
-    //TODO Create compatability with UNICODE
-    /**
-     * Post Title Shortcode. 
-     * 
-     * Desc: Adds the post/page title.
-     * 
-     * 1. Add to return Post Post_Title.  
-     * 2. Return string. 
-     * 
-     * @since 0.1.0
-     * @version 0.4.0 - Changed to Class function, and uses WP's built-in
-     *                  functions for setting default attributes & do_shortcode().
-     * 
-     * @param array $atts
-     * @return string Post->post_title.
-     */
-    public function post_title($atts)
-    {
-        //INIT
-        $atts_value = shortcode_atts( array() , $atts, 'post_title');
-        $return_str = '';
-        
-        //STEP 1
-        $return_str .= htmlspecialchars($this->_post->post_title);
-        
-        //STEP 2
-        return $return_str;
-    }
-    
+	//FIX Characters not showing correctly in Chinese
+	//TODO Create compatability with UNICODE
+	/**
+	 * Post Title Shortcode.
+	 * 
+	 * Desc: Adds the post/page title.
+	 *
+	 * 1. Set Length attr to valid int value.
+	 * 2. Add Title is shorter than length, otherwise trim to Length.
+	 * 3. Convert special characters to HTML entities.
+	 * 4. Return string.
+	 *
+	 * @since 0.1.0
+	 * @version 0.4.0 - Changed to Class function, and WP's Shortcode API.
+	 *					Added attr 'length'.
+	 *
+	 * @param array $atts
+	 * @return string Post->post_title.
+	 */
+	public function post_title( $atts )
+	{
+		//INIT
+		$atts_value = shortcode_atts( array(
+			'length' => '250',
+		) , $atts, 'post_title' );
+
+		//STEP 1
+		if ( is_numeric( $atts_value['length'] ) )
+		{
+			$atts_value['length'] = intval( $atts_value['length'] );
+		}
+		else
+		{
+			$atts_value['length'] = 250;
+		}
+
+		//STEP 2
+		$title_tmp = '';
+		if ( strlen( $this->_post->post_title ) <= $atts_value['length'] )
+		{
+			$title_tmp .= $this->_post->post_title;
+		}
+		else
+		{
+			$title_tmp .= substr( $this->_post->post_title, 0, $atts_value['length'] );
+			if ( ' ' !== substr( $title_tmp, -1, 1 ) )  
+			{
+				$title_tmp = substr( $title_tmp, 0, strrpos( $title_tmp, " " ) );
+			}
+		}
+
+		//STEP 3
+		$return_str = '';
+		$return_str = htmlspecialchars( $title_tmp );
+
+		//STEP 4
+		return $return_str;
+	}
+	
     //TODO ADD [post_link] (Alias)
     /**
      * Post Permalink (URL) Shortcode. 
