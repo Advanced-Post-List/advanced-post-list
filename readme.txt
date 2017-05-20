@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
 Requires at least: 2.0.2
 Tested up to: 4.7
-Stable tag: 0.4.0
+Stable tag: 0.3.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -122,7 +122,7 @@ page/post (e.g. [post_list name='some-preset-name'])
 
 == Changelog ==
 
-= 0.4.0 =
+= 0.3.5 =
 * Fixed [post_excerpt] breaking last word.
 * Fixed [post_excerpt length=""] not trimming if post excerpt is found.
 * Fixed [php_function] Undefined Constant with KALIN_ALLOW_PHP when APL_ALLOW_PHP is defined.
@@ -294,6 +294,11 @@ page/post (e.g. [post_list name='some-preset-name'])
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.3.5 =
+Stable Release. Changed File Structure which may cause a PHP object error
+( Please report PHP errors ). If upgrading from 0.2, make sure to back
+up the plugin data and website.
 
 = 0.3.4 =
 Stable Release. If upgrading from 0.2, make sure to back up the plugin data
