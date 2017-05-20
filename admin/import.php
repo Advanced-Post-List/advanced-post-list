@@ -1,6 +1,6 @@
 <?php
 
-function APL_import()
+function apl_import()
 {
     check_ajax_referer("APL_import");
     

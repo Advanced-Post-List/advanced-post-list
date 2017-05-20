@@ -29,8 +29,8 @@ jQuery(document).ready(function($){
     {
         //$('#presetPHP').html('PHP code: <code>if(function_exists("kalinsPost_show"){kalinsPost_show("' + data.preset_name + '");}</code>');
       
-        //$('#presetPHP').html('PHP code: <code><<b>?php</b> if(function_exists("APL_display")){APL_display("' + preset_name + '");} <b>?</b>></code>');
-        $('#presetPHP').html('PHP code: <code><<b>?php</b> if (method_exists($advanced_post_list, "APL_display")){echo $advanced_post_list->APL_display("' + preset_name + '");} <b>?</b>></code>');
+        //$('#presetPHP').html('PHP code: <code><<b>?php</b> if(function_exists("display_post_list")){display_post_list("' + preset_name + '");} <b>?</b>></code>');
+        $('#presetPHP').html('PHP code: <code><<b>?php</b> if (method_exists($advanced_post_list, "display_post_list")){echo $advanced_post_list->display_post_list("' + preset_name + '");} <b>?</b>></code>');
     }
     //build the file table - we build it all in javascript so we can 
     // simply rebuild it whenever an entry is added through ajax
