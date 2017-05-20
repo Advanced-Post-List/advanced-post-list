@@ -21,70 +21,71 @@ as well as highly configurable and extensive.
 [github wiki]: https://github.com/EkoJr/wp-advanced-post-list/wiki
 		"Contribute or Learn about APL"
 
-Highly customizable plugin for designing a large variety of post lists. Allowing 
-the Webmaster to create any design for displaying Recent Posts, Related Posts, 
-Future Posts, etc., and easily positioning it with a shortcode inside a Page or Post. 
-All that is required is you know HTML, but the plugin can also use CSS, 
+Highly customizable plugin for designing a large variety of post lists. Allowing
+the Webmaster to create any design for displaying Recent Posts, Related Posts,
+Future Posts, etc., and easily positioning it with a shortcode inside a Page or Post.
+All that is required is you know HTML, but the plugin can also use CSS,
 JavaScript, and PHP.
 
-Version 0.3 post query was switch to WP_Query to take advantage of the Custom Post 
-Types and Taxonomies featured within WordPress, and also has additional filter settings 
+Version 0.3 post query was switch to WP_Query to take advantage of the Custom Post
+Types and Taxonomies featured within WordPress, and also has additional filter settings
 added to further reach alternate methods of displaying posts.
 
 APL's Documentation/Wiki is located on [GitHub Wiki][github wiki].
 
-Discovered a bug or an enhancement? Please submit thread/ticket at 
+Discovered a bug or an enhancement? Please submit thread/ticket at
 [WordPress][wordpress forum] or [GitHub Issue Tickets][github issues].
 
-When designing site with better navigation. This plugin accomplishes 3 main 
+When designing site with better navigation. This plugin accomplishes 3 main
 tasks when displaying the site’s content through various lists.
 
 **Content of the post list**
 
-* **Custom Post Type and Taxonomy Support** – New addition adds the ability to 
-add even more posts and/or pages to your lists. Display any page from any 
-post type and has even more filter options with any additional taxonomies that 
+* **Custom Post Type and Taxonomy Support** – New addition adds the ability to
+add even more posts and/or pages to your lists. Display any page from any
+post type and has even more filter options with any additional taxonomies that
 have been added.
-* **Add/Require Any Number of Terms** – Create diverse post lists through any 
-configuration of terms within different taxonomies, and show any posts/pages 
-that has one related term, but if needed, post lists can be required to have 
+* **Add/Require Any Number of Terms** – Create diverse post lists through any
+configuration of terms within different taxonomies, and show any posts/pages
+that has one related term, but if needed, post lists can be required to have
 all terms selected.
-* **Show Page Children** – Once only able to display one page’s children pages 
-from one hierarchical post type (WP built-in Pages). This plugin can now display 
-multitude of children pages from multiple pages from multiple hierarchical 
-post types. Making it easy to display sub-pages
-* **Dynamically Add Terms and Page Parent** – Sometimes pages are expected to 
-change, and some area’s like the header, footer, and any sidebars are expected 
-to change. So it’s just plain simple and nice to have one configuration that 
+* **Show Page Children** – Once only able to display one page’s children pages
+from one hierarchical post type (WP built-in Pages). This plugin can now display
+multitude of children pages from multiple pages from multiple hierarchical
+post types. Making it easy to display sub-pages.
+* **Dynamically Add Terms and Page Parent** – Sometimes pages are expected to
+change, and some area’s like the header, footer, and any sidebars are expected
+to change. So it’s just plain simple and nice to have one configuration that
 changes according to the visitor’s/user’s current page/post.
-* **Show Content from Private, Future, Published, and More** – A new addition 
-added to show posts/page from not only publicly published posts/pages, but from 
-any status. Opening up the ability for creating private sections on a website 
+* **Show Content from Private, Future, Published, and More** – A new addition
+added to show posts/page from not only publicly published posts/pages, but from
+any status. Opening up the ability for creating private sections on a website
 for users.
 
 **Style of the post list**
 
-* **Customizable Loop** – Any plugin of this design has to have a loop of some 
-kind to list the posts and/or pages. Most have their own style of design, but 
+* **Customizable Loop** – Any plugin of this design has to have a loop of some
+kind to list the posts and/or pages. Most have their own style of design, but
 this plugin gives the webmaster the tools to create his own style.
-* **Shortcodes for Post/Page Content** – Part of the heart of the Customizable 
-Loop, shortcodes have made it possible to pull content from each post/page and 
+* **Shortcodes for Post/Page Content** – Part of the heart of the Customizable
+Loop, shortcodes have made it possible to pull content from each post/page and
 add it to the post list.
 
 **Location of the post list**
 
-* **Post List Shortcode** – User friendly method of adding any post list to a 
+* **Post List Shortcode** – User friendly method of adding any post list to a
 section of a site.
-* **PHP Hardcode** – Add post lists where some situations require a more 
+* **PHP Hardcode** – Add post lists where some situations require a more
 technical use where WordPress features and functions aren’t fully present.
-* **Sidebar Widget** – Easy to use, but shortcodes allow post lists to be added with a text sidebar.
+* **Sidebar Widget** – Easy to use, but shortcodes allow post lists to be added
+with a text sidebar.
 
 
-This is an alternate version of [Kalins Post List][wordpress kalins post list] 
-which was unfortunately declared abandoned. Most of the credit for creating an 
-extraordinary plugin like this goes to Kalin. Currently, the plugin is still in 
-the first stages of its target design. Version 1.0.0 will feature many of the 
-functionalities that Kalin and others have mentioned, and will have a complete 
+This is an alternate version of [Kalins Post List][wordpress kalins post list]
+which was unfortunately declared abandoned. Most of the credit for creating an
+extraordinary plugin like this goes to Kalin. Currently, the plugin is still in
+the first stages of its target design. Version 1.0.0 will feature many of the
+functionalities that Kalin and others have mentioned, and will have a complete
 new layout to accommodate for the extra tools that will be added.
 
 
@@ -108,8 +109,8 @@ new layout to accommodate for the extra tools that will be added.
 Inside your admin dashboard under Settings->Admin Post List.
 
 = How do I display the post list that I created? =
-You need to locate and copy the shortcode which is in the Advance Post List - Settings 
-page on the saved preset table. Then create a page/post and paste the shortcode on your 
+You need to locate and copy the shortcode which is in the Advance Post List - Settings
+page on the saved preset table. Then create a page/post and paste the shortcode on your
 page/post (e.g. [post_list name='some-preset-name'])
 
 
@@ -294,72 +295,84 @@ page/post (e.g. [post_list name='some-preset-name'])
 
 == Upgrade Notice ==
 
+= 0.3.4 =
+Stable Release. If upgrading from 0.2, make sure to back up the plugin data
+and website.
+
+= 0.3.3 =
+Stable Release. If upgrading from 0.2, make sure to back up the plugin data
+and website.
+
+= 0.3.2 =
+Stable Release. If upgrading from 0.2, make sure to back up the plugin data
+and website.
+
 = 0.3.1 =
-Stable Release. If upgrading from 0.2, make sure to back up the plugin data 
+Stable Release. If upgrading from 0.2, make sure to back up the plugin data
 and website.
 
 = 0.3.0 =
-Stable Release. If upgrading from 0.2, make sure to back up the plugin data 
+Stable Release. If upgrading from 0.2, make sure to back up the plugin data
 and website.
 
 = 0.3.b9 =
-Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make 
+Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make
 sure you back up the plugin data and/or website.
 
 = 0.3.b8 =
-Beta Version. If upgrading from 0.2, make sure you back up the plugin data 
-and/or website. This update includes a couple major and blocker bugs to the 
-Admin UI. Further development may be required before releasing the stable 
+Beta Version. If upgrading from 0.2, make sure you back up the plugin data
+and/or website. This update includes a couple major and blocker bugs to the
+Admin UI. Further development may be required before releasing the stable
 version (0.3.0).
 
 = 0.3.b7 =
-Beta Version. If upgrading from 0.2, make sure you back up the plugin data 
-and/or website. This update includes a couple major and blocker bugs to the 
+Beta Version. If upgrading from 0.2, make sure you back up the plugin data
+and/or website. This update includes a couple major and blocker bugs to the
 Admin UI. Further testing is required before releasing the stable version.
 
 = 0.3.b6 =
-Beta Version. As always, make sure you back up your website since 
-0.3 has a couple of database updates. This version fixes some critical issues 
-when being used on a large site. Fixes to the Backup feature have also been 
+Beta Version. As always, make sure you back up your website since
+0.3 has a couple of database updates. This version fixes some critical issues
+when being used on a large site. Fixes to the Backup feature have also been
 included in this.
 
 = 0.3.b5 =
-Beta Version. Beta 5 has another database upgrade, so it is recommended you 
-backup your data, and use a test site first. No issues with the database have 
-been posted. Contains additional filter settings that are built-in the WP_Query 
-params, and added a couple custom function. Also fixed a few issues. Look at 
+Beta Version. Beta 5 has another database upgrade, so it is recommended you
+backup your data, and use a test site first. No issues with the database have
+been posted. Contains additional filter settings that are built-in the WP_Query
+params, and added a couple custom function. Also fixed a few issues. Look at
 the changelog for more details.
 
 = 0.3.b4 =
-Beta Version. It is recommended you backup, but no issues with the database 
+Beta Version. It is recommended you backup, but no issues with the database
 have been posted. Contains fixes for querying posts, and deactivation.
 
 = 0.3.b3 =
-Beta Version. It is recommended you back up data prior to upgrading.Fixed some 
+Beta Version. It is recommended you back up data prior to upgrading.Fixed some
 'strict' errors that were being tossed that could cause an issue.
 
 = 0.3.b2 =
-Beta Version. It is recommended you back up data prior to upgrading. A few 
-added preset settings. Fixed a problem with script handling that was 
+Beta Version. It is recommended you back up data prior to upgrading. A few
+added preset settings. Fixed a problem with script handling that was
 interfering with built-in scripting.
 
 = 0.3.b1 =
-Beta Version. Please back up your plugin data prior to upgrading. This version 
-introduces custom post type and taxonomy support. Along with a few added 
+Beta Version. Please back up your plugin data prior to upgrading. This version
+introduces custom post type and taxonomy support. Along with a few added
 settings.
 
 = 0.3.a1 =
-Alpha Version. Please back up your plugin data prior to upgrading. This version 
-introduces custom post type and taxonomy support. Along with a few added 
+Alpha Version. Please back up your plugin data prior to upgrading. This version
+introduces custom post type and taxonomy support. Along with a few added
 settings.
 
 = 0.2.0 =
-Upgrade adds a new export/import feature to back up your data, and fixes the 
-PHP hardcode, exclude current, and TextArea element. See change log for more 
+Upgrade adds a new export/import feature to back up your data, and fixes the
+PHP hardcode, exclude current, and TextArea element. See change log for more
 details.
 
 = 0.1.1 =
-The require() functions in advanced-post-list.php didn't have a dynamic value 
+The require() functions in advanced-post-list.php didn't have a dynamic value
 set.
 
 = 0.1.0 =
