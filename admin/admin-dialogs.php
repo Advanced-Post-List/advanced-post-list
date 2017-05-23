@@ -200,7 +200,7 @@
         </p>
     </div>
 	<div id="d13" title="List of internal post list shortcodes.">
-		<?php include(APL_DIR . "/admin/admin_dialog_shortcodes.php"); ?>
+		<?php include(APL_DIR . "/admin/admin-dialog-internal-shortcodes.php"); ?>
 	</div>
     <?php
     //////////////////////////////////////////////////////////////////////

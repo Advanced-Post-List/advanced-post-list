@@ -4,7 +4,7 @@
  * <p><b>Desc:</b> Database Object to contain Preset Objects to be
  *                  saved to the database.</p>
  * 
- * @package APLPresetDbObj
+ * @package APL_Preset_Db
  * @since 0.1.0
  * 
  */
@@ -18,7 +18,7 @@ class APLPresetDbObj
     var $_preset_db_name;
 
     /**
-     * @var array(APLPresetObj())
+     * @var array(APL_Preset())
      * @since 0.1.0
      * @todo Change to array in 0.4.0
      */
@@ -114,6 +114,10 @@ class APLPresetDbObj
         }
         else
         {
+			$a01 = unserialize(serialize($DBOptions));
+			$a01 = unserialize(serialize($DBOptions->_preset_db));
+			$a01 = unserialize(serialize($DBOptions->_delete));
+			
             $this->_preset_db = $DBOptions->_preset_db;
             $this->_delete = $DBOptions->_delete;
         }
@@ -407,7 +411,7 @@ class APLPresetDbObj
                                         "_content":"<li class=\"k_li\"><a class=\"k_a\" href=\"[post_permalink]\">[post_title]<\/a><\/li>",
                                         "_after":"<\/ul>"
                                     },
-                                    "APLPresetDbObj-jsonString_sample":
+                                    "APL_Preset_Obj-jsonString_sample":
                                     {
                                         "_postParent":["0"],
                                         "_postTax":

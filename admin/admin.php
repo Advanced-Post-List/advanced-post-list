@@ -1,22 +1,22 @@
 <?php
 ////////////////////////////////////////////////////////////////////////////////
-// APLCore Class uses this file in method APL_admin_head, if any other
+// APLCore Class uses this file in method admin_head, if any other
 //  method, function, or file uses this php file. Then it will exit this file.
 //
-if (!method_exists('APLCore', 'APL_admin_head'))
+if (!method_exists('APL_Core', 'admin_head'))
 {
     echo "Hi there!  I'm just a plugin, not much I can do when called directly.";
     exit;
 }
 //
 ////////////////////////////////////////////////////////////////////////////////
-wp_enqueue_script('jquery-ui-dialog');
+wp_enqueue_script('jquery-ui-dialog-js');
 
 //Places the (hidden) dialog content within the page.
-require_once APL_DIR . 'includes/APL-admin_dialogs.php';
+require_once APL_DIR . 'admin/admin-dialogs.php';
 //For setting certain parts of the HTML coding that aren't within the 
 // php functions
-$adminOptions = $this->APL_options_load();
+$adminOptions = $this->apl_options_load();
 
 function APL_post_tax_content()
 {
@@ -237,7 +237,7 @@ function APL_get_page_selector_options($post_type_name = 'post')
     
 }
 
-//TODO Change to use APLCore::APL_get_posts() instead of get_posts() -- May not 
+//TODO Change to use APLCore::apl_get_posts() instead of get_posts() -- May not 
 //  be possible since the function inside the class is set to private.
 //TODO Add parent (ID) variable to retrieve less data to cycle through.
 
