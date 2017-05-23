@@ -1,4 +1,4 @@
-w<?php
+<?php
 /**
  * APL Core Class
  *
@@ -529,7 +529,7 @@ class APL_Core {
 	private function apl_options_load() {
 		// New Name ( get_options ).
 		// Step 1.
-		$options = get_option( $this->$_option_name );
+		$options = get_option( $this->_option_name );
 
 		// Step 2.
 		if ( false !== $options ) {
@@ -559,7 +559,7 @@ class APL_Core {
 		// New name ( set_options ).
 		// STEP 1.
 		if ( isset( $options ) ) {
-			update_option( $this->$_option_name, $options );
+			update_option( $this->_option_name, $options );
 		}
 	}
 
