@@ -85,6 +85,9 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 
 == Changelog ==
 
+= 0.3.6 = 
+* Added load_plugin_textdomain and .pot files.
+
 = 0.3.5 =
 * Fixed [post_excerpt] breaking last word.
 * Fixed [post_excerpt length=""] not trimming if post excerpt is found.
@@ -257,6 +260,11 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.3.6 =
+Stable Release. Changed File Structure which may cause a PHP object error
+( Please report PHP errors ). If upgrading from 0.2, make sure to back
+up the plugin data and website.
 
 = 0.3.5 =
 Stable Release. Changed File Structure which may cause a PHP object error

@@ -96,9 +96,12 @@ class APL_Core {
 	 *
 	 * @since 0.1.0
 	 * @since 0.2.0 - Refined how version checking was performed.
+	 * @since 0.4.0 - Added hook for loading the textdomain to enable 
+	 *                internalization support.
 	 * @access public
 	 *
 	 * @param string $file Main plugin file.
+	 * @return void
 	 */
 	public function __construct( $file ) {
 		// STEP 1.
@@ -106,7 +109,7 @@ class APL_Core {
 		$this->_requires();
 
 		// STEP 2.
-		/***** DATABASE *****/
+		/* **** DATABASE **** */
 		$options = $this->apl_options_load();
 		if ( isset( $options['version'] ) ) {
 			/***** UPGRADES *****/
@@ -120,8 +123,10 @@ class APL_Core {
 			}
 		}
 
-		/***** ACTION & FILTERS HOOKS *****/
+		/* **** ACTION & FILTERS HOOKS **** */
 
+		// STEP - Add hook to load plugin textdomain when plugins are loaded.
+		add_action( 'plugins_loaded', array( $this, 'hook_action_load_plugin_textdomain' ) );
 		// STEP 3.
 		add_action( 'widgets_init', array( $this, 'hook_action_widget_init' ) );
 		// STEP 4.
@@ -133,7 +138,7 @@ class APL_Core {
 			// STEP 7.
 			add_action( 'admin_init', array( $this, 'hook_action_admin_init' ) );
 
-			/***** ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS *****/
+			/* **** ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS **** */
 			$file_dir = APL_DIR . 'advanced-post-list/advanced-post-list.php';
 			register_activation_hook( $file_dir, array( 'APL_Core', 'hook_activation' ) );
 			register_deactivation_hook( $file_dir, array( 'APL_Core', 'hook_deactivation' ) );
@@ -146,7 +151,7 @@ class APL_Core {
 	 *
 	 * Defines all the constants for APL.
 	 *
-	 * @since 0.4.0
+	 * @since 0.3.2
 	 * @access private
 	 *
 	 * @see Function/method/class relied on
@@ -168,7 +173,9 @@ class APL_Core {
 		/**
 		 * APL Display Name.
 		 *
-		 * @since 0.4.0
+		 * @since 0.1.0
+		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
+		 *                APL_Core::_define_constants().
 		 * @var string APL_NAME 'Advanced Post List'.
 		 */
 		define( 'APL_NAME', $plugin_data['Name'] );
@@ -176,7 +183,7 @@ class APL_Core {
 		/**
 		 * APL Slug.
 		 *
-		 * @since 0.4.0
+		 * @since 0.3.2
 		 * @var string APL_SLUG 'advanced-post-list'.
 		 */
 		define( 'APL_SLUG', $plugin_data['Slug'] );
@@ -184,7 +191,9 @@ class APL_Core {
 		/**
 		 * Version Number.
 		 *
-		 * @since 0.4.0
+		 * @since 0.1.0
+		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
+		 *                APL_Core::_define_constants().
 		 * @var string APL_VERSION '1.2.3'.
 		 */
 		define( 'APL_VERSION', $plugin_data['Version'] );
@@ -192,7 +201,9 @@ class APL_Core {
 		/**
 		 * URL Location.
 		 *
-		 * @since 0.4.0
+		 * @since 0.1.0
+		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
+		 *                APL_Core::_define_constants().
 		 * @var string APL_URL 'http://localhost/wordpress/wp-content/plugins/advanced-post-list/'.
 		 */
 		define( 'APL_URL', plugin_dir_url( $plugin_file ) );
@@ -200,7 +211,9 @@ class APL_Core {
 		/**
 		 * Directory Path.
 		 *
-		 * @since 0.4.0
+		 * @since 0.1.0
+		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
+		 *                APL_Core::_define_constants().
 		 * @var string APL_DIR 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
 		 */
 		define( 'APL_DIR', plugin_dir_path( $plugin_file ) );
@@ -211,7 +224,7 @@ class APL_Core {
 	 *
 	 * Adds the required files to include.
 	 *
-	 * @since 0.4.0
+	 * @since 0.3.0
 	 * @access private
 	 *
 	 * @see Function/method/class relied on
@@ -260,6 +273,21 @@ class APL_Core {
 
 			return $options;
 		}
+	}
+	
+	/**
+	 * Load APL's Textdomain.
+	 *
+	 * Hook for loading the textdomain location.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @link https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
+	 *
+	 * @return void
+	 */
+	public function hook_action_load_plugin_textdomain() {
+		load_plugin_textdomain( APL_SLUG, APL_DIR . '/languages/' );
 	}
 
 	/**
