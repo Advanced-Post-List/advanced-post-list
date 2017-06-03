@@ -85,6 +85,9 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 
 == Changelog ==
 
+= 0.3.7 =
+* Fixed warning with load_plugin_textdomain.
+
 = 0.3.6 = 
 * Added load_plugin_textdomain and .pot files.
 
