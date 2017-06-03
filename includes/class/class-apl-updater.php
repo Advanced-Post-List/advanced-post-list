@@ -67,25 +67,26 @@ class APL_Updater {
 			$this->preset_db = $preset_db;
 		}
 
-		//////////////////
-		//// UPGRADES ////
+		/* **** UPGRADES **** */
 		// CONVERT FROM KALIN'S POST LIST TO BASE.
 		if ( 'kalin' === $old_version ) {
 			$this->APL_convert_kalin_to_base();
 			$old_version = '0.1.0';
 		}
-
-		// UPGRADE FROM BASE TO "0.3.X".
-		if ( version_compare( '0.3.a1', $old_version, '>' ) ) {
-			$this->APL_upgrade_to_03a1();
+		if ( version_compare( APL_VERSION, $old_version, '>' ) ) {
+			// UPGRADE FROM BASE TO "0.3.X".
+			if ( version_compare( '0.3.a1', $old_version, '>' ) ) {
+				$this->APL_upgrade_to_03a1();
+			}
+			if ( version_compare( '0.3.b5', $old_version, '>' ) ) {
+				$this->APL_upgrade_to_03b5();
+			}
+			if ( version_compare( '0.4.0', $old_version, '>' ) ) {
+				$this->apl_upgrade_to_040();
+			}
 		}
 
-		if ( version_compare( '0.3.b5', $old_version, '>' ) ) {
-			$this->APL_upgrade_to_03b5();
-		}
-
-		////////////////////
-		//// DOWNGRADES ////
+		/* **** DOWNGRADES **** */
 		// DOWNGRADE FROM 0.3.X TO BASE.
 		/*
         if ( version_compare( '0.3.b5', $oldversion, '<' ) ) {
@@ -96,7 +97,7 @@ class APL_Updater {
         }
 		*/
 
-		////// UPDATE VERSION NUMBER //////
+		/* **** UPDATE VERSION NUMBER **** */
 		// APL_VERSION - equals the file version located in "advanced-post-list.php".
 		if ( isset( $this->options['version'] ) && version_compare( APL_VERSION, $old_version, '>' ) ) {
 			$this->options['version'] = APL_VERSION;
@@ -411,7 +412,7 @@ class APL_Updater {
 				foreach ( $old_preset->_preset_db as $key2 => $value2 ) {
 					$return_preset_db->_preset_db->$key2 = $this->APL_upgrade_preset_03a1_to_03b5( $value2 );
 				}
-			} elseif ( ! empty( $old_preset->$key ) ) {
+			} elseif ( ! empty( $old_preset->$key1 ) ) {
 				$return_preset_db->$key1 = $old_preset->$key1;
 			}
 		}
@@ -486,6 +487,92 @@ class APL_Updater {
 		if ( isset( $old_preset->_after ) ) {
 			$return_preset->_after              = $old_preset->_after;
 		}
+
+		return $return_preset;
+	}
+
+	/**
+	 * Upgrade APL to 0.4.0.
+	 *
+	 * Upgrades Plugin to "0.4.0".
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @see Function/method/class relied on
+	 * @link URL
+	 * @global type $varname Description.
+	 * @global type $varname Description.
+	 *
+	 * @return void
+	 */
+	private function apl_upgrade_to_040() {
+		if ( ! empty( $this->preset_db ) ) {
+			$this->preset_db = $this->apl_upgrade_return_preset_db_03b5_to_040( $this->preset_db );
+		}
+	}
+
+	/**
+	 * Upgrade Preset Database from 0.3.b5 to 0.4.0.
+	 *
+	 * Upgrades the Preset Database from "0.3.b5" to "0.4.0".
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param object $old_preset Old Preset Database.
+	 * @return object New Preset structure.
+	 */
+	private function apl_upgrade_return_preset_db_03b5_to_040( $old_preset ) {
+		$return_preset_db = new APL_Preset_Db();
+		$return_preset_db->reset_to_version( '0.3.b5' );
+
+		foreach ( $return_preset_db as $key1 => $value1 ) {
+			if ( '_preset_db' === $key1 && ! empty( $old_preset->$key1 ) ) {
+				foreach ( $old_preset->_preset_db as $key2 => $value2 ) {
+					$return_preset_db->_preset_db->$key2 = $this->apl_upgrade_preset_03b5_to_040( $value2 );
+				}
+			} elseif ( ! empty( $old_preset->$key1 ) ) {
+				$return_preset_db->$key1 = $old_preset->$key1;
+			}
+		}
+
+		return $return_preset_db;
+	}
+
+	/**
+	 * Upgrade Preset from 0.3.b5 to 0.4.0.
+	 *
+	 * Upgrades Preset from "0.3.b5" to "0.4.0".
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param object $old_preset Old Preset Data.
+	 * @return object New Preset structure.
+	 */
+	private function apl_upgrade_preset_03b5_to_040( $old_preset ) {
+		$return_preset = new APL_Preset();
+		$return_preset->reset_to_version( '0.4.0' );
+
+		$return_preset->apl_design = '';
+		$apl_design = new APL_Design();
+
+		if ( isset( $old_preset->_before ) ) {
+			$apl_design->before = $old_preset->_before;
+		}
+		if ( isset( $old_preset->_content ) ) {
+			$apl_design->content = $old_preset->_content;
+		}
+		if ( isset( $old_preset->_after ) ) {
+			$apl_design->after = $old_preset->_after;
+		}
+		if ( isset( $old_preset->_exit ) ) {
+			$apl_design->empty = $old_preset->_exit;
+		}
+		$apl_design->save_design();
+
+		$return_preset->apl_design = $apl_design->slug;
 
 		return $return_preset;
 	}

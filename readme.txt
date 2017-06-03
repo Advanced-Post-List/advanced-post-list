@@ -85,6 +85,12 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 
 == Changelog ==
 
+= 0.4.0 =
+* Added APL_Design Class.
+* Changed Preset Object variables before, content, after, & empty message to a seperate database with APL_Design.
+* Changed version check to a hook method.
+* Added more internalization.
+
 = 0.3.7 =
 * Fixed warning with load_plugin_textdomain.
 

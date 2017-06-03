@@ -15,7 +15,10 @@ jQuery(document).ready(function($){
     var saveSettingsNonce = apl_admin_settings.saveSettingsNonce;
     
     var presetObj = apl_admin_settings.presetDb;
-    presetObj = JSON.parse(presetObj);
+    presetObj = JSON.parse( presetObj );
+	
+	var apl_designs = apl_admin_settings.apl_designs;
+	apl_designs = JSON.parse( apl_designs );
     
     var postTax = apl_admin_settings.postTax;
     //postTax = JSON.parse(postTax);
@@ -274,11 +277,13 @@ jQuery(document).ready(function($){
         }
         $('#slctAuthorOperator').multiselect('refresh');
 
-        $("#txtExitMsg").val(newValues["_exit"]);
-        $("#txtBeforeList").val(newValues["_before"]);
-        $("#txtContent").val(newValues["_content"]);
-        $("#txtAfterList").val(newValues["_after"]);
-      
+		var design = apl_designs[ newValues['apl_design'] ]
+
+		$("#txtExitMsg").val( design['empty'] );
+        $("#txtBeforeList").val( design['before'] );
+        $("#txtContent").val( design['content'] );
+        $("#txtAfterList").val( design['after'] );
+
       ////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////
       
@@ -593,7 +598,7 @@ jQuery(document).ready(function($){
         //since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
         jQuery.post(ajaxurl, data, function(response) 
         {
-
+			//console.log( response );
             //alert(response);
 
             var startPosition = response.indexOf("{");
@@ -601,6 +606,7 @@ jQuery(document).ready(function($){
             {
                 apl_alert(response, 'Error');
             }
+			
             var responseObjString = response.substr(startPosition, response.lastIndexOf("}") - startPosition + 1);
 
             //alert(responseObjString);

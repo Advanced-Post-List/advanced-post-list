@@ -86,18 +86,14 @@ class APL_Core {
 	 * Constructor for APL_Core functionality.
 	 *
 	 * STEP 1: Set plugin file data/properties.
-	 * STEP 2: Check database version with the current file version.
-	 * STEP 3: Register activation, deactivation, and un-install hooks with WordPress.
-	 * STEP 4: Add Shortcode to WordPress action hooks.
-	 * STEP 5: If the current user has admin rights, do **Step 6**.
-	 * STEP 6: Add APL's menu to WordPress 'admin_menu' action hook and
-	 *         APL's initial admin action hooks to WordPress 'admin_menu'
-	 *         action hook.
+	 * STEP 2: Add Hooks.
+	 * STEP 3: Add Admin Hooks.
 	 *
 	 * @since 0.1.0
 	 * @since 0.2.0 - Refined how version checking was performed.
-	 * @since 0.4.0 - Added hook for loading the textdomain to enable 
+	 * @since 0.4.0 - Added hook for loading the textdomain to enable
 	 *                internalization support.
+	 *                Changed check version to hook method.
 	 * @access public
 	 *
 	 * @param string $file Main plugin file.
@@ -109,33 +105,15 @@ class APL_Core {
 		$this->_requires();
 
 		// STEP 2.
-		/* **** DATABASE **** */
-		$options = $this->apl_options_load();
-		if ( isset( $options['version'] ) ) {
-			/***** UPGRADES *****/
-
-			/*
-			 * Put upgrade database functions in here. Not before.
-			 *     Ex. APL_upgrade_to_XXX().
-			 */
-			if ( version_compare( $options['version'], APL_VERSION, '<' ) ) {
-				$options = $this->_update( $options );
-			}
-		}
-
 		/* **** ACTION & FILTERS HOOKS **** */
-
-		// STEP - Add hook to load plugin textdomain when plugins are loaded.
+		add_action( 'init', array( $this, 'hook_action_register_post_type_design' ) );
+		add_action( 'plugins_loaded', array( $this, 'hook_action_check_version' ) );
 		add_action( 'plugins_loaded', array( $this, 'hook_action_load_plugin_textdomain' ) );
-		// STEP 3.
 		add_action( 'widgets_init', array( $this, 'hook_action_widget_init' ) );
-		// STEP 4.
 		add_shortcode( 'post_list', array( $this, 'hook_shortcode_post_list' ) );
-		// STEP 5.
+		// STEP 3.
 		if ( is_admin() ) {
-			// STEP 6.
 			add_action( 'admin_menu', array( $this, 'hook_action_admin_menu' ) );
-			// STEP 7.
 			add_action( 'admin_init', array( $this, 'hook_action_admin_init' ) );
 
 			/* **** ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS **** */
@@ -233,6 +211,7 @@ class APL_Core {
 	private function _requires() {
 		require_once( APL_DIR . 'includes/class/class-apl-preset-db.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-preset.php' );
+		require_once( APL_DIR . 'includes/class/class-apl-design.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-widget.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-query.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-updater.php' );
@@ -246,35 +225,149 @@ class APL_Core {
 	}
 
 	/**
-	 * APL Updater.
+	 * Register the Design Post Type.
 	 *
-	 * Updater method for handling the Upgrader Class.
+	 * Hook for loading the textdomain location.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @link https://codex.wordpress.org/Function_Reference/register_post_type WP Codex.
+	 *
+	 * @return void
+	 */
+	public function hook_action_register_post_type_design() {
+		
+		$args = array(
+			'labels' => array(
+				'name'                  => __( 'Designs', 'advanced-post-list' ),
+				'singular_name'         => __( 'Design', 'advanced-post-list' ),
+				'add_new'               => _x( 'Add New', 'design', 'advanced-post-list' ),
+				'add_new_item'          => __( 'Add New Design', 'advanced-post-list' ),
+				'edit_item'             => __( 'Edit Design', 'advanced-post-list' ),
+				'new_item'              => __( 'New Design', 'advanced-post-list' ),
+				'view_item'             => __( 'View Design', 'advanced-post-list' ),
+				'view_items'            => __( 'View Designs', 'advanced-post-list' ),
+				'search_items'          => __( 'Search Designs', 'advanced-post-list' ),
+				'not_found'             => __( 'No Design found', 'advanced-post-list' ),
+				'not_found_in_trash'    => __( 'No Design found in Trash', 'advanced-post-list' ),
+				'parent_item_colon'     => __( ':', 'advanced-post-list' ),
+				'all_items'             => __( 'All Designs', 'advanced-post-list' ),
+				'archives'              => __( 'Design Archives', 'advanced-post-list' ),
+				'attributes'            => __( 'Design Attributes', 'advanced-post-list' ),
+				'insert_into_item'      => __( 'Insert into Design', 'advanced-post-list' ),
+				'uploaded_to_this_item' => __( 'Upload to this Design', 'advanced-post-list' ),
+				//'featured_image'        => __('Featured Design'),
+				//'set_featured_image'    => __('Set Featured Design'),
+				//'remove_featured_image' => __('Remove Featured Design'),
+				//'use_featured_image'    => __('Use Featured Design'),
+				'menu_name'				=> __( 'APL Designs', 'advanced-post-list' ),
+				//'filter_items_list'     => __(),
+				//'items_list_navigation' => __(),
+				//'items_list'            => __(),
+				//'name_admin_bar'        => __(),
+			),
+			'description'           => __( 'APL Designs for Preset Post Lists.', 'advanced-post-list' ),
+			// exclude_from_search, publicly_queryable, show_in_nav_menus, & show_ui
+			'public'                => true,
+			'exclude_from_search'   => true,
+			'publicly_queryable'    => false,
+			'show_ui'               => false, // Shows up in admin menu bar.
+			'show_in_nav_menus'     => false,
+			//'show_in_menu'          => 'edit.php?post_type=apl_post_list',
+			'show_in_admin_bar'		=> false,
+			//'menu_position'         => 99,
+			'menu_icon'				=> 'dashicons-admin-generic',
+			//capability_type
+			//capabilities
+			//map_meta_cap
+			'hierarchical'          => true,
+			'supports' 				=> array(
+				'title',
+				//'editor',
+				//'author',
+				'thumbnail',
+				'excerpt',
+				//'trackbacks',
+				//'custom-fields',
+				//'comments',
+				'revisions',
+				//'page-attributes',
+				//'post-formats',
+			),
+			//'register_meta_box_cb'  => array( $this, 'meta_box_test' ),
+			//taxonomies
+			'has_archive'			=> false,
+			'rewrite'               => array(
+				'slug' => 'apl_design',
+			),
+			//permalink_epmask
+			// Disables the URL query /?{query_var}={single_post_slug}
+			'query_var'             => false,
+			//'can_export'            => true, // Default true.
+			'delete_with_user'		=> false,
+			//'show_in_rest'          => false, // Default false.
+			//rest_base
+			//rest_controller_class
+			//_builtin // Core Dev
+			//_edit_link // Core Dev
+		);
+		$args = apply_filters( 'apl_register_post_type_design', $args );
+		register_post_type( 'apl_design', $args );
+	}
+
+	/*
+	private function meta_boxes() {
+		add_meta_box(
+			'apl-design-before',
+			__( 'Before content', 'advanced-post-list' ),
+			array(
+				$this,
+				'meta_box_cb_before',
+			),
+			array( 'apl-design' ),
+			'side'
+		);
+	}
+	function meta_box_before_screen() {
+		
+	}
+	 */
+
+	/**
+	 * Hook for APL check version.
+	 *
+	 * Update method for handling the Upgrader Class.
 	 *
 	 * @since 0.3.0
-	 * @access private
+	 * @since 0.4.0 - Changed to action hook.
+	 * @access public
 	 *
 	 * @see Function/method/class relied on
 	 * @link URL
 	 *
-	 * @param object $options APL Options.
-	 * @return object APL Options.
+	 * @return void
 	 */
-	private function _update( $options ) {
-		$preset_db = new APL_Preset_Db( 'default' );
-		$updater = new APL_Updater( $options['version'], $preset_db, $options );
-		// IN THIS CASE, BOTH MUST HAVE VALUES FILLED.
-		if ( null === $updater->options || null === $updater->preset_db ) {
-			return $options;
-		} else {
-			$preset_db = $updater->preset_db;
-			$preset_db->options_save_db();
-			$options = $updater->options;
-			$this->apl_options_save( $options );
-
-			return $options;
+	public function hook_action_check_version() {
+		$options = $this->apl_options_load();
+		if ( isset( $options['version'] ) ) {
+			/* **** UPGRADES **** *
+			 * Put upgrade database functions in here. Not before.
+			 *     Ex. APL_upgrade_to_XXX().
+			 */
+			if ( version_compare( $options['version'], APL_VERSION, '<' ) ) {
+				$preset_db = new APL_Preset_Db( 'default' );
+				$updater = new APL_Updater( $options['version'], $preset_db, $options );
+				// IN THIS CASE, BOTH MUST HAVE VALUES FILLED.
+				if ( null !== $updater->options || null !== $updater->preset_db ) {
+					$preset_db = $updater->preset_db;
+					$preset_db->options_save_db();
+					$options = $updater->options;
+					$this->apl_options_save( $options );
+				}
+			}
 		}
 	}
-	
+
 	/**
 	 * Load APL's Textdomain.
 	 *
@@ -712,6 +805,17 @@ class APL_Core {
 		// Step 3.
 		/***** GET AND STORE PLUGIN DATA *****/
 		$preset_db = new APL_Preset_Db( 'default' );
+
+		$args = array(
+			'post_status'      => 'publish',
+			'post_type'        => 'apl_design',
+		);
+		$post_designs = get_posts( $args );
+		$apl_designs = array();
+		foreach ( $post_designs as $key => $value ) {
+			$apl_designs[ $value->post_name ] = new APL_Design( $value->post_name );
+		}
+
 		// Step 4.
 		$post_type_taxonomies = $this->apl_get_post_types( array( 'taxonomies' ) );
 		// Step 5.
@@ -730,7 +834,8 @@ class APL_Core {
 			'exportNonce'        => wp_create_nonce( 'APL_handler_export' ),
 			'importNonce'        => wp_create_nonce( 'APL_handler_import' ),
 			'saveSettingsNonce'  => wp_create_nonce( 'APL_handler_save_settings' ),
-			'presetDb'           => json_encode( (array) $preset_db->_preset_db ),
+			'presetDb'           => wp_json_encode( (array) $preset_db->_preset_db ),
+			'apl_designs'        => wp_json_encode( $apl_designs ),
 			'postTax'            => $post_type_taxonomies,
 			'taxTerms'           => $tax_terms,
 		);
@@ -1690,12 +1795,34 @@ class APL_Core {
 		}
 		$preset_obj->_listExcludePosts = array_unique( $preset_obj->_listExcludePosts );
 
+		//TODO - Add to other inputs.
+		//$ex1 = (int) filter_input( INPUT_POST, 'data.name', FILTER_SANITIZE_NUMBER_INT );
+		//$ex2 = (string) filter_input( INPUT_POST, 'data.name', FILTER_SANITIZE_STRING );
+		//$a01 = wp_unslash( $_POST['before'] );
+		//$b01 = wp_filter_post_kses( $a01 );
+		//$b02 = balanceTags( $a01, false );
 		// Step 9.
-		// (string)
-		$preset_obj->_exit = stripslashes( $_POST['exit'] );
-		$preset_obj->_before = stripslashes( $_POST['before'] );
-		$preset_obj->_content = stripslashes( $_POST['content'] );
-		$preset_obj->_after = stripslashes( $_POST['after'] );
+		$design = new APL_Design( $preset_obj->get_apl_design() );
+		if ( isset( $_POST['before'] ) ) {
+			$before = (string) filter_input( INPUT_POST, 'before', FILTER_SANITIZE_STRING );
+			$design->before  = balanceTags( wp_unslash( $before ), false );
+		}
+		if ( isset( $_POST['content'] ) ) {
+			$content = (string) filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+			$design->content = balanceTags( wp_unslash( $content ), false );
+		}
+		if ( isset( $_POST['after'] ) ) {
+			$after = (string) filter_input( INPUT_POST, 'after', FILTER_SANITIZE_STRING );
+			$design->after   = balanceTags( wp_unslash( $after ), false );
+		}
+		if ( isset( $_POST['exit'] ) ) {
+			$empty = (string) filter_input( INPUT_POST, 'empty', FILTER_SANITIZE_STRING );
+			$design->empty   = balanceTags( wp_unslash( $empty ), false );
+		}
+		$design->save_design();
+
+		// TODO Add Filter to set name
+		$preset_obj->apl_design = $design->slug;
 
 		// Step 10.
 		$preset_db->_preset_db->$preset_name = $preset_obj;
@@ -1891,11 +2018,11 @@ class APL_Core {
 			$preset_obj = $preset_db_obj->_preset_db->$preset_name;
 		} elseif ( current_user_can( 'manage_options' ) ) {
 			// Alert Message for admins in case an invalid preset was used.
-			return '<p>Admin Alert - A problem has occured. A non-existent preset name has been passed use.</p>';
+			return esc_html__( '<p>Admin Alert - A problem has occured. A non-existent preset name has been passed use.</p>', 'advanced-post-list' ) ;
 		} else {
 			// Users/Visitors won't be able to see the post list if the
 			// preset post list name isn't set right.
-			return'';
+			return '';
 		}
 
 		// STEP 2 - If Exclude Duplicates (w/ multiple post lists) is checked,
@@ -1913,6 +2040,7 @@ class APL_Core {
 		// use a public function to return a WP_Query class; until 'inheritance'
 		// becomes more of a possibility.
 		$apl_query = new APL_Query( $preset_obj );
+		$apl_design = new APL_Design( $preset_obj->get_apl_design() );
 
 		//STEP 4 - Query the posts to retrieve the final WP_Query class.
 		$wp_query_class = $apl_query->query_wp( $apl_query->_query_str_array );
@@ -1926,7 +2054,7 @@ class APL_Core {
 			$output = '';
 
 			/* * Before ***************************************************** */
-			$output .= $preset_obj->_before;
+			$output .= $apl_design->before;
 
 			/* * Content **************************************************** */
 			$count = 0;
@@ -1938,7 +2066,7 @@ class APL_Core {
 				// $APL_post->ID;.
 				$this->_remove_duplicates[] = $wp_query_class->post->ID;
 
-				$output .= $internal_shortcodes->replace( $preset_obj->_content, $wp_query_class->post );
+				$output .= $internal_shortcodes->replace( $apl_design->content, $wp_query_class->post );
 				$count++;
 			}
 
@@ -1947,12 +2075,12 @@ class APL_Core {
 			}
 
 			/* * After ****************************************************** */
-			$output .= $preset_obj->_after;
+			$output .= $apl_design->after;
 		} else {
 			// if (count($apl_query->_posts) === 0).
 			$apl_options = $this->apl_options_load();
-			if ( ! empty( $preset_obj->_exit ) ) {
-				return $preset_obj->_exit;
+			if ( ! empty( $apl_design->empty ) ) {
+				return $apl_design->empty;
 			} elseif ( true === $apl_options['default_exit'] && ! empty( $apl_options['default_exit_msg'] ) ) {
 				return $apl_options['default_exit_msg'];
 			} else {
