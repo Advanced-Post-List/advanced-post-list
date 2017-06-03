@@ -287,7 +287,7 @@ class APL_Core {
 	 * @return void
 	 */
 	public function hook_action_load_plugin_textdomain() {
-		load_plugin_textdomain( APL_SLUG, APL_DIR . '/languages/' );
+		load_plugin_textdomain( APL_SLUG, false, APL_DIR . '/languages/' );
 	}
 
 	/**
