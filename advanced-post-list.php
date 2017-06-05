@@ -3,14 +3,13 @@
 Plugin Name: Advanced Post List
 Plugin URI: http://wordpress.org/plugins/advanced-post-list/
 Description: Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies.
-Version: 0.3.7
+Version: 0.4.0
 Author: EkoJR
 Author URI: http://ekojr.com
 License: GPLv2
 License: URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: advanced-post-list
 Domain Path: /languages
->>>>>>> Added APL Design implementation
 
 == Copyright ==
 Advanced Post List by EkoJR (email: ekojr1337@gmail.com)

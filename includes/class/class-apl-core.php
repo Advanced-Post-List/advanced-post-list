@@ -106,6 +106,7 @@ class APL_Core {
 
 		// STEP 2.
 		/* **** ACTION & FILTERS HOOKS **** */
+		add_action( 'init', array( $this, 'hook_action_register_post_type_post_list' ) );
 		add_action( 'init', array( $this, 'hook_action_register_post_type_design' ) );
 		add_action( 'plugins_loaded', array( $this, 'hook_action_check_version' ) );
 		add_action( 'plugins_loaded', array( $this, 'hook_action_load_plugin_textdomain' ) );
@@ -113,6 +114,7 @@ class APL_Core {
 		add_shortcode( 'post_list', array( $this, 'hook_shortcode_post_list' ) );
 		// STEP 3.
 		if ( is_admin() ) {
+			APL_Admin::get_instance();
 			add_action( 'admin_menu', array( $this, 'hook_action_admin_menu' ) );
 			add_action( 'admin_init', array( $this, 'hook_action_admin_init' ) );
 
@@ -211,6 +213,7 @@ class APL_Core {
 	private function _requires() {
 		require_once( APL_DIR . 'includes/class/class-apl-preset-db.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-preset.php' );
+		require_once( APL_DIR . 'includes/class/class-apl-post-list.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-design.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-widget.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-query.php' );
@@ -220,6 +223,7 @@ class APL_Core {
 		require_once( APL_DIR . 'includes/class/old-APLPresetObj.php' );
 
 		// TODO Move to Admin only function/method.
+		require_once( APL_DIR . 'admin/class-apl-admin.php' );
 		require_once( APL_DIR . 'admin/import.php' );
 		require_once( APL_DIR . 'admin/export.php' );
 	}
@@ -235,8 +239,97 @@ class APL_Core {
 	 *
 	 * @return void
 	 */
-	public function hook_action_register_post_type_design() {
+	public function hook_action_register_post_type_post_list() {
 		
+		$args = array(
+			'labels' => array(
+				'name'                  => __( 'Post Lists', 'advanced-post-list' ),
+				'singular_name'         => __( 'Post List', 'advanced-post-list' ),
+				'add_new'               => _x( 'Add New', 'List', 'advanced-post-list' ),
+				'add_new_item'          => __( 'Add New Post List', 'advanced-post-list' ),
+				'edit_item'             => __( 'Edit Post List', 'advanced-post-list' ),
+				'new_item'              => __( 'New Post List', 'advanced-post-list' ),
+				'view_item'             => __( 'View Post List', 'advanced-post-list' ),
+				'view_items'            => __( 'View Post Lists', 'advanced-post-list' ),
+				'search_items'          => __( 'Search Post Lists', 'advanced-post-list' ),
+				'not_found'             => __( 'No Post Lists found', 'advanced-post-list' ),
+				'not_found_in_trash'    => __( 'No Post Lists found in Trash', 'advanced-post-list' ),
+				'parent_item_colon'     => __( ':', 'advanced-post-list' ),
+				'all_items'             => __( 'All Post Lists', 'advanced-post-list' ),
+				'archives'              => __( 'Post List Archives', 'advanced-post-list' ),
+				'attributes'            => __( 'Post List Attributes', 'advanced-post-list' ),
+				'insert_into_item'      => __( 'Insert into Post List', 'advanced-post-list' ),
+				'uploaded_to_this_item' => __( 'Upload to this Post List', 'advanced-post-list' ),
+				//'featured_image'        => __( 'Featured Post List' ),
+				//'set_featured_image'    => __( 'Set Featured Post List' ),
+				//'remove_featured_image' => __( 'Remove Featured Post List' ),
+				//'use_featured_image'    => __( 'Use Featured Post List' ),
+				'menu_name'				=> __( 'APL Post List', 'advanced-post-list' ),
+				//'filter_items_list'     => __(  ),
+				//'items_list_navigation' => __(  ),
+				//'items_list'            => __(  ),
+				//'name_admin_bar'        => __(  ),
+			),
+			'description'           => __( 'APL Preset Post Lists.', 'advanced-post-list' ),
+			'public'                => true,
+			'exclude_from_search'   => true,
+			'publicly_queryable'    => false,
+			'show_ui'               => true, // Shows up in admin menu bar.
+			'show_in_nav_menus'     => false,
+			//'show_in_menu'          => 'edit.php?post_type=apl_post_list',
+			'show_in_admin_bar'		=> true,
+			'menu_position'         => 58,
+			'menu_icon'				=> 'dashicons-welcome-widgets-menus',
+			//capability_type
+			//capabilities
+			//map_meta_cap
+			'hierarchical'          => true,
+			'supports' 				=> array(
+				'title',
+				//'editor',
+				'author',
+				'thumbnail',
+				//'excerpt',
+				//'trackbacks',
+				//'custom-fields',
+				//'comments',
+				'revisions',
+				//'page-attributes',
+				//'post-formats',
+			),
+			'register_meta_box_cb'  => array( $this, 'post_list_meta_boxes' ),
+			//taxonomies
+			'has_archive'			=> false,
+			'rewrite'               => array(
+				'slug' => 'apl-post-list',
+			),
+			//permalink_epmask
+			// Disables the URL query /?{query_var}={single_post_slug}
+			'query_var'             => false,
+			//'can_export'            => true, // Default true.
+			'delete_with_user'		=> false,
+			//'show_in_rest'          => false, // Default false.
+			//rest_base
+			//rest_controller_class
+			//_builtin // Core Dev
+			//_edit_link // Core Dev
+		);
+		//$args = apply_filters( 'apl_register_post_type_', $args );
+		register_post_type( 'apl_post_list', $args );
+	}
+
+	/**
+	 * Register the Design Post Type.
+	 *
+	 * Hook for loading the textdomain location.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @link https://codex.wordpress.org/Function_Reference/register_post_type WP Codex.
+	 *
+	 * @return void
+	 */
+	public function hook_action_register_post_type_design() {
 		$args = array(
 			'labels' => array(
 				'name'                  => __( 'Designs', 'advanced-post-list' ),
@@ -256,18 +349,17 @@ class APL_Core {
 				'attributes'            => __( 'Design Attributes', 'advanced-post-list' ),
 				'insert_into_item'      => __( 'Insert into Design', 'advanced-post-list' ),
 				'uploaded_to_this_item' => __( 'Upload to this Design', 'advanced-post-list' ),
-				//'featured_image'        => __('Featured Design'),
-				//'set_featured_image'    => __('Set Featured Design'),
-				//'remove_featured_image' => __('Remove Featured Design'),
-				//'use_featured_image'    => __('Use Featured Design'),
+				//'featured_image'        => __( 'Featured Design' ),
+				//'set_featured_image'    => __( 'Set Featured Design' ),
+				//'remove_featured_image' => __( 'Remove Featured Design' ),
+				//'use_featured_image'    => __( 'Use Featured Design' ),
 				'menu_name'				=> __( 'APL Designs', 'advanced-post-list' ),
-				//'filter_items_list'     => __(),
-				//'items_list_navigation' => __(),
-				//'items_list'            => __(),
-				//'name_admin_bar'        => __(),
+				//'filter_items_list'     => __(  ),
+				//'items_list_navigation' => __(  ),
+				//'items_list'            => __(  ),
+				//'name_admin_bar'        => __(  ),
 			),
 			'description'           => __( 'APL Designs for Preset Post Lists.', 'advanced-post-list' ),
-			// exclude_from_search, publicly_queryable, show_in_nav_menus, & show_ui
 			'public'                => true,
 			'exclude_from_search'   => true,
 			'publicly_queryable'    => false,
@@ -298,7 +390,7 @@ class APL_Core {
 			//taxonomies
 			'has_archive'			=> false,
 			'rewrite'               => array(
-				'slug' => 'apl_design',
+				'slug' => 'apl-design',
 			),
 			//permalink_epmask
 			// Disables the URL query /?{query_var}={single_post_slug}
@@ -315,20 +407,35 @@ class APL_Core {
 		register_post_type( 'apl_design', $args );
 	}
 
+	public function post_list_meta_boxes() {
+		add_meta_box(
+			'apl-design-before',
+			__( 'Display Preset Format', 'advanced-post-list' ),
+			array( $this, 'meta_box_design', ),
+			array( 'apl_post_list' ),
+			'simple',
+			'high'
+		);
+	}
+	public function meta_box_design( $post, $metabox ) {
+		echo '<p>Foo BAR!!!</p>';
+		var_dump( $metabox );
+	}
+
 	/*
 	private function meta_boxes() {
 		add_meta_box(
 			'apl-design-before',
-			__( 'Before content', 'advanced-post-list' ),
+			__( 'Display Format', 'advanced-post-list' ),
 			array(
 				$this,
-				'meta_box_cb_before',
+				'meta_box_design',
 			),
 			array( 'apl-design' ),
 			'side'
 		);
 	}
-	function meta_box_before_screen() {
+	function meta_box_design() {
 		
 	}
 	 */
@@ -1698,6 +1805,8 @@ class APL_Core {
 		// Step 1.
 		check_ajax_referer( 'APL_handler_save_preset' );
 
+		//$inc = ABSPATH . 'wp-includes/formatting.php';
+		//include( ABSPATH . 'wp-includes/formatting.php' );
 		// DEFAULT USE.
 		$preset_db = new APL_Preset_Db( 'default' );
 		// MULTI PRESET OPTIONS.
@@ -1710,17 +1819,39 @@ class APL_Core {
 
 		// Step 2.
 		$preset_name = stripslashes( $_POST['presetName'] );
+		//@
+		if ( $_POST['presetName'] ) {
+			$t_preset_name = (string) filter_input( INPUT_POST, 'presetName', FILTER_SANITIZE_STRING );
+			$t_preset_name = wp_unslash( $t_preset_name );
+		} else {
+			return new WP_Error( 'apl_core_run', __( 'There was an error with the Preset Title. No Title available.', 'advanced-post-list' ) );
+		}
 
 		$preset_obj = new APL_Preset();
+		//@
+		$post_list = new APL_Post_List( $t_preset_name );
 
 		// Step 3.
 		$preset_obj->_postParents = json_decode( stripslashes( $_POST['postParents'] ) );
 		$preset_obj->_postParents = array_unique( $preset_obj->_postParents );
+		//@
+		if ( isset( $_POST['postParents'] ) ) {
+			$post_parents = (string) filter_input( INPUT_POST, 'postParents', FILTER_SANITIZE_STRING );
+			$post_parents = json_decode( wp_unslash( $post_parents ), false );
+			$post_list->post_parents = array_unique( $post_parents );
+		}
 
 		// Step 4.
 		$preset_obj->_postTax = json_decode( stripslashes( $_POST['postTax'] ) );
+		//@
+		if ( isset( $_POST['postTax'] ) ) {
+			$post_tax = (string) filter_input( INPUT_POST, 'postTax', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES );
+			$post_list->post_tax = json_decode( wp_unslash( $post_tax ) );
+		} else {
+			new WP_Error( 'apl_core_run', __( 'No $_POST[\'postTax\'] is available. This may be normal.', 'advanced-post-list' ) );
+		}
 		$temp_post_tax = new stdClass();
-		foreach ( $preset_obj->_postTax as $post_type_name => $post_type_value ) {
+		foreach ( $post_list->post_tax as $post_type_name => $post_type_value ) {
 			foreach ( $post_type_value->taxonomies as $taxonomy_name => $taxonomy_value ) {
 				if ( ! is_object( $temp_post_tax->$post_type_name ) ) {
 					$temp_post_tax->$post_type_name = new stdClass();
@@ -1741,34 +1872,91 @@ class APL_Core {
 			}
 		}
 		$preset_obj->_postTax = $temp_post_tax;
+		//@
+		$post_list->post_tax = $temp_post_tax;
 
 		// Step 5.
 		// (int) howmany to display.
 		$preset_obj->_listCount = intval( $_POST['count'] );
+		//@
+		if ( isset( $_POST['count'] ) ) {
+			$count = (int) filter_input( INPUT_POST, 'count', FILTER_SANITIZE_NUMBER_INT );
+			$post_list->list_count = intval( $count );
+		}
 
 		// Step 6.
 		// (string)
 		$preset_obj->_listOrder = $_POST['order'];
+		//@
+		if ( isset( $_POST['order'] ) ) {
+			$order = (string) filter_input( INPUT_POST, 'order', FILTER_SANITIZE_STRING );
+			$post_list->list_order = sanitize_text_field( wp_unslash( $order ) );
+		}
 		// (string)
 		$preset_obj->_listOrderBy = $_POST['orderBy'];
+		//@
+		if ( isset( $_POST['orderBy'] ) ) {
+			$order_by = (string) filter_input( INPUT_POST, 'orderBy', FILTER_SANITIZE_STRING );
+			$post_list->list_order_by = sanitize_text_field( wp_unslash( $order_by ) );
+		}
 
 		// Step 7.
 		// (array) => (string)
 		$preset_obj->_postVisibility = json_decode( stripslashes( $_POST['postVisibility'] ) );
+		//@
+		if ( isset( $_POST['postVisibility'] ) ) {
+			$post_visibility = (string) filter_input( INPUT_POST, 'postVisibility', FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES );
+			//$a01 = sanitize_text_field( $post_visibility );
+			$post_visibility = wp_unslash( $post_visibility );
+			$post_visibility = json_decode( $post_visibility );
+			//FIXME null
+			$post_list->post_visibility = $post_visibility;
+		}
+		
 		// (array) => (string)
 		$preset_obj->_postStatus = json_decode( stripslashes( $_POST['postStatus'] ) );
+		//@
+		if ( isset( $_POST['postStatus'] ) ) {
+			$post_status = (string) filter_input( INPUT_POST, 'postStatus', FILTER_SANITIZE_STRING );
+			$post_list->post_status = json_decode( wp_unslash( $post_status ) );
+		}
+		
 		// (string)
 		$preset_obj->_userPerm = $_POST['userPerm'];
+		//@
+		if ( isset( $_POST['userPerm'] ) ) {
+			$user_perm = (string) filter_input( INPUT_POST, 'userPerm', FILTER_SANITIZE_STRING );
+			$post_list->user_perm = sanitize_text_field( $user_perm );
+		}
 
 		// (string)
 		$preset_obj->_postAuthorOperator = $_POST['authorOperator'];
+		//@
+		if ( isset( $_POST['authorOperator'] ) ) {
+			$post_author_operator = (string) filter_input( INPUT_POST, 'authorOperator', FILTER_SANITIZE_STRING );
+			$post_list->post_author_operator = sanitize_text_field( $post_author_operator );
+		}
 		// (array) => (int)
 		$preset_obj->_postAuthorIDs = json_decode( stripslashes( $_POST['authorIDs'] ) );
+		//@
+		if ( isset( $_POST['authorIDs'] ) ) {
+			$post_author_ids = (string) filter_input( INPUT_POST, 'authorIDs', FILTER_SANITIZE_STRING );
+			$post_author_ids = json_decode( wp_unslash( $post_author_ids ) );
+			$post_list->post_author_ids = array_map( 'intval' , $post_author_ids );
+		}
 
 		// (boolean)
 		$preset_obj->_listIgnoreSticky = true;
 		if ( 'false' === $_POST['ignoreSticky'] ) {
 			$preset_obj->_listIgnoreSticky = false;
+		}
+		//@
+		if ( isset( $_POST['ignoreSticky'] ) ) {
+			$list_ignore_sticky = (string) filter_input( INPUT_POST, 'ignoreSticky', FILTER_SANITIZE_STRING );
+			$post_list->list_ignore_sticky = false;
+			if ( 'true' === $list_ignore_sticky ) {
+				$post_list->list_ignore_sticky = true;
+			}
 		}
 
 		// Step 8
@@ -1777,11 +1965,27 @@ class APL_Core {
 		if ( $_POST['excludeCurrent'] === 'false' ) {
 			$preset_obj->_listExcludeCurrent = false;
 		}
+		//@
+		if ( isset( $_POST['excludeCurrent'] ) ) {
+			$list_exclude_current = (string) filter_input( INPUT_POST, 'excludeCurrent', FILTER_SANITIZE_STRING );
+			$post_list->list_exclude_current = false;
+			if ( 'true' === $list_exclude_current ) {
+				$post_list->list_exclude_current = true;
+			}
+		}
 
 		// (boolean)
 		$preset_obj->_listExcludeDuplicates = true;
 		if ( 'false' === $_POST['excludeDuplicates'] ) {
 			$preset_obj->_listExcludeDuplicates = false;
+		}
+		//@
+		if ( isset( $_POST['excludeDuplicates'] ) ) {
+			$list_exclude_duplicates = (string) filter_input( INPUT_POST, 'excludeDuplicates', FILTER_SANITIZE_STRING );
+			$post_list->list_exclude_duplicates = false;
+			if ( 'true' === $list_exclude_duplicates ) {
+				$post_list->list_exclude_duplicates = true;
+			}
 		}
 
 		$tmp_exclude_posts = array();
@@ -1794,13 +1998,14 @@ class APL_Core {
 			}
 		}
 		$preset_obj->_listExcludePosts = array_unique( $preset_obj->_listExcludePosts );
+		//@
+		if ( isset( $_POST['excludePosts'] ) ) {
+			$list_exclude_posts = (string) filter_input( INPUT_POST, 'excludePosts', FILTER_SANITIZE_STRING );
+			$list_exclude_posts = array_map( 'intval', $list_exclude_posts );
+			$list_exclude_posts = array_unique( $list_exclude_posts );
+			$post_list->list_exclude_posts = $list_exclude_posts;
+		}
 
-		//TODO - Add to other inputs.
-		//$ex1 = (int) filter_input( INPUT_POST, 'data.name', FILTER_SANITIZE_NUMBER_INT );
-		//$ex2 = (string) filter_input( INPUT_POST, 'data.name', FILTER_SANITIZE_STRING );
-		//$a01 = wp_unslash( $_POST['before'] );
-		//$b01 = wp_filter_post_kses( $a01 );
-		//$b02 = balanceTags( $a01, false );
 		// Step 9.
 		$design = new APL_Design( $preset_obj->get_apl_design() );
 		if ( isset( $_POST['before'] ) ) {
@@ -1827,6 +2032,8 @@ class APL_Core {
 		// Step 10.
 		$preset_db->_preset_db->$preset_name = $preset_obj;
 		$preset_db->options_save_db();
+		//@
+		$post_list->save_post_list();
 
 		// Step 11.
 		$rtn_data = new stdClass();

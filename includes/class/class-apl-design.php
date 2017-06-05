@@ -27,7 +27,7 @@ class APL_Design {
 	 * @access private
 	 * @var int
 	 */
-	private $id = 0;
+	public $id = 0;
 
 	/**
 	 * Title.
@@ -98,7 +98,7 @@ class APL_Design {
 		$this->title = (string) $design_name;
 		$this->slug  = (string) strtolower( $design_name );
 		$args = array(
-			'post_name' => $this->slug,
+			'name' => $this->slug,
 		);
 		$this->get_data( $args );
 
@@ -123,7 +123,7 @@ class APL_Design {
 	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
-			'post_name'   => '',
+			'name'   => '',
 			'post_type'   => 'apl_design',
 			//'post_status' => 'publish',
 			'numberposts' => 1,
@@ -158,19 +158,23 @@ class APL_Design {
 	 * @return void
 	 */
 	public function save_design() {
-		$args = array(
+		$get_args = array(
+			'name'           => $this->slug,
+			'post_type'           => 'apl_post_list',
+		);
+		$design = get_posts( $get_args );
+
+		$save_args = array(
 			'ID'               => $this->id,
 			'post_title'       => $this->title,
 			'post_name'        => $this->slug,
 			'post_status'      => 'publish',
-			'post_type'        => 'apl_design',
+			'post_type'        => 'apl_post_list',
 		);
-
-		$design_post = get_posts( $args );
-		if ( empty( $design_post ) ) {
-			$this->insert_design_post( $args );
+		if ( empty( $design ) ) {
+			$this->insert_design_post( $save_args );
 		} else {
-			$this->update_design_post( $args );
+			$this->update_design_post( $save_args );
 		}
 	}
 

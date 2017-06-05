@@ -25,7 +25,7 @@ class APL_Preset {
 	 *
 	 * @since 0.1.0
 	 * @access public
-	 * @var string
+	 * @var array=>string
 	 */
 	public $_postParents;
 

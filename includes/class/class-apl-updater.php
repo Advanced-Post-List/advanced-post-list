@@ -51,7 +51,7 @@ class APL_Updater {
 	 */
 	public function __construct( $old_version, $preset_db = null, $options = null ) {
 		if ( empty( $old_version ) || ( empty( $preset_db ) && empty( $options ) ) ) {
-			echo 'APL Updater Class Error: empty version and/or empty APL Options & APL Preset Db is being passed to the Updater Class.';
+			return new WP_Error( 'apl_updater', __( 'APL Updater Class Error: empty version and/or empty APL Options & APL Preset Db is being passed to the Updater Class.', 'advanced-post-list' ) );
 			return;
 		}
 
@@ -509,6 +509,8 @@ class APL_Updater {
 	private function apl_upgrade_to_040() {
 		if ( ! empty( $this->preset_db ) ) {
 			$this->preset_db = $this->apl_upgrade_return_preset_db_03b5_to_040( $this->preset_db );
+			//unset( $this->preset_db->_preset_db );
+			
 		}
 	}
 
@@ -523,57 +525,113 @@ class APL_Updater {
 	 * @param object $old_preset Old Preset Database.
 	 * @return object New Preset structure.
 	 */
-	private function apl_upgrade_return_preset_db_03b5_to_040( $old_preset ) {
+	private function apl_upgrade_return_preset_db_03b5_to_040( $old_preset_db ) {
 		$return_preset_db = new APL_Preset_Db();
 		$return_preset_db->reset_to_version( '0.3.b5' );
 
 		foreach ( $return_preset_db as $key1 => $value1 ) {
-			if ( '_preset_db' === $key1 && ! empty( $old_preset->$key1 ) ) {
-				foreach ( $old_preset->_preset_db as $key2 => $value2 ) {
-					$return_preset_db->_preset_db->$key2 = $this->apl_upgrade_preset_03b5_to_040( $value2 );
+			if ( '_preset_db' === $key1 && ! empty( $old_preset_db->$key1 ) ) {
+				foreach ( $old_preset_db->_preset_db as $preset_key => $old_value ) {
+					//$return_preset_db->_preset_db->$key2 = $this->apl_upgrade_preset_03b5_to_040( $key2, $value2 );
+					//$return_preset = new APL_Preset();
+					//$return_preset->reset_to_version( '0.4.0' );
+					$new_post_list = new APL_Post_List( $preset_key );
+					
+					// (array)=>(string)
+					if ( isset( $old_value->_postParents ) ) {
+						$new_post_list->post_parents = $old_value->_postParents;
+					}
+					// (object).
+					if ( isset( $old_value->_postTax ) ) {
+						$new_post_list->post_tax = $old_value->_postTax;
+					}
+					// (int).
+					if ( isset( $old_value->_listCount ) ) {
+						$new_post_list->list_count = $old_value->_listCount;
+					}
+					// (string)
+					if ( isset( $old_value->_listOrderBy ) ) {
+						$new_post_list->list_order_by = $old_value->_listOrderBy;
+					}
+					// (string)
+					if ( isset( $old_value_listOrder ) ) {
+						$new_post_list->list_order = $old_value->_listOrder;
+					}
+					// (array)=>(string)
+					if ( isset( $old_value->_postVisibility ) ) {
+						$new_post_list->post_visibility = $old_value->_postVisibility;
+					}
+					// (array)=>(string)
+					if ( isset( $old_value->_postStatus ) ) {
+						$new_post_list->post_status = $old_value->_postStatus;
+					}
+					// (string)
+					if ( isset( $old_value->_userPerm ) ) {
+						$new_post_list->user_perm = $old_value->_userPerm;
+					}
+					// (string)
+					if ( isset( $old_value->_postAuthorOperator ) ) {
+						$new_post_list->post_author_operator = $old_value->_postAuthorOperator;
+					}
+					// (array)=>(int)
+					if ( isset( $old_value->_postAuthorIDs ) ) {
+						$new_post_list->post_author_ids = $old_value->_postAuthorIDs;
+					}
+					// (boolean)
+					if ( isset( $old_value->_listIgnoreSticky ) ) {
+						$new_post_list->list_ignore_sticky = $old_value->_listIgnoreSticky;
+					}
+					// (boolean)
+					if ( isset( $old_value->_postExcludeCurrent ) ) { //_listExcludeCurrent
+						$new_post_list->list_exclude_current = $old_value->_postExcludeCurrent;
+					}
+					// (boolean)
+					if ( isset( $old_value->_listExcludeDuplicates ) ) {
+						$new_post_list->list_exclude_duplicates = $old_value->_listExcludeDuplicates;
+					}
+					// (array)=>(int)
+					if ( isset( $old_value->_listExcludePosts ) ) {
+						$new_post_list->list_exclude_posts = $old_value->_listExcludePosts;
+					}
+					
+					// TODO Change to Design slug. Default: preset_name.
+					$new_post_list->apl_design = '';
+					$apl_design = new APL_Design( $preset_key );
+
+					if ( isset( $old_value->_before ) ) {
+						$apl_design->before = $old_value->_before;
+					}
+					if ( isset( $old_value->_content ) ) {
+						$apl_design->content = $old_value->_content;
+					}
+					if ( isset( $old_value->_after ) ) {
+						$apl_design->after = $old_value->_after;
+					}
+					if ( isset( $old_value->_exit ) ) {
+						$apl_design->empty = $old_value->_exit;
+					}
+					$apl_design->save_design();
+					$return_preset_db->design_db[] = array(
+						'id'    => $apl_design->id,
+						'slug'  => $apl_design->slug,
+						'title' => $apl_design->title,
+					);
+
+					$new_post_list->apl_design = $apl_design->slug;
+					$new_post_list->save_post_list();
+					$return_preset_db->post_list_db[] = array(
+						'id'    => $new_post_list->id,
+						'slug'  => $new_post_list->slug,
+						'title' => $new_post_list->title,
+					);
 				}
-			} elseif ( ! empty( $old_preset->$key1 ) ) {
-				$return_preset_db->$key1 = $old_preset->$key1;
+			} elseif ( ! empty( $old_preset_db->$key1 ) ) {
+				// Other unmodified APL_Options ( _preset_db_name & _delete )
+				$return_preset_db->$key1 = $old_preset_db->$key1;
 			}
 		}
 
+		unset( $return_preset_db->_preset_db );
 		return $return_preset_db;
-	}
-
-	/**
-	 * Upgrade Preset from 0.3.b5 to 0.4.0.
-	 *
-	 * Upgrades Preset from "0.3.b5" to "0.4.0".
-	 *
-	 * @since 0.4.0
-	 * @access private
-	 *
-	 * @param object $old_preset Old Preset Data.
-	 * @return object New Preset structure.
-	 */
-	private function apl_upgrade_preset_03b5_to_040( $old_preset ) {
-		$return_preset = new APL_Preset();
-		$return_preset->reset_to_version( '0.4.0' );
-
-		$return_preset->apl_design = '';
-		$apl_design = new APL_Design();
-
-		if ( isset( $old_preset->_before ) ) {
-			$apl_design->before = $old_preset->_before;
-		}
-		if ( isset( $old_preset->_content ) ) {
-			$apl_design->content = $old_preset->_content;
-		}
-		if ( isset( $old_preset->_after ) ) {
-			$apl_design->after = $old_preset->_after;
-		}
-		if ( isset( $old_preset->_exit ) ) {
-			$apl_design->empty = $old_preset->_exit;
-		}
-		$apl_design->save_design();
-
-		$return_preset->apl_design = $apl_design->slug;
-
-		return $return_preset;
 	}
 }
