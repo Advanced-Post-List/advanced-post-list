@@ -1,441 +1,263 @@
-jQuery(document).ready(function($)
-{
-    // postTax: is the Post Type and Taxonomy structure
-    var post_types = apl_admin_ui_settings.post_types;
-    var postTax = apl_admin_ui_settings.postTax;
-    var taxTerms = apl_admin_ui_settings.taxTerms;
-    // postTax_parent_selector: show which Post Types are heirarchical
-    var postTax_parent_selector = apl_admin_ui_settings.postTax_parent_selector;
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+jQuery( document ).ready( function($) {
+	var post_tax  = apl_admin_ui_local.post_tax;
+	var tax_terms = apl_admin_ui_local.tax_terms;
+	var trans     = apl_admin_ui_local.trans;
 
-    
-    // Sets everything up inside the accordian divider
-    //  -Parent Selector (MultiSelect)
-    //  -Category & Tag UI Tabs
-    //  -3 Checks (Possibly move to APL-admin.js)
-    for (var post_type_name in postTax)
-    {
-        
-        //Sets the MultiSelect Post Parent Selector
-        $("#slctParentSelector-" + post_type_name).multiselect({
-            noneSelectedText: "Select Parent",
-            selectedText: "# of # pages selected",
-            selectedList: 2,
-            height: 192,
-            buttonWidth:230,
-            menuWidth:275,
-            
-            //Function for when an option is clicked and update/refreshed the element
-            click: function(event, ui)
-            {
-                
-                for (var post_type in post_types)
-                {
-                    // GET/INIT Parent IDs array
-                    var parentIDs =  $("#slctParentSelector-" + post_type).val();
-                    if (parentIDs === null)
-                    {
-                        parentIDs = new Array();
-                    }
-                    // INIT Temp Array to replace Parent Selector
-                    var tmp_array = new Array();
-                    
-                    //Going to add clicked value
-                    if (ui.checked === true)
-                    {
-                        tmp_array = parentIDs;
-                        //Add the value at the end of the Array
-                        tmp_array[parentIDs.length] = ui.value;
-                    }
-                    //Going to withhold clicked value
-                    else
-                    {
-                        var i = 0;
-                        for (var parent_index in parentIDs)
-                        {
-                            //Prevent the value from being copied to the array
-                            if (parentIDs[parent_index] !== ui.value)
-                            {
-                                tmp_array[i] = parentIDs[parent_index];
-                                i++;
-                            }
-                        }
-                    }
-                    $("#slctParentSelector-" + post_type).val(tmp_array);
-                    $("#slctParentSelector-" + post_type).multiselect('refresh');
-                }                    
-            }//END of click function
-        });//END of multiselect
-        
-        //Disables the Parent Selector/MultiSelect if the Post Type is non-heirarchical/posts
-        if (postTax_parent_selector[post_type_name]['hierarchical'] === false)
-        {
-            $("#slctParentSelector-" + post_type_name).multiselect("disable");
-        }
+	init_chkbox_post_type_toggle_tabs();
 
-        //$( "#chkReq-" + post_type_name ).button();
-        //$( "#chkIncld-" + post_type_name ).button();
-        
-        // Sets up the Categories UI Tabs
-        $("#tabs-" + post_type_name + '-cats').tabs();
-        $('#tabs-' + post_type_name + '-cats').children().each(function(index, domEle)
-        {
-            var div_size = $(this).parent().height();
-            
-            if (index !== 0)
-            {
-                var tab_size =  $(this).parent().children().first().height();
-                var change = div_size - tab_size;
-                
-                var domPadding = $('#' + domEle.id).outerHeight() - $('#' + domEle.id).height();
-                
-                change -= (domPadding);
-                $(domEle).height(change);
-                
-                
-            }
-        });
-        
-        // Sets up the Tags UI Tabs
-        $("#tabs-" + post_type_name + '-tags').tabs();
-        $('#tabs-' + post_type_name + '-tags').children().each(function(index, domEle)
-        {
-            var div_size = $(this).parent().height();
+	init_tabs_post_type_taxonomies();
 
-            if (index !== 0)
-            {
-                var tab_size =  $(this).parent().children().first().height();
-                var change = div_size - tab_size;
-                
-                var domPadding = $('#' + domEle.id).outerHeight() - $('#' + domEle.id).height();
-                
-                change -= (domPadding);
-                $(domEle).height(change);
-            }
-        });
-        
-        
-        for (var taxonomy in postTax[post_type_name].taxonomies)
-        {
-            
-            $('#chkReqTerms-' + post_type_name + '-' + taxonomy).click(function(){
-                if (this.checked === true)
-                {
-                    var name = this.name;
-                    var name_explode = name.split("-");
-                    $('#chkTerm-' + name_explode[1] + '-' + name_explode[2] + '-0').attr('checked', false);
-                }
-            });
-            
-            $('#chkIncldTerms-' + post_type_name + '-' + taxonomy).click(function(){
-                if (this.checked === true)
-                {
-                    var name = this.name;
-                    var name_explode = name.split("-");
-                    $('#chkTerm-' + name_explode[1] + '-' + name_explode[2] + '-0').attr('checked', false);
-                }
-            });
-            
-            $('#chkTerm-' + post_type_name + '-' + taxonomy + '-0').click(function(){
-                if (this.checked === true)
-                {
-                    var name = this.name;
-                    var name_explode = name.split("-");
-                    $('#chkReqTerms-' + name_explode[1] + '-' + name_explode[2]).attr('checked', false);
-                    $('#chkIncldTerms-' + name_explode[1] + '-' + name_explode[2]).attr('checked', false);
-                    for (var term_index in taxTerms[name_explode[2]].terms)
-                    {
-                        $('#' + name_explode[0] + '-' + name_explode[1] + '-' + name_explode[2] + '-' + taxTerms[name_explode[2]].terms[term_index]).attr('checked', false);
+	init_multiselect_post_type_taxonomies();
+	
+	init_spinner_amount();
+	
+	init_slider_amount();
+	
+	init_selectmenu_order_by();
+	
+	init_selectmenu_order();
+	
+	init_selectmenu_author_operator();
+	
+	init_multiselect_author_ids();
+	
+	init_multiselect_post_status_1();
+	
+	init_multiselect_post_status_2();
+	
+	init_selectmenu_perm();
 
-                    }
-                }
-            });
-            
-            for (var term_index in taxTerms[taxonomy].terms)
-            {
-                
-                $('#chkTerm-' + post_type_name + '-' + taxonomy + '-' + taxTerms[taxonomy].terms[term_index]).click(function(){
-                    if (this.checked === true)
-                    {
-                        var name = this.name;
-                        var name_explode = name.split("-");
-                        $('#' + name_explode[0] + '-' + name_explode[1] + '-' + name_explode[2] + '-0').attr('checked', false);
-                    }
-                });
-            }
-        }
-    }//END of foreach post_type
+	function init_chkbox_post_type_toggle_tabs() {
+		$( '#apl-toggle-any' ).prop( 'checked', true );
+		$.each( post_tax, function( k_post_type_slug, v_taxonomy_arr ) {
+			if ( 'any' !== k_post_type_slug ) {
+				$( '#apl-filter-' + k_post_type_slug ).hide();
+			}
 
-    $("#cboPostVisibility").multiselect({
-        header: false,
-        noneSelectedText: "1 Req.",
-        selectedList: 1,
-        //buttonWidth: 96, Does NOTHING now.
-        minWidth: 96,
-        menuWidth: 128,
-        height: 69,
-        
-        click:function(event, ui)
-        {
-            var elemCbo = $("#cboPostVisibility").val();
-            if (elemCbo === null)
-            {
-                elemCbo = new Array();
-            }
-            var tmp_array = new Array();
-            
-            if (ui.checked === true)
-            {
-                tmp_array = elemCbo;
-                //Add the value at the end of the Array
-                tmp_array[elemCbo.length] = ui.value;
-            }
-            else 
-            {
-                var i = 0;
-                for (var elemCbo_index in elemCbo)
-                {
-                    //Prevent the value from being copied to the array
-                    if (elemCbo[elemCbo_index] !== ui.value)
-                    {
-                        tmp_array[i] = elemCbo[elemCbo_index];
-                        i++;
-                    }
-                }
-            }
+			$( '#apl-toggle-' + k_post_type_slug ).change( function() {
+				if ( $( this ).is( ':checked' ) ) {
+					if ( 'any' !== k_post_type_slug ) {
+						$( '#apl-filter-' + k_post_type_slug ).show();
 
-            $("#cboPostVisibility").val(tmp_array);
-            $("#cboPostVisibility").multiselect('refresh');
-            
-            
-        },
-                
-        //Prevents an empty value to be stored. At least 1 option must be selected
-        close:function(event,ui)
-        {
-            var values = $("#cboPostVisibility").val();
-            if (values === null)
-            {
-                var default_value = new Array('public');
-                $("#cboPostVisibility").val(default_value);
-                $("#cboPostVisibility").multiselect('refresh');
-            }
-        }
-    });
-    $("#cboPostStatus").multiselect({
-        header: false,
-        noneSelectedText: "Any",
-        selectedList: 1,
-        //buttonWidth: 128,
-        minWidth: 128,
-        menuWidth: 160,
-        
-        click:function(event, ui)
-        {
-            var elemCbo = $("#cboPostStatus").val();
-            if (elemCbo === null)
-            {
-                elemCbo = new Array();
-            }
-            var tmp_array = new Array();
-            
-            if (ui.checked === true)
-            {
-                tmp_array = elemCbo;
-                //Add the value at the end of the Array
-                tmp_array[elemCbo.length] = ui.value;
-            }
-            else 
-            {
-                var i = 0;
-                for (var elemCbo_index in elemCbo)
-                {
-                    //Prevent the value from being copied to the array
-                    if (elemCbo[elemCbo_index] !== ui.value)
-                    {
-                        tmp_array[i] = elemCbo[elemCbo_index];
-                        i++;
-                    }
-                }
-            }
+						$.each( v_taxonomy_arr.tax_arr, function( k2_tax_index, v2_tax_slug ) {
+							var target_div = '#apl-t-div-' + k_post_type_slug + '-' + v2_tax_slug;
+							$( target_div ).show();
+							return false;
+						});
 
-            $("#cboPostStatus").val(tmp_array);
-            $("#cboPostStatus").multiselect('refresh');
-            
-            
-        }
-    });
+						if ( $( '#apl-toggle-any' ).is( ':checked' ) ) {
+							$( '#apl-toggle-any' ).prop( 'checked', false );
+							$( '#apl-filter-any' ).hide();
+						}
+					} else {
+						$( this ).prop( 'checked', false );
+					}
+				} else {
+					$( '#apl-filter-' + k_post_type_slug ).hide();
+					
+					$( '#apl-toggle-any' ).prop( 'checked', true );
+					$( '#apl-filter-any' ).show();
+					$.each( post_tax, function( k2_post_type_slug, v2_taxonomy_arr ) {
+						if ( 'any' !== k2_post_type_slug && $( '#apl-toggle-' + k2_post_type_slug ).is( ':checked' ) ) {
+							$( '#apl-toggle-any' ).prop( 'checked', false );
+							$( '#apl-filter-any' ).hide();
+						}
+					});
+				}
+				$( '#apl-tabs-' + k_post_type_slug + '-type' ).tabs( 'refresh' );
+				$( '#apl-tabs-' + k_post_type_slug + '-taxonomies' ).tabs( 'refresh' );
+			});
+			
+		});
+	}
 
-    $("#slctAuthorOperator").multiselect({
-        multiple: false,
-        header: false,
-        selectedList: 1,
-        //buttonWidth: 96,
-        minWidth: 96,
-        menuWidth: 128,
-        height:96,
-        click:function(event, ui){
+	function init_tabs_post_type_taxonomies () {
+		$.each( post_tax, function( k_post_type_slug, v_taxonomy_arr ) {
+			
 
-            if (ui.value === "none")
-            {
-                var newArr = new Array();
-                $("#cboAuthorIDs").val(newArr);
-                $("#cboAuthorIDs").multiselect('refresh');
-                $("#cboAuthorIDs").multiselect("disable");
-            }
-            else
-            {
-                $("#cboAuthorIDs").multiselect("enable");
-            }
-            $("#slctAuthorOperator").val(ui.value);
-            $("#slctAuthorOperator").multiselect('refresh');
-        }
-    });
-    $("#cboAuthorIDs").multiselect({
-        header: false,
-        noneSelectedText: '-None-',
-        selectedList: 1,
-        //buttonWidth: 128,
-        minWidth: 128,
-        menuWidth: 256,
-        
-        click:function(event, ui)
-        {
-            var elemCbo = $("#cboAuthorIDs").val();
-            if (elemCbo === null)
-            {
-                elemCbo = new Array();
-            }
-            var tmp_array = new Array();
-            
-            if (ui.checked === true)
-            {
-                tmp_array = elemCbo;
-                //Add the value at the end of the Array
-                tmp_array[elemCbo.length] = ui.value;
-            }
-            else 
-            {
-                var i = 0;
-                for (var elemCbo_index in elemCbo)
-                {
-                    //Prevent the value from being copied to the array
-                    if (elemCbo[elemCbo_index] !== ui.value)
-                    {
-                        tmp_array[i] = elemCbo[elemCbo_index];
-                        i++;
-                    }
-                }
-            }
+			var first_tax = true;
+			$.each( v_taxonomy_arr.tax_arr, function( k_index, v_tax_slug ) {
+				var target_tab = '#apl-t-li-' + k_post_type_slug + '-' + v_tax_slug;
+				var target_div = '#apl-t-div-' + k_post_type_slug + '-' + v_tax_slug;
 
-            $("#cboAuthorIDs").val(tmp_array);
-            $("#cboAuthorIDs").multiselect('refresh');
-        }
-    });
-    $("#cboAuthorIDs").multiselect("disable");
+				if ( ! first_tax ) {
+					$( target_tab ).hide();
+					$( target_div ).hide();
+				}
 
-    $("#slctUserPerm").multiselect({
-        multiple: false,
-        header: false,
-        noneSelectedText: false,
-        selectedList: 1,
-        //buttonWidth: 96,
-        minWidth: 96,
-        menuWidth: 128,
-        height: 69,
-        
-        click:function(event, ui)
-        {
-            $("#slctUserPerm").val(ui.value);
-            $("#slctUserPerm").multiselect('refresh');
-        }
-    });
+				first_tax = false;
+			});
+			$( '#apl-tabs-' + k_post_type_slug +'-taxonomies' ).tabs({
+				heightStyle: "fill"
+			});
+			$( '#apl-tabs-' + k_post_type_slug +'-type' ).tabs({
+				heightStyle: "fill"
+			});
+			
+		});
+	}
 
-    //(ELEMENT - Exclude Post IDs)
-    
-    //(ELEMENT - List Amount)
+	function init_multiselect_post_type_taxonomies() {
+		$.each( post_tax, function( k_pt_slug, v_tax_arr ) {
+			$( '#apl-multiselect-' + k_pt_slug ).multiselect({
+				header: false,
+				noneSelectedText: trans.tax_noneSelectedText,
+				selectedText: trans.tax_selectedText,
+				selectedList: 2,
+				height: 150,
+				minWidth:333,
+				menuWidth:333,
 
-    $("#slctOrderBy").multiselect({
-        multiple: false,
-        header: false,
-        noneSelectedText: "Select an Option",
-        selectedList: 1,
-        //buttonWidth: 132,
-        minWidth: 132,
-        menuWidth: 192,
-        
-        click:function(event, ui)
-        {
-            $("#slctOrderBy").val(ui.value);
-            $("#slctOrderBy").multiselect('refresh');
-        }
-    });
-    $("#slctOrder").multiselect({
-        multiple: false,
-        header: false,
-        noneSelectedText: "Select an Option",
-        selectedList: 1,
-        //buttonWidth: 128,
-        minWidth: 128,
-        menuWidth: 160,
-        height: 69,
-        
-        click:function(event, ui)
-        {
-            $("#slctOrder").val(ui.value);
-            $("#slctOrder").multiselect('refresh');
-        }
-    });
+				click: function( event, ui ) {
+					var target_tab = '#apl-t-li-' + ui.value;
+					var target_div = '#apl-t-div-' + ui.value;
 
-    //(ELEMENT - Ignore Sticky Posts)
-    
-    //(ELEMENT - Exclude Current Post)
-    
-    //(ELEMENT - Exclude Duplicates from Current Post)
+					if ( true == ui.checked ) {
+						$( target_tab ).show();
+						$( target_div ).show();
 
+						$( '#apl-tabs-' + k_pt_slug + '-taxonomies' ).tabs( 'refresh' );
+					} else {
+						$( target_tab ).hide();
+						$( target_div ).hide();
 
-    $("#btnSavePreset").button();
-    $("#btnSaveSettings").button();
-    $("#btnExport").button();
-    $("#btnImport").button();
-    $("#btnRestorePreset").button();
-    $("#info10").click(function()
-    {
-        $("#d10").dialog({ width: 640, height: 480 });
-    });
-    $("#info11").click(function()
-    {
-        $("#d11").dialog({ width: 640, height: 480 });
-    });
-    $("#info12").click(function()
-    {
-        $("#d12").dialog({ width: 640});
-    });
-    $("#info13").click(function()
-    {
-        $("#d13").dialog({ width: 640, height: 480 });
-    });
-    $("#info14").click(function()
-    {
-        $("#d14").dialog({ width: 640 });
-    });
-    $("#info15").click(function()
-    {
-        $("#d15").dialog({ width: 640 });
-    });
-    $("#info16").click(function()
-    {
-        $("#d16").dialog({ width: 640 });
-    });
-    $("#divCustomPostTaxonomyContent").accordion({
-        icons: false
-    });
-    $("#divCustomPostTaxonomyContent").children().each(function(index, domEle)
-    {
+						$( '#apl-tabs-' + k_pt_slug + '-taxonomies' ).tabs( 'refresh' );
+						$( target_div ).hide();
+					}
+				},
+			});
 
-        if(domEle.localName === 'div')
-        {
-            $(domEle).height(356);
-        }
-    });
+			$( '#apl-multiselect-' + k_pt_slug ).multiselect( 'widget' ).find(':checkbox[value="' + k_pt_slug + '-' + v_tax_arr.tax_arr[ 0 ] + '"]').prop('checked', true);
 
+		});
+	}
+	
+	function init_spinner_amount() {
+		$( '.apl-spinner-amount' ).spinner({
+			min: -1,
+			change: function( event, ui ) {},
+			spin: function( event, ui ) {}
+		});
+	}
+	
+	function init_slider_amount() {
+		$( '.apl-slider-amount' ).slider({
+			value: $( '.apl-spinner-amount' ).spinner( 'value' ),
+			min: -1,
+			max: 101,
+			create: function() {
+				//$( '#apl_list_amount_slider' ).text( $( '#apl_list_amount_spinner' ).spinner( "value" ) );
+				$( '.apl-slider-handle-amount' ).text( $( this ).slider( 'value' ) );
+			},
+			slide: function( event, ui ) {
+				$( '.apl-slider-handle-amount' ).text( ui.value );
+			}
+		});
+	}
+	
+	function init_selectmenu_order_by() {
+		$( '.apl-selectmenu-order-by' ).selectmenu({
+			
+			create: function( event, ui ) {
+				$( '#' + this.id + '-button' ).addClass( 'apl-ui-ms-filter-2-row' );
+			}
+//			change: function( event, ui ) {
+//				
+//			}
+		});
+	}
+
+	function init_selectmenu_order() {
+		$( '.apl-selectmenu-order' ).selectmenu({
+			disabled: true,
+			create: function( event, ui ) {
+				$( '#' + this.id + '-button' ).addClass( 'apl-ui-ms-filter-2-row' );
+			}
+		});
+	}
+	
+	function init_selectmenu_author_operator() {
+		$( '.apl-selectmenu-author-operator' ).selectmenu({
+			create: function( event, ui ) {
+				$( '#' + this.id + '-button' ).addClass( 'apl-ui-ms-filter-2-row' );
+			}
+			
+		});
+	}
+	
+	function init_multiselect_author_ids() {
+		$( '.apl-multiselect-author-ids' ).multiselect({
+			classes: 'apl-ui-ms apl-ui-ms-filter-2-row',
+			header: false,
+			noneSelectedText: 'string',
+			selectedText: 'string',
+			selectedList: 1,
+			height: 200,
+			minWidth:100,
+			menuWidth:100,
+			click: function( event, ui ) {
+				
+			}
+		});
+	}
+	
+	function init_multiselect_post_status_1() {
+		$( '.apl-multiselect-post-status-1' ).multiselect({
+			classes: 'apl-ui-ms apl-ui-ms-filter-2-row',
+			header: false,
+			noneSelectedText: 'string',
+			selectedText: 'string',
+			selectedList: 1,
+			height: 150,
+			/* minWidth:'45%', // admin.css button.apl-ui-ms-filter-2-row */
+			menuWidth:150,
+			click: function( event, ui ) {
+				
+			}
+		})
+	}
+	
+	function init_multiselect_post_status_2() {
+		$( '.apl-multiselect-post-status-2' ).multiselect({
+			classes: 'apl-ui-ms apl-ui-ms-filter-2-row',
+			header: false,
+			noneSelectedText: 'string',
+			selectedText: 'string',
+			selectedList: 1,
+			height: 300,
+			minWidth:'45%',
+			menuWidth:150,
+			click: function( event, ui ) {
+				
+			}
+		})
+	}
+	
+	function init_selectmenu_perm() {
+		$( '.apl-selectmenu-perm' ).selectmenu({
+			create: function( event, ui ) {
+				$( '#' + this.id + '-button' ).addClass( 'apl-ui-ms-filter-2-row' );
+			},
+			change: function( event, ui ) {
+				
+			}
+		});
+	}
+	
+	
 });
+
+
+
+
+
+
+
+
+
+

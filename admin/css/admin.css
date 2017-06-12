@@ -1,74 +1,151 @@
- .txtHeader
-  {
-	width:610px;
-	position:absolute;
-	left:290px;
-  }
+/**
+ * APL Admin UI CSS
+ *
+ * Scripts: jQuery, jQuery UI, jQuery UI Multiselect
+ */
 
-/*OPTION SECTION ON APL_admin PAGE*/
-#containerOptions {
-	height: 416px;
-	max-width: 800px;
-	min-width: 720px;
+.ui-tabs-anchor {
+	padding: .1em 1em !important;
 }
-#optionsHeader {
-	margin-bottom: 5px;
-	width: auto;
-	min-height: 20px;
+
+.ui-multiselect-close {
+	display: none;
 }
-#optionL {
+
+.apl-filter-box-1 {
+	display: flex;
+	margin-bottom: 18px;
+}
+
+.apl-left-minibar {
 	float: left;
-	width: 48%;
-    height: 100%;
-	margin: 5px;
+	width: 20%;
 }
-#optionR {
+
+.apl-filter-post-tax-query {
+	float: left;
+	width: 80%;
+}
+
+.apl-tabs-post_type-type {
+	height: 405px;
+}
+
+.apl-tabs-post-type-taxonomies {
+	height: 300px;
+}
+
+.apl-t-li-post-type {
+	float: right !important;
+}
+
+.apl-t-li-post-type h5 {
+	margin: initial;
+}
+
+.apl-tabs-post-type-taxonomies > ul {
+	min-height: 22px;
+}
+
+.apl-t-terms {
+	overflow-x: hidden !important;
+}
+
+.apl-t-terms label {}
+
+.apl-filter-box-2 {
+	display: flex;
+	margin-bottom: 18px;
+}
+
+.apl-filter-box-2-left {
+	float: left;
+	margin-right: 3%;
+	width: 57%;
+}
+
+.apl-filter-box-2-right {
+	float: left;
+	width: 40%;
+}
+
+.apl-filter-field-left-row {
+	min-height: 42px;
+}
+
+.apl-filter-field-right-row {
+	min-height: 42px;
+}
+
+.apl-filter-field-row-full {
+	min-height: 42px;
+}
+
+.apl-filter-field-left-row > div:first-child {
+	float: left;
+	width: 35%;
+}
+
+.apl-filter-field-left-row > div:nth-child( 2 ) {
+	float: left;
+	width: 65%;
+}
+
+.apl-amount-alt {
+	height: 27px;
+    padding-top: 15px;
+}
+
+apl-filter-field-right-row > input {
 	float: right;
-	width: 48%;
-    height: 100%;
-	margin: 5px;
-}
-.optionL-row {
-    min-height: 26px;
-}
-.optionR-row {
-    min-height: 26px;
-    margin-right: 25px;
-    margin-top: 9px;
-}
-#options1 {
-	width: 335px;
-	margin-right: 25px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	margin-left: 5px;
-}
-#options2 {
-    width: 335px;
-	margin-right: 25px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	margin-left: 5px;
 }
 
-.info-icon {
-    cursor: help;
-}
-.ui-button-text { 
-    padding: .4em 1em !important; 
-} 
-.info_a_link {
-    cursor: help;
-    font-size: 75%
+apl-filter-field-right-row > input:after {
+	clear: both;
 }
 
-/*
-.ui-accordion-header { cursor: none; }
+.apl-ui-ms {
+	display: inline-block;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    cursor: pointer;
+	
+	padding: 0 !important;
+}
 
-.ui-accordion-header { padding-left: 0 }
+.apl-ui-ms > span.ui-icon {
+	right: 0.5em;
+	left: auto;
+	margin-top: -8px;
+	position: absolute;
+	top: 50%;
+}
 
+.apl-ui-ms > span:nth-child(2) {
+	float: left;
+	text-align: left;
+	padding: 0.4em 1.5em 0.4em 1em;
+	display: block;
+	line-height: 1.4;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 
-.ui-button { margin-left: -1px; }
+button.apl-ui-ms-filter-2-row {
+	width: 48.0% !important;
+}
 
-.ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; }
-*/
+span.apl-ui-ms-filter-2-row {
+	width: 47.2% !important;
+}
+
+input.apl-text-exclude-posts {
+	width: 100%;
+}
+
+.apl-chkbox-input {
+	float: right;
+	margin-top: 5px !important;
+}

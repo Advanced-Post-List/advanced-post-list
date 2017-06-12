@@ -108,7 +108,7 @@ class APL_Core {
 		/* **** ACTION & FILTERS HOOKS **** */
 		add_action( 'init', array( $this, 'hook_action_register_post_type_post_list' ) );
 		add_action( 'init', array( $this, 'hook_action_register_post_type_design' ) );
-		add_action( 'plugins_loaded', array( $this, 'hook_action_check_version' ) );
+		add_action( 'init', array( $this, 'hook_action_check_version' ) );
 		add_action( 'plugins_loaded', array( $this, 'hook_action_load_plugin_textdomain' ) );
 		add_action( 'widgets_init', array( $this, 'hook_action_widget_init' ) );
 		add_shortcode( 'post_list', array( $this, 'hook_shortcode_post_list' ) );
@@ -297,7 +297,7 @@ class APL_Core {
 				//'page-attributes',
 				//'post-formats',
 			),
-			'register_meta_box_cb'  => array( $this, 'post_list_meta_boxes' ),
+			//'register_meta_box_cb'  => array( $this, 'post_list_meta_boxes' ),
 			//taxonomies
 			'has_archive'			=> false,
 			'rewrite'               => array(
@@ -314,7 +314,7 @@ class APL_Core {
 			//_builtin // Core Dev
 			//_edit_link // Core Dev
 		);
-		//$args = apply_filters( 'apl_register_post_type_', $args );
+		$args = apply_filters( 'apl_register_post_type_post_list', $args );
 		register_post_type( 'apl_post_list', $args );
 	}
 
@@ -406,39 +406,6 @@ class APL_Core {
 		$args = apply_filters( 'apl_register_post_type_design', $args );
 		register_post_type( 'apl_design', $args );
 	}
-
-	public function post_list_meta_boxes() {
-		add_meta_box(
-			'apl-design-before',
-			__( 'Display Preset Format', 'advanced-post-list' ),
-			array( $this, 'meta_box_design', ),
-			array( 'apl_post_list' ),
-			'simple',
-			'high'
-		);
-	}
-	public function meta_box_design( $post, $metabox ) {
-		echo '<p>Foo BAR!!!</p>';
-		var_dump( $metabox );
-	}
-
-	/*
-	private function meta_boxes() {
-		add_meta_box(
-			'apl-design-before',
-			__( 'Display Format', 'advanced-post-list' ),
-			array(
-				$this,
-				'meta_box_design',
-			),
-			array( 'apl-design' ),
-			'side'
-		);
-	}
-	function meta_box_design() {
-		
-	}
-	 */
 
 	/**
 	 * Hook for APL check version.
@@ -559,12 +526,12 @@ class APL_Core {
 		 */
 
 		// Step 2.
-		wp_deregister_script( 'apl-admin-js' );
-		wp_deregister_script( 'apl-admin-ui-js' );
+		wp_deregister_script( 'apl-admin-js-old' );
+		wp_deregister_script( 'apl-admin-ui-js-old' );
 		wp_deregister_script( 'apl-jquery-ui-multiselect-js' );
 
-		wp_deregister_style( 'apl-admin-css' );
-		wp_deregister_style( 'apl-admin-ui-css' );
+		wp_deregister_style( 'apl-admin-css-old' );
+		wp_deregister_style( 'apl-admin-ui-css-old' );
 		wp_deregister_style( 'apl-jquery-ui-multiselect' );
 		wp_deregister_style( 'apl-jquery-ui-multiselect-css' );
 		wp_deregister_style( 'apl-jquery-ui-multiselect-filter-css' );
@@ -583,8 +550,8 @@ class APL_Core {
 		// Step 4.
 		$script_deps = array( 'jquery', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-dialog' );
 		wp_register_script(
-			'apl-admin-js',
-			plugins_url() . '/advanced-post-list/admin/js/admin.js',
+			'apl-admin-js-old',
+			plugins_url() . '/advanced-post-list/admin/js_OLD/admin.js',
 			$script_deps,
 			APL_VERSION,
 			false
@@ -592,8 +559,8 @@ class APL_Core {
 
 		$script_deps = array( 'jquery', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-accordion', 'jquery-ui-button','jquery-ui-dialog', 'jquery-ui-tabs' );
 		wp_register_script(
-			'apl-admin-ui-js',
-			plugins_url() . '/advanced-post-list/admin/js/admin-ui.js',
+			'apl-admin-ui-js-old',
+			plugins_url() . '/advanced-post-list/admin/js_OLD/admin-ui.js',
 			$script_deps,
 			APL_VERSION,
 			false
@@ -601,8 +568,8 @@ class APL_Core {
 
 		$script_deps = array( 'jquery', 'jquery-ui-core', 'jquery-ui-widget' );
 		wp_register_script(
-			'apl-jquery-ui-multiselect-js',
-			plugins_url() . '/advanced-post-list/admin/js/jquery.multiselect.min.js',
+			'apl-jquery-ui-multiselect-js-old',
+			plugins_url() . '/advanced-post-list/admin/js_OLD/jquery.multiselect.min.js',
 			$script_deps,
 			APL_VERSION,
 			false
@@ -610,8 +577,8 @@ class APL_Core {
 
 		$script_deps = array( 'jquery', 'jquery-ui-core', 'jquery-ui-widget' );
 		wp_register_script(
-			'apl-jquery-ui-multiselect-filter-js',
-			plugins_url() . '/advanced-post-list/admin/js/jquery.multiselect.filter.min.js',
+			'apl-jquery-ui-multiselect-filter-js-old',
+			plugins_url() . '/advanced-post-list/admin/js_OLD/jquery.multiselect.filter.min.js',
 			$script_deps,
 			APL_VERSION,
 			false
@@ -623,15 +590,15 @@ class APL_Core {
 
 		// Step 5.
 		wp_enqueue_style(
-			'apl-admin-css',
-			plugins_url() . '/advanced-post-list/admin/css/admin.css',
+			'apl-admin-css-old',
+			plugins_url() . '/advanced-post-list/admin/css_OLD/admin.css',
 			false,
 			APL_VERSION,
 			false
 		);
 
 		wp_enqueue_style(
-			'apl-admin-ui-css',
+			'apl-admin-ui-css-old',
 			'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/' . $otions['jquery_ui_theme'] . '/jquery-ui.css',
 			false,
 			APL_VERSION,
@@ -639,15 +606,15 @@ class APL_Core {
 		);
 
 		wp_enqueue_style(
-			'apl-jquery-ui-multiselect-css',
-			plugins_url() . '/advanced-post-list/admin/css/jquery.multiselect.css',
+			'apl-jquery-ui-multiselect-css-old',
+			plugins_url() . '/advanced-post-list/admin/css_OLD/jquery.multiselect.css',
 			false,
 			APL_VERSION,
 			false
 		);
 		wp_enqueue_style(
-			'apl-jquery-ui-multiselect-filter-css',
-			plugins_url() . '/advanced-post-list/admin/css/jquery.multiselect.filter.css',
+			'apl-jquery-ui-multiselect-filter-css-old',
+			plugins_url() . '/advanced-post-list/admin/css_OLD/jquery.multiselect.filter.css',
 			false,
 			APL_VERSION,
 			false
@@ -864,10 +831,7 @@ class APL_Core {
 			array( $this, 'admin_page' )
 		);
 		// STEP 2.
-		add_action(
-			'admin_print_styles-' . $apl_admin_page_hook,
-			array( $this, 'admin_head' )
-		);
+		// add_action( 'admin_print_styles-' . $apl_admin_page_hook, array( $this, 'admin_head' ) );
 		// add_filter( 'contextual_help', 'kalinsPost_contextual_help', 10, 3 );
 	}
 

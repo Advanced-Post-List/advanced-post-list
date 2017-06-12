@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 global $wp_version;
 
 if ( isset( $wp_version ) ) {
-	if ( version_compare( $wp_version, '2.0.2', '<' ) ) {
+	if ( version_compare( $wp_version, '4.5', '<' ) ) {
 		$error_msg = '';
 		$error_msg .= __( 'This plugin requires Wordpress 2.0.2 or higher to operate. ', 'advanced-post-list' );
 		$error_msg .= esc_html__( '<a href="http://codex.wordpress.org/Upgrading_WordPress">Please update!</a>', 'advanced-post-list' );
@@ -92,3 +92,34 @@ function hook_filter_apl_register_design( $args ) {
 	return $return_args;
 }
 add_filter( 'apl_register_post_type_design', 'hook_filter_apl_register_design' );
+
+
+
+
+
+
+
+
+//add_filter( 'hidden_meta_boxes', function( $hidden, $screen, $use_defaults )
+//{
+//    global $wp_meta_boxes;
+//    $cpt = 'apl_post_list'; // Modify this to your needs!
+//
+//    if( $cpt === $screen->id && isset( $wp_meta_boxes[$cpt] ) )
+//    {
+//        $tmp = array();
+//        foreach( (array) $wp_meta_boxes[$cpt] as $context_key => $context_item )
+//        {
+//            foreach( $context_item as $priority_key => $priority_item )
+//            {
+//                foreach( $priority_item as $metabox_key => $metabox_item )
+//                    $tmp[] = $metabox_key;
+//            }
+//        }
+//        $hidden = $tmp;  // Override the current user option here.
+//    }
+//	
+//	
+//    //return $hidden;
+//}, 10, 3 );
+
