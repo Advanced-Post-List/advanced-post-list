@@ -4,7 +4,10 @@
  * Admin JavaScript / jQuery for UI design and conditional logic.
  *
  * @package WordPress
- * @subpackage Advanced Post List
+ * @subpackage APL_Admin
+ * @subpackage jQuery
+ * @subpackage jQuery UI
+ * @subpackage jQuery UI Multiselect
  * @since 0.4.0
  */
 

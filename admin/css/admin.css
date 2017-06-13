@@ -1,7 +1,11 @@
 /**
  * APL Admin UI CSS
  *
- * Scripts: jQuery, jQuery UI, jQuery UI Multiselect
+ * @package WordPress
+ * @subpackage APL_Admin
+ * @subpackage jQuery UI
+ * @subpackage jQuery UI Multiselect 
+ * @since 0.4.0
  */
 
 .ui-tabs-anchor {
@@ -101,7 +105,7 @@
 
 .apl-amount-alt {
 	height: 27px;
-    padding-top: 15px;
+	padding-top: 15px;
 }
 
 apl-filter-field-right-row > input {
@@ -114,11 +118,11 @@ apl-filter-field-right-row > input:after {
 
 .apl-ui-ms {
 	display: inline-block;
-    overflow: hidden;
-    position: relative;
-    text-decoration: none;
-    cursor: pointer;
-	
+	overflow: hidden;
+	position: relative;
+	text-decoration: none;
+	cursor: pointer;
+
 	padding: 0 !important;
 }
 
@@ -166,9 +170,7 @@ input.apl-text-exclude-posts {
 	margin-bottom: 18px;
 }
 
-.apl-design-column {
-	
-}
+.apl-design-column {}
 
 .apl-design-row {
 	float: left;

@@ -36,13 +36,13 @@ global $wp_version;
 if ( isset( $wp_version ) ) {
 	if ( version_compare( $wp_version, '4.5', '<' ) ) {
 		$error_msg = '';
-		$error_msg .= __( 'This plugin requires Wordpress 2.0.2 or higher to operate. ', 'advanced-post-list' );
+		$error_msg .= esc_html__( 'This plugin requires Wordpress 2.0.2 or higher to operate. ', 'advanced-post-list' );
 		$error_msg .= esc_html__( '<a href="http://codex.wordpress.org/Upgrading_WordPress">Please update!</a>', 'advanced-post-list' );
-		wp_die( esc_html( $error_msg ), 'Advanced Post List: Error' );
+		wp_die( esc_html( $error_msg ), esc_html__( 'Advanced Post List: Error', 'advanced-post-list' ) );
 	}
 } else {
 	$error_msg = __( 'You are attempting to access this plugin directly.', 'advanced-post-list' );
-	wp_die( esc_html( $error_msg ), 'Advanced Post List: Error' );
+	wp_die( esc_html( $error_msg ), esc_html__( 'Advanced Post List: Error', 'advanced-post-list' ) );
 }
 
 /* **** Core Singleton Class **** */

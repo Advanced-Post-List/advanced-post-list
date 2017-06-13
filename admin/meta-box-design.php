@@ -5,7 +5,7 @@
  * Design Meta Box for making new Post Lists.
  *
  * @package WordPress
- * @subpackage Advanced Posr List
+ * @subpackage Advanced Post List
  * @since 0.4.0
  */
 

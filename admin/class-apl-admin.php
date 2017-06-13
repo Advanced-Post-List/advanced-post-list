@@ -1,15 +1,14 @@
 <?php
-
 /**
- * APL Admin Class
+ * APL Admin API: APL_Admin Class
  *
  * Admin core object to Advanced Post List
  *
  * @link https://github.com/EkoJr/advanced-post-list/
  *
  * @package WordPress
- * @subpackage advanced-post-list.php
- * @since 0.1.0
+ * @subpackage APL_Core
+ * @since 0.4.0
  */
 
 /**
@@ -17,9 +16,7 @@
  *
  * Admin core class.
  *
- * @since 0.1.0
- * @since 0.2.0
- * @since 0.3.0
+ * @since 0.4.0
  */
 class APL_Admin {
 
@@ -31,7 +28,7 @@ class APL_Admin {
 	 * @var null $instance Singleton Class Instance.
 	 */
 	protected static $instance = null;
-	
+
 	/**
 	 * Summary.
 	 *
@@ -46,25 +43,7 @@ class APL_Admin {
 		'apl_post_list',
 		'apl_design',
 	);
-	
 
-	/**
-	 * Summary.
-	 *
-	 * Description.
-	 *
-	 * @since 0.4.0
-	 * @access private
-	 *
-	 * @see Function/method/class relied on
-	 * @link URL
-	 * @global type $varname Description.
-	 * @global type $varname Description.
-	 *
-	 * @param type $var Description.
-	 * @param type $var Optional. Description. Default.
-	 * @return type Description.
-	 */
 	/**
 	 * Get Singleton Instance.
 	 *
@@ -73,7 +52,7 @@ class APL_Admin {
 	 * @since 0.4.0
 	 * @access private
 	 *
-	 * @return void
+	 * @return object
 	 */
 	public static function get_instance() {
 		if ( null === static::$instance ) {
@@ -95,7 +74,7 @@ class APL_Admin {
 	 */
 	private function __clone() {
 		// Cloning instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'advanced-post-list' ), '1.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'advanced-post-list' ), APL_VERSION );
 	}
 
 	/**
@@ -108,7 +87,7 @@ class APL_Admin {
 	 */
 	private function __wakeup() {
 		// Unserializing instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'advanced-post-list' ), '1.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin\' huh?', 'advanced-post-list' ), APL_VERSION );
 	}
 
 	/**
@@ -128,52 +107,89 @@ class APL_Admin {
 		}
 		$this->_requires();
 
-		// Menu & Scripts
+		// Menu & Scripts.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
-		// Screen Options
+		// Screen Options.
 		add_action( 'admin_head', array( $this, 'disable_screen_boxes' ) );
 		add_action( 'load-edit.php', array( $this, 'post_list_screen_all' ) );
 		add_action( 'load-post-new.php', array( $this, 'post_list_screen_add_new' ) );
 
-		// Editor Meta Boxes
+		// Editor Meta Boxes.
 		add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
 
 		/*
-		// Early Hook
+		// Early Hook.
 		add_action( 'plugins_loaded', array( $this, 'hook_action_plugins_loaded' ) );
 
-		// Plugin Init Hook
+		// Plugin Init Hook.
 		add_action( 'init', array( $this, 'hook_action_init' ) );
 
-		// After WordPress is fully loaded
+		// After WordPress is fully loaded.
 		add_action( 'wp_loaded', array( $this, 'hook_action_wp_loaded' ) );
 
-		// WordPress Footer
+		// WordPress Footer.
 		add_action( 'wp_footer', array( $this, 'hook_action_wp_footer' ) );
 		*/
 
 	}
 
+	/**
+	 * Requires Files.
+	 *
+	 * Files that this class object needs to load.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	 */
 	private function _requires() {
-		//require_once( APL_DIR . 'includes/example.php' );
+		// Example.
+		// 'require_once( APL_DIR . 'includes/example.php' )'.
 	}
-	
+
+	/**
+	 * APL Admin Menu.
+	 *
+	 * Adds the Admin Menu and Scripts for APL.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see wp-admin/admin-header.php
+	 * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
+	 *
+	 * @return void
+	 */
 	public function admin_menu() {
-		// Add APL Dashboard
-		// Add APL Settings API
-		// Add Help API
-		
-		// Enqueue Scripts & Styles
+		// TODO - Add APL Dashboard.
+		// TODO - Add APL Settings API.
+		// TODO - Add Help API.
+
+		// Enqueue Scripts & Styles.
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 	}
-	
-	public function admin_enqueue( $hook ) {
+
+	/**
+	 * APL Admin Enqueue Scripts & Styles.
+	 *
+	 * Loads APL scripts and styles. If not in APL Admin Pages, then remove.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see wp-admin/admin-header.php
+	 * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
+	 *
+	 * @param string $hook_suffix The suffix for the current Admin page.
+	 * @return void.
+	 */
+	public function admin_enqueue( $hook_suffix ) {
 		$screen = get_current_screen();
-		
+
 		/*
 		 * ************** REMOVE SCRIPTS & STYLES *********************
 		 */
+
+		// STEP 1 - By default, remove any scripts & styles.
 		wp_deregister_script( 'apl-admin-js' );
 		wp_deregister_script( 'apl-admin-ui-js' );
 		wp_deregister_script( 'apl-admin-ui-multiselect-js' );
@@ -183,28 +199,27 @@ class APL_Admin {
 		wp_deregister_style( 'apl-admin-ui-multiselect-css' );
 		wp_deregister_style( 'apl-admin-ui-multiselect-filter-css' );
 
+		// If we are not viewing APL Post List area, then return.
 		if ( 'apl_post_list' !== $screen->post_type ) {
 			return;
 		} else {
-
 			/*
 			 * ************** AJAX ACTION HOOKS ***************************
 			 */
+
+			// TODO - Add meta box to side to load different presets from 'edit.php'.
 			add_action( 'wp_ajax_apl_load_preset', array( $this, 'hook_ajax_load_preset' ) );
 
 			/*
 			 * ************** REGISTER SCRIPTS ****************************
 			 */
 
-			// Step 4.
+			// Step 2 - Register scripts to be enqueued.
 			wp_register_script(
 				'apl-admin-js',
 				APL_URL . 'admin/js/admin.js',
 				array(
 					'jquery',
-					//'jquery-ui-core',
-					//'jquery-ui-widget',
-					//'jquery-ui-dialog',
 				),
 				APL_VERSION,
 				false
@@ -223,9 +238,6 @@ class APL_Admin {
 					'jquery-ui-button',
 					'jquery-ui-dialog',
 					'jquery-ui-selectmenu',
-					//'jquery-ui-checkboxradio',
-					//'jquery-ui-accordion',
-					
 				),
 				APL_VERSION,
 				false
@@ -255,17 +267,18 @@ class APL_Admin {
 				APL_VERSION,
 				false
 			);
-			
+
+			// STEP 3 - Enqueue scripts.
 			wp_enqueue_script( 'apl-admin-js' );
 			wp_enqueue_script( 'apl-admin-ui-js' );
 			wp_enqueue_script( 'apl-admin-ui-multiselect-js' );
 			wp_enqueue_script( 'apl-admin-ui-multiselect-filter-js' );
-			
+
 			/*
 			 * ************** REGISTER STYLES *****************************
 			 */
 
-			// Step 5.
+			// Step 4 - (Register) Enqueue styles.
 			wp_enqueue_style(
 				'apl-admin-css',
 				APL_URL . 'admin/css/admin.css',
@@ -282,7 +295,7 @@ class APL_Admin {
 				APL_VERSION,
 				false
 			);
-			
+
 			wp_enqueue_style(
 				'apl-admin-ui-multiselect-css',
 				APL_URL . 'admin/css/jquery.multiselect.css',
@@ -299,28 +312,29 @@ class APL_Admin {
 				false
 			);
 
-			// POST LISTS DATA.
-			$data_post_lists = array();
-			$args = array(
-				//'post_status'      => 'publish',
-				'post_type'        => 'apl_post_list',
-			);
-			$post_post_list = get_posts( $args );
-			foreach ( $post_post_list as $key => $value ) {
-				$data_post_lists[ $value->post_name ] = new APL_Post_List( $value->post_name );
-			}
+//			// POST LISTS DATA.
+//			$data_post_lists = array();
+//			$args = array(
+//				//'post_status'      => 'publish',
+//				'post_type'        => 'apl_post_list',
+//			);
+//			$post_post_list = get_posts( $args );
+//			foreach ( $post_post_list as $key => $value ) {
+//				$data_post_lists[ $value->post_name ] = new APL_Post_List( $value->post_name );
+//			}
+//
+//			// DESIGNS DATA.
+//			$data_designs = array();
+//			$args = array(
+//				'post_status'      => 'publish',
+//				'post_type'        => 'apl_design',
+//			);
+//			$post_designs = get_posts( $args );
+//			foreach ( $post_designs as $key => $value ) {
+//				$data_designs[ $value->post_name ] = new APL_Design( $value->post_name );
+//			}
 
-			// DESIGNS DATA.
-			$data_designs = array();
-			$args = array(
-				'post_status'      => 'publish',
-				'post_type'        => 'apl_design',
-			);
-			$post_designs = get_posts( $args );
-			foreach ( $post_designs as $key => $value ) {
-				$data_designs[ $value->post_name ] = new APL_Design( $value->post_name );
-			}
-
+			// Get values for variables to localize into JS files.
 			// POST => TAXONOMIES.
 			$data_post_tax = $this->get_post_tax();
 
@@ -345,43 +359,82 @@ class APL_Admin {
 				'trans' => $data_ui_trans,
 			);
 
+			// Add variables to JS files.
+			// '../admin/js/admin.js'.
+			// '../admin/js/admin-ui.js'.
 			wp_localize_script( 'apl-admin-js', 'apl_admin_local', $admin_localize );
 			wp_localize_script( 'apl-admin-ui-js', 'apl_admin_ui_local', $admin_ui_localize );
-		}
+		}// End if().
 	}
 
+	/**
+	 * Disables/Hides Screen Option Settings.
+	 *
+	 * Disables / Hides the Screen Option's display Meta Boxes Settings. Basically
+	 * prevents certain Meta Boxes from being hidden, and forces the box to display.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @link https://wordpress.stackexchange.com/questions/149602/hiding-metabox-from-screen-options-pull-down
+	 *
+	 * @return void
+	 */
 	public function disable_screen_boxes() {
 		echo '<style>label[for=apl-post-list-filter-hide] { display: none; }</style>';
 		echo '<style>#apl-post-list-filter { display: block; }</style>';
 	}
 
 	// Screen Options tab at top.
+	/**
+	 * Screen Options for 'All Post List' page.
+	 *
+	 * Hook 'load-edit.php', sets additional Screen Options.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	 */
 	public function post_list_screen_all() {
 		$screen = get_current_screen();
 		// Get out of here if we are not on our settings page.
-		if( ! is_object( $screen ) || $screen->id !== 'edit-apl_post_list' )
+		if ( ! is_object( $screen ) || 'edit-apl_post_list' !== $screen->id ) {
 			return;
+		}
+
 		$options = $screen->get_options();
 	}
 
+	/**
+	 * Screen Options for 'Add New' page.
+	 *
+	 * Hook 'load-post-new.php', sets additional Screen Options.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	 */
 	public function post_list_screen_add_new() {
 		$screen = get_current_screen();
 		// Get out of here if we are not on our settings page.
-		if( ! is_object( $screen ) || $screen->id !== 'apl_post_list' ) {
+		if ( ! is_object( $screen ) || 'apl_post_list' !== $screen->id ) {
 			return;
 		}
 		$options = $screen->get_options();
-
-		/*
-		$args = array(
-			'label' => __('Members per page', 'pippin'),
-			'default' => 10,
-			'option' => 'pippin_per_page'
-		);
-		add_screen_option( 'per_page', $args );
-		*/
 	}
 
+	/**
+	 * Post List Meta Boxes.
+	 *
+	 * Hook 'add_meta_boxes', adds meta boxes used in post lists.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see wp-admin/includes/template.php
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
+	 * @link https://developer.wordpress.org/reference/functions/add_meta_box/
+	 *
+	 * @return void
+	 */
 	public function post_list_meta_boxes() {
 		add_meta_box(
 			'apl-post-list-filter',
@@ -401,6 +454,19 @@ class APL_Admin {
 		);
 	}
 
+	/**
+	 * Post List Filter Meta box Template.
+	 *
+	 * Hook '$this->post_list_meta_boxes()', renders the Filter Meta Box Template.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/add_meta_box/
+	 *
+	 * @param WP_Post $post Current WP_Post object.
+	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
+	 * @return void
+	 */
 	public function post_list_meta_box_filter( $post, $metabox ) {
 		$apl_post_tax           = $this->get_post_tax();
 		$apl_tax_terms          = $this->get_tax_terms();
@@ -409,14 +475,36 @@ class APL_Admin {
 		include( APL_DIR . 'admin/meta-box-filter.php' );
 	}
 
+	/**
+	 * Post List Design Meta box Template.
+	 *
+	 * Hook '$this->post_list_meta_boxes()', renders the Design Meta Box Template.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param WP_Post $post Current WP_Post object.
+	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
+	 * @return void
+	 */
 	public function post_list_meta_box_display( $post, $metabox ) {
 		include( APL_DIR . 'admin/meta-box-design.php' );
 	}
-	
+
 	/*
 	 * *************************************************************************
 	 * **** PRIVATE FUNCTIONS **************************************************
 	 * *************************************************************************
+	 */
+
+	/**
+	 * Get Post Type & Taxonomies.
+	 *
+	 * Gets and returns an array of Post_Types => Taxonomies.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @return array Post_Type = > Name, Taxonomy Array.
 	 */
 	private function get_post_tax() {
 		$rtn_post_tax = array();
@@ -425,8 +513,7 @@ class APL_Admin {
 		$post_type_obj = get_post_types( '', 'objects' );
 
 		// Remove ignored Post Types.
-		foreach ( $this->_ignore_post_types as $value )
-		{
+		foreach ( $this->_ignore_post_types as $value ) {
 			unset( $post_type_obj[ $value ] );
 		}
 
@@ -446,10 +533,20 @@ class APL_Admin {
 		return $rtn_post_tax;
 	}
 
+	/**
+	 * Get Taxonomies & Terms.
+	 *
+	 * Gets and returns an array of Taxonomies => Terms.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @return array Taxonomy => Term.
+	 */
 	private function get_tax_terms() {
 		$rtn_tax_terms = array();
 
-		// Get Taxonomy Names
+		// Get Taxonomy Names.
 		$taxonomy_names = get_taxonomies( '', 'names' );
 
 		// Loop foreach taxonomy. Get terms, and foreach term add to taxonomy.
@@ -467,18 +564,28 @@ class APL_Admin {
 			}
 		}
 
-		// Return Tax_Terms
+		// Return Tax_Terms.
 		return $rtn_tax_terms;
 	}
 
-	// Get post types that aren't ignored ( without 'any' as used in post_tax ).
+	/**
+	 * Get Post Types to Display.
+	 *
+	 * Displays a *valid* list of post types that also aren't on the global ignore list.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @see $this->_ignore_post_types.
+	 *
+	 * @return array List of Post Types.
+	 */
 	private function get_display_post_types() {
 		$rtn_post_types = array();
 
 		$post_type_objs = get_post_types( '', 'objects' );
 		// Remove ignored Post Types.
-		foreach ( $this->_ignore_post_types as $value )
-		{
+		foreach ( $this->_ignore_post_types as $value ) {
 			unset( $post_type_objs[ $value ] );
 		}
 
@@ -488,5 +595,5 @@ class APL_Admin {
 
 		return $rtn_post_types;
 	}
-	
+
 }
