@@ -1,13 +1,21 @@
 <?php
+/**
+ * Filter Meta Box Template.
+ *
+ * Filter Meta Box for making new Post Lists.
+ *
+ * @package WordPress
+ * @subpackage Advanced Post List
+ * @since 0.4.0
+ */
 /*
- * VARIABLES
+ * PRIOR VARIABLES
  */
 //var_dump( $post );
 //var_dump( $metabox );
 //var_dump( $apl_post_tax );
 //var_dump( $apl_tax_terms );
 //var_dump( $apl_display_post_types );
-
 
 ?>
 <?php
@@ -266,11 +274,9 @@ foreach ( $apl_tax_terms as $key => $value ) {
 			<div>
 				<!-- INPUT -->
 				<select id="apl_order_by" class="apl-selectmenu-order-by">
-					<!-- Added None -->
-					<option selected="selected" value="none">None</option>
+					<option selected="selected" value="none">- None -</option>
 					<option value="ID">ID</option>
 					<option value="title">Title</option>
-					<!-- Added Slug -->
 					<option value="name">Slug</option>
 					<option value="date">Date</option>
 					<option value="modified">Modified Date</option>
@@ -281,7 +287,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 					<option value="rand">Random</option>
 				</select>
 				<select id="apl_order" class="apl-selectmenu-order">
-					<option value="desc">Descending</option>
+					<option selected="selected" value="desc">Descending</option>
 					<option value="asc">Ascending</option>
 				</select>
 			</div>
@@ -334,7 +340,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 					<option value="private">Private (BETA)</option>
 				</select>
 				<select id="apl_post_status_2" class="apl-multiselect-post-status-2" multiple="multiple">
-					<option value="publish" selected="selected" >Published</option>
+					<option value="publish">Published</option>
 					<option value="pending">Pending Review</option>
 					<option value="draft">Draft</option>
 					<option value="auto-draft">Auto-Draft</option>
@@ -351,7 +357,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 			<div>
 				<!-- INPUT -->
 				<select id="apl_perm" class="apl-selectmenu-perm">
-					<option selected="selected" value="none">None</option>
+					<option selected="selected" value="none">- None -</option>
 					<option value="readable">Readable</option>
 					<option value="editable">Editable</option>
 				</select>
@@ -370,10 +376,9 @@ foreach ( $apl_tax_terms as $key => $value ) {
 			<label for="apl_sticky_posts">Enable Sticky Posts:</label>
 			<input type="checkbox" id="apl_sticky_posts" class="apl-chkbox-sticky-posts apl-chkbox-input" />
 		</div>
-		
 		<div class="apl-filter-field-right-row">
 			<label for="apl_exclude_current">Exclude Current Post:</label>
-			<input type="checkbox" id="apl_exclude_current" class="apl-chkbox-exclude-current apl-chkbox-input" />
+			<input type="checkbox" id="apl_exclude_current" class="apl-chkbox-exclude-current apl-chkbox-input" checked="checked" />
 		</div>
 		<div class="apl-filter-field-right-row">
 			<label for="apl_exclude_dupe" >Exclude Duplicate Posts:</label>

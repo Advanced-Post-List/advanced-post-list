@@ -86,10 +86,14 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 == Changelog ==
 
 = 0.4.0 =
-* Added APL_Design Class.
-* Changed Preset Object variables before, content, after, & empty message to a seperate database with APL_Design.
+* Added APL_Design Class to use post data as a database.
+* Changed Preset variables before, content, after, & empty message to APL_Design object.
+* Changed Preset object to use post data as a database, and adds multiple improvements with WP's built-in support.
 * Changed version check to a hook method.
 * Added more internalization.
+* Changed to Admin Menu.
+* Added New Admin templates and multiple UI improvements.
+* Added Sort by 'None' and 'Slug'.
 
 = 0.3.7 =
 * Fixed warning with load_plugin_textdomain.

@@ -324,19 +324,22 @@ class APL_Admin {
 			// POST => TAXONOMIES.
 			$data_post_tax = $this->get_post_tax();
 
-			// TAXONOMIES => TERMS
+			// TAXONOMIES => TERMS.
 			$data_tax_terms = $this->get_tax_terms();
 
 			$data_ui_trans = array(
-				'tax_noneSelectedText' => esc_html__( 'Select Taxonomy', 'advanced-post-list' ),
-				'tax_selectedText'     => esc_html__( '# of # taxonomies selected', 'advanced-post-list' ),
+				'tax_noneSelectedText'           => esc_html__( 'Select Taxonomy', 'advanced-post-list' ),
+				'tax_selectedText'               => esc_html__( '# of # taxonomies selected', 'advanced-post-list' ),
+				'author_ids_noneSelectedText'    => esc_html__( '- None -', 'advanced-post-list' ),
+				'author_ids_selectedText'        => esc_html__( '# Selected', 'advanced-post-list' ),
+				'post_status_1_noneSelectedText' => esc_html__( 'Select Status', 'advanced-post-list' ),
+				'post_status_1_selectedText'     => esc_html__( 'Both', 'advanced-post-list' ),
+				'post_status_2_noneSelectedText' => esc_html__( 'Published', 'advanced-post-list' ),
+				'post_status_2_selectedText'     => esc_html__( '# Selected', 'advanced-post-list' ),
 			);
 
 			$admin_localize = array();
 			$admin_ui_localize = array(
-				//'post_type_objs'
-				//'taxonomy_objs'
-				//'term_objs'
 				'post_tax' => $data_post_tax,
 				'tax_terms' => $data_tax_terms,
 				'trans' => $data_ui_trans,
@@ -345,8 +348,6 @@ class APL_Admin {
 			wp_localize_script( 'apl-admin-js', 'apl_admin_local', $admin_localize );
 			wp_localize_script( 'apl-admin-ui-js', 'apl_admin_ui_local', $admin_ui_localize );
 		}
-		
-		
 	}
 
 	public function disable_screen_boxes() {
@@ -380,7 +381,7 @@ class APL_Admin {
 		add_screen_option( 'per_page', $args );
 		*/
 	}
-	
+
 	public function post_list_meta_boxes() {
 		add_meta_box(
 			'apl-post-list-filter',
@@ -399,19 +400,17 @@ class APL_Admin {
 			'core'
 		);
 	}
-	public function post_list_meta_box_filter( $post, $metabox ) {
-		// ob_start.
 
+	public function post_list_meta_box_filter( $post, $metabox ) {
 		$apl_post_tax           = $this->get_post_tax();
 		$apl_tax_terms          = $this->get_tax_terms();
 		$apl_display_post_types = $this->get_display_post_types();
 
 		include( APL_DIR . 'admin/meta-box-filter.php' );
-		
 	}
+
 	public function post_list_meta_box_display( $post, $metabox ) {
-		echo '<p>Hello2</p>';
-		var_dump( $metabox );
+		include( APL_DIR . 'admin/meta-box-design.php' );
 	}
 	
 	/*

@@ -12,6 +12,10 @@
 	display: none;
 }
 
+/*
+ * TOP FILTER META BOX
+ */
+
 .apl-filter-box-1 {
 	display: flex;
 	margin-bottom: 18px;
@@ -52,6 +56,10 @@
 }
 
 .apl-t-terms label {}
+
+/*
+ * BOTTOM FILTER META BOX
+ */
 
 .apl-filter-box-2 {
 	display: flex;
@@ -148,4 +156,31 @@ input.apl-text-exclude-posts {
 .apl-chkbox-input {
 	float: right;
 	margin-top: 5px !important;
+}
+
+/*
+ * DESIGN META BOX
+ */
+.apl-design-box-1 {
+	display: flex;
+	margin-bottom: 18px;
+}
+
+.apl-design-column {
+	
+}
+
+.apl-design-row {
+	float: left;
+	width: 100%;
+}
+
+.apl-design-row > div:first-child {
+	float: left;
+	width: 20.3%;
+}
+
+.apl-design-row > div:nth-child( 2 ) {
+	float: left;
+	width: 79.7%;
 }
