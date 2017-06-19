@@ -3,7 +3,7 @@
 Plugin Name: Advanced Post List
 Plugin URI: http://wordpress.org/plugins/advanced-post-list/
 Description: Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies.
-Version: 0.4.0
+Version: 0.4.a1
 Author: EkoJR
 Author URI: http://ekojr.com
 License: GPLv2
@@ -78,28 +78,8 @@ $advanced_post_list = new APL_Core( __FILE__ );
 
 /* **** TESTING **** */
 
-function hook_filter_apl_design_slug( $slug, $preset_obj ) {
-	$return_slug = $slug;
-	$val_1       = $preset_obj;
-
-	return $return_slug;
-}
-add_filter( 'apl_design_slug', 'hook_filter_apl_design_slug', 10, 2 );
-
-function hook_filter_apl_register_design( $args ) {
-	$return_args = $args;
-
-	return $return_args;
-}
-add_filter( 'apl_register_post_type_design', 'hook_filter_apl_register_design' );
-
-
-
-
-
-
-
-
+//Dev Method for removing invalid metaboxes
+//
 //add_filter( 'hidden_meta_boxes', function( $hidden, $screen, $use_defaults )
 //{
 //    global $wp_meta_boxes;

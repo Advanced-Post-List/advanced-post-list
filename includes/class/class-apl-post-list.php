@@ -22,29 +22,115 @@
  */
 class APL_Post_List {
 	
+	/**
+	 * Post Data ID.
+	 *
+	 * @since 0.4.0
+	 * @access public
+	 * @var int
+	 */
 	public $id = 0;
 
+	/**
+	 * Post Data Title.
+	 *
+	 * @since 0.4.0
+	 * @access public
+	 * @var string
+	 */
 	public $title = '';
 
+	/**
+	 * Post Data slug.
+	 *
+	 * @since 0.4.0
+	 * @access public
+	 * @var string $slug
+	 */
 	public $slug = '';
-	
+
+	/**
+	 * Post Types filter.
+	 *
+	 * Also used to determine which Tax_Queries are active and to pull data from.
+	 *
+	 * @since 0.3.0
+	 * @since 0.4.0 - Changed from $post_tax to $post_type, and works in
+	 *                conjunction with tax_query.
+	 *                Fixed/reduced nested multi-dimensional arrays.
+	 * @access public
+	 * @var array $post_type {
+	 *     @type string X => 'any'
+	 *     --- OR --- 
+	 *     @type array  X => array( 'post_type_1' ),
+	 *     // Consolidate in WP_Query with Tax_Query & Dynamic features.
+	 *     // Use first post type for Tax_Query
+	 *     @type array  X => array( 'post_type_2', 'post_type_3' )
+	 * }
+	 */
+	public $post_type = array( 'any' );
+
+	/**
+	 * Tax Query filter ( Modified )
+	 *
+	 * Follows the same general Query_Args structure, but carries additional
+	 * variables used with APL.
+	 *
+	 * @since 0.4.0
+	 * @access public
+	 * @var array $tax_query {
+	 *     $post_type = array(
+	 *         'relation' => 'AND' || 'OR',
+	 *         [Y1]       => array(
+	 *             'taxonomy'          => 'tax_1',
+	 *             'field'             => 'id',
+	 *             'terms'             => array( 103, 115, 206 ),
+	 *             'include_children'  => false,
+	 *             'operator'          => 'IN' || 'AND' || -'NOT_IN'-,
+	 *
+	 *             'apl_dynamic_terms' => false,
+	 *         ),
+	 *         [Y2]       => array(
+	 *             'taxonomy'          => 'tax_2',
+	 *             'field'             => 'id',
+	 *             'terms'             => array( 456, 189, 752 ),
+	 *             'include_children'  => false,
+	 *             'operator'          => 'IN' || 'AND' || -'NOT_IN'-,
+	 *
+	 *             'apl_terms_dynamic' => false,
+	 *         ),
+	 *     )
+	 *     --- OR ---
+	 *     $post_type => {}, //ANY 
+	 * }
+	 */
+	public $tax_query = array();
+
 	/**
 	 * Filter by Page Parents.
 	 *
 	 * @since 0.1.0
+	 * @since 0.4.0 - Changed to an array.
 	 * @access public
-	 * @var string
+	 * @var array $post_parent__in {
+	 *     @type array $post_type => array( 1, 23 ) Contain Post/Page IDs.
+	 * }
 	 */
-	public $post_parents = '';
+	public $post_parent__in = array();
 
 	/**
-	 * Filter by Post Type and Taxonomy structure.
-	 * @todo Change to an array.
+	 * Dynamic Page Parents
 	 *
-	 * @since 0.3.0
-	 * @var object
+	 * @since 0.4.0
+	 * @access public
+	 * @var array $post_parent_dynamic {
+	 *     Desc
+	 *
+	 *     @type boolean $post_type => (bool) Active Post Types with dynamic 
+	 *                                        Page Parent settings.
+	 * } 
 	 */
-	public $post_tax;
+	public $post_parent_dynamic = array();
 
 	/**
 	 * Post List Amount.
@@ -53,64 +139,68 @@ class APL_Post_List {
 	 * @version 0.3.0  - Changed (string) to (int).
 	 * @var int
 	 */
-	public $list_count = 0;
+	public $posts_per_page = 5;
 
 	/**
 	 * Order Filter By.
 	 *
 	 * @since 0.1.0
+	 * @since 0.4.0 Changed from $_list_order_by to $order_by.
+	 *              Added 'none', and value as default.
 	 * @var string
 	 */
-	public $list_order_by = '';
+	public $order_by = 'none';
 
 	/**
 	 * Order Filter Ascending or Descending.
 	 *
 	 * @since 0.1.0
+	 * @since 0.4.0 Changed from $_list_order to $order
+	 *              Changed value to 'DESC' as default.
 	 * @var string
 	 */
-	public $list_order = '';
-
-	/**
-	 * Filter by Post Visibility.
-	 *
-	 * @since 0.1.0
-	 * @var array[]string
-	 */
-	public $post_visibility = array( 'public' );
+	public $order = 'DESC';
 
 	/**
 	 * Filter by Post Status.
 	 *
+	 * Note: Empty default as array( 'public', 'publish' )
+	 *
 	 * @since 0.3.0
 	 * @version 0.3.b5 - Change from (string) to (array) => (string).
-	 * @var array[]string
+	 * @var  string | array $post_status {
+	 *     $type string 'public', 'publish' || 'private', 'pending'
+	 * }
 	 */
-	public $post_status = array( 'publish' );
+	public $post_status = 'none';
 
 	/**
 	 * Filter by User Permissions.
 	 *
 	 * @since 0.3.0
-	 * @var string
+	 * @var string 'none' || 'readable' || 'editable'
 	 */
-	public $user_perm = 'readable';
+	public $perm = 'none';
 
 	/**
 	 * Operator for Author ID filter.
 	 *
 	 * @since 0.3.0
-	 * @var string
+	 * @since 0.4.0 - Changed from $post_author_operator to $author__bool.
+	 * @var string 'none' || 'in' || 'not_in'.
 	 */
-	public $post_author_operator = 'none';
+	public $author__bool = 'none';
 
 	/**
 	 * Filter by Author ID.
 	 *
 	 * @since 0.3.0
-	 * @var array=>int
+	 * @since 0.4.0 - Change from $post_author_ids to $author__in
+	 * @var array $author__in {
+	 *     @type int $index => Author_ID
+	 * }
 	 */
-	public $post_author_ids = array();
+	public $author__in = array();
 
 	/**
 	 * Filter Stickies.
@@ -118,7 +208,15 @@ class APL_Post_List {
 	 * @since 0.3.0
 	 * @var boolean
 	 */
-	public $list_ignore_sticky = false;
+	public $ignore_sticky_posts = true;
+
+	/**
+	 * Filter Posts.
+	 *
+	 * @since 0.3.0
+	 * @var array
+	 */
+	public $post__not_in = array();
 
 	/**
 	 * Filter Current Post/Page.
@@ -127,7 +225,7 @@ class APL_Post_List {
 	 * @version 0.3.0 - changed (string) to (boolean).
 	 * @var boolean
 	 */
-	public $list_exclude_current = true;
+	public $pl_exclude_current = true;
 
 	/**
 	 * Filter Duplicates.
@@ -135,24 +233,31 @@ class APL_Post_List {
 	 * @since 0.3.0
 	 * @var boolean
 	 */
-	public $list_exclude_duplicates = false;
-
-	/**
-	 * Filter Posts.
-	 *
-	 * @since 0.3.0
-	 * @var array
-	 */
-	public $list_exclude_posts = array();
-
+	public $pl_exclude_dupes = false;
+ 
 	/**
 	 * Design for APL Preset Loop.
 	 *
 	 * @since 0.4.0
 	 * @var string
 	 */
-	public $apl_design = '';
+	public $pl_apl_design = '';
 
+	/**
+	 * APL Post List Constructor.
+	 *
+	 * Class Constructor.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see Function/method/class relied on
+	 * @link URL
+	 * @global type $varname Description.
+	 * @global type $varname Description.
+	 *
+	 * @param string $post_list_name Post List slug.
+	 * @return void
+	 */
 	public function __construct( $post_list_name ) {
 		$this->title = $post_list_name;
 		$this->slug  = (string) sanitize_title_with_dashes( $post_list_name );
@@ -163,64 +268,84 @@ class APL_Post_List {
 
 		if ( is_admin() ) {
 			// Save Design Meta Data Hook.
-			add_action( 'save_post_apl_post_list', array( &$this, 'hook_action_save_post_apl_post_list' ) );
+			// Only use 'save_post_{post_type}' for saving object as meta data
+			// after post has been saved, and data has been process via {status}_{post_type}.
+			add_action( 'save_post_apl_post_list', array( $this, 'hook_action_save_post_apl_post_list' ), 10, 3 );
+
 			// Delete Design Hook.
 			// Import / Export Hook.
 		}
-		
 	}
-	
+
+	/**
+	 * Get Data.
+	 *
+	 * Get Post Data and set as Post List class.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see WP_Query Args.
+	 * @link https://gist.github.com/luetkemj/2023628
+	 * @see get_post_meta().
+	 * @link https://developer.wordpress.org/reference/functions/get_post_meta/
+	 *
+	 * @param array $args WP_Query args.
+	 * @return boolean True if data exists.
+	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
-			'name'   => '',
-			'post_type'   => 'apl_post_list',
-			//'post_status' => 'publish',
-			'numberposts' => 1,
+			'name'            => '',
+			'post_type'       => 'apl_post_list',
+			//'post_status'   => 'publish',
+			'posts_per_page'  => 1,
 		);
 		$args = wp_parse_args( $args, $defaults );
 
-		// If there is a design, set this variable to the meta data it has.
+		// If there is a design, set object variables to the meta data.
 		// Else no designs, return false.
-		$post_lists = get_posts( $args );
-		if ( $post_lists ) {
-			$this->id      = $post_lists[0]->ID;
-			$this->title   = esc_html( $post_lists[0]->post_title );
-			$this->slug    = $post_lists[0]->post_name;
-			
-			$this->post_parents            = get_post_meta( $this->id, 'apl_post_parents', true ) ?: '';
-			$this->post_tax                = get_post_meta( $this->id, 'apl_post_tax', true ) ?: '';
-			$this->list_count              = get_post_meta( $this->id, 'apl_list_count ', true ) ?: '';
-			$this->list_order_by           = get_post_meta( $this->id, 'apl_list_order_by ', true ) ?: '';
-			$this->list_order              = get_post_meta( $this->id, 'apl_list_order', true ) ?: '';
-			$this->post_visibility         = get_post_meta( $this->id, 'apl_post_visibility ', true ) ?: '';
-			$this->post_status             = get_post_meta( $this->id, 'apl_post_status', true ) ?: '';
-			$this->user_perm               = get_post_meta( $this->id, 'apl_user_perm', true ) ?: '';
-			$this->post_author_operator    = get_post_meta( $this->id, 'apl_post_author_operator', true ) ?: '';
-			$this->post_author_ids         = get_post_meta( $this->id, 'apl_list_ignore_sticky', true ) ?: '';
-			$this->list_ignore_sticky      = get_post_meta( $this->id, 'apl_list_exclude_posts', true ) ?: '';
-			$this->list_exclude_posts      = get_post_meta( $this->id, 'apl_list_exclude_posts', true ) ?: '';
-			$this->list_exclude_duplicates = get_post_meta( $this->id, 'apl_list_exclude_duplicates', true ) ?: '';
-			$this->list_exclude_current    = get_post_meta( $this->id, 'apl_list_exclude_current', true ) ?: '';
-			$this->apl_design              = get_post_meta( $this->id, 'apl_design', true ) ?: '';;
+		$pl_query = new WP_Query( $args );
+		if ( 1 > $pl_query->post_count ) {
+			return false;
+		}
+		$post_list = $pl_query->post;
+
+		if ( $post_list->post_name === $args['name'] && !empty( $args['name'] ) ) {
+			$this->id      = absint( $post_list->ID );
+			$this->title   = esc_html( $post_list->post_title );
+			$this->slug    = sanitize_title_with_dashes( $post_list->post_name );
+
+			$this->post_type            = get_post_meta( $this->id, 'apl_post_type', true )            ?: array( 'any' );
+			$this->tax_query            = get_post_meta( $this->id, 'apl_tax_query', true )            ?: array();
+			$this->post_parent__in      = get_post_meta( $this->id, 'apl_post_parent__in', true )      ?: array();
+			$this->post_parent_dynamic  = get_post_meta( $this->id, 'apl_post_parent_dynamic', true )  ?: array();
+
+			$this->posts_per_page       = get_post_meta( $this->id, 'apl_posts_per_page', true )       ?: 5;
+			$this->order_by             = get_post_meta( $this->id, 'apl_order_by', true )             ?: 'none';
+			$this->order                = get_post_meta( $this->id, 'apl_order', true )                ?: 'DESC';
+			$this->author__bool         = get_post_meta( $this->id, 'apl_author__bool', true )         ?: 'none';
+			$this->author__in           = get_post_meta( $this->id, 'apl_author__in', true )           ?: array();
+			$this->post_status          = get_post_meta( $this->id, 'apl_post_status', true )          ?: 'none';
+			$this->perm                 = get_post_meta( $this->id, 'apl_perm', true )                 ?: 'none';
+			$this->post__not_in         = get_post_meta( $this->id, 'apl_post__not_in', true )         ?: array();
+
+			$tmp_ignore_sticky_posts  = get_post_meta( $this->id, 'apl_ignore_sticky_posts', true );
+			$this->ignore_sticky_posts  = ( false !== $tmp_ignore_sticky_posts )  ? (bool) $tmp_ignore_sticky_posts : true;
+
+			$tmp_pl_exclude_current   = get_post_meta( $this->id, 'apl_pl_exclude_current', true );
+			$this->pl_exclude_current   = ( false !== $tmp_pl_exclude_current )   ? (bool) $tmp_pl_exclude_current  : true;
+
+			$tmp_pl_exclude_dupes     = get_post_meta( $this->id, 'apl_pl_exclude_dupes', true );
+			$this->pl_exclude_dupes     = ( false !== $tmp_pl_exclude_dupes )     ? (bool) $tmp_pl_exclude_dupes    : false;
+
+			//$apl_design_slug            = apply_filters( 'apl_post_list_get_data_apl_design_slug', $this->slug );
+			$this->pl_apl_design        = get_post_meta( $this->id, 'apl_pl_apl_design', true )        ?: '';
+
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	/**
-	 * Returns the APL Design slug.
-	 *
-	 * Gets and returns $this->apl_design.
-	 *
-	 * @since 0.4.0
-	 *
-	 * @return string Returns the slug from variable APL Design.
-	 */
-	public function get_apl_design() {
-		$apl_design = apply_filters( 'apl_design_slug', $this->apl_design, $this );
-		return $apl_design;
-	}
 	/**
 	 * Save APL Design Object.
 	 *
@@ -232,15 +357,14 @@ class APL_Post_List {
 	 * @return void
 	 */
 	public function save_post_list() {
+		if ( empty( $this->slug ) ) {
+			return;
+		}
 		$get_args = array(
-			'name'      => $this->slug,
+			'ID'        => $this->id,
 			'post_type' => 'apl_post_list',
-			//'post_title'          => $this->title,
-			//'post_status'         => 'publish',
-			//'post__in'            => array( $this->id ),
-			//'ignore_sticky_posts' => true,
 		);
-		$post_list = get_posts( $get_args );
+		$post_lists = new WP_Query( $get_args );
 
 		$save_args = array(
 			'ID'          => $this->id,
@@ -249,47 +373,11 @@ class APL_Post_List {
 			'post_status' => 'publish',
 			'post_type'   => 'apl_post_list',
 		);
-		if ( empty( $post_list ) ) {
+		if ( 0 < $post_lists->post_count ) {
 			$this->insert_post_list_post( $save_args );
 		} else {
 			$this->update_post_list_post( $save_args );
 		}
-	}
-
-	/**
-	 * Insert Design post data.
-	 *
-	 * Inserts APL Design's post args to the database to create a new WP_Post.
-	 *
-	 * @since 0.4.0
-	 * @access private
-	 *
-	 * @param array $args Post arg array for creating Post objects.
-	 * @return void
-	 */
-	private function insert_post_list_post( $args = array() ) {
-		$defaults = $this->default_postarr();
-		$args = wp_parse_args( $args, $defaults );
-
-		wp_insert_post( $args );
-	}
-
-	/**
-	 * Update Design post data.
-	 *
-	 * Inserts APL Design's post args to the database to update a WP_Post.
-	 *
-	 * @since 0.4.0
-	 * @access private
-	 *
-	 * @param type $args Post arg array for creating Post objects.
-	 * @return void
-	 */
-	private function update_post_list_post( $args = array() ) {
-		$defaults = $this->default_postarr();
-		$args = wp_parse_args( $args, $defaults );
-
-		wp_update_post( $args );
 	}
 
 	/**
@@ -332,72 +420,132 @@ class APL_Post_List {
 		);
 	}
 
-	// TODO Simplify method with a For Loop? Or keep the same for readability?
-	public function hook_action_save_post_apl_post_list( $post_id ) {
-		$this->id = $post_id;
-		$post_list_post = get_post( $this->id );
+	/**
+	 * Insert Design post data.
+	 *
+	 * Inserts APL Design's post args to the database to create a new WP_Post.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param array $args Post arg array for creating Post objects.
+	 * @return void
+	 */
+	private function insert_post_list_post( $args = array() ) {
+		$defaults = $this->default_postarr();
+		$args = wp_parse_args( $args, $defaults );
 
-		$old_post_parents             = get_post_meta( $post_list_post, 'apl_post_parents', true ) ?: '';
-		$old_post_tax                 = get_post_meta( $post_list_post, 'apl_post_tax', true ) ?: '';
-		$old_list_count               = get_post_meta( $post_list_post, 'apl_list_count', true ) ?: '';
-		$old_list_order_by            = get_post_meta( $post_list_post, 'apl_list_order_by ', true ) ?: '';
-		$old_list_order               = get_post_meta( $post_list_post, 'apl_list_order', true ) ?: '';
-		$old_post_visibility          = get_post_meta( $post_list_post, 'apl_post_visibility', true ) ?: '';
-		$old_post_status              = get_post_meta( $post_list_post, 'apl_post_status', true ) ?: '';
-		$old_user_perm                = get_post_meta( $post_list_post, 'apl_user_perm', true ) ?: '';
-		$old_post_author_operator     = get_post_meta( $post_list_post, 'apl_post_author_operator', true ) ?: '';
-		$old_post_author_ids          = get_post_meta( $post_list_post, 'apl_post_author_ids', true ) ?: '';
-		$old_list_ignore_sticky       = get_post_meta( $post_list_post, 'apl_list_ignore_sticky', true ) ?: '';
-		$old_list_exclude_posts       = get_post_meta( $post_list_post, 'apl_list_exclude_posts', true ) ?: '';
-		$old_list_exclude_duplicates  = get_post_meta( $post_list_post, 'apl_list_exclude_duplicates', true ) ?: '';
-		$old_list_exclude_current     = get_post_meta( $post_list_post, 'apl_list_exclude_current', true ) ?: '';
-		$old_apl_design               = get_post_meta( $post_list_post, 'apl_design', true ) ?: '';
+		wp_insert_post( $args );
+	}
 
-		if ( $old_post_parents !== $this->post_parents ) {
-			update_post_meta( $this->id, 'apl_post_parents', $this->post_parents );
+	/**
+	 * Update Design post data.
+	 *
+	 * Inserts APL Design's post args to the database to update a WP_Post.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param type $args Post arg array for creating Post objects.
+	 * @return void
+	 */
+	private function update_post_list_post( $args = array() ) {
+		$defaults = $this->default_postarr();
+		$args = wp_parse_args( $args, $defaults );
+
+		wp_update_post( $args );
+	}
+
+	/**
+	 * Meta Data Save Post hook.
+	 *
+	 * Description.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see Function/method/class relied on
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/wp_insert_post
+	 * @global global $_POST Description.
+	 *
+	 * @param int     $post_id Post ID.
+	 * @param WP_Post $post    Post object.
+	 * @param boolean $update  Whether this is an existing post being updated or not.
+	 * @return void
+	 */
+	public function hook_action_save_post_apl_post_list( $post_id, $post_obj, $update ) {
+		$old_post_type            = get_post_meta( $this->id, 'apl_post_type', true );
+		$old_tax_query            = get_post_meta( $this->id, 'apl_tax_query', true );
+		$old_post_parent__in      = get_post_meta( $this->id, 'apl_post_parent__in', true );
+		$old_post_parent_dynamic  = get_post_meta( $this->id, 'apl_post_parent_dynamic', true );
+
+		$old_posts_per_page       = get_post_meta( $this->id, 'apl_posts_per_page', true );
+		$old_order_by             = get_post_meta( $this->id, 'apl_order_by', true );
+		$old_order                = get_post_meta( $this->id, 'apl_order', true );
+		$old_author__bool         = get_post_meta( $this->id, 'apl_author__bool', true );
+		$old_author__in           = get_post_meta( $this->id, 'apl_author__in', true );
+		$old_post_status          = get_post_meta( $this->id, 'apl_post_status', true );
+		$old_perm                 = get_post_meta( $this->id, 'apl_perm', true );
+		$old_post__not_in         = get_post_meta( $this->id, 'apl_post__not_in', true );
+		
+		$old_ignore_sticky_posts  = get_post_meta( $this->id, 'apl_ignore_sticky_posts', true );
+		$old_ignore_sticky_posts  = ( false !== $old_ignore_sticky_posts )  ? (bool) $old_ignore_sticky_posts : null;
+		
+		$old_pl_exclude_current   = get_post_meta( $this->id, 'apl_pl_exclude_current', true );
+		$old_pl_exclude_current   = ( false !== $old_pl_exclude_current )   ? (bool) $old_pl_exclude_current  : null;
+		
+		$old_pl_exclude_dupes     = get_post_meta( $this->id, 'apl_pl_exclude_dupes', true );
+		$old_pl_exclude_dupes     = ( false !== $old_pl_exclude_dupes )     ? (bool) $old_pl_exclude_dupes    : null;
+		
+		$old_pl_apl_design        = get_post_meta( $this->id, 'apl_pl_apl_design', true );
+
+		// Compare and update if modified.
+		if ( $this->post_type !== $old_post_type ) {
+			update_post_meta( $this->id, 'apl_post_type', $this->post_type );
 		}
-		if ( $old_post_tax !== $this->post_tax ) {
-			update_post_meta( $this->id, 'apl_post_tax', $this->post_tax );
+		if ( $this->tax_query !== $old_tax_query ) {
+			update_post_meta( $this->id, 'apl_tax_query', $this->tax_query );
 		}
-		if ( $old_list_count !== $this->list_count ) {
-			update_post_meta( $this->id, 'apl_list_count', $this->list_count );
+		if ( $this->post_parent__in !== $old_post_parent__in ) {
+			update_post_meta( $this->id, 'apl_post_parent__in', $this->post_parent__in );
 		}
-		if ( $old_list_order_by !== $this->list_order_by ) {
-			update_post_meta( $this->id, 'apl_list_order_by', $this->list_order_by );
+		if ( $this->post_parent_dynamic !== $old_post_parent_dynamic ) {
+			update_post_meta( $this->id, 'apl_post_parent_dynamic', $this->post_parent_dynamic );
 		}
-		if ( $old_list_order !== $this->list_order ) {
-			update_post_meta( $this->id, 'apl_list_order', $this->list_order );
+		if ( $this->posts_per_page !== $old_posts_per_page ) {
+			update_post_meta( $this->id, 'apl_posts_per_page', $this->posts_per_page );
 		}
-		if ( $old_post_visibility !== $this->post_visibility ) {
-			update_post_meta( $this->id, 'apl_post_visibility', $this->post_visibility );
+		if ( $this->order_by !== $old_order_by ) {
+			update_post_meta( $this->id, 'apl_order_by', $this->order_by );
 		}
-		if ( $old_post_status !== $this->post_status ) {
+		if ( $this->order !== $old_order ) {
+			update_post_meta( $this->id, 'apl_order', $this->order );
+		}
+		if ( $this->author__bool !== $old_author__bool ) {
+			update_post_meta( $this->id, 'apl_author__bool', $this->author__bool );
+		}
+		if ( $this->author__in !== $old_author__in ) {
+			update_post_meta( $this->id, 'apl_author__in', $this->author__in );
+		}
+		if ( $this->post_status !== $old_post_status ) {
 			update_post_meta( $this->id, 'apl_post_status', $this->post_status );
 		}
-		if ( $old_user_perm !== $this->user_perm ) {
-			update_post_meta( $this->id, 'apl_user_perm', $this->user_perm );
+		if ( $this->perm !== $old_perm ) {
+			update_post_meta( $this->id, 'apl_perm', $this->perm );
 		}
-		if ( $old_post_author_operator !== $this->post_author_operator ) {
-			update_post_meta( $this->id, 'apl_post_author_operator', $this->post_author_operator );
+		if ( $this->post__not_in !== $old_post__not_in ) {
+			update_post_meta( $this->id, 'apl_post__not_in', $this->post__not_in );
 		}
-		if ( $old_post_author_ids !== $this->post_author_ids ) {
-			update_post_meta( $this->id, 'apl_post_author_ids', $this->post_author_ids );
+		if ( $this->ignore_sticky_posts !== $old_ignore_sticky_posts ) {
+			update_post_meta( $this->id, 'apl_ignore_sticky_posts', $this->ignore_sticky_posts );
 		}
-		if ( $old_list_ignore_sticky !== $this->list_ignore_sticky ) {
-			update_post_meta( $this->id, 'apl_list_ignore_sticky', $this->list_ignore_sticky );
+		if ( $this->pl_exclude_current !== $old_pl_exclude_current ) {
+			update_post_meta( $this->id, 'apl_pl_exclude_current', $this->pl_exclude_current );
 		}
-		if ( $old_list_exclude_posts !== $this->list_exclude_posts ) {
-			update_post_meta( $this->id, 'apl_list_exclude_posts', $this->list_exclude_posts );
+		if ( $this->pl_exclude_dupes !== $old_pl_exclude_dupes ) {
+			update_post_meta( $this->id, 'apl_pl_exclude_dupes', $this->pl_exclude_dupes );
 		}
-		if ( $old_list_exclude_duplicates !== $this->list_exclude_duplicates ) {
-			update_post_meta( $this->id, 'apl_list_exclude_duplicates', $this->list_exclude_duplicates );
-		}
-		if ( $old_list_exclude_current !== $this->list_exclude_current ) {
-			update_post_meta( $this->id, 'apl_list_exclude_current', $this->list_exclude_current );
-		}
-		if ( $old_apl_design !== $this->apl_design ) {
-			update_post_meta( $this->id, 'apl_design', $this->apl_design );
+		if ( $this->pl_apl_design  !== $old_pl_apl_design  ) {
+			update_post_meta( $this->id, 'apl_pl_apl_design', $this->pl_apl_design  );
 		}
 	}
-	
 }

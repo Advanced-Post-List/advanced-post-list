@@ -106,16 +106,17 @@ class APL_Core {
 
 		// STEP 2.
 		/* **** ACTION & FILTERS HOOKS **** */
+		add_action( 'plugins_loaded', array( $this, 'hook_action_check_version' ) );
 		add_action( 'init', array( $this, 'hook_action_register_post_type_post_list' ) );
 		add_action( 'init', array( $this, 'hook_action_register_post_type_design' ) );
-		add_action( 'init', array( $this, 'hook_action_check_version' ) );
 		add_action( 'plugins_loaded', array( $this, 'hook_action_load_plugin_textdomain' ) );
-		add_action( 'widgets_init', array( $this, 'hook_action_widget_init' ) );
 		add_shortcode( 'post_list', array( $this, 'hook_shortcode_post_list' ) );
+		add_action( 'widgets_init', array( $this, 'hook_action_widget_init' ) );
 		// STEP 3.
 		if ( is_admin() ) {
-			APL_Admin::get_instance();
-
+			// Admin Class
+			add_action( 'init', array( 'APL_Admin', 'get_instance' ) );
+			
 			/* **** ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS **** */
 			$file_dir = APL_DIR . 'advanced-post-list/advanced-post-list.php';
 			register_activation_hook( $file_dir, array( 'APL_Core', 'hook_activation' ) );
@@ -209,6 +210,8 @@ class APL_Core {
 	 * @global string APL_DIR APL file path.
 	 */
 	private function _requires() {
+		// PUBLIC.
+		// Class Objects.
 		require_once( APL_DIR . 'includes/class/class-apl-preset-db.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-preset.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-post-list.php' );
@@ -219,7 +222,11 @@ class APL_Core {
 		// OLD - Remove between 0.4 - 0.6.
 		require_once( APL_DIR . 'includes/class/old-APLPresetDbObj.php' );
 		require_once( APL_DIR . 'includes/class/old-APLPresetObj.php' );
+		
+		// Functions.
+		require_once( APL_DIR . 'includes/functions.php');
 
+		// ADMIN
 		require_once( APL_DIR . 'admin/class-apl-admin.php' );
 	}
 

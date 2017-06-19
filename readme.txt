@@ -91,9 +91,14 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 * Changed Preset object to use post data as a database, and adds multiple improvements with WP's built-in support.
 * Changed version check to a hook method.
 * Added more internalization.
-* Changed to Admin Menu.
-* Added New Admin templates and multiple UI improvements.
+* Added Admin Singleton Class.
+* Changed to Custom Admin Menu.
+* Added New Admin templates and multiple UI changes.
 * Added Sort by 'None' and 'Slug'.
+* Added Post Status filter by 'None' and 'Any'.
+* Added Perms filter by 'None'.
+* Added non-class Functions file for common functions.
+* Added Hooks file to store custom hooks.
 
 = 0.3.7 =
 * Fixed warning with load_plugin_textdomain.

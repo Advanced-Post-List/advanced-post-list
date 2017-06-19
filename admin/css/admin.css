@@ -30,6 +30,8 @@
 	width: 20%;
 }
 
+.apl-filter-post-type {}
+
 .apl-filter-post-tax-query {
 	float: left;
 	width: 80%;
@@ -49,6 +51,10 @@
 
 .apl-t-li-post-type h5 {
 	margin: initial;
+}
+
+.apl-chk-req-taxonomies {
+	border-bottom: 1px solid #23282d
 }
 
 .apl-tabs-post-type-taxonomies > ul {
@@ -103,9 +109,13 @@
 	width: 65%;
 }
 
-.apl-amount-alt {
+.apl-posts_per_page-alt {
 	height: 27px;
 	padding-top: 15px;
+}
+
+.apl-slider-handle-posts_per_page {
+	z-index: 0 !important;
 }
 
 apl-filter-field-right-row > input {

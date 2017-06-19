@@ -30,21 +30,6 @@ class APL_Admin {
 	protected static $instance = null;
 
 	/**
-	 * Summary.
-	 *
-	 * @since 0.4.0
-	 * @access private
-	 * @var array( string )
-	 */
-	private $_ignore_post_types = array(
-		'attachment',
-		'revision',
-		'nav_menu_item',
-		'apl_post_list',
-		'apl_design',
-	);
-
-	/**
 	 * Get Singleton Instance.
 	 *
 	 * Singleton Get Instance.
@@ -103,7 +88,7 @@ class APL_Admin {
 	private function __construct() {
 		// Exit if Non-Admins access this object. Also wrapped in APL_Core.
 		if ( ! is_admin() ) {
-			return new WP_Error( 'apl_admin', esc_html__( 'You do not have admin capabilities.', 'advanced-post-list' ) );
+			return new WP_Error( 'apl_admin', esc_html__( 'You do not have admin capabilities in APL_Admin.', 'advanced-post-list' ) );
 		}
 		$this->_requires();
 
@@ -117,6 +102,14 @@ class APL_Admin {
 
 		// Editor Meta Boxes.
 		add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
+
+		// Post Data
+		add_action( 'draft_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		//add_action( 'trash_apl_post_list', array( $this, 'save_post_list' ), 10, 3 );
 
 		/*
 		// Early Hook.
@@ -441,15 +434,15 @@ class APL_Admin {
 			__( 'Filter Settings', 'advanced-post-list' ),
 			array( $this, 'post_list_meta_box_filter' ),
 			'apl_post_list',
-			'advanced',
-			'sorted'
+			'normal', // 'normal', 'advanced', 'side'.
+			'high' // 'high', 'sorted', 'core', 'default', 'low'.
 		);
 		add_meta_box(
 			'apl-post-list-display',
 			__( 'Display Settings', 'advanced-post-list' ),
 			array( $this, 'post_list_meta_box_display' ),
 			'apl_post_list',
-			'advanced',
+			'normal',
 			'core'
 		);
 	}
@@ -470,7 +463,7 @@ class APL_Admin {
 	public function post_list_meta_box_filter( $post, $metabox ) {
 		$apl_post_tax           = $this->get_post_tax();
 		$apl_tax_terms          = $this->get_tax_terms();
-		$apl_display_post_types = $this->get_display_post_types();
+		$apl_display_post_types = apl_get_display_post_types();
 
 		include( APL_DIR . 'admin/meta-box-filter.php' );
 	}
@@ -488,6 +481,355 @@ class APL_Admin {
 	 */
 	public function post_list_meta_box_display( $post, $metabox ) {
 		include( APL_DIR . 'admin/meta-box-design.php' );
+	}
+
+	/**
+	 * Save Post List.
+	 *
+	 * Hook for saving object during post transitions.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see Hook: {status}_{post_type}
+	 * @link https://codex.wordpress.org/Post_Status_Transitions
+	 *
+	 * @param int     $post_id Old post ID.
+	 * @param WP_Post $post    Current Post object.
+	 * @return void
+	 */
+	public function save_post_list( $post_id, $post ) {
+		// CHECK AJAX REFERENCE.
+		
+		// ACTION = editpost
+		// Doesn't work if there is no action ( Add New )
+		//check_admin_referer( 'update-post_' . $post_id );
+		
+		$this->post_list_process( $post_id, $post );
+		
+	}
+
+	/**
+	 * Process Post List Form.
+	 *
+	 * Gathers data from the Post List edit page.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @see $this->save_post_list()
+	 *
+	 * @param int     $post_id Old post ID.
+	 * @param WP_Post $post    Current Post object.
+	 * @return void
+	 */
+	private function post_list_process( $post_id, $post ) {
+		$old_post = get_post( $post_id );
+		$apl_post_list = new APL_Post_List( $old_post->post_name );
+
+		// post_type[0,1,2]       = 'any' || 'none'    || array(); CANNOT USE 'any' IN ARRAY.
+		// tax_query[pt1,pt2,pt3] = array( empty )     || array( query ).
+		// post_parent__in.
+		// post_parent_dynamic.
+		$tmp_post_type = array();
+		$tmp_tax_query = array();
+
+		$tmp_post_parent__in = array();
+		$tmp_post_parent_dynamic = array();
+
+		$post_type_names = apl_get_display_post_types();
+		$post_type_names = array_merge( array( 'any' => __( 'Any / All', 'advanced-post-list' ) ), $post_type_names );
+		foreach ( $post_type_names as $k_pt_slug => $v_pt_title ) {
+			// POST TYPES (ACTIVE).
+			if ( isset( $_POST[ 'apl_toggle-' . $k_pt_slug ] ) ) {
+				// If 'Any / All' is toggled, then treat 'any' differently and skip the rest.
+				if ( 'any' === $k_pt_slug ) {
+					// 'any' TAXONOMY.
+					$tmp_post_type[] = 'any';
+
+					if ( isset( $_POST['apl_multiselect_taxonomies-any'] ) ) {
+						$tmp_tax_query[ $k_pt_slug ] = $this->post_list_process_tax_query( $k_pt_slug );
+					}
+
+					break;
+				} else {
+					// POST TYPE TAXONOMIES.
+					$tmp_post_type[] = array( $k_pt_slug );
+
+					if ( isset( $_POST['apl_multiselect_taxonomies-' . $k_pt_slug] ) ) {
+						$tmp_tax_query[ $k_pt_slug ] = $this->post_list_process_tax_query( $k_pt_slug );
+					}
+
+					// PAGE PARENTS.
+					if ( is_post_type_hierarchical( $k_pt_slug ) ) {
+						
+						$tmp_post_parent_dynamic[ $k_pt_slug ] = false;
+						if ( isset( $_POST[ 'apl_page_parent_dynamic-' . $k_pt_slug ] ) ) {
+							$tmp_post_parent_dynamic[ $k_pt_slug ] = true;
+						}
+
+						$page_args = array(
+							'post_type' => $k_pt_slug,
+							'posts_per_page'  => -1,
+							'order'           => 'DESC',
+							'orderby'         => 'id',
+						);
+						$page_query = new WP_Query( $page_args );
+						while ( $page_query->have_posts() ) {
+							$page_query->the_post();
+
+							if ( isset( $_POST[ 'apl_page_parent-' . $k_pt_slug . '-' . $page_query->post->ID ] ) ) {
+								if ( ! isset( $tmp_post_parent__in[ $k_pt_slug ] ) ) {
+									$tmp_post_parent__in[ $k_pt_slug ] = array();
+								}
+								$tmp_post_parent__in[ $k_pt_slug ][] = $page_query->post->ID;
+							}
+						}
+						wp_reset_postdata();
+					}
+				}
+			}
+		}// End Foreach Post_Types.
+		$apl_post_list->post_type = $tmp_post_type;
+		$apl_post_list->tax_query = $tmp_tax_query;
+
+		$apl_post_list->post_parent__in = $tmp_post_parent__in;
+		$apl_post_list->post_parent_dynamic = $tmp_post_parent_dynamic;
+
+		// posts_per_page.
+		$tmp_posts_per_page = 5;
+		if ( isset( $_POST['apl_posts_per_page'] ) ) {
+			$p_posts_per_page = filter_input( INPUT_POST, 'apl_posts_per_page', FILTER_SANITIZE_NUMBER_INT );
+			$tmp_posts_per_page = intval( $p_posts_per_page );
+		}
+		$apl_post_list->posts_per_page = $tmp_posts_per_page;
+
+		// order_by.
+		// order.
+		$tmp_order_by = 'none';
+		$tmp_order    = 'DESC';
+		if ( isset( $_POST['apl_order_by'] ) ) {
+			$order_by = filter_input( INPUT_POST, 'apl_order_by', FILTER_SANITIZE_STRING );
+			$tmp_order_by = $order_by;
+
+			if ( 'none' !== $order_by && isset( $_POST['apl_order'] ) ) {
+				$order = filter_input( INPUT_POST, 'apl_order', FILTER_SANITIZE_STRING );
+				$tmp_order = $order;
+			}
+		}
+		$apl_post_list->order_by = $tmp_order_by;
+		$apl_post_list->order    = $tmp_order;
+
+		// post_status = array ( 'public', 'publish' ).
+		$tmp_post_status = 'any';
+		if( isset( $_POST['apl_post_status_1'] ) ) {
+			$p_post_status_1 = array_map( 'sanitize_key', $_POST['apl_post_status_1'] );
+
+			$p_post_status_2 = array();
+			if ( 'none' === $p_post_status_1[0] || 'any' === $p_post_status_1[0] ) {
+				$tmp_post_status = $p_post_status_1[0];
+			} else {
+				// add 'public' &| 'private'
+				if ( isset( $_POST['apl_post_status_2'] ) ) {
+					$p_post_status_2 = array_map( 'sanitize_key', $_POST['apl_post_status_2'] );
+				}
+				$tmp_post_status = array_merge( $p_post_status_1, $p_post_status_2 );
+			}
+		}
+		$apl_post_list->post_status = $tmp_post_status;
+
+		// perm.
+		$tmp_perm = 'none';
+		if ( isset( $_POST['apl_perm'] ) ) {
+			$tmp_perm = filter_input( INPUT_POST, 'apl_perm', FILTER_SANITIZE_STRING );
+		}
+		$apl_post_list->perm = $tmp_perm;
+
+		// author_in = (boolean).
+		// author = array( ).
+		$tmp_author__bool = 'none';
+		$tmp_author__in = array();
+		if ( isset( $_POST['apl_author__bool']) ) {
+			$tmp_author__bool = filter_input( INPUT_POST, 'apl_author__bool', FILTER_SANITIZE_STRING );
+
+			if ( 'none' !== $tmp_author__bool && isset( $_POST['apl_author__in'] ) ) {
+				$tmp_author__in = array_map( 'intval', $_POST['apl_author__in'] );
+			}
+		}
+		$apl_post_list->author__bool = $tmp_author__bool;
+		$apl_post_list->author__in = $tmp_author__in;
+
+		// post__not_in.
+		$tmp_post__not_in = array();
+		if ( isset( $_POST['apl_post__not_in'] ) ) {
+			$p_post__not_in = filter_input( INPUT_POST, 'apl_post__not_in', FILTER_SANITIZE_STRING );
+			$tmp_post__not_in = array_map( 'absint', explode( ',', $p_post__not_in ) );
+		}
+		$apl_post_list->post__not_in = $tmp_post__not_in;
+
+		// ignore_stick_posts.
+		$tmp_ignore_sticky_posts = true;
+		if ( isset( $_POST['apl_sticky_posts'] ) ) {
+			$p_ignore_sticky_posts = filter_input( INPUT_POST, 'apl_sticky_posts', FILTER_SANITIZE_STRING );
+			$tmp_ignore_sticky_posts = false;
+		}
+		$apl_post_list->ignore_sticky_posts = $tmp_ignore_sticky_posts;
+
+		// pl_exclude_current.
+		$tmp_pl_exclude_current = false;
+		if ( isset( $_POST['apl_pl_exclude_current'] ) ) {
+			$p_pl_exclude_current = filter_input( INPUT_POST, 'apl_pl_exclude_current', FILTER_SANITIZE_STRING );
+			$tmp_pl_exclude_current = true;
+		}
+		$apl_post_list->pl_exclude_current = $tmp_pl_exclude_current;
+
+		// pl_exclude_dupes.
+		$tmp_pl_exclude_dupes = false;
+		if ( isset( $_POST['apl_pl_exclude_dupes'] ) ) {
+			$p_pl_exclude_dupes = filter_input( INPUT_POST, 'apl_pl_exclude_dupes', FILTER_SANITIZE_STRING );
+			$tmp_pl_exclude_dupes = true;
+		}
+		$apl_post_list->pl_exclude_dupes = $tmp_pl_exclude_dupes;
+
+		$new_design_slug = '';
+		if ( !empty( $post->post_name ) ) {
+			$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
+			$design_slug = apply_filters( 'apl_design_process_slug', $post->post_name, $this );
+			$new_design_slug = $design_slug . $slug_suffix;
+		}
+
+		$apl_post_list->pl_apl_design = $this->post_list_process_apl_design( $apl_post_list->pl_apl_design, $new_design_slug );
+	}
+	
+	/**
+	 * Process Tax Query.
+	 *
+	 * Processes the taxonomies and returns 'multiple arrays' simular to $args['tax_query'].
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @see WP_Query Args
+	 * @link https://gist.github.com/luetkemj/2023628
+	 *
+	 * @param string $post_type Post Type slug.
+	 * @return array Tax_Query used in WP_Query Args.
+	 */
+	private function post_list_process_tax_query( $post_type ) {
+		// Get the list of active taxonomies.
+		$p_taxonomies = array_map( 'sanitize_key', $_POST[ 'apl_multiselect_taxonomies-' . $post_type ] );
+		$tmp_tax_query = array();
+		$tmp_req_tax = 'OR';
+		foreach ( $p_taxonomies as $v1_taxonomy ) {
+			// Check 'require' as an active checkbox.
+			// Else process other checkboxes.
+			if ( 'require' === $v1_taxonomy ) {
+				$tmp_req_tax = 'AND';
+			} else {
+				// Check Require Terms.
+				$tmp_terms_req = 'IN';
+				if ( isset( $_POST[ 'apl_terms_req-' . $post_type . '-' . $v1_taxonomy ] ) ) {
+					$tmp_terms_req = 'AND';
+				}
+
+				// Check Dynamic Terms.
+				$tmp_terms_dynamic = false;
+				if ( isset( $_POST[ 'apl_terms_dynamic-' . $post_type . '-' . $v1_taxonomy ] ) ) {
+					$tmp_terms_dynamic = true;
+				}
+
+				// TERM LOOP.
+				$arg_terms = array(
+					'taxonomy'   => $v1_taxonomy,
+					'hide_empty' => false,
+				);
+				$terms = get_terms( $arg_terms );
+				$tmp_terms = array();
+				foreach ( $terms as $v2_term_obj ) {
+					// Check 'any' term, and if set, skip other terms. break;
+					if ( isset( $_POST[ 'apl_term-' . $post_type . '-' . $v1_taxonomy . '-any' ] ) ) {
+						// No reason to have dynamic true with 'any'; fallback method.
+						$tmp_terms_dynamic = false;
+						break;
+					} elseif ( isset( $_POST[ 'apl_term-' . $post_type . '-' . $v1_taxonomy . '-' . $v2_term_obj->term_id ] ) ) {
+						$tmp_terms[] = $v2_term_obj->term_id;
+					}
+
+				}
+
+				$tmp_tax_query[] =  array(
+					'taxonomy'          => $v1_taxonomy,
+					'field'             => 'id', // Or 'slug'.
+					'terms'             => $tmp_terms,
+					'include_children'  => false,
+					'operator'          => $tmp_terms_req, // 'IN' | 'AND' | --'NOT IN'--
+
+					//'apl_terms_req'     = $tmp_terms_req;  
+					'apl_terms_dynamic' => $tmp_terms_dynamic,
+				);
+			}
+		} // End Foreach Taxonomy.
+		$tmp_tax_query['relation'] = $tmp_req_tax;
+		
+		return $tmp_tax_query;
+	}
+
+	/**
+	 * Process Design Meta Box.
+	 *
+	 * Description.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param string $apl_design_slug Current active slug.
+	 * @param string $new_design_slug New slug relative to $this->pl_apl_design.
+	 * @return string Slug used in $this->pl_apl_design.
+	 */
+	private function post_list_process_apl_design( $apl_design_slug, $new_design_slug ) {
+		$apl_design = new APL_Design( $apl_design_slug );
+
+		// SLUG / KEY.
+		if ( $new_design_slug !== $apl_design_slug && '-design' !== $new_design_slug  ) {
+			$apl_design->title = $new_design_slug;
+			$apl_design->slug = sanitize_title_with_dashes( $new_design_slug );
+		}
+
+		// BEFORE.
+		$tmp_apl_design_before = '';
+		if ( isset( $_POST['apl_before'] ) ) {
+			$tmp_apl_design_before = filter_input( INPUT_POST, 'apl_before', FILTER_UNSAFE_RAW );
+		}
+		$apl_design->before = $tmp_apl_design_before;
+
+		// CONTENT.
+		$tmp_apl_design_content = '';
+		if ( isset( $_POST['apl_content'] ) ) {
+			$tmp_apl_design_content = filter_input( INPUT_POST, 'apl_content', FILTER_UNSAFE_RAW );
+		}
+		$apl_design->content = $tmp_apl_design_content;
+
+		// AFTER.
+		$tmp_apl_design_after = '';
+		if ( isset( $_POST['apl_after'] ) ) {
+			$tmp_apl_design_after = filter_input( INPUT_POST, 'apl_after', FILTER_UNSAFE_RAW );
+		}
+		$apl_design->after = $tmp_apl_design_after;
+
+		// EMPTY MESSAGE.
+		$tmp_apl_design_empty = '';
+		if ( isset( $_POST['apl_empty_message'] ) ) {
+			$tmp_apl_design_empty = filter_input( INPUT_POST, 'apl_empty_message', FILTER_UNSAFE_RAW );
+		}
+		$apl_design->empty = $tmp_apl_design_empty;
+
+		// Save APL_Design.
+		$apl_design->save_design();
+
+		// SLUG/KEY.
+		$rtn_apl_design_slug = '';
+		$rtn_apl_design_slug = $apl_design->slug;
+
+		return $rtn_apl_design_slug;
 	}
 
 	/*
@@ -509,14 +851,8 @@ class APL_Admin {
 	private function get_post_tax() {
 		$rtn_post_tax = array();
 
-		// Get Post Type names.
-		$post_type_obj = get_post_types( '', 'objects' );
-
-		// Remove ignored Post Types.
-		foreach ( $this->_ignore_post_types as $value ) {
-			unset( $post_type_obj[ $value ] );
-		}
-
+		$post_types = apl_get_display_post_types();
+		
 		// Add to rtn {post_type} => {array( taxonomies )}.
 		$rtn_post_tax['any']['name'] = __( 'Any / All', 'advanced-post-list' );
 		$taxonomy_names = get_taxonomies( '', 'names' );
@@ -524,9 +860,9 @@ class APL_Admin {
 			$rtn_post_tax['any']['tax_arr'][] = $name;
 		}
 
-		foreach ( $post_type_obj as $key => $value ) {
-			$rtn_post_tax[ $key ]['name'] = $value->labels->singular_name;
-			$rtn_post_tax[ $key ]['tax_arr'] = get_object_taxonomies( $key, 'names' );
+		foreach ( $post_types as $k_slug => $v_name ) {
+			$rtn_post_tax[ $k_slug ]['name'] = $v_name;
+			$rtn_post_tax[ $k_slug ]['tax_arr'] = get_object_taxonomies( $k_slug, 'names' );
 		}
 
 		// Return Post_Tax.
@@ -537,6 +873,9 @@ class APL_Admin {
 	 * Get Taxonomies & Terms.
 	 *
 	 * Gets and returns an array of Taxonomies => Terms.
+	 *
+	 * @see get_terms()
+	 * @link https://developer.wordpress.org/reference/functions/get_terms/
 	 *
 	 * @since 0.4.0
 	 * @access private
@@ -560,7 +899,7 @@ class APL_Admin {
 			// Set slug.
 			$rtn_tax_terms[ $taxonomy ] = array();
 			foreach ( $terms as $term ) {
-				$rtn_tax_terms[ $taxonomy ][] = $term->slug;
+				$rtn_tax_terms[ $taxonomy ][] = $term->term_id;
 			}
 		}
 
@@ -585,7 +924,8 @@ class APL_Admin {
 
 		$post_type_objs = get_post_types( '', 'objects' );
 		// Remove ignored Post Types.
-		foreach ( $this->_ignore_post_types as $value ) {
+		$ignore_post_types = apl_get_display_post_types();
+		foreach ( $ignore_post_types as $value ) {
 			unset( $post_type_objs[ $value ] );
 		}
 
