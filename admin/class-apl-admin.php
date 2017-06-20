@@ -100,6 +100,10 @@ class APL_Admin {
 		add_action( 'load-edit.php', array( $this, 'post_list_screen_all' ) );
 		add_action( 'load-post-new.php', array( $this, 'post_list_screen_add_new' ) );
 
+		add_action( 'manage_apl_post_list_posts_columns', array( $this, 'post_list_posts_columns' ) );
+		add_action( 'manage_apl_post_list_posts_custom_column', array( $this, 'post_list_posts_custom_column' ), 10, 2 );
+		add_action( 'manage_edit-apl_post_list_sortable_columns', array( $this, 'post_list_sortable_columns' ) );
+
 		// Editor Meta Boxes.
 		add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
 
@@ -418,6 +422,76 @@ class APL_Admin {
 			return;
 		}
 		$options = $screen->get_options();
+	}
+
+	/**
+	 * Post List All Posts Columns.
+	 *
+	 * Adds additional columns to All Post Lists page.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @uses manage_${post_type}_posts_columns
+	 * @link https://codex.wordpress.org/Plugin_API/Filter_Reference/manage_$post_type_posts_columns
+	 *
+	 * @param type $columns Columns use in the 'All Post Lists' page.
+	 * @return array
+	 */
+	public function post_list_posts_columns( $columns ) {
+		$tmp_date = $columns['date'];
+		unset( $columns['date'] );
+		
+		$columns['post_name']      = __( 'Slug', 'advanced-post-list' );
+		$columns['apl_shortcode']  = __( 'Shortcode', 'advanced-post-list' );
+		
+		$columns['date'] = $tmp_date;
+		
+		return $columns;
+	}
+
+	/**
+	 * Post List Custom Column.
+	 *
+	 * Adds content to custom column.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @uses manage_${post_type}_posts_columns
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/manage_$post_type_posts_custom_column
+	 *
+	 * @param type $column
+	 * @param type $post_id
+	 */
+	public function post_list_posts_custom_column( $column, $post_id ) {
+		$args = array(
+			'post__in' => array( $post_id ),
+			'post_type' => 'apl_post_list',
+		);
+		$post_lists = new WP_Query( $args );
+		$post_list = $post_lists->post;
+		
+		switch ( $column ) {
+			case 'post_name' :
+				echo $post_list->post_name;
+				break;
+			case 'apl_shortcode' :
+				echo '<input value="[post_list name=\'' . $post_list->post_name . '\']" type="text" size="32" onfocus="this.select();" onclick="this.select();" readonly="readonly" />';
+				break;
+		}
+	}
+
+	/**
+	 * Post List Sortable Columns.
+	 *
+	 * Sets Custom Columns to be sortable.
+	 *
+	 * @param array $columns
+	 * @return string
+	 */
+	public function post_list_sortable_columns( $columns ) {
+		$columns['post_name'] = 'post_name';
+		
+		return $columns;
 	}
 
 	/**
@@ -795,7 +869,10 @@ class APL_Admin {
 		$tmp_post__not_in = array();
 		if ( isset( $_POST['apl_post__not_in'] ) ) {
 			$p_post__not_in = filter_input( INPUT_POST, 'apl_post__not_in', FILTER_SANITIZE_STRING );
-			$tmp_post__not_in = array_map( 'absint', explode( ',', $p_post__not_in ) );
+			if ( ! empty( $p_post__not_in ) ) {
+				$tmp_post__not_in = array_map( 'absint', explode( ',', $p_post__not_in ) );
+			}
+			
 		}
 		$apl_post_list->post__not_in = $tmp_post__not_in;
 
