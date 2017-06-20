@@ -107,7 +107,7 @@ class APL_Design {
 			// Draft/Init Hook.
 			
 			// Save Design Meta Data Hook.
-			add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ) );
+			add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );
 			// Delete Design Hook.
 			// Import / Export Hook.
 		}
@@ -128,7 +128,14 @@ class APL_Design {
 		$defaults = array(
 			'name'            => '',
 			'post_type'       => 'apl_design',
-			//'post_status'   => 'publish',
+			'post_status'     => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
 			'posts_per_page'  => 1,
 		);
 		$args = wp_parse_args( $args, $defaults );
@@ -171,13 +178,13 @@ class APL_Design {
 			return;
 		}
 		$get_args = array(
-			'ID'             => $this->id,
-			//'name'           => $this->slug,
-			'post_type'           => 'apl_design',
+			'post__in'   => array( $this->id ),
+			//'name'       => $this->slug,
+			'post_type'  => 'apl_design',
 		);
 		$designs = new WP_Query( $get_args );
 
-		$save_args = array(
+		$save_postarr = array(
 			'ID'               => $this->id,
 			'post_title'       => $this->title,
 			'post_name'        => $this->slug,
@@ -185,11 +192,18 @@ class APL_Design {
 			'post_type'        => 'apl_design',
 		);
 
-		if ( 0 < $designs->post_count ) {
-			$this->insert_design_post( $save_args );
+		if ( 1 > $designs->post_count || 0 === $this->id ) {
+			$this->insert_design_post( $save_postarr );
 		} else {
-			$this->update_design_post( $save_args );
+			$this->update_design_post( $save_postarr );
 		}
+	}
+
+	// https://codex.wordpress.org/Function_Reference/wp_delete_post
+	public function delete_design() {
+		
+		wp_delete_post( $this->id, true );
+		
 	}
 
 	/**
@@ -285,11 +299,10 @@ class APL_Design {
 	 * @param int $post_id Post ID that is past by WP when saving post.
 	 * @return void
 	 */
-	public function hook_action_save_post_apl_design( $post_id ) {
-		$args = array(
-			'ID' => $post_id,
-		);
-		$design_post = new WP_Query( $args );
+	public function hook_action_save_post_apl_design( $post_id, $post_obj, $update ) {
+		$this->id     = $post_id;
+		$this->title  = $post_obj->post_title;
+		$this->slug   = $post_obj->post_name;
 
 		$old_before  = get_post_meta( $this->id, 'apl_before', true );
 		$old_content = get_post_meta( $this->id, 'apl_content', true );

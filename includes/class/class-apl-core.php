@@ -134,6 +134,7 @@ class APL_Core {
 	 * @access private
 	 *
 	 * @see Function/method/class relied on
+	 * @link https://hitchhackerguide.com/2011/02/12/get_plugin_data/
 	 *
 	 * @param string $plugin_file Main plugin file.
 	 */
@@ -262,7 +263,7 @@ class APL_Core {
 				'attributes'            => __( 'Post List Attributes', 'advanced-post-list' ),
 				'insert_into_item'      => __( 'Insert into Post List', 'advanced-post-list' ),
 				'uploaded_to_this_item' => __( 'Upload to this Post List', 'advanced-post-list' ),
-				'menu_name'				=> __( 'APL Post List', 'advanced-post-list' ),
+				'menu_name'				=> __( 'Adv. Post List', 'advanced-post-list' ),
 			),
 			'description'           => __( 'APL Preset Post Lists.', 'advanced-post-list' ),
 			'public'                => true,
@@ -276,9 +277,9 @@ class APL_Core {
 			'hierarchical'          => true,
 			'supports' 				=> array(
 				'title',
-				'author',
-				'thumbnail',
-				'revisions',
+				//'author',
+				//'thumbnail',
+				//'revisions',
 			),
 			'has_archive'			=> false,
 			'rewrite'               => array(
@@ -339,9 +340,9 @@ class APL_Core {
 			'hierarchical'          => true,
 			'supports' 				=> array(
 				'title',
-				'thumbnail',
-				'excerpt',
-				'revisions',
+				//'thumbnail',
+				//'excerpt',
+				//'revisions',
 			),
 			'has_archive'			=> false,
 			'rewrite'               => array(

@@ -259,7 +259,7 @@ class APL_Post_List {
 	 * @return void
 	 */
 	public function __construct( $post_list_name ) {
-		$this->title = $post_list_name;
+		//$this->title = $post_list_name;
 		$this->slug  = (string) sanitize_title_with_dashes( $post_list_name );
 		$args = array(
 			'name' => $this->slug,
@@ -294,9 +294,16 @@ class APL_Post_List {
 	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
-			'name'            => '',
+			'post__in'        => array(),
 			'post_type'       => 'apl_post_list',
-			//'post_status'   => 'publish',
+			'post_status'     => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
 			'posts_per_page'  => 1,
 		);
 		$args = wp_parse_args( $args, $defaults );
@@ -361,12 +368,12 @@ class APL_Post_List {
 			return;
 		}
 		$get_args = array(
-			'ID'        => $this->id,
+			'post__in'  => array( $this->id ),
 			'post_type' => 'apl_post_list',
 		);
 		$post_lists = new WP_Query( $get_args );
 
-		$save_args = array(
+		$save_postarr = array(
 			'ID'          => $this->id,
 			'post_title'  => $this->title,
 			'post_name'   => $this->slug,
@@ -374,9 +381,9 @@ class APL_Post_List {
 			'post_type'   => 'apl_post_list',
 		);
 		if ( 0 < $post_lists->post_count ) {
-			$this->insert_post_list_post( $save_args );
+			$this->insert_post_list_post( $save_postarr );
 		} else {
-			$this->update_post_list_post( $save_args );
+			$this->update_post_list_post( $save_postarr );
 		}
 	}
 
@@ -473,6 +480,10 @@ class APL_Post_List {
 	 * @return void
 	 */
 	public function hook_action_save_post_apl_post_list( $post_id, $post_obj, $update ) {
+		$this->id     = $post_id;
+		$this->title  = $post_obj->post_title;
+		$this->slug   = $post_obj->post_name;
+		
 		$old_post_type            = get_post_meta( $this->id, 'apl_post_type', true );
 		$old_tax_query            = get_post_meta( $this->id, 'apl_tax_query', true );
 		$old_post_parent__in      = get_post_meta( $this->id, 'apl_post_parent__in', true );

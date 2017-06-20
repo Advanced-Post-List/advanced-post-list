@@ -381,12 +381,11 @@ foreach ( $apl_tax_terms as $key => $value ) {
 														}
 													}
 												}
-
-												if ( $first_tax && empty( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
-													$tax_display = 'display: block;';
-												}
-												$first_tax = false;
 											}
+											if ( $first_tax && empty( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
+												$tax_display = 'display: block;';
+											}
+											$first_tax = false;
 											?>
 											<li id="apl-t-li-<?php echo esc_attr( $k_pt_slug ); ?>-<?php echo esc_attr( $tax_slug ); ?>" style="<?php echo $tax_display; ?>"><a href="#apl-t-div-<?php echo esc_attr( $k_pt_slug ); ?>-<?php echo esc_attr( $tax_slug ); ?>"><?php echo esc_html( $apl_taxonomy_objs[ $tax_slug ]->labels->singular_name ); ?></a></li>
 										<?php endforeach; ?>

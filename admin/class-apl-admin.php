@@ -104,13 +104,18 @@ class APL_Admin {
 		add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
 
 		// Post Data
-		add_action( 'draft_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
+
 		add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
 		add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
 		add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
 		add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-		//add_action( 'trash_apl_post_list', array( $this, 'save_post_list' ), 10, 3 );
 
+		//add_action( 'trash_apl_post_list', array( $this, 'trash_post_list' ), 10, 3 );
+		add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
+		add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
+		add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
+		
 		/*
 		// Early Hook.
 		add_action( 'plugins_loaded', array( $this, 'hook_action_plugins_loaded' ) );
@@ -483,6 +488,34 @@ class APL_Admin {
 		include( APL_DIR . 'admin/meta-box-design.php' );
 	}
 
+	public function draft_post_list( $post_id, $post ) {
+		if ( isset( $_REQUEST['action'] ) ) {
+			if ( 'untrash' === $_REQUEST['action'] ) {
+				return;
+			}
+		}
+		if ( empty( $post->post_name ) ) {
+			if ( empty( $post->post_title ) ) {
+				$post->post_title = 'APL-' . $post->ID;
+			}
+			
+			remove_action('draft_apl_post_list', array( $this, 'draft_post_list' ) );
+			$post->post_name = sanitize_title_with_dashes( $post->post_title );
+			
+			$postarr = array(
+				'ID' => $post->ID,
+				'post_title' => $post->post_title,
+				'post_name' => $post->post_name,
+				//'post_status' => $post->post_status,
+			);
+			wp_update_post( $postarr );
+			
+			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
+		}
+		
+		$this->post_list_process( $post_id, $post );
+	}
+
 	/**
 	 * Save Post List.
 	 *
@@ -504,8 +537,108 @@ class APL_Admin {
 		// Doesn't work if there is no action ( Add New )
 		//check_admin_referer( 'update-post_' . $post_id );
 		
+		//add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		//add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		//add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		//add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+		
 		$this->post_list_process( $post_id, $post );
 		
+	}
+
+	// MOVE TO APL_POST_LIST???
+	// https://codex.wordpress.org/Plugin_API/Action_Reference/before_delete_post
+	public function action_wp_trash_post_apl_post_list( $post_id ) {
+		$args = array(
+			'post__in'    => array( $post_id ),
+			'post_type'   => 'apl_post_list',
+			//'post_status' => 'trash',
+		);
+		$post_lists = new WP_Query( $args );
+		if ( 1 > $post_lists->post_count ) {
+			return false;
+		}
+		$post_list = $post_lists->post;
+		
+		if ( 'apl_post_list' !== $post_list->post_type ) {
+			return;
+		}
+		
+		$apl_post_list = new APL_Post_List( $post_list->post_name );
+		
+		$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+		
+		$new_post_list_slug = $post_list->post_name . '__trashed';
+		$new_design_slug = '';
+		if ( !empty( $post_list->post_name ) ) {
+			$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
+			$design_slug = apply_filters( 'apl_design_trash_slug', $new_post_list_slug );
+			$new_design_slug = $design_slug . $slug_suffix;
+		}
+		$apl_post_list->pl_apl_design = $new_design_slug;
+		$apl_design->slug = $new_design_slug;
+		
+		$apl_design->save_design();
+	}
+
+	
+	public function action_untrash_post_apl_post_list( $post_id ) {
+		$args = array(
+			'post__in'    => array( $post_id ),
+			'post_type'   => 'apl_post_list',
+			'post_status' => 'trash',
+		);
+		$post_lists = new WP_Query( $args );
+		if ( 1 > $post_lists->post_count ) {
+			return false;
+		}
+		$post_list = $post_lists->post;
+		
+		if ( 'apl_post_list' !== $post_list->post_type ) {
+			return;
+		}
+		
+		$apl_post_list = new APL_Post_List( $post_list->post_name );
+		
+		$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+		
+		$new_post_list_slug = str_replace( '__trashed', '', $post_list->post_name );
+		$new_design_slug = '';
+		if ( !empty( $post_list->post_name ) ) {
+			$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
+			$design_slug = apply_filters( 'apl_design_trash_slug', $new_post_list_slug );
+			$new_design_slug = $design_slug . $slug_suffix;
+		}
+		$apl_post_list->pl_apl_design = $new_design_slug;
+		$apl_design->slug = $new_design_slug;
+		
+		$apl_design->save_design();
+	}
+
+	// MOVE TO APL_POST_LIST???
+	// before delete post hook https://codex.wordpress.org/Plugin_API/Action_Reference/before_delete_post
+	public function action_before_delete_post_apl_post_list( $post_id ) {
+		
+		
+		$args = array(
+			'post__in'    => array( $post_id ),
+			'post_type'   => 'apl_post_list',
+			'post_status' => 'trash',
+		);
+		$post_lists = new WP_Query( $args );
+		if ( 1 > $post_lists->post_count ) {
+			return false;
+		}
+		$post_list = $post_lists->post;
+		
+		if ( 'apl_post_list' !== $post_list->post_type ) {
+			return;
+		}
+		
+		$apl_post_list = new APL_Post_List( $post_list->post_name );
+		$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+		
+		$apl_design->delete_design();
 	}
 
 	/**
@@ -817,7 +950,7 @@ class APL_Admin {
 
 		// EMPTY MESSAGE.
 		$tmp_apl_design_empty = '';
-		if ( isset( $_POST['apl_empty_message'] ) ) {
+		if ( isset( $_POST['apl_empty_enable'] ) && isset( $_POST['apl_empty_message'] ) ) {
 			$tmp_apl_design_empty = filter_input( INPUT_POST, 'apl_empty_message', FILTER_UNSAFE_RAW );
 		}
 		$apl_design->empty = $tmp_apl_design_empty;
