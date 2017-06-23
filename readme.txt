@@ -71,10 +71,10 @@ Questions/Bug Report submit thread / ticket at [WordPress][wp apl support] or [G
 == Frequently Asked Questions ==
 
 = Where is the settings page? =
-Inside your admin dashboard under Settings->Admin Post List.
+Inside your admin dashboard under Adv. Post List.
 
 = How do I display the post list that I created? =
-You need to locate and copy the shortcode which is in the Advance Post List - Settings page on the saved preset table. Then create a page/post and paste the shortcode on your page/post (e.g. [post_list name='some-preset-name'])
+You need to copy & paste the shortcode to the desired location (e.g. [post_list name='some-preset-name']).
 
 
 == Screenshots ==
@@ -86,9 +86,9 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 == Changelog ==
 
 = 0.4.0 =
-* Added APL_Design Class to use post data as a database.
+* Changed Preset object to use APL_Post_List post data database structure; adds multiple built-in improvements & support.
+* Added APL_Design Class post data database structure.
 * Changed Preset variables before, content, after, & empty message to APL_Design object.
-* Changed Preset object to use post data as a database, and adds multiple improvements with WP's built-in support.
 * Changed version check to a hook method.
 * Added more internalization.
 * Added Admin Singleton Class.
@@ -98,7 +98,9 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 * Added Post Status filter by 'None' and 'Any'.
 * Added Perms filter by 'None'.
 * Added non-class Functions file for common functions.
-* Added Hooks file to store custom hooks.
+* Added hooks.php file to store custom hook examples.
+* Added additional Notice to front-end if attribute 'name' in [post_list] is invalid or missing.
+* Added Sanitazion toshortcode attribute 'name'; ex. [post_list name=""].
 
 = 0.3.7 =
 * Fixed warning with load_plugin_textdomain.

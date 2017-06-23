@@ -106,12 +106,15 @@ class APL_Core {
 
 		// STEP 2.
 		/* **** ACTION & FILTERS HOOKS **** */
-		add_action( 'plugins_loaded', array( $this, 'hook_action_check_version' ) );
-		add_action( 'init', array( $this, 'hook_action_register_post_type_post_list' ) );
-		add_action( 'init', array( $this, 'hook_action_register_post_type_design' ) );
-		add_action( 'plugins_loaded', array( $this, 'hook_action_load_plugin_textdomain' ) );
-		add_shortcode( 'post_list', array( $this, 'hook_shortcode_post_list' ) );
-		add_action( 'widgets_init', array( $this, 'hook_action_widget_init' ) );
+		add_action( 'plugins_loaded', array( $this, 'action_check_version' ) );
+		add_action( 'init', array( $this, 'action_register_post_type_post_list' ) );
+		add_action( 'init', array( $this, 'action_register_post_type_design' ) );
+		add_action( 'plugins_loaded', array( $this, 'action_load_plugin_textdomain' ) );
+
+		// Public Hooks.
+		add_shortcode( 'post_list', array( $this, 'shortcode_post_list' ) );
+		add_action( 'widgets_init', array( $this, 'action_widget_init' ) );
+
 		// STEP 3.
 		if ( is_admin() ) {
 			// Admin Class
@@ -119,9 +122,9 @@ class APL_Core {
 			
 			/* **** ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS **** */
 			$file_dir = APL_DIR . 'advanced-post-list/advanced-post-list.php';
-			register_activation_hook( $file_dir, array( 'APL_Core', 'hook_activation' ) );
-			register_deactivation_hook( $file_dir, array( 'APL_Core', 'hook_deactivation' ) );
-			register_uninstall_hook( $file_dir, array( 'APL_Core', 'hook_uninstall' ) );
+			register_activation_hook( $file_dir, array( 'APL_Core', 'activation' ) );
+			register_deactivation_hook( $file_dir, array( 'APL_Core', 'deactivation' ) );
+			register_uninstall_hook( $file_dir, array( 'APL_Core', 'uninstall' ) );
 		}
 	}
 
@@ -133,7 +136,7 @@ class APL_Core {
 	 * @since 0.3.2
 	 * @access private
 	 *
-	 * @see Function/method/class relied on
+	 * @see get_file_data()
 	 * @link https://hitchhackerguide.com/2011/02/12/get_plugin_data/
 	 *
 	 * @param string $plugin_file Main plugin file.
@@ -242,7 +245,7 @@ class APL_Core {
 	 *
 	 * @return void
 	 */
-	public function hook_action_register_post_type_post_list() {
+	public function action_register_post_type_post_list() {
 		
 		$args = array(
 			'labels' => array(
@@ -306,7 +309,7 @@ class APL_Core {
 	 *
 	 * @return void
 	 */
-	public function hook_action_register_post_type_design() {
+	public function action_register_post_type_design() {
 		$args = array(
 			'labels' => array(
 				'name'                  => __( 'Designs', 'advanced-post-list' ),
@@ -372,7 +375,7 @@ class APL_Core {
 	 *
 	 * @return void
 	 */
-	public function hook_action_check_version() {
+	public function action_check_version() {
 		$options = $this->apl_options_load();
 		if ( isset( $options['version'] ) ) {
 			/* **** UPGRADES **** *
@@ -404,7 +407,7 @@ class APL_Core {
 	 *
 	 * @return void
 	 */
-	public function hook_action_load_plugin_textdomain() {
+	public function action_load_plugin_textdomain() {
 		$lang_dir = APL_DIR . '/languages/';
 		load_plugin_textdomain( APL_SLUG, false, $lang_dir );
 	}
@@ -420,7 +423,7 @@ class APL_Core {
 	 * @since 0.1.0
 	 * @access public
 	 */
-	public function hook_activation() {
+	public function activation() {
 		// TODO Change to Post Data
 		// Step 1.
 		$options = get_option( 'APL_Options' );
@@ -462,7 +465,7 @@ class APL_Core {
 	 *                preset database data.
 	 * @access public
 	 */
-	public function hook_deactivation() {
+	public function deactivation() {
 		// TODO Change to Post Data
 		// STEP 1.
 		$options = get_option( 'APL_Options' );
@@ -486,7 +489,7 @@ class APL_Core {
 	 *                data upon deactivation' is set or not.
 	 * @access public
 	 */
-	public function hook_uninstall() {
+	public function uninstall() {
 		// TODO Change to Post Data
 		// Step 1.
 		delete_option( 'APL_Options' );
@@ -592,7 +595,7 @@ class APL_Core {
 	 * @see APL_Widget class 'advanced-post-list/includes/class/class-apl-widget.php
 	 * @link URL
 	 */
-	public function hook_action_widget_init() {
+	public function action_widget_init() {
 		register_widget( 'APL_Widget' );
 	}
 
@@ -610,11 +613,13 @@ class APL_Core {
 	 * @param string $att Carries the preset name.
 	 * @return string HTML content, if param is set. Otherwise return an empty string.
 	 */
-	public function hook_shortcode_post_list( $att ) {
+	public function shortcode_post_list( $att ) {
 		// STEP 1.
 		if ( isset( $att['name'] ) ) {
 			// STEP 2.
 			return $this->display_post_list( $att['name'] );
+		} elseif( current_user_can( 'manage_options' ) ) {
+			return __( 'NOTICE: Shortcode name is missing. Ex [post_list name=\'example\']', 'advanced-post-list' );
 		} else {
 			// STEP 3.
 			return '';
@@ -622,153 +627,128 @@ class APL_Core {
 	}
 
 	/**
-	 * Summary.
+	 * Public Hard-code Display Post List.
 	 *
-	 * Public function for post lists.
+	 * Public function for displaying Post Lists.
 	 *
-	 * @since 0.1.0
-	 * @access (for functions: only use if private)
-	 *
-	 * @see Function/method/class relied on
-	 * @link URL
-	 * @global type $varname Description.
-	 * @global type $varname Description.
+	 * @since 0.3.0
+	 * @since 0.4.0 - Added slug sanitization.
 	 *
 	 * @param string $preset_name Preset slug/name.
-	 * @return string HTML content
+	 * @return string HTML content.
 	 */
 	public function display_post_list( $preset_name ) {
-		require_once( APL_DIR . 'includes/class/class-apl-shortcodes.php' );
-
-		return $this->apl_run( $preset_name );
+		$preset_name = sanitize_key( $preset_name );
+		return $this->post_list_loop( $preset_name );
 	}
 
 	/**
-	 * Summary.
+	 * Post List Looper.
 	 *
-	 * Method used for executing the main purpose of the plugin. Creates an HTML
-	 * post list string to be sent to the page that it was called from. What is
-	 * displayed is determined by the 'post_list name' being used.
-	 *
-	 * STEP 1 - Get the preset object, and if empty, display a message to
-	 * the admin.
-	 * STEP 2 - If Exclude Duplicates (w/ multiple post lists) is checked,
-	 * then add any post IDs collected to the preset post list object's exclude
-	 * post array to be filter out.
-	 * STEP 3 - Initialize the APLQuery object (sets the query strings).
-	 * STEP 4 - Query the posts to retrieve the final WP_Query class.
-	 * STEP 5 - If posts are present, the use the loop to display posts. Otherwise
-	 * return an exit message if no posts are found.
-	 * STEP 6 - Return output string.
+	 * Method used for executing the frontend loop. Currently uses an output
+	 * string (HTML) to return.
 	 *
 	 * @since 0.1.0
-	 * @since 0.2.0 - Corrected a typo in the if statement for _postExcludeCurrent.
+	 * @since 0.2.0  - Corrected a typo in the if statement for _postExcludeCurrent.
 	 * @since 0.3.b8 - Complete overhaul. Moved dynamic settings to APLQuery,
-	 *                implemented WP's loop.
+	 *                 implemented WP's loop.
+	 * @since 0.4.0  - Changed 'Preset' database objects to APL_Post_List
+	 *                 and APL_Design database objects.
 	 * @access private
 	 *
-	 * @see APL_Preset_Db class
+	 * @see APL_Post_List class
+	 * @see APL_Design class
 	 * @see APL_Query class
 	 * @see APL_Internal_Shortcodes class
-	 * @link URL
 	 *
 	 * @param string $preset_name Preset slug/name.
 	 * @return string HTML string.
 	 */
-	private function apl_run( $preset_name ) {
-		// What does this do???
-		// This is something that Kalin was originally had in mind for
-		// implementing page style and design with the global $post.
-		/*
-		if ($newVals->post_type == "none") {
-			$output = APLInternalShortcodeReplace($newVals->content, $post, 0);
-		}
-		*/
-
-		// STEP 1 - Get the preset object, and if empty, display a message
-		// to the admin.
-		$preset_db_obj = new APL_Preset_Db( 'default' );
-		if ( isset( $preset_db_obj->_preset_db->$preset_name ) ) {
-			$preset_obj = new APL_Preset();
-			$preset_obj = $preset_db_obj->_preset_db->$preset_name;
+	private function post_list_loop( $post_list_slug ) {
+		// STEP 1 - Get Post List data, and if valid, do initilization. 
+		// Otherwise, for Admin show an alert message, and nothing to viewers.
+		$apl_post_list = new APL_Post_List( $post_list_slug );
+		if ( $apl_post_list->id  ) {
+			// INIT.
+			require_once( APL_DIR . 'includes/class/class-apl-shortcodes.php' );
+			$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
 		} elseif ( current_user_can( 'manage_options' ) ) {
-			// Alert Message for admins in case an invalid preset was used.
-			return esc_html__( '<p>Admin Alert - A problem has occured. A non-existent preset name has been passed use.</p>', 'advanced-post-list' ) ;
+			// Admin Message.
+			return esc_html__( 'NOTICE: Post list \'name\' does not exist or is invalid.', 'advanced-post-list' );
 		} else {
-			// Users/Visitors won't be able to see the post list if the
-			// preset post list name isn't set right.
+			// Users/Visitors.
 			return '';
 		}
 
-		// STEP 2 - If Exclude Duplicates (w/ multiple post lists) is checked,
+		// STEP - If Exclude Duplicates is checked (w/ multiple post lists),
 		// then add any post IDs collected to the preset post list object's
 		// exclude post array to be filter out.
-		if ( isset( $preset_obj->_listExcludeDuplicates ) && true === $preset_obj->_listExcludeDuplicates ) {
+		if ( $apl_post_list->pl_exclude_dupes ) {
 			foreach ( $this->_remove_duplicates as $post_id ) {
-				$preset_obj->_listExcludePosts[] = $post_id;
+				$apl_post_list->post__not_in[] = $post_id;
 			}
 		}
 
-		// STEP 3 - Initialize the APLQuery object (sets the query strings).
-		// The constructor will do most of the initial settings, like setting
-		// multiple query strings according to APL. The class will still need to
-		// use a public function to return a WP_Query class; until 'inheritance'
-		// becomes more of a possibility.
-		$apl_query = new APL_Query( $preset_obj );
-		$apl_design = new APL_Design( $preset_obj->get_apl_design() );
+		// STEP - Init APL_Query object (sets the query strings).
+		// The constructor will process and produce a final array of query_args.
+		// Then APL_Query will need to query_wp and return a final WP_Query class.
+		// NOTE: Look into class inheritence for enhancing, or change the label
+		//       of the concept; APL_Process, *_Factory.
+		$apl_query = new APL_Query( $apl_post_list );
 
-		//STEP 4 - Query the posts to retrieve the final WP_Query class.
-		$wp_query_class = $apl_query->query_wp( $apl_query->_query_str_array );
-
+		// STEP - Query the posts to retrieve the final WP_Query class.
+		// NOTE: There's got to be a better concept to produce a final WP_Query.
+		$wp_query_class = $apl_query->query_wp( $apl_query->query_args_arr );
+		
 		/* ****************************************************************** */
 		/* * The Loop (APL/WP Concept) ************************************** */
 		/* ****************************************************************** */
-		// STEP 5 - If posts are present, the use the loop to display posts.
+		// STEP 5 - If there are posts, the use the loop to display posts.
 		// Otherwise return an exit message if no posts are found.
+		$output = '';
+		$count = 0;
 		if ( $wp_query_class->have_posts() ) {
-			$output = '';
-
-			/* * Before ***************************************************** */
+			// BEFORE.
 			$output .= $apl_design->before;
 
-			/* * Content **************************************************** */
-			$count = 0;
-
+			// Initial Internal Shortcodes since there's posts.
 			$internal_shortcodes = new APL_Internal_Shortcodes();
 
+			$output = apply_filters( 'apl_core_loop_before_content', $output, $count, $wp_query_class );
+
+			// LIST CONTENT.
 			while ( $wp_query_class->have_posts() ) {
 				$wp_query_class->the_post();
-				// $APL_post->ID;.
-				$this->_remove_duplicates[] = $wp_query_class->post->ID;
 
+				$this->_remove_duplicates[] = $wp_query_class->post->ID;
 				$output .= $internal_shortcodes->replace( $apl_design->content, $wp_query_class->post );
 				$count++;
 			}
-
+			// [final_end] internal shortcode.
 			if ( strrpos( $output, 'final_end' ) ) {
 				$output = $internal_shortcodes->final_end( $output );
 			}
 
-			/* * After ****************************************************** */
+			$output = apply_filters( 'apl_core_loop_after_content', $output, $count, $wp_query_class );
+
+			// AFTER.
 			$output .= $apl_design->after;
-		} else {
-			// if (count($apl_query->_posts) === 0).
+
+			// Exit method for apl-shortcodes class; __destroy magic method wasn't working as intended.
+			$internal_shortcodes->remove();
+		} else {// EMPTY.
 			$apl_options = $this->apl_options_load();
+
 			if ( ! empty( $apl_design->empty ) ) {
-				return $apl_design->empty;
+				$output .= $apl_design->empty;
 			} elseif ( true === $apl_options['default_exit'] && ! empty( $apl_options['default_exit_msg'] ) ) {
-				return $apl_options['default_exit_msg'];
-			} else {
-				return '';
+				$output .= $apl_options['default_exit_msg'];
 			}
-		}// End if().
+		}// End if( have_posts ) loop.
 
-		/* Restore Global Post Data */
 		wp_reset_postdata();
-		// Exit method for apl-shortcodes class.
-		$internal_shortcodes->remove();
 
-		// STEP 6 - Return output string.
+		// STEP - Return output string.
 		return $output;
 	}
 }

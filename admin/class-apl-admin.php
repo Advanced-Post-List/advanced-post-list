@@ -748,6 +748,8 @@ class APL_Admin {
 		foreach ( $post_type_names as $k_pt_slug => $v_pt_title ) {
 			// POST TYPES (ACTIVE).
 			if ( isset( $_POST[ 'apl_toggle-' . $k_pt_slug ] ) ) {
+				$tmp_tax_query[ $k_pt_slug ] = array();
+				
 				// If 'Any / All' is toggled, then treat 'any' differently and skip the rest.
 				if ( 'any' === $k_pt_slug ) {
 					// 'any' TAXONOMY.
@@ -958,6 +960,7 @@ class APL_Admin {
 					// Check 'any' term, and if set, skip other terms. break;
 					if ( isset( $_POST[ 'apl_term-' . $post_type . '-' . $v1_taxonomy . '-any' ] ) ) {
 						// No reason to have dynamic true with 'any'; fallback method.
+						$tmp_terms[] = 0;
 						$tmp_terms_dynamic = false;
 						break;
 					} elseif ( isset( $_POST[ 'apl_term-' . $post_type . '-' . $v1_taxonomy . '-' . $v2_term_obj->term_id ] ) ) {
