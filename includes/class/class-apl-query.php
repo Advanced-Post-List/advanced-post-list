@@ -239,13 +239,37 @@ class APL_Query {
 						}
 					}
 
+					// Page Parents
 					if ( isset( $apl_post_list->post_parent__in[ $v2_pt_slug ] ) ) {
 						$tmp_query_args['post_parent__in'] = $apl_post_list->post_parent__in[ $v2_pt_slug ];
 					}
 				}
 			} else { // ANY
 				$tmp_query_args['post_type'] = 'any';
-				$tmp_query_args['tax_query'] = $apl_post_list->tax_query['any'];
+				//$tmp_query_args['tax_query'] = $apl_post_list->tax_query['any'];
+
+				$tmp_tax_query = $apl_post_list->tax_query[ $v1_pt_arr ];
+				if ( ! empty( $tmp_query_args ) ) {
+
+					$tmp_query_args['tax_query']['relation'] = $tmp_tax_query['relation'];
+					unset( $tmp_tax_query['relation'] );
+
+					foreach ( $tmp_tax_query as $tax_arr ) {
+						// Any / All.
+						if ( 0 === $tax_arr['terms'][0] ){
+							$terms_args = array(
+								'taxonomy' => $tax_arr['taxonomy'],
+								'fields' => 'ids',
+							);
+							$tax_arr['terms'] = get_terms( $terms_args );
+
+							$tmp_query_args['tax_query'][] = $tax_arr;
+						} else {
+							$tmp_query_args['tax_query'][] = $tax_arr;
+						}
+					}
+				}
+
 				// Post Parents is empty in 'Any'
 				//$tmp_query_args['post_parent__in'] = $apl_post_list->post_parent__in['any'];
 			}
@@ -486,9 +510,12 @@ class APL_Query {
 			// STEP.
 			// Collect an array of Post IDs.
 			$post_IDs = array();
-			foreach ( $Query_Obj->posts as $i => $post_ID ) {
-				$post_IDs[] = intval( $post_ID );
+			if ( ! empty( $Query_Obj->posts ) ) {
+				foreach ( $Query_Obj->posts as $i => $post_ID ) {
+					$post_IDs[] = intval( $post_ID );
+				}
 			}
+				
 			$post_IDs = array_merge( $post_IDs, $post_in_IDs );
 
 			// STEP.

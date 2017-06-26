@@ -329,6 +329,8 @@ class APL_Design {
 		if ( $old_empty !== $this->empty ) {
 			update_post_meta( $this->id, 'apl_empty', $this->empty );
 		}
+		
+		remove_action( 'save_post_apl_design', array( $this, 'hook_action_save_post_apl_design' ) );
 	}
 }
 

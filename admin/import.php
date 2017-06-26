@@ -23,14 +23,14 @@ function apl_import() {
 					$apl_post_list = new APL_Post_List( $v2_post_list_import->slug );
 
 					$apl_post_list->title                = $v2_post_list_import->title                ?: $apl_post_list->title;
-					$apl_post_list->post_type            = $v2_post_list_import->post_type            ?: $apl_post_list->post_type ;
-					$apl_post_list->tax_query            = $v2_post_list_import->tax_query            ?: $apl_post_list->tax_query;
-					$apl_post_list->post_parent__in      = $v2_post_list_import->post_parent__in      ?: $apl_post_list->post_parent__in;
-					$apl_post_list->post_parent_dynamic  = $v2_post_list_import->post_parent_dynamic  ?: $apl_post_list->post_parent_dynamic;
+					$apl_post_list->post_type            = $v2_post_list_import->post_type            ? json_decode( json_encode( $apl_post_list->post_type ), true ) : $apl_post_list->post_type ;
+					$apl_post_list->tax_query            = $v2_post_list_import->tax_query            ? json_decode( json_encode( $apl_post_list->tax_query ), true ) : $apl_post_list->tax_query;
+					$apl_post_list->post_parent__in      = $v2_post_list_import->post_parent__in      ? json_decode( json_encode( $apl_post_list->post_parent__in ), true ) : $apl_post_list->post_parent__in;
+					$apl_post_list->post_parent_dynamic  = $v2_post_list_import->post_parent_dynamic  ? json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true ) : $apl_post_list->post_parent_dynamic;
 					$apl_post_list->posts_per_page       = $v2_post_list_import->posts_per_page       ?: $apl_post_list->posts_per_page;
 					$apl_post_list->order_by             = $v2_post_list_import->order_by             ?: $apl_post_list->order_by;
 					$apl_post_list->order                = $v2_post_list_import->order                ?: $apl_post_list->order;
-					$apl_post_list->post_status          = $v2_post_list_import->post_status          ?: $apl_post_list->post_status;
+					$apl_post_list->post_status          = $v2_post_list_import->post_status          ? json_decode( json_encode( $apl_post_list->post_status ), true ): $apl_post_list->post_status;
 					$apl_post_list->perm                 = $v2_post_list_import->perm                 ?: $apl_post_list->perm;
 					$apl_post_list->author__bool         = $v2_post_list_import->author__bool         ?: $apl_post_list->author__bool;
 					$apl_post_list->author__in           = $v2_post_list_import->author__in           ?: $apl_post_list->author__in;

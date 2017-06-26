@@ -160,10 +160,10 @@ jQuery( document ).ready( function($) {
 						stack: false,
 						title: trans.import_overwrite_dialog_title,
 						resizable: true,
-						height: 256,
-						minWidth: 352,
-						maxWidth: 512,
-						maxHeight: 448,
+						height: 270,
+						minWidth: 360,
+						maxWidth: 540,
+						maxHeight: 639,
 						modal: true,
 						buttons: {
 							Next: function() {

@@ -270,7 +270,7 @@ class APL_Post_List {
 			// Save Design Meta Data Hook.
 			// Only use 'save_post_{post_type}' for saving object as meta data
 			// after post has been saved, and data has been process via {status}_{post_type}.
-			add_action( 'save_post_apl_post_list', array( $this, 'hook_action_save_post_apl_post_list' ), 10, 3 );
+			add_action( 'save_post_apl_post_list', array( &$this, 'hook_action_save_post_apl_post_list' ), 10, 3 );
 
 			// Delete Design Hook.
 			// Import / Export Hook.
@@ -577,5 +577,7 @@ class APL_Post_List {
 		if ( $this->pl_apl_design  !== $old_pl_apl_design  ) {
 			update_post_meta( $this->id, 'apl_pl_apl_design', $this->pl_apl_design  );
 		}
+		
+		remove_action( 'save_post_apl_post_list', array( &$this, 'hook_action_save_post_apl_post_list' ) );
 	}
 }

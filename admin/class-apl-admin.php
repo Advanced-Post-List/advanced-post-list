@@ -96,6 +96,8 @@ class APL_Admin {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 
+		add_action( 'current_screen', array( $this, 'current_screen_hooks' ) );
+
 		// Screen Options.
 		add_action( 'admin_head', array( $this, 'disable_screen_boxes' ) );
 		add_action( 'load-edit.php', array( $this, 'post_list_screen_all' ) );
@@ -109,24 +111,16 @@ class APL_Admin {
 		add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
 		add_action( 'add_meta_boxes', array( $this, 'settings_meta_boxes' ) );
 
-		// Post Data
-		add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
-
-		add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-		add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-		add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-		add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-
-		//add_action( 'trash_apl_post_list', array( $this, 'trash_post_list' ), 10, 3 );
-		add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
-		add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
-		add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
+		
 		
 		// Settings Data
 		add_action( 'admin_post_apl_save_general_settings', array( $this, 'save_general_settings' ) );
 		// AJAX.
 		add_action( 'admin_init', array( $this, 'add_settings_ajax_hooks' ) );
 
+		// TESTING
+		
+		
 		/*
 		// Early Hook.
 		add_action( 'plugins_loaded', array( $this, 'hook_action_plugins_loaded' ) );
@@ -141,6 +135,55 @@ class APL_Admin {
 		add_action( 'wp_footer', array( $this, 'hook_action_wp_footer' ) );
 		*/
 
+	}
+	
+	/**
+	 * 
+	 * @param WP_Screen $current_screen Current WP_Screen object.
+	 */
+	public function current_screen_hooks( $current_screen ) {
+		
+		//var_dump( $current_screen );
+		
+		if ( 'edit-apl_post_list'  === $current_screen->id ) {
+			// Add New.
+			
+			// Post Data
+			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
+
+			add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+
+			//add_action( 'trash_apl_post_list', array( $this, 'trash_post_list' ), 10, 3 );
+			add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
+			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
+			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
+			
+			
+		} elseif ( 'apl_post_list'  === $current_screen->id ) {
+			// All Post Lists.
+			
+			// Post Data
+			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
+
+			add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+
+			//add_action( 'trash_apl_post_list', array( $this, 'trash_post_list' ), 10, 3 );
+			add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
+			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
+			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
+			
+		} elseif ( 'apl_post_list_page_apl_settings'  === $current_screen->id ) {
+			// Settings (Page)
+			
+			
+		}
+		
 	}
 
 	/**
@@ -188,7 +231,7 @@ class APL_Admin {
 		// TODO - Add Help API.
 		
 		// EXTENSIONS
-		do_action( 'apl_admin_menu' );
+		do_action( 'apl_admin_menu_ext' );
 
 	}
 
@@ -610,6 +653,14 @@ class APL_Admin {
 		$args = array(
 			'post__in' => array( $post_id ),
 			'post_type' => 'apl_post_list',
+			'post_status'     => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
 		);
 		$post_lists = new WP_Query( $args );
 		$post_list = $post_lists->post;
@@ -1147,7 +1198,7 @@ class APL_Admin {
 			'overwrite_post_list'  => $data_overwrite_post_list,
 			'overwrite_design'     => $data_overwrite_design,
 		);
-		
+
 		echo json_encode( $rtn_data );
 		
 		die();
@@ -1155,7 +1206,9 @@ class APL_Admin {
 
 	/**
 	 * Process Import for Post Lists
-	 * 
+	 *
+	 * @since 0.4.0
+	 *
 	 * @param APL_Post_List $apl_post_list
 	 * @return void
 	 */
@@ -1163,14 +1216,14 @@ class APL_Admin {
 		$tmp_apl_post_list = new APL_Post_List( $apl_post_list->slug );
 		
 		$tmp_apl_post_list->title                = $apl_post_list->title                ?: $tmp_apl_post_list->title;
-		$tmp_apl_post_list->post_type            = $apl_post_list->post_type            ?: $tmp_apl_post_list->post_type ;
-		$tmp_apl_post_list->tax_query            = $apl_post_list->tax_query            ?: $tmp_apl_post_list->tax_query;
-		$tmp_apl_post_list->post_parent__in      = $apl_post_list->post_parent__in      ?: $tmp_apl_post_list->post_parent__in;
-		$tmp_apl_post_list->post_parent_dynamic  = $apl_post_list->post_parent_dynamic  ?: $tmp_apl_post_list->post_parent_dynamic;
+		$tmp_apl_post_list->post_type            = $apl_post_list->post_type            ? json_decode( json_encode( $apl_post_list->post_type ), true ) : $tmp_apl_post_list->post_type ;
+		$tmp_apl_post_list->tax_query            = $apl_post_list->tax_query            ? json_decode( json_encode( $apl_post_list->tax_query ), true ) : $tmp_apl_post_list->tax_query;
+		$tmp_apl_post_list->post_parent__in      = $apl_post_list->post_parent__in      ? json_decode( json_encode( $apl_post_list->post_parent__in ), true ) : $tmp_apl_post_list->post_parent__in;
+		$tmp_apl_post_list->post_parent_dynamic  = $apl_post_list->post_parent_dynamic  ? json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true ) : $tmp_apl_post_list->post_parent_dynamic;
 		$tmp_apl_post_list->posts_per_page       = $apl_post_list->posts_per_page       ?: $tmp_apl_post_list->posts_per_page;
 		$tmp_apl_post_list->order_by             = $apl_post_list->order_by             ?: $tmp_apl_post_list->order_by;
 		$tmp_apl_post_list->order                = $apl_post_list->order                ?: $tmp_apl_post_list->order;
-		$tmp_apl_post_list->post_status          = $apl_post_list->post_status          ?: $tmp_apl_post_list->post_status;
+		$tmp_apl_post_list->post_status          = $apl_post_list->post_status          ? json_decode( json_encode( $apl_post_list->post_status ), true ) : $tmp_apl_post_list->post_status;
 		$tmp_apl_post_list->perm                 = $apl_post_list->perm                 ?: $tmp_apl_post_list->perm;
 		$tmp_apl_post_list->author__bool         = $apl_post_list->author__bool         ?: $tmp_apl_post_list->author__bool;
 		$tmp_apl_post_list->author__in           = $apl_post_list->author__in           ?: $tmp_apl_post_list->author__in;
@@ -1185,6 +1238,8 @@ class APL_Admin {
 
 	/**
 	 * Process Import for Designs
+	 *
+	 * @since 0.4.0
 	 *
 	 * @param APL_Design $apl_design
 	 */
