@@ -1,0 +1,35 @@
+/**
+ * APL Admin UI CSS
+ *
+ * @package WordPress
+ * @subpackage APL_Admin
+ * @since 0.4.0
+ */
+
+/* SETTINGS */
+
+.apl-settings-row {
+	clear: left;
+	min-height: 18px;
+	margin-bottom: 18px;
+}
+
+.apl-settings-row > div {
+	float: left;
+}
+
+.apl-row-first-cell {
+	width: 36%;
+}
+
+.apl-cell-1of2 {
+	width: 64%;
+}
+.apl-settings-row > input {
+	float: left;
+}
+
+.apl-settings-row > textarea {
+	margin-left: 36%;
+	width: 64%;
+}

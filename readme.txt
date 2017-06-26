@@ -90,7 +90,7 @@ You need to copy & paste the shortcode to the desired location (e.g. [post_list 
 * Added APL_Design Class post data database structure.
 * Changed Preset variables before, content, after, & empty message to APL_Design object.
 * Changed version check to a hook method.
-* Added more internalization.
+* Added Internalization for translations.
 * Added Admin Singleton Class.
 * Changed to Custom Admin Menu.
 * Added New Admin templates and multiple UI changes.
@@ -101,6 +101,10 @@ You need to copy & paste the shortcode to the desired location (e.g. [post_list 
 * Added hooks.php file to store custom hook examples.
 * Added additional Notice to front-end if attribute 'name' in [post_list] is invalid or missing.
 * Added Sanitazion toshortcode attribute 'name'; ex. [post_list name=""].
+* Removed jQuery UI Theme setting from APL Options.
+* Fixed possible bug with Plugin Options not being initiated.
+* Changed/Fixed Exporting and Importing.
+* Changed General Settings to Settings API w/ Meta Boxes.
 
 = 0.3.7 =
 * Fixed warning with load_plugin_textdomain.

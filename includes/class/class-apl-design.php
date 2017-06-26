@@ -199,7 +199,15 @@ class APL_Design {
 		}
 	}
 
-	// https://codex.wordpress.org/Function_Reference/wp_delete_post
+	/**
+	 * Deletes the Design.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @link https://codex.wordpress.org/Function_Reference/wp_delete_post
+	 *
+	 * @return void
+	 */
 	public function delete_design() {
 		
 		wp_delete_post( $this->id, true );

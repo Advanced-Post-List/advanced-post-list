@@ -380,10 +380,65 @@ class APL_Post_List {
 			'post_status' => 'publish',
 			'post_type'   => 'apl_post_list',
 		);
-		if ( 0 < $post_lists->post_count ) {
+		if ( 1 > $post_lists->post_count || 0 === $this->id ) {
 			$this->insert_post_list_post( $save_postarr );
 		} else {
 			$this->update_post_list_post( $save_postarr );
+		}
+	}
+
+	/**
+	 * Deletes the Post List.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @link https://codex.wordpress.org/Function_Reference/wp_delete_post
+	 *
+	 * @return void
+	 */
+	public function delete_post_list() {
+		wp_delete_post( $this->id, true );
+	}
+
+	/**
+	 * Insert Design post data.
+	 *
+	 * Inserts APL Design's post args to the database to create a new WP_Post.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param array $args Post arg array for creating Post objects.
+	 * @return void
+	 */
+	private function insert_post_list_post( $args = array() ) {
+		$defaults = $this->default_postarr();
+		$args = wp_parse_args( $args, $defaults );
+
+		wp_insert_post( $args );
+	}
+
+	/**
+	 * Update Design post data.
+	 *
+	 * Inserts APL Design's post args to the database to update a WP_Post.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param type $args Post arg array for creating Post objects.
+	 * @return void
+	 */
+	private function update_post_list_post( $args = array() ) {
+		$defaults = $this->default_postarr();
+		$args = wp_parse_args( $args, $defaults );
+
+		$rtn_post_id = wp_update_post( $args );
+		if ( is_wp_error( $rtn_post_id ) ) {
+			$errors = $rtn_post_id->get_error_messages();
+			foreach ( $errors as $error ) {
+				echo $error;
+			}
 		}
 	}
 
@@ -425,42 +480,6 @@ class APL_Post_List {
 			//'import_id'        => 0,
 			//'context'          => '',
 		);
-	}
-
-	/**
-	 * Insert Design post data.
-	 *
-	 * Inserts APL Design's post args to the database to create a new WP_Post.
-	 *
-	 * @since 0.4.0
-	 * @access private
-	 *
-	 * @param array $args Post arg array for creating Post objects.
-	 * @return void
-	 */
-	private function insert_post_list_post( $args = array() ) {
-		$defaults = $this->default_postarr();
-		$args = wp_parse_args( $args, $defaults );
-
-		wp_insert_post( $args );
-	}
-
-	/**
-	 * Update Design post data.
-	 *
-	 * Inserts APL Design's post args to the database to update a WP_Post.
-	 *
-	 * @since 0.4.0
-	 * @access private
-	 *
-	 * @param type $args Post arg array for creating Post objects.
-	 * @return void
-	 */
-	private function update_post_list_post( $args = array() ) {
-		$defaults = $this->default_postarr();
-		$args = wp_parse_args( $args, $defaults );
-
-		wp_update_post( $args );
 	}
 
 	/**

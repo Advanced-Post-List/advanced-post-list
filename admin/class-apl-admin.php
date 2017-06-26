@@ -94,6 +94,7 @@ class APL_Admin {
 
 		// Menu & Scripts.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 
 		// Screen Options.
 		add_action( 'admin_head', array( $this, 'disable_screen_boxes' ) );
@@ -106,6 +107,7 @@ class APL_Admin {
 
 		// Editor Meta Boxes.
 		add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
+		add_action( 'add_meta_boxes', array( $this, 'settings_meta_boxes' ) );
 
 		// Post Data
 		add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
@@ -120,6 +122,11 @@ class APL_Admin {
 		add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
 		add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
 		
+		// Settings Data
+		add_action( 'admin_post_apl_save_general_settings', array( $this, 'save_general_settings' ) );
+		// AJAX.
+		add_action( 'admin_init', array( $this, 'add_settings_ajax_hooks' ) );
+
 		/*
 		// Early Hook.
 		add_action( 'plugins_loaded', array( $this, 'hook_action_plugins_loaded' ) );
@@ -148,6 +155,8 @@ class APL_Admin {
 	private function _requires() {
 		// Example.
 		// 'require_once( APL_DIR . 'includes/example.php' )'.
+		require_once( APL_DIR . 'admin/export.php' );
+		require_once( APL_DIR . 'admin/import.php' );
 	}
 
 	/**
@@ -157,6 +166,7 @@ class APL_Admin {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @see 'admin_menu' hook
 	 * @see wp-admin/admin-header.php
 	 * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
 	 *
@@ -165,10 +175,44 @@ class APL_Admin {
 	public function admin_menu() {
 		// TODO - Add APL Dashboard.
 		// TODO - Add APL Settings API.
+		add_submenu_page(
+			'edit.php?post_type=apl_post_list',
+			__( 'APL Settings', 'advanced-post-list' ),
+			__( 'Settings', 'advanced-post-list' ),
+			'administrator',
+			'apl_settings',
+			array( $this, 'submenu_settings_page' )
+		);
+		add_action( 'admin_init', array( $this, 'settings_register_settings' ) );
+		
 		// TODO - Add Help API.
+		
+		// EXTENSIONS
+		do_action( 'apl_admin_menu' );
 
-		// Enqueue Scripts & Styles.
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
+	}
+
+	public function submenu_settings_page() {
+		//echo 'FooBar';
+		include( APL_DIR . 'admin/settings-page.php' );
+	}
+
+	/**
+	 * Registers Input Settings for Settings Page.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void 
+	 */
+	public function settings_register_settings() {
+		register_setting( 'apl_settings_general', 'apl_delete_on_deactivation', 'strval' );
+		register_setting( 'apl_settings_general', 'apl_default_empty_enable', 'strval' );
+		register_setting( 'apl_settings_general', 'apl_default_empty_message', 'strval' );
+		
+		//register_setting( 'apl_settings_import_export', 'apl_export_file_name', 'strval' );
+		//register_setting( 'apl_settings_import_export', 'apl_import_opt', 'strval' );
+		//register_setting( 'apl_settings_import_export', 'apl_import_file', 'strval' );
+		//register_setting( 'apl_settings_import_export', 'apl_restore_database', 'strval' );
 	}
 
 	/**
@@ -200,11 +244,107 @@ class APL_Admin {
 		wp_deregister_style( 'apl-admin-css' );
 		wp_deregister_style( 'apl-admin-ui-multiselect-css' );
 		wp_deregister_style( 'apl-admin-ui-multiselect-filter-css' );
+		wp_deregister_style( 'apl-admin-settings-css' );
 
 		// If we are not viewing APL Post List area, then return.
 		if ( 'apl_post_list' !== $screen->post_type ) {
 			return;
+		} elseif ( 'apl_post_list_page_apl_settings' === $screen->id ) {
+			// SETTINGS PAGE
+			
+			// SCRIPTS.
+			wp_register_script(
+				'apl-settings-js',
+				APL_URL . 'admin/js/settings.js',
+				array(
+					'jquery',
+					'jquery-ui-core',
+					'jquery-ui-widget',
+					//'jquery-ui-position',
+					'jquery-ui-button',
+					//'jquery-ui-draggable',
+					//'jquery-ui-resizable',
+					//'jquery-ui-effect',
+					'jquery-ui-dialog',
+				),
+				APL_VERSION,
+				false
+			);
+			wp_register_script(
+				'apl-settings-ui-js',
+				APL_URL . 'admin/js/settings-ui.js',
+				array(
+					'jquery',
+					'jquery-ui-core',
+					'jquery-ui-widget',
+					'jquery-ui-dialog',
+				),
+				APL_VERSION,
+				false
+			);
+			
+			//wp_enqueue_script( 'common' );
+			//wp_enqueue_script( 'wp-lists' );
+			wp_enqueue_script( 'postbox' );
+			wp_enqueue_script( 'apl-settings-js' );
+			wp_enqueue_script( 'apl-settings-ui-js' );
+			
+			// STYLES.
+			wp_enqueue_style(
+				'apl-admin-settings-css',
+				APL_URL . 'admin/css/settings.css',
+				false,
+				APL_VERSION,
+				false
+			);
+			
+			$wp_scripts = wp_scripts();
+			wp_enqueue_style(
+				'apl-admin-ui-css',
+				'https://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css',
+				false,
+				APL_VERSION,
+				false
+			);
+			
+			$trans_arr = array(
+				'default_alert_title'            => __( 'Alert', 'advanced-post-list' ),
+				'default_alert_message'          => __( 'No Message to Display.', 'advanced-post-list' ),
+				'fileName_empty_alert_title'     => __( 'Filename Required', 'advanced-post-list' ),
+				'fileName_empty_alert_message'   => __( 'A filename doesn\'t exist. \n Please enter a filename before exporting.', 'advanced-post-list' ),
+				'import_no_file_message'         => __( 'No file(s) selected. Please choose a JSON file to upload.', 'advanced-post-list'),
+				'import_no_file_title'           => __( 'No File', 'advanced-post-list'),
+				'import_invalid_file_message'    => __( 'Invalid file type. Please choose a JSON file to upload.', 'advanced-post-list'),
+				'import_invalid_file_title'      => __( 'Invalid File', 'advanced-post-list'),
+				'import_success_message'         => __( 'Data successfully imported.', 'advanced-post-list' ),
+				'import_success_title'           => __( 'Complete', 'advanced-post-list' ),
+				'import_overwrite_dialog_title'  => __( 'Overwrite Presets', 'advanced-post-list' ),
+				
+			);
+			$trans_ui_arr = array(
+				'fileName_char_alert_title'    => __( 'Illegal Characters', 'advanced-post-list' ),
+				'fileName_char_alert_message1' => __( 'Cannot use (< > : " / \\ | , ? *).', 'advanced-post-list' ),
+				'fileName_char_alert_message2' => __( 'Please rename your filename.', 'advanced-post-list' ),
+			);
+			
+			$settings_localize = array(
+				'export_nonce'  => wp_create_nonce( 'apl_settings_export' ),
+				'import_nonce'  => wp_create_nonce( 'apl_settings_import' ),
+				'restore_nonce' => wp_create_nonce( 'apl_settings_restore' ),
+				'trans'         => $trans_arr,
+			);
+			$settings_ui_localize = array(
+				'trans'         => $trans_ui_arr,
+			);
+			
+			wp_localize_script( 'apl-settings-js', 'apl_settings_local', $settings_localize );
+			wp_localize_script( 'apl-settings-ui-js', 'apl_settings_ui_local', $settings_ui_localize );
+			
+			do_action( 'add_meta_boxes', $hook_suffix );
+			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
+			
 		} else {
+			
 			/*
 			 * ************** AJAX ACTION HOOKS ***************************
 			 */
@@ -377,6 +517,7 @@ class APL_Admin {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @see 'admin_head' hook.
 	 * @link https://wordpress.stackexchange.com/questions/149602/hiding-metabox-from-screen-options-pull-down
 	 *
 	 * @return void
@@ -392,6 +533,7 @@ class APL_Admin {
 	 *
 	 * Hook 'load-edit.php', sets additional Screen Options.
 	 *
+	 * @see 'load-edit.php' hook.
 	 * @since 0.4.0
 	 *
 	 * @return void
@@ -411,6 +553,7 @@ class APL_Admin {
 	 *
 	 * Hook 'load-post-new.php', sets additional Screen Options.
 	 *
+	 * @see 'load-post-new.php' hook.
 	 * @since 0.4.0
 	 *
 	 * @return void
@@ -431,6 +574,7 @@ class APL_Admin {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @see 'manage_apl_post_list_posts_columns'
 	 * @uses manage_${post_type}_posts_columns
 	 * @link https://codex.wordpress.org/Plugin_API/Filter_Reference/manage_$post_type_posts_columns
 	 *
@@ -456,7 +600,7 @@ class APL_Admin {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @uses manage_${post_type}_posts_columns
+	 * @uses manage_${post_type}_posts_columns hook.
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/manage_$post_type_posts_custom_column
 	 *
 	 * @param type $column
@@ -501,6 +645,7 @@ class APL_Admin {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @see 'add_meta_boxes' hook.
 	 * @see wp-admin/includes/template.php
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
 	 * @link https://developer.wordpress.org/reference/functions/add_meta_box/
@@ -527,13 +672,81 @@ class APL_Admin {
 	}
 
 	/**
-	 * Post List Filter Meta box Template.
+	 * Add Settings Page Meta Boxes
 	 *
-	 * Hook '$this->post_list_meta_boxes()', renders the Filter Meta Box Template.
+	 * @uses add_meta_box();
+	 * @see https://developer.wordpress.org/reference/functions/add_meta_box/
+	 *
+	 * @return void
+	 */
+	public function settings_meta_boxes() {
+		add_meta_box(
+			'apl-info',
+			__( 'Import / Export', 'advanced-post-list' ),
+			array( $this, 'settings_meta_box_info' ),
+			'apl_post_list_page_apl_settings',
+			'side',
+			'core'
+		);
+		$title = '<a id="info16" class="info_a_link" style="float:right;">Export/Import Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>';
+		add_meta_box(
+			'apl-general',
+			$title . __( 'General Settings', 'advanced-post-list' ),
+			array( $this, 'settings_meta_box_general' ),
+			'apl_post_list_page_apl_settings',
+			'normal', // 'normal', 'advanced', 'side'.
+			'high' // 'high', 'sorted', 'core', 'default', 'low'.
+		);
+		add_meta_box(
+			'apl-import-export',
+			__( 'Import / Export', 'advanced-post-list' ),
+			array( $this, 'settings_meta_box_import_export' ),
+			'apl_post_list_page_apl_settings',
+			'advanced',
+			'core'
+		);
+	}
+
+	/**
+	 * Settings Info Meta Box
 	 *
 	 * @since 0.4.0
+	 * 
+	 * @param WP_Post $post Current WP_Post object.
+	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
+	 */
+	public function settings_meta_box_info( $post, $metabox ) {
+		include( APL_DIR . 'admin/settings-meta-box-info.php' );
+	}
+
+	/**
+	 * Settings General Settings Meta Box
 	 *
-	 * @see https://developer.wordpress.org/reference/functions/add_meta_box/
+	 * @since 0.4.0
+	 * 
+	 * @param WP_Post $post Current WP_Post object.
+	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
+	 */
+	public function settings_meta_box_general( $post, $metabox ) {
+		include( APL_DIR . 'admin/settings-meta-box-general.php' );
+	}
+
+	/**
+	 * Settings Import/Export Meta Box
+	 *
+	 * @since 0.4.0
+	 * 
+	 * @param WP_Post $post Current WP_Post object.
+	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
+	 */
+	public function settings_meta_box_import_export( $post, $metabox ) {
+		include( APL_DIR . 'admin/settings-meta-box-import-export.php' );
+	}
+
+	/**
+	 * Post List Filter Meta box Template.
+	 *
+	 * @since 0.4.0
 	 *
 	 * @param WP_Post $post Current WP_Post object.
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
@@ -544,7 +757,7 @@ class APL_Admin {
 		$apl_tax_terms          = $this->get_tax_terms();
 		$apl_display_post_types = apl_get_display_post_types();
 
-		include( APL_DIR . 'admin/meta-box-filter.php' );
+		include( APL_DIR . 'admin/post-list-meta-box-filter.php' );
 	}
 
 	/**
@@ -559,9 +772,20 @@ class APL_Admin {
 	 * @return void
 	 */
 	public function post_list_meta_box_display( $post, $metabox ) {
-		include( APL_DIR . 'admin/meta-box-design.php' );
+		include( APL_DIR . 'admin/post-list-meta-box-design.php' );
 	}
 
+	/**
+	 * Draft Post List.
+	 *
+	 * Hook for draft Post Transitions with Post Lists.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param int      $post_id
+	 * @param WP_Post  $post
+	 * @return void
+	 */
 	public function draft_post_list( $post_id, $post ) {
 		if ( isset( $_REQUEST['action'] ) ) {
 			if ( 'untrash' === $_REQUEST['action'] ) {
@@ -621,7 +845,16 @@ class APL_Admin {
 	}
 
 	// MOVE TO APL_POST_LIST???
-	// https://codex.wordpress.org/Plugin_API/Action_Reference/before_delete_post
+	/**
+	 * WP_Trash_Post APL Post List
+	 *
+	 * Host for trash post transitions with Post Lists.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param type $post_id
+	 * @return boolean
+	 */
 	public function action_wp_trash_post_apl_post_list( $post_id ) {
 		$args = array(
 			'post__in'    => array( $post_id ),
@@ -655,7 +888,16 @@ class APL_Admin {
 		$apl_design->save_design();
 	}
 
-	
+	/**
+	 * Un-Trash for Post List
+	 *
+	 * Hook for untrash Post Transition with Post Lists.
+	 *
+	 * @since 0.4.0 
+	 *
+	 * @param int $post_id
+	 * @return boolean
+	 */
 	public function action_untrash_post_apl_post_list( $post_id ) {
 		$args = array(
 			'post__in'    => array( $post_id ),
@@ -690,7 +932,17 @@ class APL_Admin {
 	}
 
 	// MOVE TO APL_POST_LIST???
-	// before delete post hook https://codex.wordpress.org/Plugin_API/Action_Reference/before_delete_post
+	/**
+	 * WP_Delete_Post APL Post List
+	 *
+	 * Host for delete post transitions with Post Lists.
+	 *
+	 * @since 0.4.0
+	 * @see https://codex.wordpress.org/Plugin_API/Action_Reference/before_delete_post
+	 *
+	 * @param int $post_id
+	 * @return boolean
+	 */
 	public function action_before_delete_post_apl_post_list( $post_id ) {
 		
 		
@@ -715,6 +967,238 @@ class APL_Admin {
 		$apl_design->delete_design();
 	}
 
+	/**
+	 * Save General Settings
+	 *
+	 * Uses a lazy REST API built into WP.
+	 *
+	 * @uses Hook 'admin_post_{SCREEN ID}' ex. 'admin_post_apl_save_general_settings'.
+	 * @link https://developer.wordpress.org/reference/hooks/admin_post_action/
+	 *
+	 * @return void
+	 */
+	public function save_general_settings() {
+		$options = apl_options_load();
+		
+		if ( isset( $_POST['apl_delete_on_deactivate'] ) ) {
+			$input = filter_input( INPUT_POST, 'apl_delete_on_deactivate', FILTER_SANITIZE_STRING );
+			if ( 'yes' === $input ) {
+				$options['delete_core_db'] = true;
+			} elseif ( 'no' === $input ) {
+				$options['delete_core_db'] = false;
+			} else {
+				$options['delete_core_db'] = false;
+			}
+		}
+		
+		if ( isset( $_POST['apl_default_empty_enable'] ) ) {
+			$input = filter_input( INPUT_POST, 'apl_delete_on_deactivate', FILTER_SANITIZE_STRING );
+			if ( 'yes' === $input ) {
+				$options['default_exit'] = true;
+			} elseif ( 'no' === $input ) {
+				$options['default_exit'] = false;
+			} else {
+				$options['default_exit'] = true;
+			}
+		}
+		
+		$options['default_exit_msg'] = '';
+		if ( isset( $_POST['apl_default_empty_message'] ) ) {
+			// Sanatize with admins?
+			$tmp_empty_messaage = filter_input( INPUT_POST, 'apl_default_empty_message', FILTER_UNSAFE_RAW );
+			$options['default_exit_msg'] = $tmp_empty_messaage;
+		}
+		
+		apl_options_save( $options );
+		
+		wp_redirect( 'edit.php?post_type=apl_post_list&page=apl_settings' );
+		exit;
+	}
+
+	/**
+	 * Settings Page AJAX Hooks
+	 *
+	 * Add AJAX hooks for Settings Page.
+	 *
+	 * @uses 'wp_ajax_{name}'
+	 *
+	 * @return void
+	 */
+	public function add_settings_ajax_hooks() {
+		add_action( 'wp_ajax_apl_settings_export', array( $this, 'ajax_settings_export' ) );
+		add_action( 'wp_ajax_apl_export', 'apl_export' );
+		
+		add_action( 'wp_ajax_apl_settings_import', array( $this, 'ajax_settings_import' ) );
+		add_action( 'wp_ajax_apl_import', 'apl_import' );
+	}
+
+	/**
+	 * AJAX Settings Page Export
+	 *
+	 * Handles the AJAX call for exporting data.
+	 *
+	 * @return void
+	 */
+	public function ajax_settings_export() {
+		check_ajax_referer( 'apl_settings_export' );
+
+		$rtn_data = array(
+			'action'             => 'apl_export',
+			'_ajax_nonce'        => wp_create_nonce( 'apl_export' ),
+		);
+
+		$tmp_filename = 'file_export_name';
+		if ( isset( $_POST['filename'] ) ) {
+			$tmp_filename = filter_input( INPUT_POST, 'filename', FILTER_SANITIZE_STRING );
+		}
+		$rtn_data['filename'] = $tmp_filename;
+
+		$export_data = array(
+			'version'            => APL_VERSION,
+			'apl_post_list_arr'  => array(),
+			'apl_design_arr'     => array(),
+		);
+
+		$args = array(
+			'post_type' => 'apl_post_list',
+			'post_status' => 'publish',
+			//'field' => 'slug',
+			'post_per_page' => -1,
+		);
+		$apl_post_lists =  new WP_Query( $args );
+
+		foreach ( $apl_post_lists->posts as $post_obj ) {
+			$apl_post_list  = new APL_Post_List( $post_obj->post_name );
+			$apl_design     = new APL_Design( $apl_post_list->pl_apl_design );
+
+			$export_data['apl_post_list_arr'][] = $apl_post_list->slug;
+			$export_data['apl_design_arr'][] = $apl_design->slug;
+		}
+
+		update_option( 'apl_export_data', $export_data );
+
+		echo json_encode( $rtn_data );
+
+		die();
+	}
+
+	/**
+	 * AJAX Settings Import
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return void
+	 */
+	public function ajax_settings_import() {
+		check_ajax_referer( 'apl_settings_import' );
+		
+		$imported_content = array();
+		$i = 0;
+		while ( isset( $_FILES[ 'file_' . $i ] ) ) {
+			$file_arr = $_FILES[ 'file_' . $i ];
+			$file_content = file_get_contents( $file_arr['tmp_name'] );
+			$imported_content[] = json_decode( $file_content );
+			$i++;
+		}
+		
+		// TODO UPGRADER
+		
+		$overwrite_apl_post_list = array();
+		$overwrite_design_list = array();
+		
+		$data_overwrite_post_list = array();
+		$data_overwrite_design = array();
+		
+		foreach ( $imported_content as $v1_content ) {
+			// POST LISTS
+			foreach ( $v1_content->apl_post_list_arr as $v2_post_list ) {
+				$db_post_list = new APL_Post_List( $v2_post_list->slug );
+				if ( 0 !== $db_post_list->id ) {
+					$overwrite_apl_post_list[] = $v2_post_list;
+					$data_overwrite_post_list[] = $v2_post_list->slug;
+				} else {
+					// Check version, and run through upgrader if needed.
+					// Add Variable.
+					//$v2_post_list->save_post_list();
+					$this->import_process_post_list( $v2_post_list );
+				}
+			}
+			
+			// Designs
+			foreach ( $v1_content->apl_design_arr as $v2_design ) {
+				$db_design = new APL_Design( $v2_design->slug );
+				if ( 0 !== $db_design->id ) {
+					$overwrite_apl_design[] = $v2_design;
+					$data_overwrite_design[] = $v2_design->slug;
+				} else {
+					// Check version, and run through upgrader if needed.
+					// Add Variable.
+					$this->import_process_design( $v2_design );
+				}
+			}
+		}
+		
+		update_option( 'apl_import_overwrite_post_list', $overwrite_apl_post_list );
+		update_option( 'apl_import_overwrite_design', $overwrite_apl_design );
+		
+		$rtn_data = array(
+			'action'               => 'apl_import',
+			'_ajax_nonce'          => wp_create_nonce( 'apl_import' ),
+			'overwrite_post_list'  => $data_overwrite_post_list,
+			'overwrite_design'     => $data_overwrite_design,
+		);
+		
+		echo json_encode( $rtn_data );
+		
+		die();
+	}
+
+	/**
+	 * Process Import for Post Lists
+	 * 
+	 * @param APL_Post_List $apl_post_list
+	 * @return void
+	 */
+	private function import_process_post_list( $apl_post_list ) {
+		$tmp_apl_post_list = new APL_Post_List( $apl_post_list->slug );
+		
+		$tmp_apl_post_list->title                = $apl_post_list->title                ?: $tmp_apl_post_list->title;
+		$tmp_apl_post_list->post_type            = $apl_post_list->post_type            ?: $tmp_apl_post_list->post_type ;
+		$tmp_apl_post_list->tax_query            = $apl_post_list->tax_query            ?: $tmp_apl_post_list->tax_query;
+		$tmp_apl_post_list->post_parent__in      = $apl_post_list->post_parent__in      ?: $tmp_apl_post_list->post_parent__in;
+		$tmp_apl_post_list->post_parent_dynamic  = $apl_post_list->post_parent_dynamic  ?: $tmp_apl_post_list->post_parent_dynamic;
+		$tmp_apl_post_list->posts_per_page       = $apl_post_list->posts_per_page       ?: $tmp_apl_post_list->posts_per_page;
+		$tmp_apl_post_list->order_by             = $apl_post_list->order_by             ?: $tmp_apl_post_list->order_by;
+		$tmp_apl_post_list->order                = $apl_post_list->order                ?: $tmp_apl_post_list->order;
+		$tmp_apl_post_list->post_status          = $apl_post_list->post_status          ?: $tmp_apl_post_list->post_status;
+		$tmp_apl_post_list->perm                 = $apl_post_list->perm                 ?: $tmp_apl_post_list->perm;
+		$tmp_apl_post_list->author__bool         = $apl_post_list->author__bool         ?: $tmp_apl_post_list->author__bool;
+		$tmp_apl_post_list->author__in           = $apl_post_list->author__in           ?: $tmp_apl_post_list->author__in;
+		$tmp_apl_post_list->ignore_sticky_posts  = $apl_post_list->ignore_sticky_posts  ?: $tmp_apl_post_list->ignore_sticky_posts;
+		$tmp_apl_post_list->post__not_in         = $apl_post_list->post__not_in         ?: $tmp_apl_post_list->post__not_in;
+		$tmp_apl_post_list->pl_exclude_current   = $apl_post_list->pl_exclude_current   ?: $tmp_apl_post_list->pl_exclude_current;
+		$tmp_apl_post_list->pl_exclude_dupes     = $apl_post_list->pl_exclude_dupes     ?: $tmp_apl_post_list->pl_exclude_dupes;
+		$tmp_apl_post_list->pl_apl_design        = $apl_post_list->pl_apl_design        ?: $tmp_apl_post_list->pl_apl_design;
+		
+		$tmp_apl_post_list->save_post_list();
+	}
+
+	/**
+	 * Process Import for Designs
+	 *
+	 * @param APL_Design $apl_design
+	 */
+	private function import_process_design( $apl_design ) {
+		$tmp_apl_design = new APL_Design( $apl_design->slug );
+
+		$tmp_apl_design->title    = $apl_design->title    ?: $tmp_apl_design->title;
+		$tmp_apl_design->before   = $apl_design->before   ?: $tmp_apl_design->before;
+		$tmp_apl_design->content  = $apl_design->content  ?: $tmp_apl_design->content;
+		$tmp_apl_design->after    = $apl_design->after    ?: $tmp_apl_design->after;
+		$tmp_apl_design->empty    = $apl_design->empty    ?: $tmp_apl_design->empty;
+
+		$tmp_apl_design->save_design();
+	}
 	/**
 	 * Process Post List Form.
 	 *

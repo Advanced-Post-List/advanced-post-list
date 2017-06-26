@@ -508,6 +508,7 @@ class APL_Core {
 	 * STEP 2 - If Options exists, then return object. Otherwise return false.
 	 *
 	 * @since 0.1.0
+	 * @since 0.4.0 - Added a defaults and save if empty.
 	 * @access private
 	 *
 	 * @see Function/method/class relied on
@@ -524,7 +525,9 @@ class APL_Core {
 		if ( false !== $options ) {
 			return $options;
 		} else {
-			return $this->apl_options_default();
+			$defaults = $this->apl_options_default();
+			$this->apl_options_save( $defaults );
+			return $defaults;
 		}
 	}
 
