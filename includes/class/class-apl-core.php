@@ -370,32 +370,71 @@ class APL_Core {
 	 * @since 0.4.0 - Changed to action hook.
 	 * @access public
 	 *
-	 * @see Function/method/class relied on
-	 * @link URL
+	 * @see 'plugins_loaded' action hook.
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/plugins_loaded
+	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
 	 *
 	 * @return void
 	 */
 	public function action_check_version() {
 		$options = $this->apl_options_load();
 		if ( isset( $options['version'] ) ) {
-			/* **** UPGRADES **** *
-			 * Put upgrade database functions in here. Not before.
-			 *     Ex. APL_upgrade_to_XXX().
-			 */
 			if ( version_compare( $options['version'], APL_VERSION, '<' ) ) {
 				$preset_db = new APL_Preset_Db( 'default' );
-				$updater = new APL_Updater( $options['version'], $preset_db, $options );
+				
+				$update_items = array(
+					'options'   => $options,
+					'preset_db' => $preset_db,
+				);
+				
+				$updater = new APL_Updater( $options['version'], $update_items );
 				// IN THIS CASE, BOTH MUST HAVE VALUES FILLED.
-				if ( null !== $updater->options || null !== $updater->preset_db ) {
-					$preset_db = $updater->preset_db;
-					$preset_db->options_save_db();
+				if ( $updater->update_occurred ) {
 					$options = $updater->options;
-					$this->apl_options_save( $options );
+					apl_options_save( $options );
+					
+					$this->update_post_list_database( $updater->apl_post_list_arr );
+					$this->update_design_database( $updater->apl_design_arr );
+					
+					delete_option( 'APL_preset_db-default' );
 				}
 			}
 		}
 	}
 
+	/**
+	 * Update Post List Database.
+	 *
+	 * Updates or adds to database via APL_Post_List object.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param array $apl_post_list_arr
+	 * @return void
+	 */
+	private function update_post_list_database( $apl_post_list_arr ) {
+		foreach ( $apl_post_list_arr as $imp_post_list ) {
+			$imp_post_list->save_post_list();
+		}
+	}
+
+	/**
+	 * Update Design Database.
+	 *
+	 * Updates or adds to database via APL_Design object.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param array $apl_post_list_arr
+	 * @return void
+	 */
+	private function update_design_database( $apl_design_arr ) {
+		foreach ( $apl_design_arr as $imp_design ) {
+			$imp_design->save_design();
+		}
+	}
 	/**
 	 * Load APL's Textdomain.
 	 *
@@ -417,38 +456,15 @@ class APL_Core {
 	 *
 	 * Handles the activation method when the plugin is first activated.
 	 *
-	 * STEP 1 - Load APLOptions.
-	 * STEP 2 - If no options was loaded then install options to be loaded.
-	 *
 	 * @since 0.1.0
 	 * @access public
 	 */
 	public function activation() {
-		// TODO Change to Post Data
 		// Step 1.
-		$options = get_option( 'APL_Options' );
-		// Step 2.
-		if ( false === $options ) {
-			$options = array();
-		}
-		if ( ! isset( $options['version'] ) ) {
-			$options['version'] = APL_VERSION;
-		}
-		if ( ! isset( $options['preset_db_names'] ) ) {
-			$options['preset_db_names'] = array(
-				0 => 'default',
-				);
-		}
-		if ( ! isset( $options['delete_core_db'] ) ) {
-			$options['delete_core_db'] = false;
-		}
-		if ( ! isset( $options['jquery_ui_theme'] ) ) {
-			$options['jquery_ui_theme'] = 'overcast';
-		}
-		if ( ! isset( $options['error'] ) ) {
-			$options['error'] = '';
-		}
-		update_option( 'APL_Options', $options );
+		$options = apl_options_load();
+
+		// Any Need? apl_options_load() already sets defaults if no data is found.
+		apl_options_save( $options );
 	}
 
 	/**
@@ -463,16 +479,62 @@ class APL_Core {
 	 * @since 0.1.0
 	 * @since 0.2.0 - Added delete_option('APL_preset_db-default') for deleting
 	 *                preset database data.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/unregister_post_type/
 	 * @access public
 	 */
 	public function deactivation() {
-		// TODO Change to Post Data
 		// STEP 1.
 		$options = get_option( 'APL_Options' );
 		// STEP 2.
 		if ( true === $options['delete_core_db'] || ( false !== $options && ! isset( $options['delete_core_db'] ) ) ) {
 			delete_option( 'APL_Options' );
-			delete_option( 'APL_preset_db-default' );
+			
+			// POST LIST POST DATA.
+			$pl_args = array(
+				'post_type' => 'apl_post_list',
+				'posts_per_page'  => -1,
+				'post_status'     => array(
+					'draft',
+					'pending',
+					'publish',
+					'future',
+					'private',
+					'trash',
+				),
+			);
+			$pl_query = new WP_Query( $pl_args );
+			$post_list_data = $pl_query->posts;
+			
+			foreach ( $post_list_data as $v1_pl_post ) {
+				$apl_post_list = new APL_Post_List( $v1_pl_post->post_name );
+				
+				$apl_post_list->delete_post_list();
+			}
+			unregister_post_type( 'apl_post_list' );
+
+			// DESIGN POST DATA.
+			$d_args = array(
+				'post_type' => 'apl_design',
+				'posts_per_page'  => -1,
+				'post_status'     => array(
+					'draft',
+					'pending',
+					'publish',
+					'future',
+					'private',
+					'trash',
+				),
+			);			
+			$d_query = new WP_Query( $d_args );
+			$design_data = $d_query->posts;
+			
+			foreach ( $design_data as $v1_d_post ) {
+				$apl_design = new APL_Design( $v1_d_post->post_name );
+				
+				$apl_design->delete_design();
+			}
+			unregister_post_type( 'apl_design' );
 		}
 	}
 
@@ -481,27 +543,67 @@ class APL_Core {
 	 *
 	 * Handles the uninstall method when plugin is uninstalled.
 	 *
-	 * STEP 1 - Delete APLOptions/Core settings from WordPress.
-	 * STEP 2 - Delete preset database options.
-	 *
 	 * @since 0.1.0
 	 * @since 0.2.0 - Changed to delete all plugin data, whether 'delete plugin
 	 *                data upon deactivation' is set or not.
+	 * @since 0.4.0 - Changed to delete Post Data.
 	 * @access public
 	 */
 	public function uninstall() {
-		// TODO Change to Post Data
-		// Step 1.
 		delete_option( 'APL_Options' );
-		// Step 2.
-		// Alt uninstall that uses the 'delete upon deactivation' setting.
-		delete_option( 'APL_preset_db-default' );
+
+		// POST LIST POST DATA.
+		$pl_args = array(
+			'post_type' => 'apl_post_list',
+			'posts_per_page'  => -1,
+			'post_status'     => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
+		);
+		$pl_query = new WP_Query( $pl_args );
+		$post_list_data = $pl_query->posts;
+
+		foreach ( $post_list_data as $v1_pl_post ) {
+			$apl_post_list = new APL_Post_List( $v1_pl_post->post_name );
+
+			$apl_post_list->delete_post_list();
+		}
+		unregister_post_type( 'apl_post_list' );
+
+		// DESIGN POST DATA.
+		$d_args = array(
+			'post_type' => 'apl_design',
+			'posts_per_page'  => -1,
+			'post_status'     => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
+		);			
+		$d_query = new WP_Query( $d_args );
+		$design_data = $d_query->posts;
+
+		foreach ( $design_data as $v1_d_post ) {
+			$apl_design = new APL_Design( $v1_d_post->post_name );
+
+			$apl_design->delete_design();
+		}
+		unregister_post_type( 'apl_design' );
 	}
 
 	/**
 	 * Summary.
 	 *
-	 * Gets APLOptions from WordPress database and send the option data back if any.
+	 * Gets APLOptions from WordPress database and send the option data back
+	 * if any. Deprecated.
 	 *
 	 * STEP 1 - Get APLOptions from WordPress Database or get false if options
 	 *          doesn't exist.
@@ -534,7 +636,7 @@ class APL_Core {
 	/**
 	 * Summary.
 	 *
-	 * Description.
+	 * Deprecated.
 	 *
 	 * STEP 1 - If option data (param) exists, save option data to
 	 *               WordPress database.
@@ -558,7 +660,7 @@ class APL_Core {
 	/**
 	 * Summary.
 	 *
-	 * Sets options to default values.
+	 * Sets options to default values. Deprecated.
 	 *
 	 * STEP 1 - Set options as an array.
 	 * STEP 2 - Add default values to options.
@@ -574,13 +676,10 @@ class APL_Core {
 		// Step 1.
 		$options = array();
 		// Step 2.
-		$options['version']          = APL_VERSION;
-		$options['preset_db_names']  = array( 'default' );
-		$options['delete_core_db']   = true;
-		//$options['jquery_ui_theme']  = 'overcast';
-		$options['default_exit']     = false;
-		$options['default_exit_msg'] = __( '<p>Sorry, but no content is available at this time.</p>', 'advanced-post-list' );
-		$options['error']            = '';
+		$options['version']               = APL_VERSION;
+		$options['delete_core_db']        = false;
+		$options['default_empty_enable']  = false;
+		$options['default_empty_output']  = __( '<p>Sorry, but no content is available at this time.</p>', 'advanced-post-list' );
 
 		// Step 3.
 		return $options;
@@ -744,8 +843,8 @@ class APL_Core {
 
 			if ( ! empty( $apl_design->empty ) ) {
 				$output .= $apl_design->empty;
-			} elseif ( true === $apl_options['default_exit'] && ! empty( $apl_options['default_exit_msg'] ) ) {
-				$output .= $apl_options['default_exit_msg'];
+			} elseif ( true === $apl_options['default_empty_enable'] && ! empty( $apl_options['default_empty_output'] ) ) {
+				$output .= $apl_options['default_empty_output'];
 			}
 		}// End if( have_posts ) loop.
 

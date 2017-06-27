@@ -1045,19 +1045,19 @@ class APL_Admin {
 		if ( isset( $_POST['apl_default_empty_enable'] ) ) {
 			$input = filter_input( INPUT_POST, 'apl_delete_on_deactivate', FILTER_SANITIZE_STRING );
 			if ( 'yes' === $input ) {
-				$options['default_exit'] = true;
+				$options['default_empty_enable'] = true;
 			} elseif ( 'no' === $input ) {
-				$options['default_exit'] = false;
+				$options['default_empty_enable'] = false;
 			} else {
-				$options['default_exit'] = true;
+				$options['default_empty_enable'] = true;
 			}
 		}
 		
-		$options['default_exit_msg'] = '';
+		$options['default_empty_output'] = '';
 		if ( isset( $_POST['apl_default_empty_message'] ) ) {
 			// Sanatize with admins?
 			$tmp_empty_messaage = filter_input( INPUT_POST, 'apl_default_empty_message', FILTER_UNSAFE_RAW );
-			$options['default_exit_msg'] = $tmp_empty_messaage;
+			$options['default_empty_output'] = $tmp_empty_messaage;
 		}
 		
 		apl_options_save( $options );
@@ -1138,60 +1138,89 @@ class APL_Admin {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @uses add_settings_ajax_hooks().
+	 * @uses wp_ajax_apl_settings_import.
+	 *
 	 * @return void
 	 */
 	public function ajax_settings_import() {
 		check_ajax_referer( 'apl_settings_import' );
-		
-		$imported_content = array();
+
+		$raw_content = array();
 		$i = 0;
 		while ( isset( $_FILES[ 'file_' . $i ] ) ) {
 			$file_arr = $_FILES[ 'file_' . $i ];
 			$file_content = file_get_contents( $file_arr['tmp_name'] );
-			$imported_content[] = json_decode( $file_content );
+			$raw_content[] = json_decode( $file_content );
 			$i++;
 		}
-		
+
 		// TODO UPGRADER
-		
+		$imported_content = array();
+		foreach ( $raw_content as $v1_content ) {
+			$update_items = array();
+			if ( isset( $v1_content->version ) ) {
+				$version = $v1_content->version;
+			} else {
+				return new WP_Error( 'apl_admin', __( 'Version number is not present in imported file.', 'advanced-post-list' ) );
+				die();
+			}
+			if ( isset( $v1_content->presetDbObj ) ) {
+
+				$update_items['preset_db'] = $v1_content->presetDbObj;
+
+			}
+			if ( isset( $v1_content->apl_post_list_arr ) ) {
+				$update_items['apl_post_list_arr'] = $v1_content->apl_post_list_arr;
+			}
+			if ( isset( $v1_content->apl_design_arr ) ) {
+				$update_items['apl_design_arr'] = $v1_content->apl_design_arr;
+			}
+
+			$updater = new APL_Updater( $version, $update_items );
+
+			$imported_content[] = array(
+				'apl_post_list_arr'  => $updater->apl_post_list_arr,
+				'apl_design_arr'     => $updater->apl_design_arr,
+			);
+
+		}
+
 		$overwrite_apl_post_list = array();
-		$overwrite_design_list = array();
-		
+		$overwrite_apl_design = array();
+
 		$data_overwrite_post_list = array();
 		$data_overwrite_design = array();
-		
+
 		foreach ( $imported_content as $v1_content ) {
-			// POST LISTS
-			foreach ( $v1_content->apl_post_list_arr as $v2_post_list ) {
+			// POST LISTS.
+			foreach ( $v1_content['apl_post_list_arr'] as $v2_post_list ) {
 				$db_post_list = new APL_Post_List( $v2_post_list->slug );
 				if ( 0 !== $db_post_list->id ) {
 					$overwrite_apl_post_list[] = $v2_post_list;
 					$data_overwrite_post_list[] = $v2_post_list->slug;
 				} else {
-					// Check version, and run through upgrader if needed.
-					// Add Variable.
-					//$v2_post_list->save_post_list();
+					// Add Variable to Database.
 					$this->import_process_post_list( $v2_post_list );
 				}
 			}
-			
-			// Designs
-			foreach ( $v1_content->apl_design_arr as $v2_design ) {
+
+			// DESIGNS.
+			foreach ( $v1_content['apl_design_arr'] as $v2_design ) {
 				$db_design = new APL_Design( $v2_design->slug );
 				if ( 0 !== $db_design->id ) {
 					$overwrite_apl_design[] = $v2_design;
 					$data_overwrite_design[] = $v2_design->slug;
 				} else {
-					// Check version, and run through upgrader if needed.
-					// Add Variable.
+					// Add Variable to Database.
 					$this->import_process_design( $v2_design );
 				}
 			}
 		}
-		
+
 		update_option( 'apl_import_overwrite_post_list', $overwrite_apl_post_list );
 		update_option( 'apl_import_overwrite_design', $overwrite_apl_design );
-		
+
 		$rtn_data = array(
 			'action'               => 'apl_import',
 			'_ajax_nonce'          => wp_create_nonce( 'apl_import' ),
@@ -1200,7 +1229,7 @@ class APL_Admin {
 		);
 
 		echo json_encode( $rtn_data );
-		
+
 		die();
 	}
 

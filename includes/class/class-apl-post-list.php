@@ -102,6 +102,8 @@ class APL_Post_List {
 	 *     )
 	 *     --- OR ---
 	 *     $post_type => {}, //ANY 
+	 *     --- OR ---
+	 *     'any' => array(), //ANY 
 	 * }
 	 */
 	public $tax_query = array();
@@ -214,7 +216,7 @@ class APL_Post_List {
 	 * Filter Posts.
 	 *
 	 * @since 0.3.0
-	 * @var array
+	 * @var array => int
 	 */
 	public $post__not_in = array();
 

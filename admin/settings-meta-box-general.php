@@ -32,16 +32,16 @@ function apl_is_checked() {
 			<label>Enable Default Empty Message:</label>
 		</div>
 		<div>
-			<input type="radio" id="apl_empty_enable_yes" class="apl-default-empty-enable" name="apl_default_empty_enable" value="yes" <?php echo $options['default_exit'] ? 'checked="checked"' : ''; ?> />
+			<input type="radio" id="apl_empty_enable_yes" class="apl-default-empty-enable" name="apl_default_empty_enable" value="yes" <?php echo $options['default_empty_enable'] ? 'checked="checked"' : ''; ?> />
 			<label for="apl_empty_enable_yes" >Yes</label>
 		</div>
 		<div>
-			<input type="radio" id="apl_empty_enable_no" class="apl-default-empty-enable" name="apl_default_empty_enable" value="no" <?php echo $options['default_exit'] ? '' : 'checked="checked"'; ?> />
+			<input type="radio" id="apl_empty_enable_no" class="apl-default-empty-enable" name="apl_default_empty_enable" value="no" <?php echo $options['default_empty_enable'] ? '' : 'checked="checked"'; ?> />
 			<label for="apl_empty_enable_no" >No</label>
 		</div>
 	</div>
 	<div class="apl-settings-row" >
-		<textarea id="apl_textarea_default_empty" class="apl-default-empty-message" name="apl_default_empty_message" rows="9" ><?php echo $options['default_exit_msg']; ?></textarea>
+		<textarea id="apl_textarea_default_empty" class="apl-default-empty-message" name="apl_default_empty_message" rows="9" ><?php echo $options['default_empty_output']; ?></textarea>
 	</div>
 	<?php submit_button( __( 'Save Settings' ), 'primary', 'apl_save_settings', false ); ?>
 </form>

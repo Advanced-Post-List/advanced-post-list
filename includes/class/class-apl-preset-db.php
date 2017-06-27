@@ -172,7 +172,7 @@ class APL_Preset_Db {
 		// STEP 2.
 		if ( false === $options_db ) {
 			$this->set_to_defaults();
-			//$this->options_save_db();
+			$this->options_save_db();
 		} else {
 			$this->_preset_db = $options_db->_preset_db;
 			$this->_delete = $options_db->_delete;

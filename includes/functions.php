@@ -14,13 +14,10 @@
 
 
 /**
- * Summary.
+ * APL Load Option.
  *
- * Gets APLOptions from WordPress database and send the option data back if any.
- *
- * STEP 1 - Get APLOptions from WordPress Database or get false if options
- *          doesn't exist.
- * STEP 2 - If Options exists, then return object. Otherwise return false.
+ * Gets APLOptions from WordPress database and returns it. If there is no data,
+ * then set to defaults, save, and return options.
  *
  * @since 0.1.0
  * @since 0.4.0 - Moved to non-class function.
@@ -31,34 +28,26 @@
  * @return object APL option settings.
  */
 function apl_options_load() {
-	// Step 1.
 	$options = get_option( 'APL_Options' );
 
-	// Step 2.
 	if ( false !== $options ) {
 		return $options;
 	} else {
 		$options = array();
-		$options['version']          = APL_VERSION;
-		//$options['preset_db_names']  = array( 'default' );
-		$options['delete_core_db']   = true;
-		//$options['jquery_ui_theme']  = 'overcast';
-		$options['default_exit']     = false;
-		$options['default_exit_msg'] = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
-		$options['error']            = '';
-		
+		$options['version']               = APL_VERSION;
+		$options['delete_core_db']        = false;
+		$options['default_empty_enable']  = false;
+		$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
+
 		apl_options_save( $defaults );
 		return $defaults;
 	}
 }
 
 /**
- * Summary.
+ * APL Save Options
  *
- * Description.
- *
- * STEP 1 - If option data (param) exists, save option data to
- *               WordPress database.
+ * Save APL_Options.
  *
  * @since 0.1.0
  * @since 0.4.0 - Moved to non-class function.
@@ -69,7 +58,6 @@ function apl_options_load() {
  * @param object $options Core option settings.
  */
 function apl_options_save( $options ) {
-	// STEP 1.
 	if ( isset( $options ) ) {
 		update_option( 'APL_Options', $options );
 	}
