@@ -736,8 +736,8 @@ class APL_Admin {
 			__( 'Import / Export', 'advanced-post-list' ),
 			array( $this, 'settings_meta_box_info' ),
 			'apl_post_list_page_apl_settings',
-			'side',
-			'core'
+			'side',  // 'normal', 'advanced', 'side'.
+			'core' // 'high', 'sorted', 'core', 'default', 'low'.
 		);
 		$title = '<a id="info16" class="info_a_link" style="float:right;">Export/Import Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>';
 		add_meta_box(

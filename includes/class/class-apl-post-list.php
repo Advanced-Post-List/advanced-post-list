@@ -88,7 +88,7 @@ class APL_Post_List {
 	 *             'include_children'  => false,
 	 *             'operator'          => 'IN' || 'AND' || -'NOT_IN'-,
 	 *
-	 *             'apl_dynamic_terms' => false,
+	 *             'apl_terms_dynamic' => false,
 	 *         ),
 	 *         [Y2]       => array(
 	 *             'taxonomy'          => 'tax_2',

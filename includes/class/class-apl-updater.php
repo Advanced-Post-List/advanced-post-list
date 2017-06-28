@@ -122,10 +122,11 @@ class APL_Updater {
 			}
 			// VERSION 0.4.0
 			if ( version_compare( '0.4.b1', $old_version, '>' ) ) {
-				if ( ! empty( $this->preset_db ) ) {
+				if ( ! empty( $this->options ) ) {
 					$new_options = $this->upgrade_options_03b5_to_040( $this->options );
 					$this->options = $new_options;
-
+				}
+				if ( ! empty( $this->preset_db ) ) {
 					$new_preset_arr = $this->upgrade_preset_db_03b5_to_040( $this->preset_db );
 					$this->apl_post_list_arr  = $new_preset_arr['apl_post_list'];
 					$this->apl_design_arr     = $new_preset_arr['apl_design'];
@@ -645,7 +646,7 @@ class APL_Updater {
 									'include_children'   => false, // Unmodified.
 									'operator'           => 'IN',
 
-									'apl_dynamic_terms'  => false,
+									'apl_terms_dynamic'  => false,
 								);
 
 								// TAXONOMY SLUG.
@@ -663,7 +664,7 @@ class APL_Updater {
 
 								// DYNAMIC TERMS [APL]
 								if ( $v4_tax_obj->include_terms ) {
-									$tmp_tq_item['apl_dynamic_terms'] = true;
+									$tmp_tq_item['apl_terms_dynamic'] = true;
 								}
 
 								// TERMS.

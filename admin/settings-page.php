@@ -29,7 +29,7 @@ global $hook_suffix;
 				<div id="postbox-container-1" class="postbox-container" >
 					<?php do_meta_boxes( $hook_suffix, 'side', null ); ?>
 				</div>
-				<div id="postbox-container-1" class="postbox-container" >
+				<div id="postbox-container-2" class="postbox-container" >
 					<?php do_meta_boxes( $hook_suffix, 'advanced', null ); ?>
 				</div>
 			</div><!-- #post-body -->
