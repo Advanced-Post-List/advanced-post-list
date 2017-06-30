@@ -150,11 +150,13 @@ class APL_Updater {
 
 		// Finalize the APL_Post_List & APL_Design to the proper class format.
 		// Does not save since it also handles imported data.
+		// BUGGED??? For some reason, when apl_post_list->save_post_list() is used
+		// to save these values. The whole array looses all its class pointers/references
 		if ( $this->update_occurred ) {
-			$new_items_arr = $this->the_finisher( $this->apl_post_list_arr, $this->apl_design_arr );
+			//$new_items_arr = $this->the_finisher( $this->apl_post_list_arr, $this->apl_design_arr );
 
-			$this->apl_post_list_arr  = $new_items_arr['apl_post_list_arr'];
-			$this->apl_design_arr     = $new_items_arr['apl_design_arr'];
+			//$this->apl_post_list_arr  = $new_items_arr['apl_post_list_arr'];
+			//$this->apl_design_arr     = $new_items_arr['apl_design_arr'];
 
 			// Fallback option if things go wrong.
 			update_option( 'apl_update_items_backup', $update_items );
