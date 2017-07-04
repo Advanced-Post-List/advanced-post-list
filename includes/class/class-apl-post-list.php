@@ -80,24 +80,26 @@ class APL_Post_List {
 	 * @access public
 	 * @var array $tax_query {
 	 *     $post_type = array(
-	 *         'relation' => 'AND' || 'OR',
-	 *         [Y1]       => array(
-	 *             'taxonomy'          => 'tax_1',
-	 *             'field'             => 'id',
-	 *             'terms'             => array( 103, 115, 206 ),
-	 *             'include_children'  => false,
-	 *             'operator'          => 'IN' || 'AND' || -'NOT_IN'-,
+	 *         'relation'  => 'AND' || 'OR',
+	 *         [Y1]        => array(
+	 *             'taxonomy'           => 'tax_1',
+	 *             'field'              => 'id',
+	 *             'terms'              => array( 103, 115, 206 ),
+	 *             'include_children'   => false,
+	 *             'operator'           => 'IN' || 'AND' || -'NOT_IN'-,
 	 *
-	 *             'apl_terms_dynamic' => false,
+	 *             'apl_terms_dynamic'  => false,
+	 *             'apl_terms_slug      => array( 'alpha', 'beta', 'gamma' ),
 	 *         ),
-	 *         [Y2]       => array(
-	 *             'taxonomy'          => 'tax_2',
-	 *             'field'             => 'id',
-	 *             'terms'             => array( 456, 189, 752 ),
-	 *             'include_children'  => false,
-	 *             'operator'          => 'IN' || 'AND' || -'NOT_IN'-,
+	 *         [Y2]        => array(
+	 *             'taxonomy'           => 'tax_2',
+	 *             'field'              => 'id',
+	 *             'terms'              => array( 456, 189, 752 ),
+	 *             'include_children'   => false,
+	 *             'operator'           => 'IN' || 'AND' || -'NOT_IN'-,
 	 *
-	 *             'apl_terms_dynamic' => false,
+	 *             'apl_terms_dynamic'  => false,
+	 *             'apl_terms_slug      => array( 'alfa', 'bravo', 'charlie' ),
 	 *         ),
 	 *     )
 	 *     --- OR ---
@@ -122,6 +124,8 @@ class APL_Post_List {
 
 	/**
 	 * Dynamic Page Parents
+	 *
+	 * May want to change to apl_ prefix.
 	 *
 	 * @since 0.4.0
 	 * @access public

@@ -1524,6 +1524,7 @@ class APL_Admin {
 				);
 				$terms = get_terms( $arg_terms );
 				$tmp_terms = array();
+				$tmp_terms_slug = array();
 				foreach ( $terms as $v2_term_obj ) {
 					// Check 'any' term, and if set, skip other terms. break;
 					if ( isset( $_POST[ 'apl_term-' . $post_type . '-' . $v1_taxonomy . '-any' ] ) ) {
@@ -1533,6 +1534,7 @@ class APL_Admin {
 						break;
 					} elseif ( isset( $_POST[ 'apl_term-' . $post_type . '-' . $v1_taxonomy . '-' . $v2_term_obj->term_id ] ) ) {
 						$tmp_terms[] = $v2_term_obj->term_id;
+						$tmp_terms_slug[ $v2_term_obj->term_id ] = $v2_term_obj->slug;
 					}
 
 				}
@@ -1544,7 +1546,8 @@ class APL_Admin {
 					'include_children'  => false,
 					'operator'          => $tmp_terms_req, // 'IN' | 'AND' | --'NOT IN'--
 
-					//'apl_terms_req'     = $tmp_terms_req;  
+					//'apl_terms_req'     = $tmp_terms_req;
+					'apl_terms_slug'    => $tmp_terms_slug,
 					'apl_terms_dynamic' => $tmp_terms_dynamic,
 				);
 			}

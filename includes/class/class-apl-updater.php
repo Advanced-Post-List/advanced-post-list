@@ -638,7 +638,7 @@ class APL_Updater {
 						foreach( $old_value->_postTax as $k3_pt_slug => $v3_taxonomies_obj ) {
 							// DEFAULTS.
 							$tmp_tax_query = array();
-							$tmp_tax_query['relation'] = 'OR';
+							$p_relation = 'OR';
 							foreach ( $v3_taxonomies_obj->taxonomies as $k4_tax_slug => $v4_tax_obj ) {
 								// DEFAULTS.
 								$tmp_tq_item = array(
@@ -648,6 +648,7 @@ class APL_Updater {
 									'include_children'   => false, // Unmodified.
 									'operator'           => 'IN',
 
+									'apl_terms_slug'     => array(),
 									'apl_terms_dynamic'  => false,
 								);
 
@@ -656,7 +657,7 @@ class APL_Updater {
 
 								// REQUIRED TAXONOMY(IES)
 								if ( $v4_tax_obj->require_taxonomy ) {
-									$tmp_tax_query['relation'] = 'AND';
+									$p_relation = 'AND';
 								}
 
 								// REQUIRED TERMS.
@@ -670,8 +671,18 @@ class APL_Updater {
 								}
 
 								// TERMS.
-								$tmp_tq_item['terms'] = $v4_tax_obj->terms;
+								foreach ( $v4_tax_obj->terms as $k5_ => $v5_term_id ) {
+									if ( term_exists( $v5_term_id, $k4_tax_slug ) ) {
+										$p_term_obj = get_term( $v5_term_id, $k4_tax_slug );
+										
+										$tmp_tq_item['terms'][] = $v5_term_id;
+										$tmp_tq_item['apl_terms_slug'][ $v5_term_id ] = $p_term_obj->slug;
+									} elseif( 0 === $v5_term_id ) {
+										$tmp_tq_item['terms'][] = 0;
+									}
+								}
 
+								$tmp_tax_query['relation'] = $p_relation;
 								$tmp_tax_query[] = $tmp_tq_item;
 							}
 
