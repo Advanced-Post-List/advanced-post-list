@@ -161,6 +161,15 @@ class APL_Updater {
 			// Fallback option if things go wrong.
 			update_option( 'apl_update_items_backup', $update_items );
 		}
+		
+		$new_post_list_arr = array();
+		foreach ( $this->apl_post_list_arr as $k1_ => $v1_apl_post_list ) {
+
+			$new_post_list_arr[] = $this->reform_post_list( $v1_apl_post_list );
+			
+		}
+		$this->apl_post_list_arr = $new_post_list_arr;
+		
 	}
 
 	/**
@@ -578,7 +587,7 @@ class APL_Updater {
 
 		return $rtn_options;
 	}
-	
+
 	/**
 	 * Upgrade Preset Database from 0.3.b5 to 0.4.0.
 	 *
@@ -601,32 +610,11 @@ class APL_Updater {
 				foreach ( $v1_preset_db_var as $k2_preset_slug => $old_value ) {
 					// Replace with stdClass
 					//$new_post_list = new APL_Post_List( $preset_key );
-					$new_post_list = new stdClass();
-
-					// SET DEFAULTS MANUALLY
-					$new_post_list->id                   = 0;
-					$new_post_list->title                = '';
-					//$new_post_list->slug               = '';
-					$new_post_list->post_type            = array( 'any' );
-					$new_post_list->tax_query            = array();
-					$new_post_list->post_parent__in      = array();
-					$new_post_list->post_parent_dynamic  = array();
-					$new_post_list->posts_per_page       = 5;
-					$new_post_list->order_by             = 'none';
-					$new_post_list->order                = 'DESC';
-					$new_post_list->post_status          = 'none';
-					$new_post_list->perm                 = 'none';
-					$new_post_list->author__bool         = 'none';
-					$new_post_list->author__in           = array();
-					$new_post_list->ignore_sticky_posts  = true;
-					$new_post_list->post__not_in         = array();
-					$new_post_list->pl_exclude_current   = true;
-					$new_post_list->pl_exclude_dupes     = false;
-					$new_post_list->pl_apl_design        = '';
+					$new_post_list = $this->post_list_obj();
 
 					// ADD VALUES.
-					$new_post_list->title  = sanitize_key( $k2_preset_slug )  ?: $new_post_list->title;
-					$new_post_list->slug   = $new_post_list->title            ?: $k2_preset_slug;
+					$new_post_list->slug   = sanitize_key( $k2_preset_slug )  ?: $new_post_list->slug;
+					$new_post_list->title  = $new_post_list->slug             ?: $new_post_list->title;
 
 					// POST TYPES & TAX_QUERY
 					// array <= (object).
@@ -636,10 +624,18 @@ class APL_Updater {
 					if ( ! empty( $old_value->_postTax ) ) {
 						// FOR POST TYPES SELECTED
 						foreach( $old_value->_postTax as $k3_pt_slug => $v3_taxonomies_obj ) {
+							if ( ! post_type_exists( $k3_pt_slug ) ) {
+								continue;
+							}
+
 							// DEFAULTS.
 							$tmp_tax_query = array();
 							$p_relation = 'OR';
 							foreach ( $v3_taxonomies_obj->taxonomies as $k4_tax_slug => $v4_tax_obj ) {
+								if ( ! taxonomy_exists( $k4_tax_slug ) ) {
+									continue;
+								}
+
 								// DEFAULTS.
 								$tmp_tq_item = array(
 									'taxonomy'           => '',
@@ -692,7 +688,9 @@ class APL_Updater {
 							$tmp_tax_query_arr[ $k3_pt_slug ] = array();
 							$tmp_tax_query_arr[ $k3_pt_slug ] = $tmp_tax_query;
 						}
-					} elseif ( empty( $old_value->_postParents ) ) {
+					}
+
+					if ( empty( $old_value->_postParents ) && empty( $tmp_post_type_arr ) && empty( $tmp_tax_query_arr ) ) {
 						// FOR EMPTY TO Post_Type 'Any'
 						// An empty tax_query is ok. ( ['tax_query']['any'] = array(); )
 						$tmp_post_type_arr[] = 'any';
@@ -830,15 +828,7 @@ class APL_Updater {
 					 * DESIGN OBJECT ( APL_Design() )
 					 */
 					// SET DEFAULTS MANUALLY.
-					$new_design = new stdClass();
-
-					$new_design->id       = 0;
-					$new_design->title    = '';
-					$new_design->slug     = '';
-					$new_design->before   = '';
-					$new_design->content  = '';
-					$new_design->after    = '';
-					$new_design->empty    = '';
+					$new_design = $this->design_obj();
 
 					$new_design->title             = sanitize_key( $k2_preset_slug ) ?: $new_design->title;
 					$new_design->title .= '-design';
@@ -863,6 +853,225 @@ class APL_Updater {
 		}
 
 		return $rtn_new_preset_arr;
+	}
+
+	/**
+	 * Post List Object.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @return object
+	 */
+	private function post_list_obj() {
+		$rtn_post_list = new stdClass();
+
+		// SET DEFAULTS MANUALLY
+		$rtn_post_list->id                   = 0;
+		$rtn_post_list->slug                 = '';
+		$rtn_post_list->title                = '';
+		$rtn_post_list->post_type            = array( 'any' );
+		$rtn_post_list->tax_query            = array();
+		$rtn_post_list->post_parent__in      = array();
+		$rtn_post_list->post_parent_dynamic  = array();
+		$rtn_post_list->posts_per_page       = 5;
+		$rtn_post_list->order_by             = 'none';
+		$rtn_post_list->order                = 'DESC';
+		$rtn_post_list->post_status          = 'none';
+		$rtn_post_list->perm                 = 'none';
+		$rtn_post_list->author__bool         = 'none';
+		$rtn_post_list->author__in           = array();
+		$rtn_post_list->ignore_sticky_posts  = true;
+		$rtn_post_list->post__not_in         = array();
+		$rtn_post_list->pl_exclude_current   = true;
+		$rtn_post_list->pl_exclude_dupes     = false;
+		$rtn_post_list->pl_apl_design        = '';
+		
+		return $rtn_post_list;
+	}
+
+	/**
+	 * Design Object.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @return object
+	 */
+	private function design_obj() {
+		$rtn_design = new stdClass();
+
+		$rtn_design->id       = 0;
+		$rtn_design->title    = '';
+		$rtn_design->slug     = '';
+		$rtn_design->before   = '';
+		$rtn_design->content  = '';
+		$rtn_design->after    = '';
+		$rtn_design->empty    = '';
+		
+		return $rtn_design;
+	}
+
+	/**
+	 * Reform to Post List
+	 *
+	 * Used to set the post list to the correct configuration in a given
+	 * website environment.
+	 *
+	 * @param APL_Post_list $apl_post_list
+	 * @return object
+	 */
+	private function reform_post_list( $apl_post_list ) {
+		$new_post_list = $this->post_list_obj();
+
+		$new_post_list->id     = $apl_post_list->id     ?: $new_post_list->id;
+		$new_post_list->slug   = $apl_post_list->slug   ?: $new_post_list->slug;
+		$new_post_list->title  = $apl_post_list->title  ?: $new_post_list->title;
+
+		$tmp_post_type = array();
+		$tmp_tax_query = array();
+		$tmp_post_parent__in = array();
+		$tmp_post_parent_dynamic = array();
+		foreach ( $apl_post_list->post_type as $k1_ => $v1_post_types ) {
+			if ( is_array( $v1_post_types ) ) {
+
+				$tmp2_post_type = array();
+				foreach ( $v1_post_types as $k2_ => $v2_pt_slug ) {
+					//$tmp2_post_type[] = $v2_pt_slug;
+					if ( ! post_type_exists( $v2_pt_slug  ) ) {
+						continue;
+					}
+					$tmp2_post_type[] = $v2_pt_slug;
+
+					$p_tax_query = json_decode( json_encode( $apl_post_list->tax_query ), true );
+					$tmp_tax_query[ $v2_pt_slug ] = array();
+					$tmp_tax_query[ $v2_pt_slug ] = $this->reform_post_list_tax_query( $p_tax_query[ $v2_pt_slug ] );
+
+					////////////////////////////////////////////////////////////
+
+					if ( isset( $apl_post_list->post_parent__in[ $v2_pt_slug ] ) ) {
+						$tmp_post_parents = array();
+						foreach ( $apl_post_list->post_parent__in[ $v2_pt_slug ] as $k3_ => $v3_post_id ) {
+							$args = array(
+								'post__in'        => array( $v3_post_id ),
+								'post_type'       => $v2_pt_slug,
+								'post_status'     => array(
+									'draft',
+									'pending',
+									'publish',
+									'future',
+									'private',
+									'trash',
+								),
+								'posts_per_page'  => 1,
+							);
+							$pl_query = new WP_Query( $args );
+							if ( 1 > $pl_query->post_count ) {
+								continue;
+							}
+							$tmp_post_parents[] = $v3_post_id;
+						}
+						$tmp_post_parent__in[ $v2_pt_slug ] = $tmp_post_parents;
+						$tmp_post_parent_dynamic[ $v2_pt_slug ] = $apl_post_list->post_parent_dynamic[ $v2_pt_slug ] ?: false;
+					}
+
+				}
+				$tmp_post_type[] = $tmp2_post_type;
+
+
+			}
+			// AND if still empty
+			if ( 'any' === $v1_post_types && empty( $tmp_post_type ) ) {
+				$v2_pt_slug = 'any';
+				$tmp_post_type[] = $v2_pt_slug;
+
+
+				$p_tax_query = json_decode( json_encode( $apl_post_list->tax_query ), true );
+				$tmp_tax_query[ $v2_pt_slug ] = array();
+				$tmp_tax_query[ $v2_pt_slug ] = $this->reform_post_list_tax_query( $p_tax_query[ $v2_pt_slug ] );
+
+			}
+		}
+
+		$new_post_list->post_type            = $tmp_post_type;
+		$new_post_list->tax_query            = $tmp_tax_query;
+		$new_post_list->post_parent__in      = $tmp_post_parent__in;
+		$new_post_list->post_parent_dynamic  = $tmp_post_parent_dynamic;
+
+		$new_post_list->posts_per_page       = isset( $apl_post_list->posts_per_page )       ? $apl_post_list->posts_per_page       : $new_post_list->posts_per_page;
+		$new_post_list->order_by             = isset( $apl_post_list->order_by )             ? $apl_post_list->order_by             : $new_post_list->order_by;
+		$new_post_list->order                = isset( $apl_post_list->order )                ? $apl_post_list->order                : $new_post_list->order;
+		$new_post_list->post_status          = isset( $apl_post_list->post_status )          ? $apl_post_list->post_status          : $new_post_list->post_status;
+		$new_post_list->perm                 = isset( $apl_post_list->perm )                 ? $apl_post_list->perm                 : $new_post_list->perm;
+		$new_post_list->author__bool         = isset( $apl_post_list->author__bool )         ? $apl_post_list->author__bool         : $new_post_list->author__bool;
+		$new_post_list->author__in           = isset( $apl_post_list->author__in )           ? $apl_post_list->author__in           : $new_post_list->author__in;
+		$new_post_list->ignore_sticky_posts  = isset( $apl_post_list->ignore_sticky_posts )  ? $apl_post_list->ignore_sticky_posts  : $new_post_list->ignore_sticky_posts;
+		$new_post_list->post__not_in         = isset( $apl_post_list->post__not_in )         ? $apl_post_list->post__not_in         : $new_post_list->post__not_in;
+		$new_post_list->pl_exclude_current   = isset( $apl_post_list->pl_exclude_current )   ? $apl_post_list->pl_exclude_current   : $new_post_list->pl_exclude_current;
+		$new_post_list->pl_exclude_dupes     = isset( $apl_post_list->pl_exclude_dupes )     ? $apl_post_list->pl_exclude_dupes     : $new_post_list->pl_exclude_dupes;
+		$new_post_list->pl_apl_design        = isset( $apl_post_list->pl_apl_design )        ? $apl_post_list->pl_apl_design        : $new_post_list->pl_apl_design;
+
+		return $new_post_list;
+	}
+
+	/**
+	 * Reform to Tax Query
+	 *
+	 * Used to set the post list's tax_query to the correct configuration in a given
+	 * website environment.
+	 *
+	 * @param type $tax_query
+	 * @return array
+	 */
+	private function reform_post_list_tax_query( $tax_query ) {
+		$rtn_tax_query = array();
+		if ( empty( $tax_query ) ) {
+			return $rtn_tax_query;
+		}
+		
+		$relation = $tax_query['relation'] ?: 'OR';
+		unset( $tax_query['relation'] );
+
+		$tmp2_tax_arr = array();
+		foreach ( $tax_query as $k3_ => $v3_tax_arr ) {
+			if ( ! taxonomy_exists( $v3_tax_arr['taxonomy'] ) ) {
+				continue;
+			}
+			$tmp_tq_item = array(
+				'taxonomy'           => '',
+				'field'              => 'id', // Unmodified.
+				'terms'              => array(),
+				'include_children'   => false, // Unmodified.
+				'operator'           => 'IN',
+
+				'apl_terms_slug'     => array(),
+				'apl_terms_dynamic'  => false,
+			);
+
+			$tmp_tq_item['taxonomy']           = $v3_tax_arr['taxonomy'];
+			$tmp_tq_item['operator']           = $v3_tax_arr['operator']           ?: $tmp_tq_item['operator'];
+			$tmp_tq_item['apl_terms_dynamic']  = $v3_tax_arr['apl_terms_dynamic']  ?: $tmp_tq_item['apl_terms_dynamic'];
+
+			foreach ( $v3_tax_arr['terms'] as $k4_ => $v4_term_id ) {
+				if ( 0 >= $v4_term_id ) {
+					$tmp_tq_item['terms'][] = 0;
+					continue;
+				} elseif ( term_exists( $v3_tax_arr['apl_terms_slug'][ $v4_term_id ], $v3_tax_arr['taxonomy'] ) ) {
+					$p_term_obj = get_term_by( 'slug', $v3_tax_arr['apl_terms_slug'][ $v4_term_id ], $v3_tax_arr['taxonomy'] );
+
+					$tmp_tq_item['terms'][]                                 = $p_term_obj->term_id;
+					$tmp_tq_item['apl_terms_slug'][ $p_term_obj->term_id ]  = $p_term_obj->slug;
+				}
+			}
+			if ( empty( $tmp_tq_item['terms'] ) ) {
+				$tmp_tq_item['terms'][] = 0;
+			}
+			$tmp2_tax_arr[] = $tmp_tq_item;
+		}
+		$rtn_tax_query              = $tmp2_tax_arr;
+		$rtn_tax_query['relation']  = $relation;
+
+		return $rtn_tax_query;
 	}
 
 	/**
