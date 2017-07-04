@@ -1114,7 +1114,7 @@ class APL_Admin {
 			'post_type' => 'apl_post_list',
 			'post_status' => 'publish',
 			//'field' => 'slug',
-			'post_per_page' => -1,
+			'posts_per_page' => -1,
 		);
 		$apl_post_lists =  new WP_Query( $args );
 

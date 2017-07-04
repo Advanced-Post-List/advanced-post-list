@@ -225,7 +225,7 @@ class APL_Query {
 
 						foreach ( $tmp_tax_query as $tax_arr ) {
 							// Any / All.
-							if ( 0 === $tax_arr['terms'][0] ){
+							if ( isset( $tax_arr['terms'][0] ) && 0 === $tax_arr['terms'][0] ){
 								$terms_args = array(
 									'taxonomy' => $tax_arr['taxonomy'],
 									'fields' => 'ids',
@@ -248,9 +248,8 @@ class APL_Query {
 				$tmp_query_args['post_type'] = 'any';
 				//$tmp_query_args['tax_query'] = $apl_post_list->tax_query['any'];
 
-				$tmp_tax_query = $apl_post_list->tax_query[ $v1_pt_arr ];
-				if ( ! empty( $tmp_query_args ) ) {
-
+				if ( ! empty( $apl_post_list->tax_query[ $v1_pt_arr ] ) ) {
+					$tmp_tax_query = $apl_post_list->tax_query[ $v1_pt_arr ];
 					$tmp_query_args['tax_query']['relation'] = $tmp_tax_query['relation'];
 					unset( $tmp_tax_query['relation'] );
 
@@ -488,10 +487,13 @@ class APL_Query {
 			// Since post__in and post__not_in don't mix at all. The 2 variables
 			// are stored seperately.
 			// TODO Create function for Post Include/Exclude.
-			if ( ! empty( $query_str['post__not_in'] ) ) {
-				$post_not_in_IDs = $query_str['post__not_in'];
+			if ( ! empty( $query_str['post__not_in'] ) && 0 < $query_str['posts_per_page'] ) {
+				// Removed at final.
+				//$post_not_in_IDs = $query_str['post__not_in'];
+				$query_str['posts_per_page'] += count( $query_str['post__not_in'] );
 			}
 			unset( $query_str['post__not_in'] );
+			
 			if ( ! empty( $query_str['post__in'] ) ) {
 				$post_in_IDs = array_merge( $post_in_IDs, $query_str['post__in'] );
 			}
@@ -539,18 +541,16 @@ class APL_Query {
 
 			// STEP.
 			// Filter out excluded posts.
-			$not_in_count = 0;
 			foreach ( $query_str['post__not_in'] as $post_not_value ) {
 				foreach ( $post_in_IDs as $key => $post_in_value ) {
 					if ( $post_in_value === $post_not_value ) {
 						unset( $post_in_IDs[ $key ] );
-						$not_in_count++;
 					}
 				}
 			}
 			$post_in_IDs = array_merge( $post_in_IDs );
 
-			// STEP.
+			// STEP - Prevent defaulting when there's no posts.
 			if ( empty( $post_in_IDs ) ) {
 				$post_in_IDs[] = 0;
 			}
@@ -560,7 +560,7 @@ class APL_Query {
 			$final_query_str = array(
 				'post__in'             => $post_in_IDs,
 				'post_type'            => 'any',
-				'posts_per_page'       => $query_str['posts_per_page'] - $not_in_count,
+				'posts_per_page'       => $query_str['posts_per_page'],
 				'nopaging'             => ( -1 === $query_str['posts_per_page'] ) ? true : false,
 				'order'                => $query_str['order'],
 				'orderby'              => $query_str['orderby'],

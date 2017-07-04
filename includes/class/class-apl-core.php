@@ -99,7 +99,7 @@ class APL_Core {
 	 * @param string $file Main plugin file.
 	 * @return void
 	 */
-	public function __construct( $file ) {
+	public function __construct( $file ) {	
 		// STEP 1.
 		$this->_define_constants( $file );
 		$this->_requires();
@@ -679,7 +679,7 @@ class APL_Core {
 		$options['version']               = APL_VERSION;
 		$options['delete_core_db']        = false;
 		$options['default_empty_enable']  = false;
-		$options['default_empty_output']  = __( '<p>Sorry, but no content is available at this time.</p>', 'advanced-post-list' );
+		$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
 
 		// Step 3.
 		return $options;
@@ -721,7 +721,7 @@ class APL_Core {
 			// STEP 2.
 			return $this->display_post_list( $att['name'] );
 		} elseif( current_user_can( 'manage_options' ) ) {
-			return __( 'NOTICE: Shortcode name is missing. Ex [post_list name=\'example\']', 'advanced-post-list' );
+			return esc_html__( 'NOTICE: Shortcode name is missing. Ex [post_list name=\'example\']', 'advanced-post-list' );
 		} else {
 			// STEP 3.
 			return '';
@@ -786,8 +786,8 @@ class APL_Core {
 		// then add any post IDs collected to the preset post list object's
 		// exclude post array to be filter out.
 		if ( $apl_post_list->pl_exclude_dupes ) {
-			foreach ( $this->_remove_duplicates as $post_id ) {
-				$apl_post_list->post__not_in[] = $post_id;
+			foreach ( $this->_remove_duplicates as $v1_post_id ) {
+				$apl_post_list->post__not_in[] = $v1_post_id;
 			}
 		}
 
