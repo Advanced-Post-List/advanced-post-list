@@ -229,6 +229,10 @@ class APL_Design {
 		$defaults = $this->default_postarr();
 		$args = wp_parse_args( $args, $defaults );
 
+		global $wp_rewrite;
+
+		remove_all_actions( 'save_post_apl_design', 10 );
+		add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );
 		wp_insert_post( $args );
 	}
 
@@ -247,6 +251,10 @@ class APL_Design {
 		$defaults = $this->default_postarr();
 		$args = wp_parse_args( $args, $defaults );
 
+		global $wp_rewrite;
+
+		remove_all_actions( 'save_post_apl_design', 10 );
+		add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );
 		$rtn_post_id = wp_update_post( $args );
 		if ( is_wp_error( $rtn_post_id ) ) {
 			$errors = $rtn_post_id->get_error_messages();

@@ -12,6 +12,33 @@
  * @since 0.4.0
  */
 
+/**
+ * APL Option Defaults.
+ *
+ * Sets options to default values. Deprecated.
+ *
+ * STEP 1 - Set options as an array.
+ * STEP 2 - Add default values to options.
+ * STEP 3 - Return Options.
+ *
+ * @since 0.1.0
+ * @access private
+ *
+ * @return object Core option settings
+ */
+function apl_options_default() {
+	// New name ( default_options ).
+	// Step 1.
+	$options = array();
+	// Step 2.
+	$options['version']               = APL_VERSION;
+	$options['delete_core_db']        = false;
+	$options['default_empty_enable']  = false;
+	$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
+
+	// Step 3.
+	return $options;
+}
 
 /**
  * APL Load Option.
@@ -28,24 +55,19 @@
  * @return object APL option settings.
  */
 function apl_options_load() {
-	$options = get_option( 'APL_Options' );
+	$options = get_option( 'apl_options' );
 
 	if ( false !== $options ) {
 		return $options;
 	} else {
-		$options = array();
-		$options['version']               = APL_VERSION;
-		$options['delete_core_db']        = false;
-		$options['default_empty_enable']  = false;
-		$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
-
-		apl_options_save( $defaults );
-		return $defaults;
+		$options = apl_options_default();
+		apl_options_save( $options );
+		return $options;
 	}
 }
 
 /**
- * APL Save Options
+ * APL Save Options.
  *
  * Save APL_Options.
  *
@@ -58,8 +80,11 @@ function apl_options_load() {
  * @param object $options Core option settings.
  */
 function apl_options_save( $options ) {
+	$default_options = apl_options_default();
+	$options = wp_parse_args( $options, $default_options );
+	
 	if ( isset( $options ) ) {
-		update_option( 'APL_Options', $options );
+		update_option( 'apl_options', $options );
 	}
 }
 

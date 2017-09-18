@@ -72,16 +72,20 @@ class APL_Updater {
 	 * Constructor for the Updater Class.
 	 *
 	 * @since 0.3.0
+	 * @since 0.4.0 - Changed diverse upgrade params to upgrade_items array.
 	 *
-	 * @param string $old_version Version number the plugin is currently operating at.
-	 * @param object $preset_db Optional. Current/Old Preset Database Object. Default null.
-	 * @param array  $options Optional. The plugin settings stored.
+	 * @param string  $old_version    Version number the plugin is currently operating at.
+	 * $param array   $upgrade_items  Items needed to be upgraded from the old_version.
+	 * @param string  $return_type    (Optional) Type of values to return. Default: 'APL' ('APL' || 'OBJECT')
+	 *                                'APL'    - Returns the APL Classes/Method objects.
+	 *                                'OBJECT' - Returns a Standard Class object. 
+	 *                                           NOTE: Used for importing, since objects would
+	 *                                           lose the pointers in that given instance.
 	 * @return void
 	 */
-	public function __construct( $old_version, $update_items ) {
+	public function __construct( $old_version, $update_items, $return_type = 'OBJECT' ) {
 		if ( empty( $old_version ) || empty ( $update_items ) ) {
 			return new WP_Error( 'apl_updater', __( 'APL Updater Class Error: empty version and/or empty APL Options & APL Preset Db is being passed to the Updater Class.', 'advanced-post-list' ) );
-			return;
 		}
 
 		// INIT - FILL IN VARIABLES.
@@ -130,13 +134,16 @@ class APL_Updater {
 					$new_preset_arr = $this->upgrade_preset_db_03b5_to_040( $this->preset_db );
 					$this->apl_post_list_arr  = $new_preset_arr['apl_post_list'];
 					$this->apl_design_arr     = $new_preset_arr['apl_design'];
+
+					delete_option( 'APL_preset_db-default' );
 				}
 			}
 
+			$this->options['version'] = APL_VERSION;
 			$this->update_occurred = true;
 		}
 
-		// This is likely to never happen, but just in case...
+		// This is likely to never happen, but just in case...fundamental example.
 		/* **** DOWNGRADES CONCEPT ( FUTURE REFERENCE ) **** */
 		// DOWNGRADE FROM 0.3.X TO BASE.
 		/*
@@ -148,28 +155,37 @@ class APL_Updater {
 		}
 		*/
 
-		// Finalize the APL_Post_List & APL_Design to the proper class format.
-		// Does not save since it also handles imported data.
-		// BUGGED??? For some reason, when apl_post_list->save_post_list() is used
-		// to save these values. The whole array looses all its class pointers/references
 		if ( $this->update_occurred ) {
-			//$new_items_arr = $this->the_finisher( $this->apl_post_list_arr, $this->apl_design_arr );
-
-			//$this->apl_post_list_arr  = $new_items_arr['apl_post_list_arr'];
-			//$this->apl_design_arr     = $new_items_arr['apl_design_arr'];
-
 			// Fallback option if things go wrong.
-			update_option( 'apl_update_items_backup', $update_items );
+			update_option( 'apl_backup_update_items', $update_items );
+			foreach ( $update_items as $k1_index => $u_item ) {
+				update_option( 'apl_backup_update_item_' . $k1_index . '_' . sanitize_key( $old_version ), $u_item );
+			}
 		}
-		
-		$new_post_list_arr = array();
-		foreach ( $this->apl_post_list_arr as $k1_ => $v1_apl_post_list ) {
 
+		// Reform Preset Filters to work according to website. Like when importing
+		// to a different website with the same category names that differ in IDs.
+		// This corrects those various diviations.
+		$new_post_list_arr = array();
+		foreach ( $this->apl_post_list_arr as $v1_apl_post_list ) {
 			$new_post_list_arr[] = $this->reform_post_list( $v1_apl_post_list );
-			
 		}
 		$this->apl_post_list_arr = $new_post_list_arr;
-		
+
+		// Finalize the APL_Post_List & APL_Design to the proper type/format.
+		// During Importing, class instances are lost when a static method or
+		// seperate instance is used.
+		switch ( $return_type ) {
+			case 'APL' :
+				$this->apl_post_list_arr  = $this->return_type_apl_post_lists( $this->apl_post_list_arr );
+				$this->apl_design_arr     = $this->return_type_apl_designs( $this->apl_design_arr );
+				break;
+			case 'OBJECT' :
+			default :
+				// Do nothing since everything is already a StdObject.
+				break;
+		}
+
 	}
 
 	/**
@@ -308,7 +324,7 @@ class APL_Updater {
 				foreach ( $old_preset->_preset_db as $key2 => $value2 ) {
 					$return_preset_db->_preset_db->$key2 = $this->APL_upgrade_preset_base_to_03a1( $value2 );
 				}
-			} elseif ( ! empty( $old_preset->$key ) ) {
+			} elseif ( ! empty( $old_preset->$key1 ) ) {
 				$return_preset_db->$key1 = $old_preset->$key1;
 			}
 		}
@@ -596,7 +612,7 @@ class APL_Updater {
 	 * @since 0.4.0
 	 * @access private
 	 *
-	 * @param object $old_preset Old Preset Database.
+	 * @param object $old_preset_db Old Preset Database.
 	 * @return object New Preset structure.
 	 */
 	private function upgrade_preset_db_03b5_to_040( $old_preset_db ) {
@@ -610,7 +626,7 @@ class APL_Updater {
 				foreach ( $v1_preset_db_var as $k2_preset_slug => $old_value ) {
 					// Replace with stdClass
 					//$new_post_list = new APL_Post_List( $preset_key );
-					$new_post_list = $this->post_list_obj();
+					$new_post_list = $this->post_list_stdObj();
 
 					// ADD VALUES.
 					$new_post_list->slug   = sanitize_key( $k2_preset_slug )  ?: $new_post_list->slug;
@@ -828,10 +844,10 @@ class APL_Updater {
 					 * DESIGN OBJECT ( APL_Design() )
 					 */
 					// SET DEFAULTS MANUALLY.
-					$new_design = $this->design_obj();
+					$new_design = $this->design_stdObj();
 
 					$new_design->title             = sanitize_key( $k2_preset_slug ) ?: $new_design->title;
-					$new_design->title .= '-design';
+					//$new_design->title .= '-design';
 					$new_design->slug              = $new_design->title;
 					// Add the design slug to post_list it belongs to.
 					$new_post_list->pl_apl_design  = $new_design->slug;
@@ -858,12 +874,14 @@ class APL_Updater {
 	/**
 	 * Post List Object.
 	 *
+	 * Sets the object as a stdClass for better handling with various class conflicts.
+	 *
 	 * @since 0.4.0
 	 * @access private
 	 *
 	 * @return object
 	 */
-	private function post_list_obj() {
+	private function post_list_stdObj() {
 		$rtn_post_list = new stdClass();
 
 		// SET DEFAULTS MANUALLY
@@ -893,12 +911,14 @@ class APL_Updater {
 	/**
 	 * Design Object.
 	 *
+	 * Sets the object as a stdClass for better handling with various class conflicts.
+	 *
 	 * @since 0.4.0
 	 * @access private
 	 *
 	 * @return object
 	 */
-	private function design_obj() {
+	private function design_stdObj() {
 		$rtn_design = new stdClass();
 
 		$rtn_design->id       = 0;
@@ -918,11 +938,14 @@ class APL_Updater {
 	 * Used to set the post list to the correct configuration in a given
 	 * website environment.
 	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
 	 * @param APL_Post_list $apl_post_list
 	 * @return object
 	 */
 	private function reform_post_list( $apl_post_list ) {
-		$new_post_list = $this->post_list_obj();
+		$new_post_list = $this->post_list_stdObj();
 
 		$new_post_list->id     = $apl_post_list->id     ?: $new_post_list->id;
 		$new_post_list->slug   = $apl_post_list->slug   ?: $new_post_list->slug;
@@ -1020,6 +1043,9 @@ class APL_Updater {
 	 * Used to set the post list's tax_query to the correct configuration in a given
 	 * website environment.
 	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
 	 * @param type $tax_query
 	 * @return array
 	 */
@@ -1073,68 +1099,90 @@ class APL_Updater {
 
 		return $rtn_tax_query;
 	}
-
+	
 	/**
-	 * Finalize the Database Items.
+	 * Object Type for APL Post Lists
 	 *
-	 * Used as a final function for class variables. Useful for later when
-	 * using the class save method.
+	 * This sets the Post Lists as the custom APL_Post_List object.
 	 *
 	 * @since 0.4.0
 	 * @access private
 	 *
-	 * @uses $this->update_occurred
-	 *
-	 * @param array $apl_post_list_arr  An array of APL_Post_List objects.
-	 * @param array $apl_design_arr     An array of APL_Design objects.
-	 * @return array {
-	 *     @type array 'apl_post_list_arr'  => array( APL_Post_List )
-	 *     @type array 'apl_design_arr'     => array( APL_Design )
-	 * }
+	 * @param array $apl_post_list_arr Post List array for $this->apl_post_list_arr.
+	 * @return APL_Post_List Custom APL Post List object.
 	 */
-	private function the_finisher( $apl_post_list_arr, $apl_design_arr ) {
-		$rtn_new_db_arr = array(
-			'apl_post_list_arr'  => array(),
-			'apl_design_arr'     => array(),
-		);
+	private function return_type_apl_post_lists( $apl_post_list_arr ) {
+		$rtn_apl_post_list_arr = array();
 		
-		foreach ( $apl_post_list_arr as $v1_post_list ) {
-			$tmp_post_list = new APL_Post_List( $v1_post_list->slug );
+		foreach ( $apl_post_list_arr as $apl_post_list ) {
+			$tmp_apl_post_list = new APL_Post_List( $apl_post_list->slug );
+
+			$tmp_apl_post_list->title                = $apl_post_list->title                ?: $tmp_apl_post_list->title;
+			$tmp_apl_post_list->post_type            = $apl_post_list->post_type            ? json_decode( json_encode( $apl_post_list->post_type ), true ) : $tmp_apl_post_list->post_type ;
+			$tmp_apl_post_list->tax_query            = $apl_post_list->tax_query            ? json_decode( json_encode( $apl_post_list->tax_query ), true ) : $tmp_apl_post_list->tax_query;
+			$tmp_apl_post_list->post_parent__in      = $apl_post_list->post_parent__in      ? json_decode( json_encode( $apl_post_list->post_parent__in ), true ) : $tmp_apl_post_list->post_parent__in;
+			$tmp_apl_post_list->post_parent_dynamic  = $apl_post_list->post_parent_dynamic  ? json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true ) : $tmp_apl_post_list->post_parent_dynamic;
+			$tmp_apl_post_list->posts_per_page       = $apl_post_list->posts_per_page       ?: $tmp_apl_post_list->posts_per_page;
+			$tmp_apl_post_list->order_by             = $apl_post_list->order_by             ?: $tmp_apl_post_list->order_by;
+			$tmp_apl_post_list->order                = $apl_post_list->order                ?: $tmp_apl_post_list->order;
+			$tmp_apl_post_list->post_status          = $apl_post_list->post_status          ? json_decode( json_encode( $apl_post_list->post_status ), true ) : $tmp_apl_post_list->post_status;
+			$tmp_apl_post_list->perm                 = $apl_post_list->perm                 ?: $tmp_apl_post_list->perm;
+			$tmp_apl_post_list->author__bool         = $apl_post_list->author__bool         ?: $tmp_apl_post_list->author__bool;
+			$tmp_apl_post_list->author__in           = $apl_post_list->author__in           ?: $tmp_apl_post_list->author__in;
+			$tmp_apl_post_list->ignore_sticky_posts  = $apl_post_list->ignore_sticky_posts  ?: $tmp_apl_post_list->ignore_sticky_posts;
+			$tmp_apl_post_list->post__not_in         = $apl_post_list->post__not_in         ?: $tmp_apl_post_list->post__not_in;
+			$tmp_apl_post_list->pl_exclude_current   = $apl_post_list->pl_exclude_current   ?: $tmp_apl_post_list->pl_exclude_current;
+			$tmp_apl_post_list->pl_exclude_dupes     = $apl_post_list->pl_exclude_dupes     ?: $tmp_apl_post_list->pl_exclude_dupes;
+			$tmp_apl_post_list->pl_apl_design        = $apl_post_list->pl_apl_design        ?: $tmp_apl_post_list->pl_apl_design;
 			
-			$tmp_post_list->title                = $v1_post_list->title                ?: $tmp_post_list->title;
-			$tmp_post_list->post_type            = $v1_post_list->post_type            ?: $tmp_post_list->post_type;
-			$tmp_post_list->tax_query            = $v1_post_list->tax_query            ?: $tmp_post_list->tax_query;
-			$tmp_post_list->post_parent__in      = $v1_post_list->post_parent__in      ?: $tmp_post_list->post_parent__in;
-			$tmp_post_list->post_parent_dynamic  = $v1_post_list->post_parent_dynamic  ?: $tmp_post_list->post_parent_dynamic;
-			$tmp_post_list->posts_per_page       = $v1_post_list->posts_per_page       ?: $tmp_post_list->posts_per_page;
-			$tmp_post_list->order_by             = $v1_post_list->order_by             ?: $tmp_post_list->order_by;
-			$tmp_post_list->order                = $v1_post_list->order                ?: $tmp_post_list->order;
-			$tmp_post_list->post_status          = $v1_post_list->post_status          ?: $tmp_post_list->post_status;
-			$tmp_post_list->perm                 = $v1_post_list->perm                 ?: $tmp_post_list->perm;
-			$tmp_post_list->author__bool         = $v1_post_list->author__bool         ?: $tmp_post_list->author__bool;
-			$tmp_post_list->author__in           = $v1_post_list->author__in           ?: $tmp_post_list->author__in;
-			$tmp_post_list->ignore_sticky_posts  = $v1_post_list->ignore_sticky_posts  ?: $tmp_post_list->ignore_sticky_posts;
-			$tmp_post_list->post__not_in         = $v1_post_list->post__not_in         ?: $tmp_post_list->post__not_in;
-			$tmp_post_list->pl_exclude_current   = $v1_post_list->pl_exclude_current   ?: $tmp_post_list->pl_exclude_current;
-			$tmp_post_list->pl_exclude_dupes     = $v1_post_list->pl_exclude_dupes     ?: $tmp_post_list->pl_exclude_dupes;
-			$tmp_post_list->pl_apl_design        = $v1_post_list->pl_apl_design        ?: $tmp_post_list->pl_apl_design;
-			
-			$rtn_new_db_arr['apl_post_list_arr'][] = $tmp_post_list;
+			$rtn_apl_post_list_arr[] = $tmp_apl_post_list;
 		}
 		
-		foreach ( $apl_design_arr as $v1_design ) {
-			$tmp_design = new APL_Design( $v1_design->slug );
-			
-			$tmp_design->title    = $v1_design->title    ?: $tmp_design->title;
-			$tmp_design->before   = $v1_design->before   ?: $tmp_design->before;
-			$tmp_design->content  = $v1_design->content  ?: $tmp_design->content;
-			$tmp_design->after    = $v1_design->after    ?: $tmp_design->after;
-			$tmp_design->empty    = $v1_design->empty    ?: $tmp_design->empty;
-			
-			$rtn_new_db_arr['apl_design_arr'][] = $tmp_design;
-		}
-		
-		return $rtn_new_db_arr;
+		return $rtn_apl_post_list_arr;
 	}
+	
+	/**
+	 * Object Type for APL Designs
+	 *
+	 * This sets the Designs as the custom APL_Design object.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param array $apl_design_arr Design array for $this->apl_design_arr.
+	 * @return APL_Design Custom APL Design object.
+	 */
+	private function return_type_apl_designs( $apl_design_arr ) {
+		$rtn_apl_design_arr = array();
+		
+		
+		foreach ( $apl_design_arr as $apl_design ) {
+			$tmp_apl_design = new APL_Design( $apl_design->slug );
+
+			$tmp_apl_design->title    = $apl_design->title    ?: $tmp_apl_design->title;
+			$tmp_apl_design->before   = $apl_design->before   ?: $tmp_apl_design->before;
+			$tmp_apl_design->content  = $apl_design->content  ?: $tmp_apl_design->content;
+			$tmp_apl_design->after    = $apl_design->after    ?: $tmp_apl_design->after;
+			$tmp_apl_design->empty    = $apl_design->empty    ?: $tmp_apl_design->empty;
+			
+			$rtn_apl_design_arr[] = $tmp_apl_design;
+		}
+		
+		return $rtn_apl_design_arr;
+	}
+	
+//	/**
+//	 * EXAMPLE IF NEED TO SET TO OBJECT.
+//	 */
+//	private function return_type_object_post_lists() {
+//		
+//	}
+//	
+//	/**
+//	 * EXAMPLE IF NEED TO SET TO OBJECT.
+//	 */
+//	private function return_type_object_designs() {
+//		
+//	}
 	
 }

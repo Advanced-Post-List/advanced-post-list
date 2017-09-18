@@ -24,25 +24,6 @@
 class APL_Core {
 
 	/**
-	 * Stores error message when error occurs.
-	 *
-	 * @since 0.1.0
-	 * @access private
-	 * @var string
-	 */
-	private $_error;
-
-	/**
-	 * Summary.
-	 *
-	 * @since 0.1.0
-	 * @since 0.4.0 Change name $_errorLog to $_error_log
-	 * @access private
-	 * @var string
-	 */
-	private $_error_log;
-
-	/**
 	 * Summary.
 	 *
 	 * @since 0.1.0
@@ -50,7 +31,7 @@ class APL_Core {
 	 * @access public
 	 * @var string
 	 */
-	private $_option_name = 'APL_Options';
+	private $_option_name = 'apl_options';
 
 	/**
 	 * Summary.
@@ -377,7 +358,7 @@ class APL_Core {
 	 * @return void
 	 */
 	public function action_check_version() {
-		$options = $this->apl_options_load();
+		$options = apl_options_load();
 		if ( isset( $options['version'] ) ) {
 			if ( version_compare( $options['version'], APL_VERSION, '<' ) ) {
 				$preset_db = new APL_Preset_Db( 'default' );
@@ -387,7 +368,7 @@ class APL_Core {
 					'preset_db' => $preset_db,
 				);
 				
-				$updater = new APL_Updater( $options['version'], $update_items );
+				$updater = new APL_Updater( $options['version'], $update_items, 'APL' );
 				// IN THIS CASE, BOTH MUST HAVE VALUES FILLED.
 				if ( $updater->update_occurred ) {
 					$options = $updater->options;
@@ -395,8 +376,6 @@ class APL_Core {
 					
 					$this->update_post_list_database( $updater->apl_post_list_arr );
 					$this->update_design_database( $updater->apl_design_arr );
-					
-					delete_option( 'APL_preset_db-default' );
 				}
 			}
 		}
@@ -413,9 +392,9 @@ class APL_Core {
 	 * @param array $apl_post_list_arr
 	 * @return void
 	 */
-	private function update_post_list_database( $apl_post_list_arr ) {
-		foreach ( $apl_post_list_arr as $imp_post_list ) {
-			$imp_post_list->save_post_list();
+	public function update_post_list_database( $apl_post_list_arr ) {
+		foreach ( $apl_post_list_arr as $k1_ => $apl_post_list ) {
+			$apl_post_list->save_post_list();
 		}
 	}
 
@@ -431,8 +410,8 @@ class APL_Core {
 	 * @return void
 	 */
 	private function update_design_database( $apl_design_arr ) {
-		foreach ( $apl_design_arr as $imp_design ) {
-			$imp_design->save_design();
+		foreach ( $apl_design_arr as $apl_design ) {
+			$apl_design->save_design();
 		}
 	}
 	/**
@@ -485,10 +464,10 @@ class APL_Core {
 	 */
 	public function deactivation() {
 		// STEP 1.
-		$options = get_option( 'APL_Options' );
+		$options = get_option( 'apl_options' );
 		// STEP 2.
 		if ( true === $options['delete_core_db'] || ( false !== $options && ! isset( $options['delete_core_db'] ) ) ) {
-			delete_option( 'APL_Options' );
+			delete_option( 'apl_options' );
 			
 			// POST LIST POST DATA.
 			$pl_args = array(
@@ -550,7 +529,7 @@ class APL_Core {
 	 * @access public
 	 */
 	public function uninstall() {
-		delete_option( 'APL_Options' );
+		delete_option( 'apl_options' );
 
 		// POST LIST POST DATA.
 		$pl_args = array(
@@ -600,7 +579,35 @@ class APL_Core {
 	}
 
 	/**
-	 * Summary.
+	 * (DEPRECATED) Option Defaults.
+	 *
+	 * Sets options to default values. Deprecated.
+	 *
+	 * STEP 1 - Set options as an array.
+	 * STEP 2 - Add default values to options.
+	 * STEP 3 - Return Options.
+	 *
+	 * @since 0.1.0
+	 * @access private
+	 *
+	 * @return object Core option settings
+	 */
+	private function apl_options_default() {
+		// New name ( default_options ).
+		// Step 1.
+		$options = array();
+		// Step 2.
+		$options['version']               = APL_VERSION;
+		$options['delete_core_db']        = false;
+		$options['default_empty_enable']  = false;
+		$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
+
+		// Step 3.
+		return $options;
+	}
+
+	/**
+	 * (DEPRECATED) APL Load Option.
 	 *
 	 * Gets APLOptions from WordPress database and send the option data back
 	 * if any. Deprecated.
@@ -634,7 +641,7 @@ class APL_Core {
 	}
 
 	/**
-	 * Summary.
+	 * (DEPRECATED) Save Options.
 	 *
 	 * Deprecated.
 	 *
@@ -655,34 +662,6 @@ class APL_Core {
 		if ( isset( $options ) ) {
 			update_option( $this->_option_name, $options );
 		}
-	}
-
-	/**
-	 * Summary.
-	 *
-	 * Sets options to default values. Deprecated.
-	 *
-	 * STEP 1 - Set options as an array.
-	 * STEP 2 - Add default values to options.
-	 * STEP 3 - Return Options.
-	 *
-	 * @since 0.1.0
-	 * @access private
-	 *
-	 * @return object Core option settings
-	 */
-	private function apl_options_default() {
-		// New name ( default_options ).
-		// Step 1.
-		$options = array();
-		// Step 2.
-		$options['version']               = APL_VERSION;
-		$options['delete_core_db']        = false;
-		$options['default_empty_enable']  = false;
-		$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
-
-		// Step 3.
-		return $options;
 	}
 
 	/**

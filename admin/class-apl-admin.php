@@ -929,9 +929,10 @@ class APL_Admin {
 		$new_post_list_slug = $post_list->post_name . '__trashed';
 		$new_design_slug = '';
 		if ( !empty( $post_list->post_name ) ) {
-			$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
+			//$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
 			$design_slug = apply_filters( 'apl_design_trash_slug', $new_post_list_slug );
-			$new_design_slug = $design_slug . $slug_suffix;
+			//$new_design_slug = $design_slug . $slug_suffix;
+			$new_design_slug = $design_slug;
 		}
 		$apl_post_list->pl_apl_design = $new_design_slug;
 		$apl_design->slug = $new_design_slug;
@@ -972,9 +973,10 @@ class APL_Admin {
 		$new_post_list_slug = str_replace( '__trashed', '', $post_list->post_name );
 		$new_design_slug = '';
 		if ( !empty( $post_list->post_name ) ) {
-			$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
+			//$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
 			$design_slug = apply_filters( 'apl_design_trash_slug', $new_post_list_slug );
-			$new_design_slug = $design_slug . $slug_suffix;
+			//$new_design_slug = $design_slug . $slug_suffix;
+			$new_design_slug = $design_slug;
 		}
 		$apl_post_list->pl_apl_design = $new_design_slug;
 		$apl_design->slug = $new_design_slug;
@@ -1177,7 +1179,7 @@ class APL_Admin {
 				$update_items['apl_design_arr'] = $v1_content->apl_design_arr;
 			}
 
-			$updater = new APL_Updater( $version, $update_items );
+			$updater = new APL_Updater( $version, $update_items, 'OBJECT' );
 
 			$imported_content[] = array(
 				'apl_post_list_arr'  => $updater->apl_post_list_arr,
@@ -1196,6 +1198,7 @@ class APL_Admin {
 			// POST LISTS.
 			foreach ( $v1_content['apl_post_list_arr'] as $v2_post_list ) {
 				$db_post_list = new APL_Post_List( $v2_post_list->slug );
+				// Check if Post List (ID) already exists.
 				if ( 0 !== $db_post_list->id ) {
 					$overwrite_apl_post_list[] = $v2_post_list;
 					$data_overwrite_post_list[] = $v2_post_list->slug;
@@ -1472,9 +1475,10 @@ class APL_Admin {
 
 		$new_design_slug = '';
 		if ( !empty( $post->post_name ) ) {
-			$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
+			//$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
 			$design_slug = apply_filters( 'apl_design_process_slug', $post->post_name, $this );
-			$new_design_slug = $design_slug . $slug_suffix;
+			//$new_design_slug = $design_slug . $slug_suffix;
+			$new_design_slug = $design_slug;
 		}
 
 		$apl_post_list->pl_apl_design = $this->post_list_process_apl_design( $apl_post_list->pl_apl_design, $new_design_slug );
@@ -1573,7 +1577,8 @@ class APL_Admin {
 		$apl_design = new APL_Design( $apl_design_slug );
 
 		// SLUG / KEY.
-		if ( $new_design_slug !== $apl_design_slug && '-design' !== $new_design_slug  ) {
+		//if ( $new_design_slug !== $apl_design_slug && '-design' !== $new_design_slug  ) {
+		if ( $new_design_slug !== $apl_design_slug ) {
 			$apl_design->title = $new_design_slug;
 			$apl_design->slug = sanitize_title_with_dashes( $new_design_slug );
 		}
