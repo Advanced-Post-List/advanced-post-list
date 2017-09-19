@@ -102,7 +102,7 @@ class APL_Core {
 			add_action( 'init', array( 'APL_Admin', 'get_instance' ) );
 			
 			/* **** ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS **** */
-			$file_dir = APL_DIR . 'advanced-post-list/advanced-post-list.php';
+			$file_dir = APL_DIR . 'advanced-post-list.php';
 			register_activation_hook( $file_dir, array( 'APL_Core', 'activation' ) );
 			register_deactivation_hook( $file_dir, array( 'APL_Core', 'deactivation' ) );
 			register_uninstall_hook( $file_dir, array( 'APL_Core', 'uninstall' ) );
@@ -438,7 +438,7 @@ class APL_Core {
 	 * @since 0.1.0
 	 * @access public
 	 */
-	public function activation() {
+	public static function activation() {
 		// Step 1.
 		$options = apl_options_load();
 
@@ -462,7 +462,7 @@ class APL_Core {
 	 * @link https://developer.wordpress.org/reference/functions/unregister_post_type/
 	 * @access public
 	 */
-	public function deactivation() {
+	public static function deactivation() {
 		// STEP 1.
 		$options = get_option( 'apl_options' );
 		// STEP 2.
@@ -528,7 +528,7 @@ class APL_Core {
 	 * @since 0.4.0 - Changed to delete Post Data.
 	 * @access public
 	 */
-	public function uninstall() {
+	public static function uninstall() {
 		delete_option( 'apl_options' );
 
 		// POST LIST POST DATA.
