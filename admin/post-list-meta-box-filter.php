@@ -334,7 +334,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 								<select id="apl-multiselect-<?php echo esc_attr( $k_pt_slug ); ?>" class="apl-multiselect-<?php echo esc_attr( $k_pt_slug ); ?>" name="apl_multiselect_taxonomies-<?php echo esc_attr( $k_pt_slug ); ?>[]" multiple="multiple">
 									<?php
 									$tax_req_selected = '';
-									if ( isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
+									if ( isset( $apl_post_list->tax_query[ $k_pt_slug ]['relation'] ) ) {
 										if ( 'AND' === $apl_post_list->tax_query[ $k_pt_slug ]['relation'] ) {
 											$tax_req_selected = 'selected="selected"';
 										}
@@ -357,7 +357,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 											}
 										}
 
-										if ( true === $first_tax && empty( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
+										if ( true === $first_tax && ! isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 											$tax_selected = 'selected="selected"';
 										}
 										$first_tax = false;
@@ -382,7 +382,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 													}
 												}
 											}
-											if ( $first_tax && empty( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
+											if ( $first_tax && ! isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 												$tax_display = 'display: block;';
 											}
 											$first_tax = false;
@@ -412,7 +412,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 												}
 											}
 
-											if ( $first_tax && empty( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
+											if ( $first_tax && ! isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 												$tax_display = 'display: block;';
 												$first_tax = false;
 											}
