@@ -77,12 +77,42 @@ jQuery( document ).ready( function($) {
 	function init_tabs_post_type_taxonomies () {
 		$.each( post_tax, function( k_post_type_slug, v_taxonomy_arr ) {
 			$( '#apl-tabs-' + k_post_type_slug + '-taxonomies' ).tabs({
-				heightStyle: "fill"
+				heightStyle: "fill",
+				create: function(event, ui) {
+					// MANUALLY HIDE ALL AND SHOW SELECTED.
+					var opts = $( '#apl-multiselect-' + k_post_type_slug ).children();
+					$.each( opts, function( k_tax_index, v_tax_ele ) {
+						// Hide panel.
+						var opt_tax = $( v_tax_ele ).val();
+						if ( 'require' !== opt_tax ) {
+							$( '#apl-t-div-' + k_post_type_slug + '-' + opt_tax ).hide();
+
+							// If selected, unhide.
+							var selected = $( v_tax_ele ).prop( 'selected' );
+							if ( selected ) {
+								$( '#apl-t-div-' + k_post_type_slug + '-' + opt_tax ).show();
+							}
+						}
+					});
+					var option_index = $( '#apl-multiselect-' + k_post_type_slug + ' option:selected' ).index();
+					if ( 0 === option_index ) {
+						option_index = $( '#apl-multiselect-' + k_post_type_slug + ' option' ).next( ':selected' ).index();
+					}
+					if ( -1 !== option_index ) {
+						// -1 since req checkbox isn't a tab.
+						$( '#apl-tabs-' + k_post_type_slug + '-taxonomies' ).tabs( 'option', 'active', ( option_index - 1 ) );
+					}
+					$( '#apl-tabs-' + k_post_type_slug + '-taxonomies' ).tabs( 'refresh' );
+				}
 			});
+
 			$( '#apl-tabs-' + k_post_type_slug + '-type' ).tabs({
-				heightStyle: "fill"
+				heightStyle: "fill",
+				create: function(event, ui) {
+					//console.log('foobar');
+				}
 			});
-		});
+		});// End of .each().
 	}
 
 	function init_multiselect_post_type_taxonomies() {
@@ -97,17 +127,38 @@ jQuery( document ).ready( function($) {
 				menuWidth:333,
 
 				click: function( event, ui ) {
+					if ( 'require' === ui.value ) {
+						return;
+					}
 					var target_tab = '#apl-t-li-' + k_pt_slug + '-' + ui.value;
 					var target_div = '#apl-t-div-' + k_pt_slug + '-' + ui.value;
 
+					var option_index = $( '#apl-multiselect-' + k_pt_slug + ' > option[value="' + ui.value + '"]' ).index();
+
 					if ( true == ui.checked ) {
+						$( '#apl-multiselect-' + k_pt_slug + ' option[value="' + ui.value + '"]' ).prop( 'selected', true );
 						$( target_tab ).show();
 						$( target_div ).show();
 
+						// TODO - ADD FOCUS / ACTIVE.
+						// -1 since req checkbox isn't a tab.
+						$( '#apl-tabs-' + k_pt_slug + '-taxonomies' ).tabs( 'option', 'active', ( option_index - 1 ) );
+
 						$( '#apl-tabs-' + k_pt_slug + '-taxonomies' ).tabs( 'refresh' );
 					} else {
+						$( '#apl-multiselect-' + k_pt_slug + ' option[value="' + ui.value + '"]' ).prop( 'selected', false );
 						$( target_tab ).hide();
 						$( target_div ).hide();
+
+						// TODO - CHANGE FOCUS / ACTIVE.
+						option_index = $( '#apl-multiselect-' + k_pt_slug + ' option:selected' ).index();
+						if ( 0 === option_index ) {
+							option_index = $( '#apl-multiselect-' + k_pt_slug + ' option' ).next( ':selected' ).index();
+						}
+						if ( -1 !== option_index ) {
+							// -1 since req checkbox isn't a tab.
+							$( '#apl-tabs-' + k_pt_slug + '-taxonomies' ).tabs( 'option', 'active', ( option_index - 1 ) );
+						}
 
 						$( '#apl-tabs-' + k_pt_slug + '-taxonomies' ).tabs( 'refresh' );
 						$( target_div ).hide();
