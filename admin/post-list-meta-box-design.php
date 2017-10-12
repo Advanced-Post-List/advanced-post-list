@@ -14,14 +14,36 @@
  */
 //var_dump( $post );
 //var_dump( $metabox );
+$apl_help_text = array(
+	'before_list' => esc_html__(
+		'Used to store any HTML & CSS code that exists before the post/content listings. Useful for div, ul, ol, tables, etc.. As well as storing CSS styling for IDs and Classes.',
+		'advanced-post-list'
+	),
+	'list_content' => esc_html__(
+		'This where you design how your posts are going to display in the post list. In here you can use HTML, CSS, PHP (requires the PHP shortcode), and the plugin\'s internal shortcodes. Info can be found at the bottom, or by clicking on the shortcode info found below "List content".',
+		'advanced-post-list'
+	),
+	'after_list' => esc_html__(
+		'Used for ending any elements that are still open, or to display a final message to the users/visitors.',
+		'advanced-post-list'
+	),
+	'empty_message' => esc_html__(
+		'This container holds the HTML & CSS content and if no posts are found to be listed in the preset. Then the preset post list will display this message. If no Empty Message is found, then the post list will use the Default Empty Message if enabled in the Plugin\'s Admin Settings. Otherwise, the plugin will display nothing like it was originally set as. Please Note: if you are using the Default Empty Message but you don\'t want to display anything in a certain preset post list. Then simple create an empty element to fall back on. For example, an empty "span" HTML element.',
+		'advanced-post-list'
+	),
+);
+
 $apl_post_list = new APL_Post_List( $post->post_name );
 $apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+
 ?>
+<?php include( APL_DIR . '/admin/admin-dialog-internal-shortcodes.php' ); ?>
 <div class="apl-design-box-1">
 	<div class="apl-design-column">
 		<div class="apl-design-row">
 			<div>
 				<label for="apl_textarea_before"><?php esc_html_e( 'Before list:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['before_list']; ?>"></span>
 			</div>
 			<div>
 				<textarea id="apl_textarea_before" class="apl-textarea-before large-text" name="apl_before" rows="3"><?php echo $apl_design->before; ?></textarea>
@@ -29,10 +51,12 @@ $apl_design = new APL_Design( $apl_post_list->pl_apl_design );
 		</div>
 		<div class="apl-design-row">
 			<div>
-				<label for="apl_textarea_content"><?php esc_html_e( 'List content:', 'advanced-post-list' ); ?></label><br />
-				<a id="info_13" class="info_a_link">
-					<span style="float: left;"><?php esc_html_e( 'List of Shortcodes', 'advanced-post-list' ) ?></span>
-					<span class="ui-icon ui-icon-info info-icon" style="float: left;"></span>
+				<label for="apl_textarea_content"><?php esc_html_e( 'List content:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['list_content']; ?>"></span>
+				<br />
+				<a id="info-shortcodes" class="apl-help apl-help-alias">
+					<?php esc_html_e( 'List of Shortcodes', 'advanced-post-list' ) ?>
+					<span class="dashicons dashicons-clipboard"></span>
 				</a>
 			</div>
 			<div>
@@ -42,6 +66,7 @@ $apl_design = new APL_Design( $apl_post_list->pl_apl_design );
 		<div class="apl-design-row">
 			<div>
 				<label for="apl_textarea_after"><?php esc_html_e( 'After list:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['after_list']; ?>"></span>
 			</div>
 			<div>
 				<textarea id="apl_textarea_after" class="apl-textarea-after large-text" name="apl_after" rows="3"><?php echo $apl_design->after; ?></textarea>
@@ -50,6 +75,7 @@ $apl_design = new APL_Design( $apl_post_list->pl_apl_design );
 		<div class="apl-design-row">
 			<div>
 				<label for="apl_textarea_empty_message"><?php esc_html_e( 'Empty Message:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['empty_message']; ?>"></span>
 			</div>
 			<div>
 				<div style="margin: 3px 0px 3px 6px;">

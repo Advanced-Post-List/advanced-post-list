@@ -17,7 +17,86 @@
 //var_dump( $apl_post_tax );
 //var_dump( $apl_tax_terms );
 //var_dump( $apl_display_post_types );
-
+$apl_help_text = array(
+	'post_types' => esc_html__(
+		'Each (jQuiry UI) accordion contains a separate individual post type. ' .
+		'The default post types built into WordPress are Post and Page. Any ' .
+		'additional post types are dynamically added in the manner WordPress ' .
+		'does. Please Note: Each post/page can have only one post type, which may ' .
+		'explain why it has been divided by post types.',
+		'advanced-post-list'
+	),
+	'taxonomy_tab' => esc_html__(
+		'Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.',
+		'advanced-post-list'
+	),
+	'parent_page_tab' => esc_html__(
+		'Each hierarchical post type has a Parent selector for selecting which children pages to display. You can add multiple Post Parents of dynamically add children pages according to the Current Page.',
+		'advanced-post-list'
+	),
+	'taxonomy_multiselect' => esc_html__(
+		'MULTISELECT Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.' .
+		'<br /><br />' .
+		'Req. Taxonomies: If more than one ‘Require Taxonomy’ is checked and terms (or include) are selected, or "any", then each taxonomy must be required within the post type.',
+		'advanced-post-list'
+	),
+	'require_terms' => esc_html__(
+		'If selected, and more than one term is checked, then each term must be required within the CPT/taxonomy in order to be displayed in the post list.',
+		'advanced-post-list'
+	),
+	'dynamic_terms' => esc_html__(
+		'If selected, the post list preset will include any terms the current page/post has within the CTP/taxonomy.',
+		'advanced-post-list'
+	),
+	'any_terms' => esc_html__(
+		'When checked, any terms will be included within that CPT/taxonomy.',
+		'advanced-post-list'
+	),
+	'list_amount' => esc_html__(
+		'The numeric value of how many posts you want the post list to display. Negative one (-1) will display all the posts that are available after filtering.',
+		'advanced-post-list'
+	),
+	'order_by' => esc_html__(
+		'Choose which page properties to sort from. All of which are built in params used in WP_Query.',
+		'advanced-post-list'
+	),
+	'authors' => esc_html__(
+		'Show or remove posts that were created by a certain author, or authors. You can only choose between adding or removing, not both.' .
+		'<br /><br />' .
+		'Operator - Determines whether you want to include or exclude authors.' .
+		'<br /><br />' .
+		'Author Names/IDs - Displays a list of authors the site currently has and is divided/grouped into separate role groups.',
+		'advanced-post-list'
+	),
+	'post_status' => esc_html__(
+		'Holds the settings to show which posts to display based on the user visibility and/or the page states. To which is only visible to the users with the necessary capabilities to view them.' .
+		'<br /><br />' .
+		'<b>Visibility</b> - Display posts as either Public, Private, or Both' .
+		'<br /><br />' .
+		'<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, Auto-save, Inherit, and/or Trash.',
+		'advanced-post-list'
+	),
+	'user_perms' => esc_html__(
+		'Uses the user permission via. user capabilities to determine what posts to display in the post list to the visitor/user.',
+		'advanced-post-list'
+	),
+	'exclude_posts_by_id' => esc_html__(
+		'Add post/page IDs, seperated by a comma (,), will prevent those posts from being added to the post list.',
+		'advanced-post-list'
+	),
+	'enable_sticky_posts' => esc_html__(
+		'Meant for the built-in post type (Posts) function. When checked, this will prevent sticky posts from always displaying at the top of the post list.',
+		'advanced-post-list'
+	),
+	'exclude_current_post' => esc_html__(
+		'When checked, the current post being viewed will be excluded from the post list.',
+		'advanced-post-list'
+	),
+	'exclude_duplicate_posts' => esc_html__(
+		'In the "order that it is received", each preset post list being viewed will add the post IDs to a global exclude list built into APL. When checked, the preset post list will add the post IDs (listed at the time) to the exclude filter settings in WP_Query. This will remove any posts that have already been displayed to the user by the APL plugin.',
+		'advanced-post-list'
+	),
+);
 ?>
 <?php
 
@@ -134,10 +213,15 @@ function apl_render_page_parents( $post_type, $apl_post_list, $page_parent = 0, 
 		}
 	}
 
+	$apl_help_text_parent = esc_html__(
+		'Adds the Current Page being displayed as a Parent Page, which will then add those child pages.',
+		'advanced-post-list'
+	);
 	?>
 	<?php if ( 0 === $page_parent ) : ?>
 		<input type="checkbox" id="apl_parent_page_dynamic-<?php echo esc_attr( $post_type ); ?>" class="apl_parent_page_dynamic" name="apl_page_parent_dynamic-<?php echo esc_attr( $post_type ); ?>" <?php echo $page_dynamic_checked; ?> >
 		<label for="apl_parent_page_dynamic-<?php echo esc_attr( $post_type ); ?>"><b><?php esc_html_e( 'Dynamic Parent Page', 'advanced-post-list' ); ?></b></label>
+		<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text_parent; ?>"></span>
 		<br />
 		<br />
 		<table class="widefat">
@@ -286,7 +370,10 @@ foreach ( $apl_tax_terms as $key => $value ) {
 ?>
 <div class="apl-filter-box-1">
 	<div class="apl-left-minibar">
-		<h3><span><?php esc_html_e( 'Post Types', 'advanced-post-list' ); ?></span></h3>
+		<h3>
+			<?php esc_html_e( 'Post Types', 'advanced-post-list' ); ?>
+			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['post_types']; ?>"></span>
+		</h3>
 		<div class="apl_post_types">
 			<?php $first_pt = false; ?>
 			<?php foreach ( $apl_post_tax as $k_pt_slug => $v_arr ) : ?>
@@ -319,11 +406,19 @@ foreach ( $apl_tax_terms as $key => $value ) {
 				<div id="apl-tabs-<?php echo esc_attr( $k_pt_slug ); ?>-type" class="apl-tabs-post_type-type">
 					<ul>
 						<?php if ( ! empty( $v_pt_arr['tax_arr'] ) ) : ?>
-							<li class="apl-t-li-post-type"><a href="#apl-t-<?php echo esc_attr( $k_pt_slug ); ?>-type-taxonomies"><h5><?php esc_html_e( 'Taxonomies', 'advanced-post-list' ); ?></h5></a></li>
+							<li class="apl-t-li-post-type">
+								<a href="#apl-t-<?php echo esc_attr( $k_pt_slug ); ?>-type-taxonomies">
+									<h5><?php esc_html_e( 'Taxonomies', 'advanced-post-list' ); ?><span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['taxonomy_tab']; ?>"></span></h5>
+								</a>
+							</li>
 						<?php endif; ?>
 						<?php if ( isset( $apl_post_type_objs[ $k_pt_slug ] ) ) : ?>
 							<?php if ( $apl_post_type_objs[ $k_pt_slug ]->hierarchical ) : ?>
-								<li class="apl-t-li-post-type"><a href="#apl-t-<?php echo esc_attr( $k_pt_slug ); ?>-type-pages"><h5><?php esc_html_e( 'Parent Pages', 'advanced-post-list' ); ?></h5></a></li>
+								<li class="apl-t-li-post-type">
+									<a href="#apl-t-<?php echo esc_attr( $k_pt_slug ); ?>-type-pages">
+										<h5><?php esc_html_e( 'Parent Pages', 'advanced-post-list' ); ?><span class="apl-help apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['parent_page_tab']; ?>"></span></h5>
+									</a>
+								</li>
 							<?php endif; ?>
 						<?php endif; ?>
 					</ul>
@@ -341,7 +436,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 									}
 									$first_tax = true;
 									?>
-									<option id="apl_chk_req_taxonomies-<?php echo esc_attr( $k_pt_slug ); ?>" class="apl-chk-req-taxonomies" value="require" <?php echo $tax_req_selected; ?>><b><?php esc_html_e( 'Req. Taxonomies', 'advanced-post-list' ); ?></b></option>
+									<option id="apl_chk_req_taxonomies-<?php echo esc_attr( $k_pt_slug ); ?>" class="apl-chk-req-taxonomies apl-tooltip" value="require" <?php echo $tax_req_selected; ?>><b><?php esc_html_e( 'Req. Taxonomies', 'advanced-post-list' ); ?></b></option>
 									<hr />
 									<?php foreach ( $v_pt_arr['tax_arr'] as $index => $tax_slug ) : ?>
 										<?php
@@ -365,6 +460,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 										<option value="<?php echo esc_attr( $tax_slug ); ?>" <?php echo $tax_selected; ?>><?php echo esc_html( $apl_taxonomy_objs[ $tax_slug ]->labels->singular_name ); ?></option>
 									<?php endforeach; ?>
 								</select>
+								<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['taxonomy_multiselect']; ?>"></span>
 							</div>
 							<div class="apl-pt-taxonomy-tabs">
 								<div id="apl-tabs-<?php echo esc_attr( $k_pt_slug ); ?>-taxonomies" class="apl-tabs-post-type-taxonomies">
@@ -427,12 +523,14 @@ foreach ( $apl_tax_terms as $key => $value ) {
 														<input type="checkbox" id="apl_chk_terms_req-<?php echo esc_attr( $ele_tag ); ?>" name="apl_terms_req-<?php echo esc_attr( $ele_tag ); ?>" <?php echo $tax_chk_required; ?> >
 														<?php esc_html_e( 'Require Terms', 'advanced-post-list' ); ?>
 													</label>
+													<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['require_terms']; ?>"></span>
 												</li>
 												<li>
 													<label for="apl_chk_dynamic-<?php echo esc_attr( $ele_tag ); ?>">
 														<input type="checkbox" id="apl_chk_terms_dynamic-<?php echo esc_attr( $ele_tag ); ?>" name="apl_terms_dynamic-<?php echo esc_attr( $ele_tag ); ?>" <?php echo $tax_chk_dynamic; ?> >
 														<?php esc_html_e( 'Dynamic Terms', 'advanced-post-list' ); ?>
 													</label>
+													<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['dynamic_terms']; ?>"></span>
 												</li>
 											</ul>
 											<?php do_action( 'apl_metabox_filter_term_settings', $k_pt_slug, $tax_slug ); ?>
@@ -465,6 +563,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 		<div class="apl-filter-field-left-row" style="height: 84px;">
 			<div>
 				<label for="apl_spinner_posts_per_page"><?php esc_html_e( 'List Amount:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['list_amount']; ?>"></span>
 			</div>
 			<div>
 				<input id="apl_spinner_posts_per_page" class="apl-spinner-posts_per_page small-text" name="apl_posts_per_page" value="<?php echo intval( $apl_post_list->posts_per_page ); ?>" />
@@ -478,6 +577,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 		<div class="apl-filter-field-left-row apl-order-by">
 			<div>
 				<label for="apl_selectmenu_order_by"><?php esc_html_e( 'Order By:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['order_by']; ?>"></span>
 			</div>
 			<div>
 				<!-- INPUT -->
@@ -503,6 +603,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 		<div class="apl-filter-field-left-row apl-authors">
 			<div>
 				<label for="apl_selectmenu_author__bool"><?php esc_html_e( 'Authors:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['authors']; ?>"></span>
 			</div>
 			<div>
 				<div>
@@ -538,6 +639,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 		<div class="apl-filter-field-left-row">
 			<div>
 				<label for="apl_multiselect_post_status_1"><?php esc_html_e( 'Post Status:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['post_status']; ?>"></span>
 			</div>
 			<div>
 				<!-- INPUT -->
@@ -562,6 +664,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 		<div class="apl-filter-field-left-row">
 			<div>
 				<label for="apl_selectmenu_perm"><?php esc_html_e( 'User Perms:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['user_perms']; ?>"></span>
 			</div>
 			<div>
 				<!-- INPUT -->
@@ -577,23 +680,25 @@ foreach ( $apl_tax_terms as $key => $value ) {
 	<div class="apl-filter-box-2-right">
 		<div class="apl-filter-field-row-full">
 			<label for="apl_exclude_posts"><?php esc_html_e( 'Exclude Post by ID:', 'advanced-post-list' ); ?></label>
+			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['exclude_post_by_id']; ?>"></span>
 		</div>
 		<div class="apl-filter-field-row-full">
 			<input type="text" id="apl_exclude_posts" class="apl-text-exclude-posts" name="apl_post__not_in" value="<?php echo implode( ',', $apl_post_list->post__not_in ); ?>" />
 		</div>
 		<div class="apl-filter-field-right-row">
 			<label for="apl_sticky_posts"><?php esc_html_e( 'Enable Sticky Posts:', 'advanced-post-list' ); ?></label>
+			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['enable_sticky_posts']; ?>"></span>
 			<input type="checkbox" id="apl_sticky_posts" class="apl-chkbox-sticky-posts apl-chkbox-input" name="apl_sticky_posts" <?php echo ( false === $apl_post_list->ignore_sticky_posts ) ? 'checked="checked"' : ''; ?> />
 		</div>
 		<div class="apl-filter-field-right-row">
 			<label for="apl_exclude_current"><?php esc_html_e( 'Exclude Current Post:', 'advanced-post-list' ); ?></label>
+			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['exclude_current_post']; ?>"></span>
 			<input type="checkbox" id="apl_exclude_current" class="apl-chkbox-exclude-current apl-chkbox-input" name="apl_pl_exclude_current" <?php echo ( $apl_post_list->pl_exclude_current ) ? 'checked="checked"' : ''; ?> />
 		</div>
 		<div class="apl-filter-field-right-row">
 			<label for="apl_exclude_dupe" ><?php esc_html_e( 'Exclude Duplicate Posts:', 'advanced-post-list' ); ?></label>
-			<?php
-			$p_pl_exclude_dupes = ( true === $apl_post_list->pl_exclude_dupes ) ? 'checked="checked"' : '';
-			?>
+			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['exclude_duplicate_posts']; ?>"></span>
+			<?php $p_pl_exclude_dupes = ( true === $apl_post_list->pl_exclude_dupes ) ? 'checked="checked"' : ''; ?>
 			<input type="checkbox" id="apl_exclude_dupes" class="apl-chkbox-exclude-dupes apl-chkbox-input" name="apl_pl_exclude_dupes" <?php echo $p_pl_exclude_dupes = ( true === $apl_post_list->pl_exclude_dupes ) ? 'checked="checked"' : ''; ?> />
 		</div>
 	</div>

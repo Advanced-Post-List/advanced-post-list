@@ -423,6 +423,9 @@ class APL_Admin {
 					'jquery-ui-button',
 					'jquery-ui-dialog',
 					'jquery-ui-selectmenu',
+					'jquery-ui-position',
+					'jquery-ui-tooltip',
+					
 				),
 				APL_VERSION,
 				false

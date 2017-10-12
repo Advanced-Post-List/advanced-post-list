@@ -11,7 +11,7 @@
  * @since 0.4.0
  */
 
-jQuery( document ).ready( function($) {
+jQuery( function($) {
 	var post_tax  = apl_admin_ui_local.post_tax;
 	var tax_terms = apl_admin_ui_local.tax_terms;
 	var trans     = apl_admin_ui_local.trans;
@@ -31,6 +31,9 @@ jQuery( document ).ready( function($) {
 	init_selectmenu_perm();
 
 	init_textarea_empty_message();
+	
+	apl_init_tooltips();
+	apl_init_dialogs();
 
 	function init_chkbox_post_type_toggle_tabs() {
 		$.each( post_tax, function( k_post_type_slug, v_taxonomy_arr ) {
@@ -117,6 +120,11 @@ jQuery( document ).ready( function($) {
 
 	function init_multiselect_post_type_taxonomies() {
 		$.each( post_tax, function( k_pt_slug, v_tax_arr ) {
+			//var elem = '#apl_chk_req_taxonomies-' + k_pt_slug;
+			//var help_attr_title1 = $( elem ).attr('title');
+			//elem = 'option.apl-chk-req-taxonomies';
+			//var help_attr_title2 = $( elem ).attr( 'title' );
+			
 			$( '#apl-multiselect-' + k_pt_slug ).multiselect({
 				header: false,
 				noneSelectedText: trans.tax_noneSelectedText,
@@ -165,6 +173,8 @@ jQuery( document ).ready( function($) {
 					}
 				}
 			});
+			
+			//$( 'li.apl-chk-req-taxonomies' ).attr( 'title', help_attr_title2  );
 
 			$( '#apl-multiselect-' + k_pt_slug ).multiselect( 'refresh' );
 		});
@@ -455,4 +465,26 @@ jQuery( document ).ready( function($) {
 			}
 		});
 	}
-});
+
+	function apl_init_tooltips() {
+		jQuery( '.apl-tooltip' ).tooltip({
+//			content: function( callback ) { 
+//				//callback( $( this ).prop('title').replace( '(<br([\s]?[\/]?)?>)', '<br />' ) );
+//			}
+			content: function( callback ) { 
+				callback( $( this ).prop( 'title' ) );
+			}
+		});
+	}
+	
+	function apl_init_dialogs() {
+		$('#info-shortcodes').click(function()
+		{
+			$('#d-shortcodes').dialog({
+				width: '32%',
+				height: 450
+			});
+		});
+	}
+		
+})(jQuery);

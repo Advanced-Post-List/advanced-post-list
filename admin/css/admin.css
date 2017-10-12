@@ -16,6 +16,23 @@
 	display: none;
 }
 
+.apl-tooltip {
+	/*text-align: left;*/
+}
+
+.apl-help {
+	cursor: help;
+}
+
+.apl-help-icon {
+	color: #0073aa;
+}
+
+.apl-info-icon:active,
+.apl-info-icon:focus,
+.apl-info-icon:hover {
+    color: #0096dd
+}
 /*
  * TOP FILTER META BOX
  */
