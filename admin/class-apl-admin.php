@@ -1256,6 +1256,7 @@ class APL_Admin {
 		$tmp_apl_post_list->post_parent__in      = $apl_post_list->post_parent__in      ? json_decode( json_encode( $apl_post_list->post_parent__in ), true ) : $tmp_apl_post_list->post_parent__in;
 		$tmp_apl_post_list->post_parent_dynamic  = $apl_post_list->post_parent_dynamic  ? json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true ) : $tmp_apl_post_list->post_parent_dynamic;
 		$tmp_apl_post_list->posts_per_page       = $apl_post_list->posts_per_page       ?: $tmp_apl_post_list->posts_per_page;
+		$tmp_apl_post_list->offset               = $apl_post_list->offset               ?: $tmp_apl_post_list->offset;
 		$tmp_apl_post_list->order_by             = $apl_post_list->order_by             ?: $tmp_apl_post_list->order_by;
 		$tmp_apl_post_list->order                = $apl_post_list->order                ?: $tmp_apl_post_list->order;
 		$tmp_apl_post_list->post_status          = $apl_post_list->post_status          ? json_decode( json_encode( $apl_post_list->post_status ), true ) : $tmp_apl_post_list->post_status;
@@ -1385,6 +1386,14 @@ class APL_Admin {
 			$tmp_posts_per_page = intval( $p_posts_per_page );
 		}
 		$apl_post_list->posts_per_page = $tmp_posts_per_page;
+
+		// offset.
+		$tmp_offset = 5;
+		if ( isset( $_POST['apl_offset'] ) ) {
+			$p_offset = filter_input( INPUT_POST, 'apl_offset', FILTER_SANITIZE_NUMBER_INT );
+			$tmp_offset = intval( $p_offset );
+		}
+		$apl_post_list->offset = $tmp_offset;
 
 		// order_by.
 		// order.

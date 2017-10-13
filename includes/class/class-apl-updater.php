@@ -797,6 +797,8 @@ class APL_Updater {
 					// (int).
 					$new_post_list->posts_per_page       = $old_value->_listCount              ?: $new_post_list->posts_per_page;
 
+					// New Option $new_post_list->offset;.
+					
 					// (string)
 					$new_post_list->order_by             = $old_value->_listOrderBy            ?: $new_post_list->order_by;
 					// (string)
@@ -893,6 +895,7 @@ class APL_Updater {
 		$rtn_post_list->post_parent__in      = array();
 		$rtn_post_list->post_parent_dynamic  = array();
 		$rtn_post_list->posts_per_page       = 5;
+		$rtn_post_list->offset               = 0;
 		$rtn_post_list->order_by             = 'none';
 		$rtn_post_list->order                = 'DESC';
 		$rtn_post_list->post_status          = 'none';
@@ -1022,6 +1025,7 @@ class APL_Updater {
 		$new_post_list->post_parent_dynamic  = $tmp_post_parent_dynamic;
 
 		$new_post_list->posts_per_page       = isset( $apl_post_list->posts_per_page )       ? $apl_post_list->posts_per_page       : $new_post_list->posts_per_page;
+		$new_post_list->offset               = isset( $apl_post_list->offset )               ? $apl_post_list->offset               : $new_post_list->offset;
 		$new_post_list->order_by             = isset( $apl_post_list->order_by )             ? $apl_post_list->order_by             : $new_post_list->order_by;
 		$new_post_list->order                = isset( $apl_post_list->order )                ? $apl_post_list->order                : $new_post_list->order;
 		$new_post_list->post_status          = isset( $apl_post_list->post_status )          ? $apl_post_list->post_status          : $new_post_list->post_status;
@@ -1123,6 +1127,7 @@ class APL_Updater {
 			$tmp_apl_post_list->post_parent__in      = $apl_post_list->post_parent__in      ? json_decode( json_encode( $apl_post_list->post_parent__in ), true ) : $tmp_apl_post_list->post_parent__in;
 			$tmp_apl_post_list->post_parent_dynamic  = $apl_post_list->post_parent_dynamic  ? json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true ) : $tmp_apl_post_list->post_parent_dynamic;
 			$tmp_apl_post_list->posts_per_page       = $apl_post_list->posts_per_page       ?: $tmp_apl_post_list->posts_per_page;
+			$tmp_apl_post_list->offset               = $apl_post_list->offset               ?: $tmp_apl_post_list->offset;
 			$tmp_apl_post_list->order_by             = $apl_post_list->order_by             ?: $tmp_apl_post_list->order_by;
 			$tmp_apl_post_list->order                = $apl_post_list->order                ?: $tmp_apl_post_list->order;
 			$tmp_apl_post_list->post_status          = $apl_post_list->post_status          ? json_decode( json_encode( $apl_post_list->post_status ), true ) : $tmp_apl_post_list->post_status;

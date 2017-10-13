@@ -56,19 +56,19 @@ class APL_Query {
 	 * @since 0.3.0
 	 * @since 0.4.0 - Change to new object method structure.
 	 *
-	 * @param object $preset APL Preset Post List Object.
+	 * @param object $apl_post_list APL Preset Post List Object.
 	 * @return void
 	 */
 	public function __construct( $apl_post_list ) {
 		// STEP 1.
 		$apl_post_list         = $this->add_list_dynamics( $apl_post_list );
-		
+
 		// STEP 2.
 		$this->query_args_arr  = $this->set_query_args_arr( $apl_post_list );
-		
+
 		// STEP 3.
 		$this->query_args_arr  = $this->query_arg_consolidate( $this->query_args_arr );
-		
+
 		// STEP 4.
 		$this->query_args_arr  = $this->query_args_accommodate( $this->query_args_arr );
 	}
@@ -90,27 +90,27 @@ class APL_Query {
 		if ( ! $post_id ) {
 			return $apl_post_list;
 		}
-		
+
 		// EXCLUDE CURRENT POST
 		if ( $apl_post_list->pl_exclude_current ) {
 			$apl_post_list->post__not_in[] = $post_id;
 		}
-		
+
 		$current_post_type = get_post_type( $post_id );
-		$current_taxonomies = get_post_taxonomies( $post_id );;
-		
+		$current_taxonomies = get_post_taxonomies( $post_id );
+
 		$terms_args = array(
 			'orderby'  => 'term_id',
 			'order'    => 'ASC',
 			'fields'   => 'ids',
 		);
-		
-		foreach( $apl_post_list->post_type as $k1_index => $v1_pt_arr ) {
+
+		foreach ( $apl_post_list->post_type as $k1_index => $v1_pt_arr ) {
 			if ( is_array( $v1_pt_arr ) ) {
-				// POST TYPES
-				foreach( $v1_pt_arr as $k2_index => $v2_pt_slug ) {
+				// POST TYPES.
+				foreach ( $v1_pt_arr as $k2_index => $v2_pt_slug ) {
 					// Current Post Type.
-					// PAGE PARENT
+					// PAGE PARENT.
 					if ( $current_post_type === $v2_pt_slug ) {
 						if ( isset( $apl_post_list->post_parent_dynamic[ $v2_pt_slug ] ) ) {
 							if ( $apl_post_list->post_parent_dynamic[ $v2_pt_slug ] ) {
@@ -125,14 +125,14 @@ class APL_Query {
 						foreach ( $apl_post_list->tax_query[ $v2_pt_slug ] as $k3_tax_key => &$v3_tax_arr ) {
 
 							if ( 'relation' !== $k3_tax_key ) {
-								if ( in_array( $v3_tax_arr['taxonomy'], $current_taxonomies ) ) {
+								if ( in_array( $v3_tax_arr['taxonomy'], $current_taxonomies, true ) ) {
 									if ( $v3_tax_arr['apl_terms_dynamic'] ) {
-										// Add Terms
+										// Add Terms.
 										$current_taxonomy_terms = wp_get_post_terms(
 											$post_id,
 											$v3_tax_arr['taxonomy'],
 											array(
-												'fields' => 'ids'
+												'fields' => 'ids',
 											)
 										);
 										if ( is_wp_error( $current_taxonomy_terms ) ) {
@@ -144,28 +144,28 @@ class APL_Query {
 											//$apl_post_list->tax_query[ $v2_pt_slug ]['terms'][] = $current_term_id;
 											$v3_tax_arr['terms'][] = $current_term_id;
 										}
-										
-										$apl_post_list->tax_query[ $v2_pt_slug ][$k3_tax_key]['terms'] = array_values( array_unique( $v3_tax_arr['terms'] ) );
+
+										$apl_post_list->tax_query[ $v2_pt_slug ][ $k3_tax_key ]['terms'] = array_values( array_unique( $v3_tax_arr['terms'] ) );
 									}
 								}
 							}
 						}
 					}
-				}// End Foreach( POST TYPE)
+				}// End Foreach( POST TYPE).
 			} else { // ANY / ALL.
 				// TAXONOMIES.
 				if ( isset( $apl_post_list->tax_query[ $v1_pt_arr ] ) ) {
 					foreach ( $apl_post_list->tax_query[ $v1_pt_arr ] as $k2_tax_key => &$v2_tax_arr ) {
 
 						if ( 'relation' !== $k2_tax_key ) {
-							if ( in_array( $v2_tax_arr['taxonomy'], $current_taxonomies ) ) {
+							if ( in_array( $v2_tax_arr['taxonomy'], $current_taxonomies, true ) ) {
 								if ( $v2_tax_arr['apl_terms_dynamic'] ) {
-									// Add Terms
+									// Add Terms.
 									$current_taxonomy_terms = wp_get_post_terms(
 										$post_id,
 										$v2_tax_arr['taxonomy'],
 										array(
-											'fields' => 'ids'
+											'fields' => 'ids',
 										)
 									);
 									if ( is_wp_error( $current_taxonomy_terms ) ) {
@@ -184,9 +184,9 @@ class APL_Query {
 				}
 				// Break Post Type Loop ( Just in case ).
 				break;
-			}
-		}// foreach $apl_post_list->post_type.
-		
+			}// End if().
+		}// End foreach $apl_post_list->post_type.
+
 		return $apl_post_list;
 	}
 
@@ -207,25 +207,25 @@ class APL_Query {
 	 */
 	private function set_query_args_arr( $apl_post_list ) {
 		$rtn_query_args_arr = array();
-		
+
 		foreach ( $apl_post_list->post_type as $v1_pt_arr ) {
 			$tmp_query_args = array();
-			
+
 			// If there is an array of post types, then loop through and add.
 			if ( is_array( $v1_pt_arr ) ) {
 				foreach ( $v1_pt_arr as $v2_pt_slug ) {
 					$tmp_query_args['post_type'] = array( $v2_pt_slug );
-					
+
 					//$tmp_query_args['tax_query'] = $apl_post_list->tax_query[ $v2_pt_slug ];
 					$tmp_tax_query = $apl_post_list->tax_query[ $v2_pt_slug ];
-					
+
 					if ( ! empty( $tmp_tax_query ) ) {
 						$tmp_query_args['tax_query']['relation'] = $tmp_tax_query['relation'];
 						unset( $tmp_tax_query['relation'] );
 
 						foreach ( $tmp_tax_query as $tax_arr ) {
 							// Any / All.
-							if ( isset( $tax_arr['terms'][0] ) && 0 === $tax_arr['terms'][0] ){
+							if ( isset( $tax_arr['terms'][0] ) && 0 === $tax_arr['terms'][0] ) {
 								$terms_args = array(
 									'taxonomy' => $tax_arr['taxonomy'],
 									'fields' => 'ids',
@@ -239,12 +239,12 @@ class APL_Query {
 						}
 					}
 
-					// Page Parents
+					// Page Parents.
 					if ( isset( $apl_post_list->post_parent__in[ $v2_pt_slug ] ) ) {
 						$tmp_query_args['post_parent__in'] = $apl_post_list->post_parent__in[ $v2_pt_slug ];
 					}
 				}
-			} else { // ANY
+			} else { // ANY.
 				$tmp_query_args['post_type'] = 'any';
 				//$tmp_query_args['tax_query'] = $apl_post_list->tax_query['any'];
 
@@ -255,7 +255,7 @@ class APL_Query {
 
 					foreach ( $tmp_tax_query as $tax_arr ) {
 						// Any / All.
-						if ( 0 === $tax_arr['terms'][0] ){
+						if ( 0 === $tax_arr['terms'][0] ) {
 							$terms_args = array(
 								'taxonomy' => $tax_arr['taxonomy'],
 								'fields' => 'ids',
@@ -268,13 +268,13 @@ class APL_Query {
 						}
 					}
 				}
-
 				// Post Parents is empty in 'Any'
 				//$tmp_query_args['post_parent__in'] = $apl_post_list->post_parent__in['any'];
-			}
-			
-			// General Filter
+			}// End if().
+
+			// General Filter.
 			$tmp_query_args['posts_per_page'] = $apl_post_list->posts_per_page;
+			$tmp_query_args['offset'] = $apl_post_list->offset;
 			$tmp_query_args['orderby'] = $apl_post_list->order_by;
 			$tmp_query_args['order'] = $apl_post_list->order;
 			// Handle post_status in accommodate method.
@@ -291,10 +291,10 @@ class APL_Query {
 			}
 			$tmp_query_args['ignore_sticky_posts'] = $apl_post_list->ignore_sticky_posts;
 			$tmp_query_args['post__not_in'] = $apl_post_list->post__not_in;
-			
+
 			$rtn_query_args_arr[] = $tmp_query_args;
-		}
-		
+		}// End foreach();
+
 		return $rtn_query_args_arr;
 	}
 
@@ -315,8 +315,8 @@ class APL_Query {
 	 * @global type $varname Description.
 	 * @global type $varname Description.
 	 *
-	 * @param array $query_str_array Multi-dimensional query_str array.
-	 * @return $query_str_array Multi-dimensional query_str array.
+	 * @param array $arg_arr     Multi-dimensional  query_str array.
+	 * @return $query_str_array  Multi-dimensional  query_str array.
 	 */
 	private function query_arg_consolidate( $arg_arr ) {
 		$query_count = count( $arg_arr );
@@ -327,20 +327,20 @@ class APL_Query {
 					// IF there is a post_parents; which would conflict.
 					// IF both query_arg's tax_query match.
 					if ( isset( $arg_arr[ $i ]['post_parent'] ) && empty( $arg_arr[ $i ]['post_parent'] &&
-							$this->tax_query_match( $arg_arr[ $i ]['tax_query'], $arg_arr[ $j ]['tax_query'] ) ) ) {
-						
+					$this->tax_query_match( $arg_arr[ $i ]['tax_query'], $arg_arr[ $j ]['tax_query'] ) ) ) {
+
 						$arg_arr[ $i ]['post_type'][] = $arg_arr['post_type'][0];
-						
+
 						unset( $arg_arr[ $j ] );
 						$arg_arr = array_values( $arg_arr );
-						
-						// Set $i back 1 to do next $j properly
+
+						// Set $i back 1 to do next $j properly.
 						$i--;
 					}
 				}
 			}
 		}
-		
+
 		return $arg_arr;
 	}
 
@@ -378,7 +378,7 @@ class APL_Query {
 						$tax_match_found = true;
 						if ( $tax_query1[ $i ]['operator'] === $tax_query2[ $j ]['operator'] ) {
 							foreach ( $tax_query1[ $i ]['terms'] as $key => $value ) {
-								if ( ! in_array( $value, $tax_query2[ $j ]['terms'] ) ) {
+								if ( ! in_array( $value, $tax_query2[ $j ]['terms'], true ) ) {
 									return false;
 								}
 							}
@@ -405,7 +405,7 @@ class APL_Query {
 	 *
 	 * @since 0.4.0
 	 * @private
-	 * 
+	 *
 	 * @param type $query_args_arr
 	 * @return string
 	 */
@@ -413,9 +413,9 @@ class APL_Query {
 		$rtn_query_args_arr = array();
 		foreach ( $query_args_arr as $v1_query_args ) {
 			if ( is_array( $v1_query_args['post_status'] ) ) {
-				$public = array_search( 'public', $v1_query_args['post_status'] );
-				$private = array_search( 'private', $v1_query_args['post_status'] );
-				
+				$public   = array_search( 'public', $v1_query_args['post_status'], true );
+				$private  = array_search( 'private', $v1_query_args['post_status'], true );
+
 				if ( $public && $private ) {
 					unset( $v1_query_args['post_status'][ $public ] );
 					$rtn_query_args_arr[] = $v1_query_args;
@@ -436,7 +436,7 @@ class APL_Query {
 				$rtn_query_args_arr[] = $v1_query_args;
 			}
 		}
-		
+
 		return $rtn_query_args_arr;
 	}
 
@@ -493,7 +493,7 @@ class APL_Query {
 				$query_str['posts_per_page'] += count( $query_str['post__not_in'] );
 			}
 			unset( $query_str['post__not_in'] );
-			
+
 			if ( ! empty( $query_str['post__in'] ) ) {
 				$post_in_IDs = array_merge( $post_in_IDs, $query_str['post__in'] );
 			}
@@ -503,6 +503,7 @@ class APL_Query {
 			// If Posts Per Page is set to -1/Unlimited, then set nopaging to true.
 			if ( -1 === $query_str['posts_per_page'] ) {
 				$query_str['nopaging'] = true;
+				$query_str['offset']   = 0;
 			}
 			// STEP.
 			// Sets the query string to just query IDs.
@@ -517,7 +518,7 @@ class APL_Query {
 					$post_IDs[] = intval( $post_ID );
 				}
 			}
-				
+
 			$post_IDs = array_merge( $post_IDs, $post_in_IDs );
 
 			// STEP.
@@ -528,6 +529,7 @@ class APL_Query {
 		} else {
 			// STEP 2.
 			// Repeated === false
+
 			/*
 			 * This is the Initial and Final Query. This is used to collect IDs first
 			 * with 1 or more query_str (that couldn't be consolidated/merged), and
@@ -561,6 +563,7 @@ class APL_Query {
 				'post__in'             => $post_in_IDs,
 				'post_type'            => 'any',
 				'posts_per_page'       => $query_str['posts_per_page'],
+				'offset'               => $query_str['offset'],
 				'nopaging'             => ( -1 === $query_str['posts_per_page'] ) ? true : false,
 				'order'                => $query_str['order'],
 				'orderby'              => $query_str['orderby'],

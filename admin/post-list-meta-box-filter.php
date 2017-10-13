@@ -80,6 +80,12 @@ $apl_help_text = array(
 		'Uses the user permission via. user capabilities to determine what posts to display in the post list to the visitor/user.',
 		'advanced-post-list'
 	),
+	'offset' => esc_html__(
+		'Number of posts to skip/displace.' .
+		'<br />' .
+		'NOTE: Offset is ignored when List Amount is set to -1 (show all posts).',
+		'advanced-post-list'
+	),
 	'exclude_posts_by_id' => esc_html__(
 		'Add post/page IDs, seperated by a comma (,), will prevent those posts from being added to the post list.',
 		'advanced-post-list'
@@ -134,8 +140,8 @@ function apl_render_categories( $post_type, $taxonomy, $apl_post_list, $term_par
 			$ele_tag = $post_type . '-' . $taxonomy . '-any';
 
 			$term_checked = '';
-			if ( !empty( $apl_post_list->tax_query[ $post_type ] ) ) {
-				foreach( $apl_post_list->tax_query[ $post_type ] as $k1_pl_index => $v1_pl_tax_query ) {
+			if ( ! empty( $apl_post_list->tax_query[ $post_type ] ) ) {
+				foreach ( $apl_post_list->tax_query[ $post_type ] as $k1_pl_index => $v1_pl_tax_query ) {
 					if ( 'relation' !== $k1_pl_index ) {
 						if ( $taxonomy === $v1_pl_tax_query['taxonomy'] && empty( $v1_pl_tax_query['terms'] ) ) {
 							$term_checked = 'checked="checked"';
@@ -147,7 +153,7 @@ function apl_render_categories( $post_type, $taxonomy, $apl_post_list, $term_par
 			?>
 			<li>
 				<label for="term-<?php echo esc_attr( $ele_tag ); ?>">
-					<input type="checkbox" id="term-<?php echo esc_attr( $ele_tag ); ?>" name="apl_term-<?php echo esc_attr( $ele_tag ); ?>" <?php echo $term_checked; ?> >
+					<input type="checkbox" id="term-<?php echo esc_attr( $ele_tag ); ?>" name="apl_term-<?php echo esc_attr( $ele_tag ); ?>" <?php echo esc_attr( $term_checked ); ?> >
 					<?php esc_html_e( 'Any / All Terms', 'advanced-post-list' ); ?>
 				</label>
 			</li>
@@ -161,7 +167,7 @@ function apl_render_categories( $post_type, $taxonomy, $apl_post_list, $term_par
 				if ( isset( $apl_post_list->tax_query[ $post_type ] ) ) {
 					foreach ( $apl_post_list->tax_query[ $post_type ] as $k2_pl_index => $v2_pl_tax_query ) {
 						if ( 'relation' !== $k2_pl_index ) {
-							if ( $taxonomy === $v2_pl_tax_query['taxonomy'] && in_array( $v_term_obj->term_id, $v2_pl_tax_query['terms'] ) ) {
+							if ( $taxonomy === $v2_pl_tax_query['taxonomy'] && in_array( $v_term_obj->term_id, $v2_pl_tax_query['terms'], true ) ) {
 								$term_checked = 'checked="checked"';
 							}
 						}
@@ -170,7 +176,7 @@ function apl_render_categories( $post_type, $taxonomy, $apl_post_list, $term_par
 				?>
 				<li>
 					<label for="term-<?php echo esc_attr( $ele_tag ); ?>">
-						<input type="checkbox" id="term-<?php echo esc_attr( $ele_tag ); ?>" name="apl_term-<?php echo esc_attr( $ele_tag ); ?>" <?php echo $term_checked; ?> >
+						<input type="checkbox" id="term-<?php echo esc_attr( $ele_tag ); ?>" name="apl_term-<?php echo esc_attr( $ele_tag ); ?>" <?php echo esc_attr( $term_checked ); ?> >
 						<?php echo esc_html( $v_term_obj->name ); ?>
 					</label>
 				</li>
@@ -219,7 +225,7 @@ function apl_render_page_parents( $post_type, $apl_post_list, $page_parent = 0, 
 	);
 	?>
 	<?php if ( 0 === $page_parent ) : ?>
-		<input type="checkbox" id="apl_parent_page_dynamic-<?php echo esc_attr( $post_type ); ?>" class="apl_parent_page_dynamic" name="apl_page_parent_dynamic-<?php echo esc_attr( $post_type ); ?>" <?php echo $page_dynamic_checked; ?> >
+		<input type="checkbox" id="apl_parent_page_dynamic-<?php echo esc_attr( $post_type ); ?>" class="apl_parent_page_dynamic" name="apl_page_parent_dynamic-<?php echo esc_attr( $post_type ); ?>" <?php echo esc_attr( $page_dynamic_checked ); ?> >
 		<label for="apl_parent_page_dynamic-<?php echo esc_attr( $post_type ); ?>"><b><?php esc_html_e( 'Dynamic Parent Page', 'advanced-post-list' ); ?></b></label>
 		<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text_parent; ?>"></span>
 		<br />
@@ -238,17 +244,17 @@ function apl_render_page_parents( $post_type, $apl_post_list, $page_parent = 0, 
 		<?php
 		$query_pages->the_post();
 		$ele_tag = $post_type . '-' . $query_pages->post->ID;
-		
+
 		$page_checked = '';
-		if ( isset( $apl_post_list->post_parent__in[ $post_type ]  ) ) {
-			if ( in_array( $query_pages->post->ID, $apl_post_list->post_parent__in[ $post_type ] ) ) {
+		if ( isset( $apl_post_list->post_parent__in[ $post_type ] ) ) {
+			if ( in_array( $query_pages->post->ID, $apl_post_list->post_parent__in[ $post_type ], true ) ) {
 				$page_checked = 'checked="checked"';
 			}
 		}
 		?>
 				<tr class="alternate">
 					<td class="apl-chk-td-post_type-parent">
-						<input type="checkbox" class="apl-page-post_type-pages" id="apl-page-<?php echo esc_attr( $ele_tag ); ?>" name="apl_page_parent-<?php echo esc_attr( $ele_tag ); ?>" <?php echo $page_checked; ?> />
+						<input type="checkbox" class="apl-page-post_type-pages" id="apl-page-<?php echo esc_attr( $ele_tag ); ?>" name="apl_page_parent-<?php echo esc_attr( $ele_tag ); ?>" <?php echo esc_attr( $page_checked ); ?> />
 					</td>
 					<td>
 						<?php echo esc_html( $query_pages->post->ID ); ?>
@@ -285,10 +291,10 @@ function apl_render_page_parents( $post_type, $apl_post_list, $page_parent = 0, 
  */
 function apl_checked_post_type( $apl_post_types, $post_type ) {
 	$checked = '';
-	if ( ! empty( $apl_post_types ) ){
+	if ( ! empty( $apl_post_types ) ) {
 		foreach ( $apl_post_types as $post_type_arr ) {
 			if ( 'any' !== $post_type_arr ) {
-				if ( in_array( $post_type, $post_type_arr ) ) {
+				if ( in_array( $post_type, $post_type_arr, true ) ) {
 					$checked = 'checked="checked"';
 				}
 			} elseif ( $post_type === $post_type_arr ) {
@@ -296,12 +302,12 @@ function apl_checked_post_type( $apl_post_types, $post_type ) {
 			}
 		}
 	}
-	
+
 	return $checked;
 }
 
 /**
- * Diplay ( Hide or Show ) post type containers. 
+ * Diplay ( Hide or Show ) post type containers.
  *
  * @param type $apl_post_types
  * @param type $post_type
@@ -309,10 +315,10 @@ function apl_checked_post_type( $apl_post_types, $post_type ) {
  */
 function apl_display_post_type( $apl_post_types, $post_type ) {
 	$hidden = 'display: none;';
-	if ( ! empty( $apl_post_types ) ){
+	if ( ! empty( $apl_post_types ) ) {
 		foreach ( $apl_post_types as $post_type_arr ) {
 			if ( 'any' !== $post_type_arr ) {
-				if ( in_array( $post_type, $post_type_arr ) ) {
+				if ( in_array( $post_type, $post_type_arr, true ) ) {
 					$hidden = 'display: block;';
 				}
 			} elseif ( $post_type === $post_type_arr ) {
@@ -320,7 +326,7 @@ function apl_display_post_type( $apl_post_types, $post_type ) {
 			}
 		}
 	}
-	
+
 	return $hidden;
 }
 
@@ -338,11 +344,11 @@ function apl_selected_post_status( $post_status, $apl_post_status ) {
 			$rtn_selected = 'selected="selected"';
 		}
 	} elseif ( is_array( $apl_post_status ) ) {
-		if ( in_array( $post_status, $apl_post_status ) ) {
+		if ( in_array( $post_status, $apl_post_status, true ) ) {
 			$rtn_selected = 'selected="selected"';
 		}
 	}
-	
+
 	return $rtn_selected;
 }
 
@@ -377,14 +383,14 @@ foreach ( $apl_tax_terms as $key => $value ) {
 		<div class="apl_post_types">
 			<?php $first_pt = false; ?>
 			<?php foreach ( $apl_post_tax as $k_pt_slug => $v_arr ) : ?>
-				<?php 
+				<?php
 				$checked = apl_checked_post_type( $apl_post_list->post_type, $k_pt_slug );
 				if ( $first_pt && empty( $apl_post_list->post_type ) ) {
 					$checked = 'checked="checked"';
 				}
 				$first_pt = false;
 				?>
-				<input type="checkbox" class="apl-toggle-post_type" id="apl-toggle-<?php echo esc_attr( $k_pt_slug ); ?>" name="apl_toggle-<?php echo esc_attr( $k_pt_slug ); ?>"  <?php echo $checked; ?>>
+				<input type="checkbox" class="apl-toggle-post_type" id="apl-toggle-<?php echo esc_attr( $k_pt_slug ); ?>" name="apl_toggle-<?php echo esc_attr( $k_pt_slug ); ?>"  <?php echo esc_attr( $checked ); ?>>
 				<label for="apl-toggle-<?php echo esc_attr( $k_pt_slug ); ?>"><?php echo esc_html( $v_arr['name'] ); ?></label>
 				<br>
 			<?php endforeach; ?>
@@ -401,7 +407,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 			}
 			$first_pt = false;
 			?>
-			<div id="apl-filter-<?php echo esc_attr( $k_pt_slug ); ?>" class="apl-filter-post-type" style="<?php echo $display; ?>">
+			<div id="apl-filter-<?php echo esc_attr( $k_pt_slug ); ?>" class="apl-filter-post-type" style="<?php echo esc_attr( $display ); ?>">
 				<h4><span><?php echo esc_html( $v_pt_arr['name'] ); ?></span></h4>
 				<div id="apl-tabs-<?php echo esc_attr( $k_pt_slug ); ?>-type" class="apl-tabs-post_type-type">
 					<ul>
@@ -436,7 +442,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 									}
 									$first_tax = true;
 									?>
-									<option id="apl_chk_req_taxonomies-<?php echo esc_attr( $k_pt_slug ); ?>" class="apl-chk-req-taxonomies apl-tooltip" value="require" <?php echo $tax_req_selected; ?>><b><?php esc_html_e( 'Req. Taxonomies', 'advanced-post-list' ); ?></b></option>
+									<option id="apl_chk_req_taxonomies-<?php echo esc_attr( $k_pt_slug ); ?>" class="apl-chk-req-taxonomies apl-tooltip" value="require" <?php echo esc_attr( $tax_req_selected ); ?>><b><?php esc_html_e( 'Req. Taxonomies', 'advanced-post-list' ); ?></b></option>
 									<hr />
 									<?php foreach ( $v_pt_arr['tax_arr'] as $index => $tax_slug ) : ?>
 										<?php
@@ -445,7 +451,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 										if ( isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 											foreach ( $apl_post_list->tax_query[ $k_pt_slug ] as $k3_pl_tax_query => $v3_pl_tax_query ) {
 												if ( 'relation' !== $k3_pl_tax_query ) {
-													if ( $tax_slug === $v3_pl_tax_query[ 'taxonomy' ] ) {
+													if ( $tax_slug === $v3_pl_tax_query['taxonomy'] ) {
 														$tax_selected = 'selected="selected"';
 													}
 												}
@@ -457,7 +463,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 										}
 										$first_tax = false;
 										?>
-										<option value="<?php echo esc_attr( $tax_slug ); ?>" <?php echo $tax_selected; ?>><?php echo esc_html( $apl_taxonomy_objs[ $tax_slug ]->labels->singular_name ); ?></option>
+										<option value="<?php echo esc_attr( $tax_slug ); ?>" <?php echo esc_attr( $tax_selected ); ?>><?php echo esc_html( $apl_taxonomy_objs[ $tax_slug ]->labels->singular_name ); ?></option>
 									<?php endforeach; ?>
 								</select>
 								<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['taxonomy_multiselect']; ?>"></span>
@@ -472,7 +478,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 											if ( isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 												foreach ( $apl_post_list->tax_query[ $k_pt_slug ] as $k3_pl_tax_query => $v3_pl_tax_query ) {
 													if ( 'relation' !== $k3_pl_tax_query ) {
-														if ( $tax_slug === $v3_pl_tax_query[ 'taxonomy' ] ) {
+														if ( $tax_slug === $v3_pl_tax_query['taxonomy'] ) {
 															$tax_display = 'display: block;';
 														}
 													}
@@ -483,7 +489,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 											}
 											$first_tax = false;
 											?>
-											<li id="apl-t-li-<?php echo esc_attr( $k_pt_slug ); ?>-<?php echo esc_attr( $tax_slug ); ?>" style="<?php echo $tax_display; ?>"><a href="#apl-t-div-<?php echo esc_attr( $k_pt_slug ); ?>-<?php echo esc_attr( $tax_slug ); ?>"><?php echo esc_html( $apl_taxonomy_objs[ $tax_slug ]->labels->singular_name ); ?></a></li>
+											<li id="apl-t-li-<?php echo esc_attr( $k_pt_slug ); ?>-<?php echo esc_attr( $tax_slug ); ?>" style="<?php echo esc_attr( $tax_display ); ?>"><a href="#apl-t-div-<?php echo esc_attr( $k_pt_slug ); ?>-<?php echo esc_attr( $tax_slug ); ?>"><?php echo esc_html( $apl_taxonomy_objs[ $tax_slug ]->labels->singular_name ); ?></a></li>
 										<?php endforeach; ?>
 									</ul>
 									<?php $first_tax = true; ?>
@@ -495,7 +501,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 										if ( isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 											foreach ( $apl_post_list->tax_query[ $k_pt_slug ] as $k3_pl_tax_query => $v3_pl_tax_query ) {
 												if ( 'relation' !== $k3_pl_tax_query ) {
-													if ( $tax_slug === $v3_pl_tax_query[ 'taxonomy' ] ) {
+													if ( $tax_slug === $v3_pl_tax_query['taxonomy'] ) {
 														$tax_display = 'display: block;';
 														// Require Terms Checkbox.
 														if ( 'AND' === $v3_pl_tax_query['operator'] ) {
@@ -514,20 +520,20 @@ foreach ( $apl_tax_terms as $key => $value ) {
 											}
 										}
 										?>
-										<div id="apl-t-div-<?php echo esc_attr( $k_pt_slug ); ?>-<?php echo esc_attr( $tax_slug ); ?>" class="apl-t-terms" style="<?php echo $tax_display; ?>">
+										<div id="apl-t-div-<?php echo esc_attr( $k_pt_slug ); ?>-<?php echo esc_attr( $tax_slug ); ?>" class="apl-t-terms" style="<?php echo esc_attr( $tax_display ); ?>">
 											<!-- WP_Terms -->
 											<?php $ele_tag = $k_pt_slug . '-' . $tax_slug?>
 											<ul>
 												<li>
 													<label for="apl_chk_req_terms-<?php echo esc_attr( $ele_tag ); ?>">
-														<input type="checkbox" id="apl_chk_terms_req-<?php echo esc_attr( $ele_tag ); ?>" name="apl_terms_req-<?php echo esc_attr( $ele_tag ); ?>" <?php echo $tax_chk_required; ?> >
+														<input type="checkbox" id="apl_chk_terms_req-<?php echo esc_attr( $ele_tag ); ?>" name="apl_terms_req-<?php echo esc_attr( $ele_tag ); ?>" <?php echo esc_attr( $tax_chk_required ); ?> >
 														<?php esc_html_e( 'Require Terms', 'advanced-post-list' ); ?>
 													</label>
 													<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['require_terms']; ?>"></span>
 												</li>
 												<li>
 													<label for="apl_chk_dynamic-<?php echo esc_attr( $ele_tag ); ?>">
-														<input type="checkbox" id="apl_chk_terms_dynamic-<?php echo esc_attr( $ele_tag ); ?>" name="apl_terms_dynamic-<?php echo esc_attr( $ele_tag ); ?>" <?php echo $tax_chk_dynamic; ?> >
+														<input type="checkbox" id="apl_chk_terms_dynamic-<?php echo esc_attr( $ele_tag ); ?>" name="apl_terms_dynamic-<?php echo esc_attr( $ele_tag ); ?>" <?php echo esc_attr( $tax_chk_dynamic ); ?> >
 														<?php esc_html_e( 'Dynamic Terms', 'advanced-post-list' ); ?>
 													</label>
 													<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['dynamic_terms']; ?>"></span>
@@ -560,27 +566,50 @@ foreach ( $apl_tax_terms as $key => $value ) {
 <div class="apl-filter-box-2">
 	<!-- LEFT SIDE -->
 	<div class="apl-filter-box-2-left">
-		<div class="apl-filter-field-left-row" style="height: 84px;">
+		<!-- POSTS PER PAGE -->
+		<div class="apl-filter-field-left-row apl-list-amount-row">
 			<div>
 				<label for="apl_spinner_posts_per_page"><?php esc_html_e( 'List Amount:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['list_amount']; ?>"></span>
+				
 			</div>
 			<div>
-				<input id="apl_spinner_posts_per_page" class="apl-spinner-posts_per_page small-text" name="apl_posts_per_page" value="<?php echo intval( $apl_post_list->posts_per_page ); ?>" />
-				<div class="apl-posts_per_page-alt">
+				<div class="apl-spinner-posts_per_page-wrap">
+					<input id="apl_spinner_posts_per_page" class="apl-spinner-posts_per_page small-text" name="apl_posts_per_page" value="<?php echo intval( $apl_post_list->posts_per_page ); ?>" />
+				</div>
+				<div class="apl-slider-posts_per_page-wrap">
 					<div id="apl_slider_posts_per_page" class="apl-slider-posts_per_page">
 						<div id="apl_slider_handle_posts_per_page" class="apl-slider-handle-posts_per_page ui-slider-handle"></div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<!-- OFFSET -->
+		<div class="apl-filter-field-left-row apl-list-offset-row">
+			<div>
+				<label for="apl_spinner_offset"><?php esc_html_e( 'Offset:', 'advanced-post-list' ); ?></label>
+				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['offset']; ?>"></span>
+			</div>
+			<div>
+				<div class="apl-spinner-offset-wrap">
+					<input id="apl_spinner_offset" class="apl-spinner-offset small-text" name="apl_offset" value="<?php echo intval( $apl_post_list->offset ); ?>" />
+
+				</div>
+				<div class="apl-slider-offset-wrap">
+					<div id="apl_slider_offset" class="apl-slider-offset">
+						<div id="apl_slider_handle_offset" class="apl-slider-handle-offset ui-slider-handle"></div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<!-- ORDER BY -->
 		<div class="apl-filter-field-left-row apl-order-by">
 			<div>
 				<label for="apl_selectmenu_order_by"><?php esc_html_e( 'Order By:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['order_by']; ?>"></span>
 			</div>
 			<div>
-				<!-- INPUT -->
 				<select id="apl_selectmenu_order_by" class="apl-selectmenu-order-by" name="apl_order_by">
 					<option <?php echo ( 'none' === $apl_post_list->order_by ) ? 'selected="selected"' : ''; ?> value="none"><?php esc_html_e( '- None -', 'advanced-post-list' ); ?></option>
 					<option <?php echo ( 'ID' === $apl_post_list->order_by ) ? 'selected="selected"' : ''; ?> value="ID"><?php esc_html_e( 'ID', 'advanced-post-list' ); ?></option>
@@ -600,6 +629,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 				</select>
 			</div>
 		</div>
+		<!-- AUTHORS -->
 		<div class="apl-filter-field-left-row apl-authors">
 			<div>
 				<label for="apl_selectmenu_author__bool"><?php esc_html_e( 'Authors:', 'advanced-post-list' ); ?></label>
@@ -618,16 +648,16 @@ foreach ( $apl_tax_terms as $key => $value ) {
 						<?php foreach ( $wp_roles->role_names as $k_role_slug => $v_role_name ) : ?>
 							<?php
 							$args = array(
-								'orderby' => 'display_name',
-								'order' => 'DESC',
-								'role' => $k_role_slug,
+								'orderby'  => 'display_name',
+								'order'    => 'DESC',
+								'role'     => $k_role_slug,
 							);
 							$apl_authors = get_users( $args );
 							?>
 							<?php if ( $apl_authors ) : ?>
 								<optgroup label="<?php echo esc_attr( $v_role_name ); ?>">
 									<?php foreach ( $apl_authors as $k2_index => $v2_user ) : ?>
-										<option <?php echo ( in_array( $v2_user->data->ID , $apl_post_list->author__in ) ) ? 'selected="selected"' : ''; ?> value="<?php echo esc_attr( $v2_user->data->ID ); ?>" ><?php echo esc_html( $v2_user->data->display_name ); ?></option>
+										<option <?php echo ( in_array( $v2_user->data->ID , $apl_post_list->author__in, true ) ) ? 'selected="selected"' : ''; ?> value="<?php echo esc_attr( $v2_user->data->ID ); ?>" ><?php echo esc_html( $v2_user->data->display_name ); ?></option>
 									<?php endforeach; ?>
 								</optgroup>
 							<?php endif; ?>
@@ -636,15 +666,14 @@ foreach ( $apl_tax_terms as $key => $value ) {
 				</div>
 			</div>
 		</div>
+		<!-- AUTHORS -->
 		<div class="apl-filter-field-left-row">
 			<div>
 				<label for="apl_multiselect_post_status_1"><?php esc_html_e( 'Post Status:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['post_status']; ?>"></span>
 			</div>
 			<div>
-				<!-- INPUT -->
 				<select id="apl_multiselect_post_status_1" class="apl-multiselect-post-status-1" name="apl_post_status_1[]" multiple="multiple" style="width:96px;">
-					<!-- ADDED ANY -->
 					<option <?php echo apl_selected_post_status( 'none', $apl_post_list->post_status ); ?> value="none"><?php esc_html_e( '- None -', 'advanced-post-list' ); ?></option>
 					<option <?php echo apl_selected_post_status( 'any', $apl_post_list->post_status ); ?> value="any"><?php esc_html_e( 'Any', 'advanced-post-list' ); ?></option>
 					<option <?php echo apl_selected_post_status( 'public', $apl_post_list->post_status ); ?> value="public"><?php esc_html_e( 'Public', 'advanced-post-list' ); ?></option>
@@ -667,7 +696,6 @@ foreach ( $apl_tax_terms as $key => $value ) {
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['user_perms']; ?>"></span>
 			</div>
 			<div>
-				<!-- INPUT -->
 				<select id="apl_selectmenu_perm" class="apl-selectmenu-perm" name="apl_perm">
 					<option <?php echo ( 'none' === $apl_post_list->perm ) ? 'selected="selected"' : ''; ?> selected="selected" value="none"><?php esc_html_e( '- None -', 'advanced-post-list' ); ?></option>
 					<option <?php echo ( 'readable' === $apl_post_list->perm ) ? 'selected="selected"' : ''; ?> value="readable"><?php esc_html_e( 'Readable', 'advanced-post-list' ); ?></option>
@@ -678,6 +706,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 	</div>
 	<!-- RIGHT SIDE -->
 	<div class="apl-filter-box-2-right">
+		<!-- EXCLUDE POST BY ID -->
 		<div class="apl-filter-field-row-full">
 			<label for="apl_exclude_posts"><?php esc_html_e( 'Exclude Post by ID:', 'advanced-post-list' ); ?></label>
 			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['exclude_post_by_id']; ?>"></span>
@@ -685,21 +714,24 @@ foreach ( $apl_tax_terms as $key => $value ) {
 		<div class="apl-filter-field-row-full">
 			<input type="text" id="apl_exclude_posts" class="apl-text-exclude-posts" name="apl_post__not_in" value="<?php echo implode( ',', $apl_post_list->post__not_in ); ?>" />
 		</div>
+		<!-- STICKY POSTS -->
 		<div class="apl-filter-field-right-row">
 			<label for="apl_sticky_posts"><?php esc_html_e( 'Enable Sticky Posts:', 'advanced-post-list' ); ?></label>
 			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['enable_sticky_posts']; ?>"></span>
 			<input type="checkbox" id="apl_sticky_posts" class="apl-chkbox-sticky-posts apl-chkbox-input" name="apl_sticky_posts" <?php echo ( false === $apl_post_list->ignore_sticky_posts ) ? 'checked="checked"' : ''; ?> />
 		</div>
+		<!-- EXCLUDE CURRENT POST -->
 		<div class="apl-filter-field-right-row">
 			<label for="apl_exclude_current"><?php esc_html_e( 'Exclude Current Post:', 'advanced-post-list' ); ?></label>
 			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['exclude_current_post']; ?>"></span>
 			<input type="checkbox" id="apl_exclude_current" class="apl-chkbox-exclude-current apl-chkbox-input" name="apl_pl_exclude_current" <?php echo ( $apl_post_list->pl_exclude_current ) ? 'checked="checked"' : ''; ?> />
 		</div>
+		<!-- EXCLUDE DUPLICATE POSTS -->
 		<div class="apl-filter-field-right-row">
 			<label for="apl_exclude_dupe" ><?php esc_html_e( 'Exclude Duplicate Posts:', 'advanced-post-list' ); ?></label>
 			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['exclude_duplicate_posts']; ?>"></span>
 			<?php $p_pl_exclude_dupes = ( true === $apl_post_list->pl_exclude_dupes ) ? 'checked="checked"' : ''; ?>
-			<input type="checkbox" id="apl_exclude_dupes" class="apl-chkbox-exclude-dupes apl-chkbox-input" name="apl_pl_exclude_dupes" <?php echo $p_pl_exclude_dupes = ( true === $apl_post_list->pl_exclude_dupes ) ? 'checked="checked"' : ''; ?> />
+			<input type="checkbox" id="apl_exclude_dupes" class="apl-chkbox-exclude-dupes apl-chkbox-input" name="apl_pl_exclude_dupes" <?php echo ( true === $apl_post_list->pl_exclude_dupes ) ? 'checked="checked"' : ''; ?> />
 		</div>
 	</div>
 </div>

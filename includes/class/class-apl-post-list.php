@@ -21,7 +21,7 @@
  * @since 0.4.0 - Changed class name.
  */
 class APL_Post_List {
-	
+
 	/**
 	 * Post Data ID.
 	 *
@@ -61,7 +61,7 @@ class APL_Post_List {
 	 * @access public
 	 * @var array $post_type {
 	 *     @type string X => 'any'
-	 *     --- OR --- 
+	 *     --- OR ---
 	 *     @type array  X => array( 'post_type_1' ),
 	 *     // Consolidate in WP_Query with Tax_Query & Dynamic features.
 	 *     // Use first post type for Tax_Query
@@ -103,9 +103,9 @@ class APL_Post_List {
 	 *         ),
 	 *     )
 	 *     --- OR ---
-	 *     $post_type => {}, //ANY 
+	 *     $post_type => {}, //ANY
 	 *     --- OR ---
-	 *     'any' => array(), //ANY 
+	 *     'any' => array(), //ANY
 	 * }
 	 */
 	public $tax_query = array();
@@ -132,9 +132,9 @@ class APL_Post_List {
 	 * @var array $post_parent_dynamic {
 	 *     Desc
 	 *
-	 *     @type boolean $post_type => (bool) Active Post Types with dynamic 
+	 *     @type boolean $post_type => (bool) Active Post Types with dynamic
 	 *                                        Page Parent settings.
-	 * } 
+	 * }
 	 */
 	public $post_parent_dynamic = array();
 
@@ -146,6 +146,14 @@ class APL_Post_List {
 	 * @var int
 	 */
 	public $posts_per_page = 5;
+
+	/**
+	 * Offset.
+	 *
+	 * @since 0.4.0
+	 * @var int
+	 */
+	public $offset = 0;
 
 	/**
 	 * Order Filter By.
@@ -240,7 +248,7 @@ class APL_Post_List {
 	 * @var boolean
 	 */
 	public $pl_exclude_dupes = false;
- 
+
 	/**
 	 * Design for APL Preset Loop.
 	 *
@@ -322,7 +330,7 @@ class APL_Post_List {
 		}
 		$post_list = $pl_query->post;
 
-		if ( $post_list->post_name === $args['name'] && !empty( $args['name'] ) ) {
+		if ( $post_list->post_name === $args['name'] && ! empty( $args['name'] ) ) {
 			$this->id      = absint( $post_list->ID );
 			$this->title   = esc_html( $post_list->post_title );
 			$this->slug    = sanitize_title_with_dashes( $post_list->post_name );
@@ -333,6 +341,7 @@ class APL_Post_List {
 			$this->post_parent_dynamic  = get_post_meta( $this->id, 'apl_post_parent_dynamic', true )  ?: array();
 
 			$this->posts_per_page       = get_post_meta( $this->id, 'apl_posts_per_page', true )       ?: 5;
+			$this->offset               = get_post_meta( $this->id, 'apl_offset', true )               ?: 0;
 			$this->order_by             = get_post_meta( $this->id, 'apl_order_by', true )             ?: 'none';
 			$this->order                = get_post_meta( $this->id, 'apl_order', true )                ?: 'DESC';
 			$this->author__bool         = get_post_meta( $this->id, 'apl_author__bool', true )         ?: 'none';
@@ -356,7 +365,7 @@ class APL_Post_List {
 			return true;
 		} else {
 			return false;
-		}
+		}// End if().
 	}
 
 	/**
@@ -440,7 +449,7 @@ class APL_Post_List {
 	private function update_post_list_post( $args = array() ) {
 		$defaults = $this->default_postarr();
 		$args = wp_parse_args( $args, $defaults );
-		
+
 		global $wp_rewrite;
 		$wp_rewrite = new WP_Rewrite();
 
@@ -506,22 +515,23 @@ class APL_Post_List {
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/wp_insert_post
 	 * @global global $_POST Description.
 	 *
-	 * @param int     $post_id Post ID.
-	 * @param WP_Post $post    Post object.
-	 * @param boolean $update  Whether this is an existing post being updated or not.
+	 * @param int     $post_id   Post ID.
+	 * @param WP_Post $post_obj  Post object.
+	 * @param boolean $update    Whether this is an existing post being updated or not.
 	 * @return void
 	 */
 	public function hook_action_save_post_apl_post_list( $post_id, $post_obj, $update ) {
 		$this->id     = $post_id;
 		$this->title  = $post_obj->post_title;
 		$this->slug   = $post_obj->post_name;
-		
+
 		$old_post_type            = get_post_meta( $this->id, 'apl_post_type', true );
 		$old_tax_query            = get_post_meta( $this->id, 'apl_tax_query', true );
 		$old_post_parent__in      = get_post_meta( $this->id, 'apl_post_parent__in', true );
 		$old_post_parent_dynamic  = get_post_meta( $this->id, 'apl_post_parent_dynamic', true );
 
 		$old_posts_per_page       = get_post_meta( $this->id, 'apl_posts_per_page', true );
+		$old_offset               = get_post_meta( $this->id, 'apl_offset', true );
 		$old_order_by             = get_post_meta( $this->id, 'apl_order_by', true );
 		$old_order                = get_post_meta( $this->id, 'apl_order', true );
 		$old_author__bool         = get_post_meta( $this->id, 'apl_author__bool', true );
@@ -529,16 +539,16 @@ class APL_Post_List {
 		$old_post_status          = get_post_meta( $this->id, 'apl_post_status', true );
 		$old_perm                 = get_post_meta( $this->id, 'apl_perm', true );
 		$old_post__not_in         = get_post_meta( $this->id, 'apl_post__not_in', true );
-		
+
 		$old_ignore_sticky_posts  = get_post_meta( $this->id, 'apl_ignore_sticky_posts', true );
 		$old_ignore_sticky_posts  = ( false !== $old_ignore_sticky_posts )  ? (bool) $old_ignore_sticky_posts : null;
-		
+
 		$old_pl_exclude_current   = get_post_meta( $this->id, 'apl_pl_exclude_current', true );
 		$old_pl_exclude_current   = ( false !== $old_pl_exclude_current )   ? (bool) $old_pl_exclude_current  : null;
-		
+
 		$old_pl_exclude_dupes     = get_post_meta( $this->id, 'apl_pl_exclude_dupes', true );
 		$old_pl_exclude_dupes     = ( false !== $old_pl_exclude_dupes )     ? (bool) $old_pl_exclude_dupes    : null;
-		
+
 		$old_pl_apl_design        = get_post_meta( $this->id, 'apl_pl_apl_design', true );
 
 		// Compare and update if modified.
@@ -556,6 +566,9 @@ class APL_Post_List {
 		}
 		if ( $this->posts_per_page !== $old_posts_per_page ) {
 			update_post_meta( $this->id, 'apl_posts_per_page', $this->posts_per_page );
+		}
+		if ( $this->offset !== $old_offset ) {
+			update_post_meta( $this->id, 'apl_offset', $this->offset );
 		}
 		if ( $this->order_by !== $old_order_by ) {
 			update_post_meta( $this->id, 'apl_order_by', $this->order_by );
@@ -587,10 +600,10 @@ class APL_Post_List {
 		if ( $this->pl_exclude_dupes !== $old_pl_exclude_dupes ) {
 			update_post_meta( $this->id, 'apl_pl_exclude_dupes', $this->pl_exclude_dupes );
 		}
-		if ( $this->pl_apl_design  !== $old_pl_apl_design  ) {
-			update_post_meta( $this->id, 'apl_pl_apl_design', $this->pl_apl_design  );
+		if ( $this->pl_apl_design !== $old_pl_apl_design ) {
+			update_post_meta( $this->id, 'apl_pl_apl_design', $this->pl_apl_design );
 		}
-		
+
 		remove_action( 'save_post_apl_post_list', array( &$this, 'hook_action_save_post_apl_post_list' ) );
 	}
 }

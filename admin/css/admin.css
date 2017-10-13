@@ -4,7 +4,7 @@
  * @package WordPress
  * @subpackage APL_Admin
  * @subpackage jQuery UI
- * @subpackage jQuery UI Multiselect 
+ * @subpackage jQuery UI Multiselect
  * @since 0.4.0
  */
 
@@ -31,10 +31,10 @@
 .apl-info-icon:active,
 .apl-info-icon:focus,
 .apl-info-icon:hover {
-    color: #0096dd
+	color: #0096dd
 }
 /*
- * TOP FILTER META BOX
+ * FILTER META BOX (TOP).
  */
 
 .apl-filter-box-1 {
@@ -85,7 +85,7 @@
 .apl-t-terms label {}
 
 /*
- * BOTTOM FILTER META BOX
+ * FILTER META BOX (BOTTOM).
  */
 
 .apl-filter-box-2 {
@@ -108,6 +108,10 @@
 	min-height: 42px;
 }
 
+.apl-filter-field-left-row > .apl-list-amount-row {
+	height: 84px;
+}
+
 .apl-filter-field-right-row {
 	min-height: 42px;
 }
@@ -126,12 +130,41 @@
 	width: 65%;
 }
 
-.apl-posts_per_page-alt {
-	height: 27px;
-	padding-top: 15px;
+.apl-spinner-posts_per_page-wrap {
+	float: left;
+	width: 25%;
+}
+
+.apl-spinner-posts_per_page-wrap > span {
+	width: 100%;
+}
+
+.apl-slider-posts_per_page-wrap {
+	float: left;
+	width: 64%;
+	margin: 6px 0% 6px 6%;
 }
 
 .apl-slider-handle-posts_per_page {
+	z-index: 0 !important;
+}
+
+.apl-spinner-offset-wrap {
+	float: left;
+	width: 25%;
+}
+
+.apl-spinner-offset-wrap > span {
+	width: 100%;
+}
+
+.apl-slider-offset-wrap {
+	float: left;
+	width: 64%;
+	margin: 6px 0% 6px 6%;
+}
+
+.apl-slider-handle-offset {
 	z-index: 0 !important;
 }
 
