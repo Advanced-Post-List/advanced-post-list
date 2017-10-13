@@ -11,7 +11,7 @@
  * @since 0.4.0
  */
 
-jQuery( function($) {
+( function($) {
 	var post_tax  = apl_admin_ui_local.post_tax;
 	var tax_terms = apl_admin_ui_local.tax_terms;
 	var trans     = apl_admin_ui_local.trans;

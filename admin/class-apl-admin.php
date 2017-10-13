@@ -428,7 +428,7 @@ class APL_Admin {
 					
 				),
 				APL_VERSION,
-				false
+				true
 			);
 
 			wp_register_script(
