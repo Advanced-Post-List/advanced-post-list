@@ -93,16 +93,19 @@ You need to copy & paste the shortcode to the desired location (e.g. [post_list 
 * Added Admin Singleton Class.
 * Changed to Custom Admin Menu.
 * Added New Admin templates and multiple UI changes.
-* Added Post_Type 'Any'.
+* Changed Info/Help to Tooltips instead of Dialogs.
+* Added Post_Type filter by 'Any'.
 * Changed 'Require Taxonomy' to 'Require Taxonomies' as a Post Type based filter instead.
 * Added Sort by 'None' and 'Slug'.
 * Added Post Status filter by 'None' and 'Any'.
 * Added Perms filter by 'None'.
+* Added Offset filter.
 * Added additional Notice to front-end if attribute 'name' in [post_list] is invalid or missing.
 * Added Sanitazion to shortcode attribute 'name'; ex. [post_list name=""].
 * Changed General Settings to Settings API w/ Meta Boxes.
 * Fixed possible defect with Plugin Options not being initiated.
 * Changed/Fixed Exporting and Importing.
+* Added jQuery (UI) compatability.
 * Removed jQuery UI Theme setting from APL Options.
 * Changed Updater Class param items to update to an array.
 * Changed version check to a hook method.
