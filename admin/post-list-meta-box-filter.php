@@ -709,7 +709,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 		<!-- EXCLUDE POST BY ID -->
 		<div class="apl-filter-field-row-full">
 			<label for="apl_exclude_posts"><?php esc_html_e( 'Exclude Post by ID:', 'advanced-post-list' ); ?></label>
-			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['exclude_post_by_id']; ?>"></span>
+			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['exclude_posts_by_id']; ?>"></span>
 		</div>
 		<div class="apl-filter-field-row-full">
 			<input type="text" id="apl_exclude_posts" class="apl-text-exclude-posts" name="apl_post__not_in" value="<?php echo implode( ',', $apl_post_list->post__not_in ); ?>" />
