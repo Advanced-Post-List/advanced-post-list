@@ -142,29 +142,9 @@ class APL_Admin {
 	 * @param WP_Screen $current_screen Current WP_Screen object.
 	 */
 	public function current_screen_hooks( $current_screen ) {
-		
-		//var_dump( $current_screen );
-		
-		if ( 'edit-apl_post_list'  === $current_screen->id ) {
-			// Add New.
-			
-			// Post Data
-			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
-
-			add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-			add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-			add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-			add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-
-			//add_action( 'trash_apl_post_list', array( $this, 'trash_post_list' ), 10, 3 );
-			add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
-			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
-			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
-			
-			
-		} elseif ( 'apl_post_list'  === $current_screen->id ) {
+		if ( 'apl_post_list'  === $current_screen->id ) {
 			// All Post Lists.
-			
+
 			// Post Data
 			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
 
@@ -177,11 +157,23 @@ class APL_Admin {
 			add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
 			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
 			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
-			
+		} elseif ( 'edit-apl_post_list'  === $current_screen->id ) {
+			// Add New.
+
+			// Post Data
+			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
+
+			add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+
+			//add_action( 'trash_apl_post_list', array( $this, 'trash_post_list' ), 10, 3 );
+			add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
+			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
+			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
 		} elseif ( 'apl_post_list_page_apl_settings'  === $current_screen->id ) {
-			// Settings (Page)
-			
-			
+			// Settings (Page).
 		}
 		
 	}
@@ -211,15 +203,33 @@ class APL_Admin {
 	 *
 	 * @see 'admin_menu' hook
 	 * @see wp-admin/admin-header.php
-	 * @link https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/
+	 * @link https://developer.wordpress.org/reference/functions/add_menu_page/
+	 * @link https://developer.wordpress.org/reference/functions/add_submenu_page/
 	 *
 	 * @return void
 	 */
 	public function admin_menu() {
+		add_menu_page(
+			__( 'Advanced Post List', 'advanced-post-list' ),
+			__( 'Adv. Post List', 'advanced-post-list' ),
+			'administrator',
+			'advanced_post_list',
+			'edit.php?post_type=apl_post_list', // Callback function if dashboard is added.
+			'dashicons-welcome-widgets-menus',
+			58
+		);
 		// TODO - Add APL Dashboard.
+		add_submenu_page(
+			'advanced_post_list',
+			__( 'Add New Post List', 'advanced-post-list' ),
+			__( 'Add New', 'advanced-post-list' ),
+			'administrator',
+			'post-new.php?post_type=apl_post_list'
+		);
+
 		// TODO - Add APL Settings API.
 		add_submenu_page(
-			'edit.php?post_type=apl_post_list',
+			'advanced_post_list',// edit.php?post_type=apl_post_list',
 			__( 'APL Settings', 'advanced-post-list' ),
 			__( 'Settings', 'advanced-post-list' ),
 			'administrator',
@@ -236,7 +246,6 @@ class APL_Admin {
 	}
 
 	public function submenu_settings_page() {
-		//echo 'FooBar';
 		include( APL_DIR . 'admin/settings-page.php' );
 	}
 
@@ -289,104 +298,7 @@ class APL_Admin {
 		wp_deregister_style( 'apl-admin-ui-multiselect-filter-css' );
 		wp_deregister_style( 'apl-admin-settings-css' );
 
-		// If we are not viewing APL Post List area, then return.
-		if ( 'apl_post_list' !== $screen->post_type ) {
-			return;
-		} elseif ( 'apl_post_list_page_apl_settings' === $screen->id ) {
-			// SETTINGS PAGE
-			
-			// SCRIPTS.
-			wp_register_script(
-				'apl-settings-js',
-				APL_URL . 'admin/js/settings.js',
-				array(
-					'jquery',
-					'jquery-ui-core',
-					'jquery-ui-widget',
-					//'jquery-ui-position',
-					'jquery-ui-button',
-					//'jquery-ui-draggable',
-					//'jquery-ui-resizable',
-					//'jquery-ui-effect',
-					'jquery-ui-dialog',
-				),
-				APL_VERSION,
-				false
-			);
-			wp_register_script(
-				'apl-settings-ui-js',
-				APL_URL . 'admin/js/settings-ui.js',
-				array(
-					'jquery',
-					'jquery-ui-core',
-					'jquery-ui-widget',
-					'jquery-ui-dialog',
-				),
-				APL_VERSION,
-				false
-			);
-			
-			//wp_enqueue_script( 'common' );
-			//wp_enqueue_script( 'wp-lists' );
-			wp_enqueue_script( 'postbox' );
-			wp_enqueue_script( 'apl-settings-js' );
-			wp_enqueue_script( 'apl-settings-ui-js' );
-			
-			// STYLES.
-			wp_enqueue_style(
-				'apl-admin-settings-css',
-				APL_URL . 'admin/css/settings.css',
-				false,
-				APL_VERSION,
-				false
-			);
-			
-			$wp_scripts = wp_scripts();
-			wp_enqueue_style(
-				'apl-admin-ui-css',
-				'https://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css',
-				false,
-				APL_VERSION,
-				false
-			);
-			
-			$trans_arr = array(
-				'default_alert_title'            => __( 'Alert', 'advanced-post-list' ),
-				'default_alert_message'          => __( 'No Message to Display.', 'advanced-post-list' ),
-				'fileName_empty_alert_title'     => __( 'Filename Required', 'advanced-post-list' ),
-				'fileName_empty_alert_message'   => __( 'A filename doesn\'t exist. \n Please enter a filename before exporting.', 'advanced-post-list' ),
-				'import_no_file_message'         => __( 'No file(s) selected. Please choose a JSON file to upload.', 'advanced-post-list'),
-				'import_no_file_title'           => __( 'No File', 'advanced-post-list'),
-				'import_invalid_file_message'    => __( 'Invalid file type. Please choose a JSON file to upload.', 'advanced-post-list'),
-				'import_invalid_file_title'      => __( 'Invalid File', 'advanced-post-list'),
-				'import_success_message'         => __( 'Data successfully imported.', 'advanced-post-list' ),
-				'import_success_title'           => __( 'Complete', 'advanced-post-list' ),
-				'import_overwrite_dialog_title'  => __( 'Overwrite Presets', 'advanced-post-list' ),
-				
-			);
-			$trans_ui_arr = array(
-				'fileName_char_alert_title'    => __( 'Illegal Characters', 'advanced-post-list' ),
-				'fileName_char_alert_message1' => __( 'Cannot use (< > : " / \\ | , ? *).', 'advanced-post-list' ),
-				'fileName_char_alert_message2' => __( 'Please rename your filename.', 'advanced-post-list' ),
-			);
-			
-			$settings_localize = array(
-				'export_nonce'  => wp_create_nonce( 'apl_settings_export' ),
-				'import_nonce'  => wp_create_nonce( 'apl_settings_import' ),
-				'restore_nonce' => wp_create_nonce( 'apl_settings_restore' ),
-				'trans'         => $trans_arr,
-			);
-			$settings_ui_localize = array(
-				'trans'         => $trans_ui_arr,
-			);
-			
-			wp_localize_script( 'apl-settings-js', 'apl_settings_local', $settings_localize );
-			wp_localize_script( 'apl-settings-ui-js', 'apl_settings_ui_local', $settings_ui_localize );
-			
-			do_action( 'add_meta_boxes', $hook_suffix );
-			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
-			
-		} else {
+		if ( 'apl_post_list' === $screen->id || 'edit-apl_post_list' === $screen->id ) {
 			
 			/*
 			 * ************** AJAX ACTION HOOKS ***************************
@@ -552,6 +464,101 @@ class APL_Admin {
 			// '../admin/js/admin-ui.js'.
 			wp_localize_script( 'apl-admin-js', 'apl_admin_local', $admin_localize );
 			wp_localize_script( 'apl-admin-ui-js', 'apl_admin_ui_local', $admin_ui_localize );
+		} elseif ( 'adv-post-list_page_apl_settings' === $screen->id ) {
+			// If we are not viewing APL Post List area, then return.
+			// SETTINGS PAGE
+			
+			// SCRIPTS.
+			wp_register_script(
+				'apl-settings-js',
+				APL_URL . 'admin/js/settings.js',
+				array(
+					'jquery',
+					'jquery-ui-core',
+					'jquery-ui-widget',
+					//'jquery-ui-position',
+					'jquery-ui-button',
+					//'jquery-ui-draggable',
+					//'jquery-ui-resizable',
+					//'jquery-ui-effect',
+					'jquery-ui-dialog',
+				),
+				APL_VERSION,
+				false
+			);
+			wp_register_script(
+				'apl-settings-ui-js',
+				APL_URL . 'admin/js/settings-ui.js',
+				array(
+					'jquery',
+					'jquery-ui-core',
+					'jquery-ui-widget',
+					'jquery-ui-dialog',
+				),
+				APL_VERSION,
+				false
+			);
+			
+			//wp_enqueue_script( 'common' );
+			//wp_enqueue_script( 'wp-lists' );
+			wp_enqueue_script( 'postbox' );
+			wp_enqueue_script( 'apl-settings-js' );
+			wp_enqueue_script( 'apl-settings-ui-js' );
+			
+			// STYLES.
+			wp_enqueue_style(
+				'apl-admin-settings-css',
+				APL_URL . 'admin/css/settings.css',
+				false,
+				APL_VERSION,
+				false
+			);
+			
+			$wp_scripts = wp_scripts();
+			wp_enqueue_style(
+				'apl-admin-ui-css',
+				'https://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css',
+				false,
+				APL_VERSION,
+				false
+			);
+			
+			$trans_arr = array(
+				'default_alert_title'            => __( 'Alert', 'advanced-post-list' ),
+				'default_alert_message'          => __( 'No Message to Display.', 'advanced-post-list' ),
+				'fileName_empty_alert_title'     => __( 'Filename Required', 'advanced-post-list' ),
+				'fileName_empty_alert_message'   => __( 'A filename doesn\'t exist. \n Please enter a filename before exporting.', 'advanced-post-list' ),
+				'import_no_file_message'         => __( 'No file(s) selected. Please choose a JSON file to upload.', 'advanced-post-list'),
+				'import_no_file_title'           => __( 'No File', 'advanced-post-list'),
+				'import_invalid_file_message'    => __( 'Invalid file type. Please choose a JSON file to upload.', 'advanced-post-list'),
+				'import_invalid_file_title'      => __( 'Invalid File', 'advanced-post-list'),
+				'import_success_message'         => __( 'Data successfully imported.', 'advanced-post-list' ),
+				'import_success_title'           => __( 'Complete', 'advanced-post-list' ),
+				'import_overwrite_dialog_title'  => __( 'Overwrite Presets', 'advanced-post-list' ),
+				
+			);
+			$trans_ui_arr = array(
+				'fileName_char_alert_title'    => __( 'Illegal Characters', 'advanced-post-list' ),
+				'fileName_char_alert_message1' => __( 'Cannot use (< > : " / \\ | , ? *).', 'advanced-post-list' ),
+				'fileName_char_alert_message2' => __( 'Please rename your filename.', 'advanced-post-list' ),
+			);
+			
+			$settings_localize = array(
+				'export_nonce'  => wp_create_nonce( 'apl_settings_export' ),
+				'import_nonce'  => wp_create_nonce( 'apl_settings_import' ),
+				'restore_nonce' => wp_create_nonce( 'apl_settings_restore' ),
+				'trans'         => $trans_arr,
+			);
+			$settings_ui_localize = array(
+				'trans'         => $trans_ui_arr,
+			);
+			
+			wp_localize_script( 'apl-settings-js', 'apl_settings_local', $settings_localize );
+			wp_localize_script( 'apl-settings-ui-js', 'apl_settings_ui_local', $settings_ui_localize );
+			
+			do_action( 'add_meta_boxes', $hook_suffix );
+			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
+			
 		}// End if().
 	}
 
@@ -738,7 +745,7 @@ class APL_Admin {
 			'apl-info',
 			__( 'Import / Export', 'advanced-post-list' ),
 			array( $this, 'settings_meta_box_info' ),
-			'apl_post_list_page_apl_settings',
+			'adv-post-list_page_apl_settings',
 			'side',  // 'normal', 'advanced', 'side'.
 			'core' // 'high', 'sorted', 'core', 'default', 'low'.
 		);
@@ -747,7 +754,7 @@ class APL_Admin {
 			'apl-general',
 			$title . __( 'General Settings', 'advanced-post-list' ),
 			array( $this, 'settings_meta_box_general' ),
-			'apl_post_list_page_apl_settings',
+			'adv-post-list_page_apl_settings',
 			'normal', // 'normal', 'advanced', 'side'.
 			'high' // 'high', 'sorted', 'core', 'default', 'low'.
 		);
@@ -755,7 +762,7 @@ class APL_Admin {
 			'apl-import-export',
 			__( 'Import / Export', 'advanced-post-list' ),
 			array( $this, 'settings_meta_box_import_export' ),
-			'apl_post_list_page_apl_settings',
+			'adv-post-list_page_apl_settings',
 			'advanced',
 			'core'
 		);

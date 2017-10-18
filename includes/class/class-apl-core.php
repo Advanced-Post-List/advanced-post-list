@@ -230,7 +230,7 @@ class APL_Core {
 		
 		$args = array(
 			'labels' => array(
-				'name'                  => __( 'Post Lists', 'advanced-post-list' ),
+				'name'                  => __( 'APL Post Lists', 'advanced-post-list' ),
 				'singular_name'         => __( 'Post List', 'advanced-post-list' ),
 				'add_new'               => _x( 'Add New', 'List', 'advanced-post-list' ),
 				'add_new_item'          => __( 'Add New Post List', 'advanced-post-list' ),
@@ -247,13 +247,14 @@ class APL_Core {
 				'attributes'            => __( 'Post List Attributes', 'advanced-post-list' ),
 				'insert_into_item'      => __( 'Insert into Post List', 'advanced-post-list' ),
 				'uploaded_to_this_item' => __( 'Upload to this Post List', 'advanced-post-list' ),
-				'menu_name'				=> __( 'Adv. Post List', 'advanced-post-list' ),
+				'menu_name'				=> __( 'APL Post List', 'advanced-post-list' ),
 			),
 			'description'           => __( 'APL Preset Post Lists.', 'advanced-post-list' ),
 			'public'                => true,
 			'exclude_from_search'   => true,
 			'publicly_queryable'    => false,
 			'show_ui'               => true, // Shows up in admin menu bar.
+			'show_in_menu'          => 'advanced_post_list',
 			'show_in_nav_menus'     => false,
 			'show_in_admin_bar'		=> true,
 			'menu_position'         => 58,
@@ -266,9 +267,6 @@ class APL_Core {
 				//'revisions',
 			),
 			'has_archive'			=> false,
-			'rewrite'               => array(
-				'slug' => 'apl-post-list',
-			),
 			// Disables the URL query /?{query_var}={single_post_slug}.
 			'query_var'             => false,
 			//'can_export'            => true, // Default true.
@@ -293,7 +291,7 @@ class APL_Core {
 	public function action_register_post_type_design() {
 		$args = array(
 			'labels' => array(
-				'name'                  => __( 'Designs', 'advanced-post-list' ),
+				'name'                  => __( 'APL Designs', 'advanced-post-list' ),
 				'singular_name'         => __( 'Design', 'advanced-post-list' ),
 				'add_new'               => _x( 'Add New', 'design', 'advanced-post-list' ),
 				'add_new_item'          => __( 'Add New Design', 'advanced-post-list' ),
