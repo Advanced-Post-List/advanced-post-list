@@ -9,6 +9,7 @@
  * @package WordPress
  * @subpackage advanced-post-list.php
  * @since 0.1.0
+ * @deprecated 0.4.0 Use Builtin Post Meta
  */
 
 /**

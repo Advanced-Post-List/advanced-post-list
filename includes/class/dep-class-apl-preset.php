@@ -9,6 +9,7 @@
  * @package WordPress
  * @subpackage advanced-post-list.php
  * @since 0.1.0
+ * @deprecated 0.4.0 Use APL_Post_List and APL_Design class
  */
 
 /**

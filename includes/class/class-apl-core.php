@@ -197,14 +197,14 @@ class APL_Core {
 	private function _requires() {
 		// PUBLIC.
 		// Class Objects.
-		require_once( APL_DIR . 'includes/class/class-apl-preset-db.php' );
-		require_once( APL_DIR . 'includes/class/class-apl-preset.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-post-list.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-design.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-widget.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-query.php' );
 		require_once( APL_DIR . 'includes/class/class-apl-updater.php' );
 		// OLD - Remove between 0.4 - 0.6.
+		require_once( APL_DIR . 'includes/class/dep-class-apl-preset-db.php' );
+		require_once( APL_DIR . 'includes/class/dep-class-apl-preset.php' );
 		require_once( APL_DIR . 'includes/class/old-APLPresetDbObj.php' );
 		require_once( APL_DIR . 'includes/class/old-APLPresetObj.php' );
 		
