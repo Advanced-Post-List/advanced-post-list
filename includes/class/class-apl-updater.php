@@ -975,9 +975,10 @@ class APL_Updater {
 
 					////////////////////////////////////////////////////////////
 
-					if ( isset( $apl_post_list->post_parent__in[ $v2_pt_slug ] ) ) {
+					$p_post_parent__in = json_decode( json_encode( $p_post_parent__in ), true );
+					if ( isset( $p_post_parent__in[ $v2_pt_slug ] ) && ! empty( $p_post_parent__in[ $v2_pt_slug ] ) ) {
 						$tmp_post_parents = array();
-						foreach ( $apl_post_list->post_parent__in[ $v2_pt_slug ] as $k3_ => $v3_post_id ) {
+						foreach ( $p_post_parent__in[ $v2_pt_slug ] as $k3_ => $v3_post_id ) {
 							$args = array(
 								'post__in'        => array( $v3_post_id ),
 								'post_type'       => $v2_pt_slug,
@@ -998,12 +999,13 @@ class APL_Updater {
 							$tmp_post_parents[] = $v3_post_id;
 						}
 						$tmp_post_parent__in[ $v2_pt_slug ] = $tmp_post_parents;
-						$tmp_post_parent_dynamic[ $v2_pt_slug ] = $apl_post_list->post_parent_dynamic[ $v2_pt_slug ] ?: false;
+
+						$p_post_parent_dynamic = json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true );
+						$tmp_post_parent_dynamic[ $v2_pt_slug ] = $p_post_parent_dynamic[ $v2_pt_slug ] ?: false;
 					}
 
 				}
 				$tmp_post_type[] = $tmp2_post_type;
-
 
 			}
 			// AND if still empty
@@ -1011,11 +1013,9 @@ class APL_Updater {
 				$v2_pt_slug = 'any';
 				$tmp_post_type[] = $v2_pt_slug;
 
-
 				$p_tax_query = json_decode( json_encode( $apl_post_list->tax_query ), true );
 				$tmp_tax_query[ $v2_pt_slug ] = array();
 				$tmp_tax_query[ $v2_pt_slug ] = $this->reform_post_list_tax_query( $p_tax_query[ $v2_pt_slug ] );
-
 			}
 		}
 

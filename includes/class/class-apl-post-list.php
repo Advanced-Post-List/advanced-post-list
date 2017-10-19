@@ -308,7 +308,7 @@ class APL_Post_List {
 	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
-			'post__in'        => array(),
+			//'post__in'        => array(), // Need this?
 			'post_type'       => 'apl_post_list',
 			'post_status'     => array(
 				'draft',
@@ -319,6 +319,7 @@ class APL_Post_List {
 				'trash',
 			),
 			'posts_per_page'  => 1,
+			//'suppress_filters' => true,
 		);
 		$args = wp_parse_args( $args, $defaults );
 

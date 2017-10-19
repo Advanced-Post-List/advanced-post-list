@@ -137,6 +137,7 @@ class APL_Design {
 				'trash',
 			),
 			'posts_per_page'  => 1,
+			//'suppress_filters' => true,
 		);
 		$args = wp_parse_args( $args, $defaults );
 

@@ -32,7 +32,7 @@ function apl_export() {
 	// OLD METHOD.
 	//echo trim( json_encode( $outputFileData ) );
 	echo json_encode( $output_data );
-	exit();
+	wp_die();
 }
 
 ?>

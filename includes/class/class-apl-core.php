@@ -308,7 +308,7 @@ class APL_Core {
 				'attributes'            => __( 'Design Attributes', 'advanced-post-list' ),
 				'insert_into_item'      => __( 'Insert into Design', 'advanced-post-list' ),
 				'uploaded_to_this_item' => __( 'Upload to this Design', 'advanced-post-list' ),
-				'menu_name'				=> __( 'APL Designs', 'advanced-post-list' ),
+				'menu_name'				=> __( 'APL Design', 'advanced-post-list' ),
 			),
 			'description'           => __( 'APL Designs for Preset Post Lists.', 'advanced-post-list' ),
 			'public'                => true,
@@ -327,9 +327,6 @@ class APL_Core {
 				//'revisions',
 			),
 			'has_archive'			=> false,
-			'rewrite'               => array(
-				'slug' => 'apl-design',
-			),
 			// Disables the URL query /?{query_var}={single_post_slug}.
 			'query_var'             => false,
 			//'can_export'            => true, // Default true.

@@ -482,9 +482,10 @@ class APL_Admin {
 					//'jquery-ui-resizable',
 					//'jquery-ui-effect',
 					'jquery-ui-dialog',
+					'jquery-ui-progressbar',
 				),
 				APL_VERSION,
-				false
+				true
 			);
 			wp_register_script(
 				'apl-settings-ui-js',
@@ -535,6 +536,9 @@ class APL_Admin {
 				'import_success_message'         => __( 'Data successfully imported.', 'advanced-post-list' ),
 				'import_success_title'           => __( 'Complete', 'advanced-post-list' ),
 				'import_overwrite_dialog_title'  => __( 'Overwrite Presets', 'advanced-post-list' ),
+				'fileName_char_alert_title'      => __( 'Illegal Characters', 'advanced-post-list' ),
+				'fileName_char_alert_message1'   => __( 'Cannot use (< > : " / \\ | , ? *).', 'advanced-post-list' ),
+				'fileName_char_alert_message2'   => __( 'Please rename your filename.', 'advanced-post-list' ),
 				
 			);
 			$trans_ui_arr = array(
@@ -1142,7 +1146,7 @@ class APL_Admin {
 
 		echo json_encode( $rtn_data );
 
-		die();
+		wp_die();
 	}
 
 	/**

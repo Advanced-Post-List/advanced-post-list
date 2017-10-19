@@ -5,7 +5,7 @@
  */
 
 jQuery(document).ready( function($) {
-	var trans        = apl_settings_ui_local.trans;
+	var trans = apl_settings_ui_local.trans;
 	
 	// toggle
 	$('.if-js-closed').removeClass('if-js-closed').addClass('closed');

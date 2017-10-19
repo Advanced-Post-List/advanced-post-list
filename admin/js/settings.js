@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-jQuery( document ).ready( function($) {
+( function($) {
 	var exportNonce  = apl_settings_local.export_nonce;
 	var importNonce  = apl_settings_local.import_nonce;
 	var restoreNonce = apl_settings_local.restore_nonce;
@@ -29,6 +29,7 @@ jQuery( document ).ready( function($) {
 
 			for ( var i = 0; i < fileName.length; i++ ) {
 				if ( iChars.indexOf( fileName.charAt(i) ) != -1 ) {
+					// Cannot use (< > : " / \\ | , ? *).
 					apl_alert('<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 75px 0;"></span>' + trans.fileName_char_alert_message1 + '<br/>' + trans.fileName_char_alert_message2 + '</p>', trans.fileName_char_alert_title );
 					return false;
 				}
@@ -147,14 +148,14 @@ jQuery( document ).ready( function($) {
 					}
 					output += '</div>';
 
-					output += '<h3>Designs</h3>';
-					output += '<div>';
-					for ( var d_i in data.overwrite_design ) {
-						output += '<input type="checkbox" name="' + data.overwrite_design[ d_i ] + '" value="' + data.overwrite_design[ d_i ] + '" id="chkGroup_overwrite_preset_' + data.overwrite_design[ d_i ] + '" />';
-						output += '<label for="">' + data.overwrite_design[ d_i ] + '</label>';
-						output += '<br />';
-					}
-					output += '</div>';
+//					output += '<h3>Designs</h3>';
+//					output += '<div>';
+//					for ( var d_i in data.overwrite_design ) {
+//						output += '<input type="checkbox" name="' + data.overwrite_design[ d_i ] + '" value="' + data.overwrite_design[ d_i ] + '" id="chkGroup_overwrite_preset_' + data.overwrite_design[ d_i ] + '" />';
+//						output += '<label for="">' + data.overwrite_design[ d_i ] + '</label>';
+//						output += '<br />';
+//					}
+//					output += '</div>';
 
 					$('<div id="apl_confirm_overwrite"></div>').html( output ).dialog({
 						stack: false,
@@ -224,13 +225,18 @@ jQuery( document ).ready( function($) {
 		});// End AJAX.
 	});// End .submit().
 
-	function apl_alert( output_msg, title_msg ) {
+	function apl_alert( output_msg, title_msg, id ) {
+		if ( !id ) 
+			id = '';
+		else
+			id = ' id="apl-dialog-' + id + '" ';
 		if ( !title_msg )
 			title_msg = trans.default_alert_title;
 
 		if ( !output_msg )
 			output_msg = trans.default_alert_message;
 
+		var elem = '<div' + id + '></div>';
 		$('<div></div>').html( output_msg ).dialog({
 			title: title_msg,
 			//resizable: true,
@@ -242,4 +248,4 @@ jQuery( document ).ready( function($) {
 			}
 		});
 	}
-});
+})(jQuery);
