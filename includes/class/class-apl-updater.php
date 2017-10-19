@@ -588,18 +588,14 @@ class APL_Updater {
 	 */
 	private function upgrade_options_03b5_to_040( $options ) {
 		// SET DEFAULTS MANUALLY.
-		$rtn_options = array(
-			'version'               => '',
-			'delete_core_db'        => false,
-			'default_empty_enable'  => false,
-			'default_empty_output'  => '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>',
-		);
+		$rtn_options = $this->options_array();
 
 		$rtn_options['version'] = APL_VERSION;
 
-		$rtn_options['delete_core_db']        = $options['delete_core_db']   ?: $rtn_options['delete_core_db'];
-		$rtn_options['default_empty_enable']  = $options['default_exit']     ?: $rtn_options['default_empty_enable'];
-		$rtn_options['default_empty_output']  = $options['default_exit_msg'] ?: $rtn_options['default_empty_output'];
+		$rtn_options['ignore_post_types']     = $options['ignore_post_types'] ?: $rtn_options['ignore_post_types'];
+		$rtn_options['delete_core_db']        = $options['delete_core_db']    ?: $rtn_options['delete_core_db'];
+		$rtn_options['default_empty_enable']  = $options['default_exit']      ?: $rtn_options['default_empty_enable'];
+		$rtn_options['default_empty_output']  = $options['default_exit_msg']  ?: $rtn_options['default_empty_output'];
 
 		return $rtn_options;
 	}
@@ -873,6 +869,15 @@ class APL_Updater {
 		return $rtn_new_preset_arr;
 	}
 
+	private function options_array() {
+		return array(
+			'version'               => APL_VERSION,
+			'ignore_post_types'     => array(),
+			'delete_core_db'        => false,
+			'default_empty_enable'  => false,
+			'default_empty_output'  => '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>',
+		);
+	}
 	/**
 	 * Post List Object.
 	 *

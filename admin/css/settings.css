@@ -17,6 +17,7 @@
 
 /* SETTINGS */
 .apl-settings-row {
+	display: flex;
 	clear: left;
 	min-height: 18px;
 	margin-bottom: 18px;

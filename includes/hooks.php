@@ -24,7 +24,7 @@ function hook_filter_apl_design_slug( $slug, $preset_obj ) {
 
 	return $return_slug;
 }
-add_filter( 'apl_design_slug', 'hook_filter_apl_design_slug', 10, 2 );
+//add_filter( 'apl_design_slug', 'hook_filter_apl_design_slug', 10, 2 );
 
 /**
  * Args Array for Registering Post List CPT.
@@ -37,7 +37,7 @@ function hook_filter_apl_register_post_type_post_list( $args ) {
 	
 	return $return_args;
 }
-add_filter( 'apl_register_post_type_post_list', 'hook_filter_apl_register_post_type_post_list' );
+//add_filter( 'apl_register_post_type_post_list', 'hook_filter_apl_register_post_type_post_list' );
 
 /**
  * Args Array for Registering Design CPT.
@@ -50,7 +50,7 @@ function hook_filter_apl_register_design( $args ) {
 
 	return $return_args;
 }
-add_filter( 'apl_register_post_type_design', 'hook_filter_apl_register_design' );
+//add_filter( 'apl_register_post_type_design', 'hook_filter_apl_register_design' );
 
 
 /**
@@ -64,7 +64,7 @@ function hook_filter_design_slug_for_get_apl_post_list( $post_list_slug ) {
 	
 	return $return_slug;
 }
-add_filter( 'apl_post_list_get_data_apl_design_slug', 'hook_filter_design_slug_for_get_apl_post_list' );
+//add_filter( 'apl_post_list_get_data_apl_design_slug', 'hook_filter_design_slug_for_get_apl_post_list' );
 //( 'apl_post_list_apl_design_slug', $this->slug )
 
 /**
@@ -80,3 +80,13 @@ function hook_filter_design_slug_for_process_apl_post_list( $post_list_slug ) {
 }
 add_filter( 'apl_post_list_process_apl_design_slug', 'hook_filter_design_slug_for_process_apl_post_list' );
 
+/**
+ * Manually prevents Custom Post Types from being displayed on Add New.
+ * @param array $ignore_post_types
+ * @return string
+ */
+function hook_filter_apl_display_post_types_ignore( $ignore_post_types ) {
+	$ignore_post_types[] = 'et_pb_layout';
+	return $ignore_post_types;
+}
+add_filter( 'apl_display_post_types_ignore', 'hook_filter_apl_display_post_types_ignore' );

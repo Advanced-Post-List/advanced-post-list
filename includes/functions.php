@@ -32,6 +32,7 @@ function apl_options_default() {
 	$options = array();
 	// Step 2.
 	$options['version']               = APL_VERSION;
+	$options['ignore_post_types']     = array();
 	$options['delete_core_db']        = false;
 	$options['default_empty_enable']  = false;
 	$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
@@ -103,15 +104,11 @@ function apl_options_save( $options ) {
 function apl_get_display_post_types() {
 	$rtn_post_types = array();
 	
-	$ignore_post_types = array(
-		'attachment',
-		'revision',
-		'nav_menu_item',
-		'apl_post_list',
-		'apl_design',
-	);
-	$ignore_post_types = apply_filters( 'apl_display_post_types', $ignore_post_types );
-	
+	$options = apl_options_load();
+	$ignore_post_types = apl_default_ignore_post_types();
+	$ignore_post_types = apply_filters( 'apl_display_post_types_ignore', $ignore_post_types );
+	$ignore_post_types = wp_parse_args( $ignore_post_types, $options['ignore_post_types'] );
+
 	// Get all Post Types.
 	$post_type_objs = get_post_types( '', 'objects' );
 	// Remove ignored Post Types.
@@ -125,3 +122,14 @@ function apl_get_display_post_types() {
 
 	return $rtn_post_types;
 }
+
+function apl_default_ignore_post_types() {
+	return array(
+		'attachment',
+		'revision',
+		'nav_menu_item',
+		'apl_post_list',
+		'apl_design',
+	);
+}
+

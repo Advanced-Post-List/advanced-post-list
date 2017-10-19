@@ -1049,7 +1049,20 @@ class APL_Admin {
 	 * @return void
 	 */
 	public function save_general_settings() {
+		if ( ! is_admin() ) {
+			wp_die();
+		}
 		$options = apl_options_load();
+		
+		$tmp_ignore_pt = array();
+		$post_types = get_post_types( '', 'names' );
+		foreach ( $post_types as $post_type ) {
+			if ( isset( $_POST[ 'apl_ignore_pt_' . $post_type ] ) ) {
+				$input = filter_input( INPUT_POST, 'apl_ignore_pt_' . $post_type, FILTER_SANITIZE_STRING );
+				$tmp_ignore_pt[ $post_type ] = sanitize_key( $input );
+			}
+		}
+		$options['ignore_post_types'] = $tmp_ignore_pt;
 		
 		if ( isset( $_POST['apl_delete_on_deactivate'] ) ) {
 			$input = filter_input( INPUT_POST, 'apl_delete_on_deactivate', FILTER_SANITIZE_STRING );
@@ -1082,8 +1095,10 @@ class APL_Admin {
 		
 		apl_options_save( $options );
 		
-		wp_redirect( 'edit.php?post_type=apl_post_list&page=apl_settings' );
-		exit;
+		//wp_redirect( 'edit.php?post_type=apl_post_list&page=apl_settings' );
+		wp_redirect( 'admin.php?page=apl_settings' );
+		//wp_die();
+		exit();
 	}
 
 	/**
