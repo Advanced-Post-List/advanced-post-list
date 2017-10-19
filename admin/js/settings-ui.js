@@ -4,9 +4,22 @@
  * and open the template in the editor.
  */
 
-jQuery(document).ready( function($) {
+( function($) {
 	var trans = apl_settings_ui_local.trans;
-	
+
+	apl_init_tooltips();
+
+	function apl_init_tooltips() {
+		$( '.apl-tooltip' ).tooltip({
+//			content: function( callback ) {
+//				//callback( $( this ).prop('title').replace( '(<br([\s]?[\/]?)?>)', '<br />' ) );
+//			}
+			content: function( callback ) {
+				callback( $( this ).prop( 'title' ) );
+			}
+		});
+	}
+
 	// toggle
 	$('.if-js-closed').removeClass('if-js-closed').addClass('closed');
 	postboxes.add_postbox_toggles( 'apl_post_list_page_apl_settings' );
@@ -42,4 +55,4 @@ jQuery(document).ready( function($) {
 			}
 		});
 	}
-});
+})(jQuery);

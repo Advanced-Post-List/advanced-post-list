@@ -6,8 +6,16 @@
  * @since 0.4.0
  */
 
-/* SETTINGS */
+/* TOOLTIPS */
+.apl-help {
+	cursor: help;
+}
 
+.apl-help-icon {
+	color: #0073aa;
+}
+
+/* SETTINGS */
 .apl-settings-row {
 	clear: left;
 	min-height: 18px;

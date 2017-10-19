@@ -482,7 +482,7 @@ class APL_Admin {
 					//'jquery-ui-resizable',
 					//'jquery-ui-effect',
 					'jquery-ui-dialog',
-					'jquery-ui-progressbar',
+					//'jquery-ui-progressbar',
 				),
 				APL_VERSION,
 				true
@@ -495,9 +495,11 @@ class APL_Admin {
 					'jquery-ui-core',
 					'jquery-ui-widget',
 					'jquery-ui-dialog',
+					'jquery-ui-position',
+					'jquery-ui-tooltip',
 				),
 				APL_VERSION,
-				false
+				true
 			);
 			
 			//wp_enqueue_script( 'common' );
@@ -747,16 +749,18 @@ class APL_Admin {
 	public function settings_meta_boxes() {
 		add_meta_box(
 			'apl-info',
-			__( 'Import / Export', 'advanced-post-list' ),
+			__( 'About', 'advanced-post-list' ),
 			array( $this, 'settings_meta_box_info' ),
 			'adv-post-list_page_apl_settings',
 			'side',  // 'normal', 'advanced', 'side'.
 			'core' // 'high', 'sorted', 'core', 'default', 'low'.
 		);
-		$title = '<a id="info16" class="info_a_link" style="float:right;">Export/Import Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>';
+		// TODO - Add Documentation Link to Admin Page/Metabox documentation.
+		//$title = '<a id="info16" class="info_a_link" style="float:right;">Export/Import Info<span class="ui-icon ui-icon-info info-icon" style="float:right"></span></a>';
 		add_meta_box(
 			'apl-general',
-			$title . __( 'General Settings', 'advanced-post-list' ),
+			//$title . __( 'General Settings', 'advanced-post-list' ),
+			__( 'General Settings', 'advanced-post-list' ),
 			array( $this, 'settings_meta_box_general' ),
 			'adv-post-list_page_apl_settings',
 			'normal', // 'normal', 'advanced', 'side'.

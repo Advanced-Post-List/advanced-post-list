@@ -8,15 +8,26 @@
 //var_dump( admin_url( 'admin-post.php' ) );
 $options = get_option( 'APL_Options' );
 
-function apl_is_checked() {
-	
-}
+$apl_help_text = array(
+	'delete_on_deactivate' => esc_html__(
+		'If "No" is selected, then the plugin\'s database data will not be removed when the plugin is deactivated. When re-activated, the plugin data will restored as it was left. Please Note: If the plugin is removed/uninstalled, then the plugin\'s data will be removed regardless.',
+		'advanced-post-list'
+	),
+	'default_empty_enable' => 
+		'<b>' . esc_html__( 'Enable Default Empty Message: ', 'advanced-post-list' ) . '</b>' .
+		esc_html__( 'Used as a default option to use if no posts are found and the Empty Message is empty within the preset post list.', 'advanced-post-list' ) . '<br />' .
+		'<b>' . esc_html__( 'Enable Global Exit (boolean): ', 'advanced-post-list' ) . '</b>' .
+		esc_html__( 'If enabled (yes), the all presets will fallback on the global/default Empty Message.', 'advanced-post-list' ) . '<br />' .
+		'<b>' . esc_html__( 'Empty Message: ', 'advanced-post-list' ) . '</b>' .
+		esc_html__( 'Contains the message that will be displayed if no posts are found. HTML and CSS can be used.', 'advanced-post-list' ),
+);
 ?>
 <form id="apl-settings-form" method="post" action="<?php echo esc_attr( admin_url( 'admin-post.php' ) ); ?>" >
 	<input type="hidden" name="action" value="apl_save_general_settings">
 	<div class="apl-settings-row" >
 		<div class="apl-row-first-cell">
 			<label>Delete database on deactivate:</label>
+			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['delete_on_deactivate']; ?>"></span>
 		</div>
 		<div>
 			<input type="radio" id="apl_delete_on_deactivate_yes" class="apl-radio-delete-on-deactivate" name="apl_delete_on_deactivate" value="yes" <?php echo $options['delete_core_db'] ? 'checked="checked"' : ''; ?> />
@@ -30,6 +41,7 @@ function apl_is_checked() {
 	<div class="apl-settings-row" style="margin-bottom: 3px;">
 		<div class="apl-row-first-cell">
 			<label>Enable Default Empty Message:</label>
+			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['default_empty_enable']; ?>"></span>
 		</div>
 		<div>
 			<input type="radio" id="apl_empty_enable_yes" class="apl-default-empty-enable" name="apl_default_empty_enable" value="yes" <?php echo $options['default_empty_enable'] ? 'checked="checked"' : ''; ?> />
