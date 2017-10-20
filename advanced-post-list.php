@@ -12,7 +12,7 @@ Text Domain: advanced-post-list
 Domain Path: /languages
 
 == Copyright ==
-Advanced Post List by EkoJR (email: ekojr1337@gmail.com)
+Advanced Post List by EkoJR (email: mail@advancedpostlist.com)
 Copyright (C) 2017 EkoJR
 
 This program is free software; you can redistribute it and/or

@@ -1,14 +1,13 @@
 /**
  * Admin UI JavaScript
  *
- * Admin JavaScript / jQuery for UI design and conditional logic.
+ * @summary     Admin JavaScript / jQuery for UI design and conditional logic.
  *
- * @package WordPress
- * @subpackage APL_Admin
- * @subpackage jQuery
- * @subpackage jQuery UI
- * @subpackage jQuery UI Multiselect
- * @since 0.4.0
+ * @since       0.4.0
+ * @package     APL_Admin
+ * @requires    jQuery
+ * @requires    jQuery UI
+ * @requires    jQuery UI Multiselect
  */
 
 ( function($) {
@@ -38,6 +37,12 @@
 	apl_init_tooltips();
 	apl_init_dialogs();
 
+	/**
+	 * Initialize Toggling Tabs with Checkbox
+	 *
+	 * @since 0.4.0
+	 * @returns {undefined}
+	 */
 	function init_chkbox_post_type_toggle_tabs() {
 		$.each( post_tax, function( k_post_type_slug, v_taxonomy_arr ) {
 			// On Change/Click Hide or unhide sections
@@ -80,6 +85,13 @@
 		});// End of .each().
 	}
 
+	/**
+	 * Initialize Post Type Taxonomy Tabs
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_tabs_post_type_taxonomies () {
 		$.each( post_tax, function( k_post_type_slug, v_taxonomy_arr ) {
 			$( '#apl-tabs-' + k_post_type_slug + '-taxonomies' ).tabs({
@@ -121,6 +133,13 @@
 		});// End of .each().
 	}
 
+	/**
+	 * Initialize Multiselect with Post Type Taxonomy Selector
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_multiselect_post_type_taxonomies() {
 		$.each( post_tax, function( k_pt_slug, v_tax_arr ) {
 			//var elem = '#apl_chk_req_taxonomies-' + k_pt_slug;
@@ -183,6 +202,13 @@
 		});
 	}
 
+	/**
+	 * Initialized Checkbox Term Events
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_chkbox_terms() {
 		$.each( post_tax, function( k1_pt_slug, v1_pt_value ) {
 			$.each( v1_pt_value.tax_arr, function( k2_index, v2_tax_slug ) {
@@ -256,6 +282,13 @@
 		});
 	}
 
+	/**
+	 * Initialize List Amount Spinner
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_spinner_amount() {
 		$( '#apl_spinner_posts_per_page' ).spinner({
 			disabled: false,
@@ -273,6 +306,13 @@
 		});
 	}
 
+	/**
+	 * Initialize List Amount Slider
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_slider_amount() {
 		$( '#apl_slider_posts_per_page' ).slider({
 			value: $( '#apl_spinner_posts_per_page' ).spinner( 'value' ),
@@ -289,6 +329,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Order By Selectmenu
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_selectmenu_order_by() {
 		$( '#apl_selectmenu_order_by' ).selectmenu({
 			create: function( event, ui ) {
@@ -304,6 +351,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Order Selectmenu
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_selectmenu_order() {
 		$( '#apl_selectmenu_order' ).selectmenu({
 
@@ -316,6 +370,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Author Operators Selectmenu
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_selectmenu_author_operator() {
 		$( '#apl_selectmenu_author__bool' ).selectmenu({
 			create: function( event, ui ) {
@@ -332,6 +393,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Author IDs Multiselect
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_multiselect_author_ids() {
 		$( '#apl_multiselect_author__in' ).multiselect({
 			classes: 'apl-ui-ms apl-ui-ms-filter-2-row',
@@ -353,6 +421,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Post Status 1 Multiselect
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_multiselect_post_status_1() {
 		$( '#apl_multiselect_post_status_1' ).multiselect({
 			classes: 'apl-ui-ms apl-ui-ms-filter-2-row',
@@ -426,6 +501,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Post Status 2 Multiselect
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_multiselect_post_status_2() {
 		$( '#apl_multiselect_post_status_2' ).multiselect({
 			classes: 'apl-ui-ms apl-ui-ms-filter-2-row',
@@ -450,6 +532,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Perms Selectmenu
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_selectmenu_perm() {
 		$( '#apl_selectmenu_perm' ).selectmenu({
 			create: function( event, ui ) {
@@ -458,6 +547,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Offset Spinner
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_spinner_offset() {
 		$( '#apl_spinner_offset' ).spinner({
 			disabled: false,
@@ -475,6 +571,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Offset Slider
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_slider_offset() {
 		$( '#apl_slider_offset' ).slider({
 			value: $( '#apl_spinner_offset' ).spinner( 'value' ),
@@ -491,6 +594,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Empty Message Textacrea
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function init_textarea_empty_message() {
 		$( '#apl_empty_message_enable' ).change( function( event, ui ) {
 			if ( this.checked ) {
@@ -501,6 +611,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Tooltips
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function apl_init_tooltips() {
 		$( '.apl-tooltip' ).tooltip({
 //			content: function( callback ) {
@@ -512,6 +629,13 @@
 		});
 	}
 
+	/**
+	 * Initialize Dialogs
+	 *
+	 * @since 0.4.0
+	 *
+	 * @returns {undefined}
+	 */
 	function apl_init_dialogs() {
 		$( '#info-shortcodes' ).click( function() {
 			$( '#d-shortcodes' ).dialog({

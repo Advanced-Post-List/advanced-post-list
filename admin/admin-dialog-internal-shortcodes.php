@@ -1,3 +1,16 @@
+<?php
+/**
+ * APL Internal Shortcodes Dialog
+ *
+ * Dialog content with a list of Internal Shortcodes that can be used.
+ *
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ *
+ * @package advanced-post-list
+ * @package advanced-post-list\APL_Admin
+ * @since 0.4.0
+ */
+?>
 <div style="display: none;" >
 	<div id="d-shortcodes" title="List of internal post list shortcodes.">
 		<p>
@@ -42,4 +55,4 @@
 		</p>
 	</div>
 </div>
-	
+

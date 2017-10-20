@@ -4,8 +4,10 @@
  *
  * Filter Meta Box for making new Post Lists.
  *
- * @package WordPress
- * @subpackage APL_Admin
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ *
+ * @package advanced-post-list
+ * @package advanced-post-list\APL_Admin
  * @since 0.4.0
  */
 
@@ -18,90 +20,52 @@
 //var_dump( $apl_tax_terms );
 //var_dump( $apl_display_post_types );
 $apl_help_text = array(
-	'post_types' => esc_html__(
-		'Each (jQuiry UI) accordion contains a separate individual post type. ' .
-		'The default post types built into WordPress are Post and Page. Any ' .
-		'additional post types are dynamically added in the manner WordPress ' .
-		'does. Please Note: Each post/page can have only one post type, which may ' .
-		'explain why it has been divided by post types.',
-		'advanced-post-list'
-	),
-	'taxonomy_tab' => esc_html__(
-		'Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.',
-		'advanced-post-list'
-	),
-	'parent_page_tab' => esc_html__(
-		'Each hierarchical post type has a Parent selector for selecting which children pages to display. You can add multiple Post Parents of dynamically add children pages according to the Current Page.',
-		'advanced-post-list'
-	),
-	'taxonomy_multiselect' => esc_html__(
-		'MULTISELECT Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.' .
+	'post_types' =>
+		esc_html__( 'Each (jQuiry UI) accordion contains a separate individual post type. The default post types built into WordPress are Post and Page. Any additional post types are dynamically added in the manner WordPress does. Please Note: Each post/page can have only one post type, which may explain why it has been divided by post types.', 'advanced-post-list' ),
+	'taxonomy_tab' =>
+		esc_html__(	'Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.', 'advanced-post-list' ),
+	'parent_page_tab' =>
+		esc_html( 'Each hierarchical post type has a Parent selector for selecting which children pages to display. You can add multiple Post Parents of dynamically add children pages according to the Current Page.', 'advanced-post-list' ),
+	'taxonomy_multiselect' =>
+		esc_html( 'MULTISELECT Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.', 'advanced-post-list' ) .
 		'<br /><br />' .
-		'Req. Taxonomies: If more than one ‘Require Taxonomy’ is checked and terms (or include) are selected, or "any", then each taxonomy must be required within the post type.',
-		'advanced-post-list'
-	),
-	'require_terms' => esc_html__(
-		'If selected, and more than one term is checked, then each term must be required within the CPT/taxonomy in order to be displayed in the post list.',
-		'advanced-post-list'
-	),
-	'dynamic_terms' => esc_html__(
-		'If selected, the post list preset will include any terms the current page/post has within the CTP/taxonomy.',
-		'advanced-post-list'
-	),
-	'any_terms' => esc_html__(
-		'When checked, any terms will be included within that CPT/taxonomy.',
-		'advanced-post-list'
-	),
-	'list_amount' => esc_html__(
-		'The numeric value of how many posts you want the post list to display. Negative one (-1) will display all the posts that are available after filtering.',
-		'advanced-post-list'
-	),
-	'order_by' => esc_html__(
-		'Choose which page properties to sort from. All of which are built in params used in WP_Query.',
-		'advanced-post-list'
-	),
-	'authors' => esc_html__(
-		'Show or remove posts that were created by a certain author, or authors. You can only choose between adding or removing, not both.' .
+		esc_html( 'Req. Taxonomies: If more than one ‘Require Taxonomy’ is checked and terms (or include) are selected, or "any", then each taxonomy must be required within the post type.', 'advanced-post-list' ),
+	'require_terms' =>
+		esc_html__( 'If selected, and more than one term is checked, then each term must be required within the CPT/taxonomy in order to be displayed in the post list.', 'advanced-post-list' ),
+	'dynamic_terms' =>
+		esc_html__( 'If selected, the post list preset will include any terms the current page/post has within the CTP/taxonomy.', 'advanced-post-list' ),
+	'any_terms' =>
+		esc_html__( 'When checked, any terms will be included within that CPT/taxonomy.', 'advanced-post-list' ),
+	'list_amount' =>
+		esc_html__( 'The numeric value of how many posts you want the post list to display. Negative one (-1) will display all the posts that are available after filtering.', 'advanced-post-list' ),
+	'order_by' =>
+		esc_html__(	'Choose which page properties to sort from. All of which are built in params used in WP_Query.', 'advanced-post-list' ),
+	'authors' =>
+		esc_html( 'Show or remove posts that were created by a certain author, or authors. You can only choose between adding or removing, not both.', 'advanced-post-list' ) .
 		'<br /><br />' .
-		'Operator - Determines whether you want to include or exclude authors.' .
+		esc_html( 'Operator - Determines whether you want to include or exclude authors.', 'advanced-post-list' ) .
 		'<br /><br />' .
-		'Author Names/IDs - Displays a list of authors the site currently has and is divided/grouped into separate role groups.',
-		'advanced-post-list'
-	),
-	'post_status' => esc_html__(
-		'Holds the settings to show which posts to display based on the user visibility and/or the page states. To which is only visible to the users with the necessary capabilities to view them.' .
+		esc_html( 'Author Names/IDs - Displays a list of authors the site currently has and is divided/grouped into separate role groups.', 'advanced-post-list' ),
+	'post_status' =>
+		esc_html( 'Holds the settings to show which posts to display based on the user visibility and/or the page states. To which is only visible to the users with the necessary capabilities to view them.', 'advanced-post-list' ) .
 		'<br /><br />' .
-		'<b>Visibility</b> - Display posts as either Public, Private, or Both' .
+		esc_html( '<b>Visibility</b> - Display posts as either Public, Private, or Both', 'advanced-post-list' ) .
 		'<br /><br />' .
-		'<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, Auto-save, Inherit, and/or Trash.',
-		'advanced-post-list'
-	),
-	'user_perms' => esc_html__(
-		'Uses the user permission via. user capabilities to determine what posts to display in the post list to the visitor/user.',
-		'advanced-post-list'
-	),
-	'offset' => esc_html__(
-		'Number of posts to skip/displace.' .
+		esc_html( '<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, Auto-save, Inherit, and/or Trash.', 'advanced-post-list' ),
+	'user_perms' =>
+		esc_html__( 'Uses the user permission via. user capabilities to determine what posts to display in the post list to the visitor/user.', 'advanced-post-list' ),
+	'offset' =>
+		esc_html( 'Number of posts to skip/displace.', 'advanced-post-list' ) .
 		'<br />' .
-		'NOTE: Offset is ignored when List Amount is set to -1 (show all posts).',
-		'advanced-post-list'
-	),
-	'exclude_posts_by_id' => esc_html__(
-		'Add post/page IDs, seperated by a comma (,), will prevent those posts from being added to the post list.',
-		'advanced-post-list'
-	),
-	'enable_sticky_posts' => esc_html__(
-		'Meant for the built-in post type (Posts) function. When checked, this will prevent sticky posts from always displaying at the top of the post list.',
-		'advanced-post-list'
-	),
-	'exclude_current_post' => esc_html__(
-		'When checked, the current post being viewed will be excluded from the post list.',
-		'advanced-post-list'
-	),
-	'exclude_duplicate_posts' => esc_html__(
-		'In the "order that it is received", each preset post list being viewed will add the post IDs to a global exclude list built into APL. When checked, the preset post list will add the post IDs (listed at the time) to the exclude filter settings in WP_Query. This will remove any posts that have already been displayed to the user by the APL plugin.',
-		'advanced-post-list'
-	),
+		esc_html( 'NOTE: Offset is ignored when List Amount is set to -1 (show all posts).', 'advanced-post-list' ),
+	'exclude_posts_by_id' =>
+		esc_html__( 'Add post/page IDs, seperated by a comma (,), will prevent those posts from being added to the post list.', 'advanced-post-list' ),
+	'enable_sticky_posts' =>
+		esc_html__( 'Meant for the built-in post type (Posts) function. When checked, this will prevent sticky posts from always displaying at the top of the post list.', 'advanced-post-list' ),
+	'exclude_current_post' =>
+		esc_html__( 'When checked, the current post being viewed will be excluded from the post list.', 'advanced-post-list' ),
+	'exclude_duplicate_posts' =>
+		esc_html__(	'In the "order that it is received", each preset post list being viewed will add the post IDs to a global exclude list built into APL. When checked, the preset post list will add the post IDs (listed at the time) to the exclude filter settings in WP_Query. This will remove any posts that have already been displayed to the user by the APL plugin.', 'advanced-post-list' ),
 );
 ?>
 <?php

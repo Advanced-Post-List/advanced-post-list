@@ -1,9 +1,12 @@
 <?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Setting's Import/Export Metabox
+ *
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ *
+ * @package advanced-post-list
+ * @package advanced-post-list\APL_Admin
+ * @since 0.4.0
  */
 
 $apl_help_text = array(
@@ -24,7 +27,7 @@ $apl_help_text = array(
 			<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['export_filename']; ?>"></span>
 		</div>
 		<div class="apl-cell-1of2" >
-			<input type="text" id="apl_export_filename" style="width: 100%;" value="APL-<?php echo date('Y-m-d-Hi'); ?>" />
+			<input type="text" id="apl_export_filename" style="width: 100%;" value="APL-<?php echo date( 'Y-m-d-Hi' ); ?>" />
 			<?php submit_button( __( 'Export' ), 'secondary', 'apl_export', true ); ?>
 		</div>
 	</div>
@@ -57,24 +60,10 @@ $apl_help_text = array(
 		</div>
 		<div class="apl-cell-1of2" >
 			<p>
-				<?php 
-				esc_html_e( 
-					'Restores the plugin\'s default preset table only, and will ' .
-					'overwrite/add the default Post Lists. This will not delete ' .
-					'other Post Lists (as long as the name isn\'t a default name).',
-					'advanced-post-list'
-				);
-				?>
+				<?php esc_html_e( 'Restores the plugin\'s default preset table only, and will overwrite/add the default Post Lists. This will not delete other Post Lists (as long as the name isn\'t a default name).', 'advanced-post-list' ); ?>
 			</p>
 			<p>
-				<?php 
-				esc_html_e( 
-					'Note: This is currently a Work In Progress. The functionality ' .
-					'is relatively simple, however, many updates have taken place ' .
-					'since then, and many of the defaults are relatively old.',
-					'advanced-post-list'
-				);
-				?>
+				<?php esc_html_e( 'Note: This is currently a Work In Progress. The functionality is relatively simple, however, many updates have taken place since then, and many of the defaults are relatively old.', 'advanced-post-list' ); ?>
 			</p>
 			<div>
 				<?php submit_button( __( 'Restore' ), 'secondary', 'apl_restore', true ); ?>

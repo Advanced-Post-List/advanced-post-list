@@ -4,10 +4,9 @@
  *
  * APL Preset Design for handling the object and post type data.
  *
- * @link https://github.com/EkoJr/advanced-post-list/
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
  *
- * @package WordPress
- * @subpackage advanced-post-list.php
+ * @package advanced-post-list
  * @since 0.4.0
  */
 
@@ -21,7 +20,7 @@
 class APL_Design {
 
 	/**
-	 * ID to Database Design.
+	 * ID to Database Design
 	 *
 	 * @since 0.4.0
 	 * @access private
@@ -30,7 +29,7 @@ class APL_Design {
 	public $id = 0;
 
 	/**
-	 * Title.
+	 * Title
 	 *
 	 * @since 0.4.0
 	 * @access public
@@ -39,7 +38,7 @@ class APL_Design {
 	public $title = '';
 
 	/**
-	 * Slug.
+	 * Slug
 	 *
 	 * @since 0.4.0
 	 * @access public
@@ -48,6 +47,8 @@ class APL_Design {
 	public $slug = '';
 
 	/**
+	 * Before List
+	 *
 	 * HTML content for Before.
 	 *
 	 * @since 0.4.0
@@ -57,6 +58,8 @@ class APL_Design {
 	public $before = '';
 
 	/**
+	 * List Content
+	 *
 	 * HTML & Shortcode content for list Content.
 	 *
 	 * @since 0.4.0
@@ -66,6 +69,8 @@ class APL_Design {
 	public $content = '';
 
 	/**
+	 * After List
+	 *
 	 * HTML content for After.
 	 *
 	 * @since 0.4.0
@@ -75,6 +80,8 @@ class APL_Design {
 	public $after = '';
 
 	/**
+	 * Empty Message
+	 *
 	 * HTML content for an empty list.
 	 *
 	 * @since 0.4.0
@@ -84,20 +91,19 @@ class APL_Design {
 	public $empty = '';
 
 	/**
-	 * Constructor for APL_Design Class.
+	 * Constructor for APL_Design Class
 	 *
 	 * Creates or loads an APL Design Object.
 	 *
 	 * @since 0.4.0
 	 *
 	 * @param string $design_name Saved as title, but is converted to a slug.
-	 * @return void
 	 */
 	public function __construct( $design_name ) {
 		// Add Hooks.
 		$this->slug = sanitize_title_with_dashes( $design_name );
 		$this->title = (string) $design_name;
-		
+
 		$args = array(
 			'name' => $this->slug,
 		);
@@ -105,7 +111,7 @@ class APL_Design {
 
 		if ( is_admin() ) {
 			// Draft/Init Hook.
-			
+
 			// Save Design Meta Data Hook.
 			add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );
 			// Delete Design Hook.
@@ -114,15 +120,16 @@ class APL_Design {
 	}
 
 	/**
-	 * Get Design data.
+	 * Get Design data
 	 *
 	 * Gets the design data from the database.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
 	 * @param array $args Query args for get_posts ( Same as WP_Query ).
-	 * @return boolean false on failure.
+	 * @return boolean Will return false on failure.
 	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
@@ -148,12 +155,12 @@ class APL_Design {
 			return false;
 		}
 		$design = $d_query->post;
-		
-		if ( $design->post_name === $args['name'] && !empty( $args['name'] ) ) {
+
+		if ( $design->post_name === $args['name'] && ! empty( $args['name'] ) ) {
 			$this->id      = absint( $design->ID );
 			$this->title   = esc_html( $design->post_title );
 			$this->slug    = $design->post_name;
-			
+
 			$this->before  = get_post_meta( $this->id, 'apl_before', true )   ?: '';
 			$this->content = get_post_meta( $this->id, 'apl_content', true )  ?: '';
 			$this->after   = get_post_meta( $this->id, 'apl_after', true )    ?: '';
@@ -165,14 +172,12 @@ class APL_Design {
 	}
 
 	/**
-	 * Save APL Design Object.
+	 * Save APL Design Object
 	 *
 	 * Inserts or updates the Design post data with $this object.
 	 *
 	 * @since 0.4.0
 	 * @access public
-	 *
-	 * @return void
 	 */
 	public function save_design() {
 		if ( empty( $this->slug ) ) {
@@ -201,30 +206,28 @@ class APL_Design {
 	}
 
 	/**
-	 * Deletes the Design.
+	 * Deletes the Design
 	 *
 	 * @since 0.4.0
 	 *
 	 * @link https://codex.wordpress.org/Function_Reference/wp_delete_post
-	 *
-	 * @return void
 	 */
 	public function delete_design() {
-		
+
 		wp_delete_post( $this->id, true );
-		
+
 	}
 
 	/**
-	 * Insert Design post data.
+	 * Insert Design post data
 	 *
 	 * Inserts APL Design's post args to the database to create a new WP_Post.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
 	 * @param array $args Post arg array for creating Post objects.
-	 * @return void
 	 */
 	private function insert_design_post( $args = array() ) {
 		$defaults = $this->default_postarr();
@@ -238,15 +241,15 @@ class APL_Design {
 	}
 
 	/**
-	 * Update Design post data.
+	 * Update Design post data
 	 *
 	 * Inserts APL Design's post args to the database to update a WP_Post.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
 	 * @param type $args Post arg array for creating Post objects.
-	 * @return void
 	 */
 	private function update_design_post( $args = array() ) {
 		$defaults = $this->default_postarr();
@@ -266,10 +269,11 @@ class APL_Design {
 	}
 
 	/**
-	 * Default Post Arg Array.
+	 * Default Post Arg Array
 	 *
 	 * Sets the default Post Argument Array for WP_Post objects.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
@@ -306,7 +310,7 @@ class APL_Design {
 	}
 
 	/**
-	 * Hook for Saving Design Post Meta.
+	 * Hook for Saving Design Post Meta
 	 *
 	 * WP hook for saving meta data in APL Design post type. This fires when
 	 * either insert or update post has been used.
@@ -314,7 +318,6 @@ class APL_Design {
 	 * @since 0.4.0
 	 *
 	 * @param int $post_id Post ID that is past by WP when saving post.
-	 * @return void
 	 */
 	public function hook_action_save_post_apl_design( $post_id, $post_obj, $update ) {
 		$this->id     = $post_id;
@@ -338,7 +341,7 @@ class APL_Design {
 		if ( $old_empty !== $this->empty ) {
 			update_post_meta( $this->id, 'apl_empty', $this->empty );
 		}
-		
+
 		remove_action( 'save_post_apl_design', array( $this, 'hook_action_save_post_apl_design' ) );
 	}
 }

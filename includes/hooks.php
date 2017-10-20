@@ -1,14 +1,12 @@
 <?php
-
 /**
  * APL Custom Hooks
  *
  * Preset Post List Object used by Preset Db.
  *
- * @link https://github.com/EkoJr/advanced-post-list/
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
  *
- * @package WordPress
- * @subpackage advanced-post-list.php
+ * @package advanced-post-list
  * @since 0.1.0
  */
 

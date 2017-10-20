@@ -1,9 +1,12 @@
 <?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Setting's Info Metabox
+ *
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ *
+ * @package advanced-post-list
+ * @package advanced-post-list\APL_Admin
+ * @since 0.4.0
  */
 ?>
 <div style="display: inline-block;">

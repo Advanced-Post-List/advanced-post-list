@@ -4,10 +4,9 @@
  *
  * APL Shortcode API: APL_InternalShortcodes class
  *
- * @link https://github.com/EkoJr/advanced-post-list/
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
  *
- * @package WordPress
- * @subpackage advanced-post-list.php
+ * @package advanced-post-list
  * @since 0.4.0
  */
 
@@ -46,15 +45,6 @@ class APL_Shortcodes {
 }
 
 /**
- * Advanced Post List - Internal Shortcodes
- *
- * Handles all internal do_shortcodes when preset post lists are called. Each time
- * the class object is created, shortcodes are added, replace function used to
- * do_shortcodes, and ends by removing shortcodes (currently manual $this->remove).
- *
- * @since 0.4.0
- */
-/**
  * APL Internal Shortcodes
  *
  * Handles all internal do_shortcodes when preset post lists are called. Each time
@@ -65,7 +55,7 @@ class APL_Shortcodes {
  */
 class APL_Internal_Shortcodes {
 	/**
-	 * WP_Post object for holding post details accessed by shortcode functions.
+	 * WP_Post object for holding post details accessed by shortcode functions
 	 *
 	 * @since 0.4.0
 	 * @access private
@@ -74,7 +64,7 @@ class APL_Internal_Shortcodes {
 	private $_post;
 
 	/**
-	 * Post Index in Post Lists to display a digit.
+	 * Post Index in Post Lists to display a digit
 	 *
 	 * @since 0.1.0
 	 * @since 0.4.0 - Added to Class Object.
@@ -84,7 +74,7 @@ class APL_Internal_Shortcodes {
 	private $_item_count;
 
 	/**
-	 * APL (Internal) Shortcode Constructor.
+	 * APL (Internal) Shortcode Constructor
 	 *
 	 * Desc: Loads/Adds all the internal shortcodes to WordPress, and sets the
 	 * class _post to default with Global Post.
@@ -96,8 +86,6 @@ class APL_Internal_Shortcodes {
 	 * @access public
 	 *
 	 * @global WP_Post $post Used to store in $this->_post.
-	 *
-	 * @return void
 	 */
 	public function __construct() {
 		// STEP 1.
@@ -113,7 +101,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Destruct Shortcode Remove.
+	 * Destruct Shortcode Remove
 	 *
 	 * Removes the shortcodes added from construction, and unset the class.
 	 * Note: Magic Method __destruct wasn't working as intended, and would called
@@ -125,8 +113,6 @@ class APL_Internal_Shortcodes {
 	 *
 	 * @since 0.4.0
 	 * @access public
-	 *
-	 * @return void
 	 */
 	public function remove() {
 		// STEP 1.
@@ -139,10 +125,11 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * List of shortcode tags.
+	 * List of shortcode tags
 	 *
 	 * Returns an array of shortcode tags used when public shortcodes are used.
 	 *
+	 * @ignore
 	 * @todo Extension support for additional functionality.
 	 *
 	 * @since 0.4.0
@@ -201,7 +188,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Shortcode Replace.
+	 * Shortcode Replace
 	 *
 	 * Replaces APL's internal shortcodes with RegEx and WP's Shortcode API
 	 * with $this->[shortcode].
@@ -243,7 +230,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * ID Shortcode.
+	 * ID Shortcode
 	 *
 	 * Adds the Post ID.
 	 *
@@ -270,7 +257,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Name Shortcode.
+	 * Post Name Shortcode
 	 *
 	 * Adds the Post Slug (post_name).
 	 *
@@ -297,7 +284,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Slug Shortcode.
+	 * Post Slug Shortcode
 	 *
 	 * Adds the Post Slug from WP_Post->post_name.
 	 *
@@ -322,7 +309,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Title Shortcode.
+	 * Post Title Shortcode
 	 *
 	 * Adds the post/page title.
 	 *
@@ -374,7 +361,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Permalink (URL) Shortcode.
+	 * Post Permalink (URL) Shortcode
 	 *
 	 * Adds the post/page permalink/URL.
 	 *
@@ -400,7 +387,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Guid (WP Default URL) Shortcode.
+	 * Post Guid (WP Default URL) Shortcode
 	 *
 	 * Adds the post/page Guid. WP's Default URL (.com/?p=396).
 	 *
@@ -427,7 +414,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Date Shortcode.
+	 * Post Date Shortcode
 	 *
 	 * Adds the post/page date.
 	 *
@@ -464,7 +451,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Date GMT Shortcode.
+	 * Post Date GMT Shortcode
 	 *
 	 * Adds the post/page date.
 	 *
@@ -501,7 +488,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Date Modified Shortcode.
+	 * Post Date Modified Shortcode
 	 *
 	 * Adds the post/page modified date.
 	 *
@@ -538,7 +525,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Date Modified GMT Shortcode.
+	 * Post Date Modified GMT Shortcode
 	 *
 	 * Adds the post/page modified date GMT.
 	 *
@@ -575,7 +562,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Author Shortcode.
+	 * Post Author Shortcode
 	 *
 	 * Adds the Author/User Data associated with the post.
 	 *
@@ -662,7 +649,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Thumb Shortcode.
+	 * Post Thumb Shortcode
 	 *
 	 * Adds a Post Thumb/Featured Image URL associated with the post, but
 	 * can also grab an image within WP_Post->post_content (extract=on/force).
@@ -737,7 +724,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Content Shortcode.
+	 * Post Content Shortcode
 	 *
 	 * Adds the Post_Content.
 	 *
@@ -764,7 +751,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Excerpt Shortcode.
+	 * Post Excerpt Shortcode
 	 *
 	 * Adds the Post Excerpt, or a substring of Post Content.
 	 *
@@ -835,7 +822,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Comment Count Shortcode.
+	 * Post Comment Count Shortcode
 	 *
 	 * Adds the Post Comment_Count, which displays the amount of comments
 	 * per post.
@@ -869,7 +856,7 @@ class APL_Internal_Shortcodes {
 	// TODO ADD Preset Design. Default would use this, but a custom comment shortcode
 	//          would have its own design.
 	/**
-	 * Post Comment Shortcode.
+	 * Post Comment Shortcode
 	 *
 	 * Adds an HTML string to display comments in a set format.
 	 *
@@ -924,7 +911,7 @@ class APL_Internal_Shortcodes {
 			if ( '' === $comment->comment_author_url ) {
 				$comment_author = $comment->comment_author;
 			} else {
-				$comment_author = '<a href="' . $comment->comment_author_url . '" >' . $comment->comment_author . "</a>";
+				$comment_author = '<a href="' . $comment->comment_author_url . '" >' . $comment->comment_author . '</a>';
 			}
 
 			$return_str .= '<p>' . $comment_author .
@@ -942,7 +929,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Page Parent Shortcode.
+	 * Page Parent Shortcode
 	 *
 	 * Adds Page Parent Title, and optionally with link.
 	 *
@@ -1012,7 +999,7 @@ class APL_Internal_Shortcodes {
 
 	// TODO ADD Array String to filter through like this->post_author.
 	/**
-	 * Post Type Shortcode.
+	 * Post Type Shortcode
 	 *
 	 * Adds the Post Type (Label) Name associated with the post/page ID.
 	 *
@@ -1054,7 +1041,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Categories Shortcode.
+	 * Categories Shortcode
 	 *
 	 * Adds Categories associated with Post/Page.
 	 *
@@ -1116,7 +1103,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Tags Shortcode.
+	 * Tags Shortcode
 	 *
 	 * Adds Tags associated with Post/Page.
 	 *
@@ -1178,7 +1165,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Terms Shortcode.
+	 * Post Terms Shortcode
 	 *
 	 * Adds (Custom) Taxonomy Terms associated with Post/Page. Displays both
 	 * post and page types, and will display terms from taxonomies that are set
@@ -1267,7 +1254,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post Meta Shortcode.
+	 * Post Meta Shortcode
 	 *
 	 * Adds Post MetaData used within posts/pages. Returns empty if nothing
 	 * is found.
@@ -1309,7 +1296,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * PHP Function Shortcode.
+	 * PHP Function Shortcode
 	 *
 	 * Adds custom php functions within the environment/instance, and displays
 	 * the returned data as a string.
@@ -1374,7 +1361,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Post List Item Number Shortcode.
+	 * Post List Item Number Shortcode
 	 *
 	 * Adds a Numeric value to each post; by X amount of increments, and
 	 * starting from where it is offset as.
@@ -1425,7 +1412,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Final End Post List Shortcode.
+	 * Final End Post List Shortcode
 	 *
 	 * Determines the End of the Final post to display.
 	 *
@@ -1455,7 +1442,7 @@ class APL_Internal_Shortcodes {
 	}
 
 	/**
-	 * Kalin's Post PDF Shortcode.
+	 * Kalin's Post PDF Shortcode
 	 *
 	 * Shortcode for displaying Kalin's Post PDF Plugin.
 	 *

@@ -4,10 +4,9 @@
  *
  * Core object to Advanced Post List
  *
- * @link https://github.com/EkoJr/advanced-post-list/
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
  *
- * @package WordPress
- * @subpackage advanced-post-list.php
+ * @package advanced-post-list
  * @since 0.1.0
  */
 
@@ -24,42 +23,24 @@
 class APL_Core {
 
 	/**
-	 * Summary.
+	 * APL Options Name
 	 *
 	 * @since 0.1.0
 	 * @since 0.4.0 Changed name $_APL_OPTION_NAME to $_option_name
+	 * @deprecated 0.4.0 Recommend manual param.
 	 * @access public
 	 * @var string
 	 */
 	private $_option_name = 'apl_options';
 
 	/**
-	 * Summary.
+	 * Remove/Prevent Duplicate Posts
 	 *
 	 * @since 0.3.0
 	 * @access public
 	 * @var array
 	 */
 	private $_remove_duplicates = array();
-
-	// PHP Doc WP Template.
-	/**
-	 * Summary.
-	 *
-	 * Description.
-	 *
-	 * @since x.x.x
-	 * @access (for functions: only use if private)
-	 *
-	 * @see Function/method/class relied on
-	 * @link URL
-	 * @global type $varname Description.
-	 * @global type $varname Description.
-	 *
-	 * @param type $var Description.
-	 * @param type $var Optional. Description. Default.
-	 * @return type Description.
-	 */
 
 	/**
 	 * Core Constructor
@@ -78,9 +59,8 @@ class APL_Core {
 	 * @access public
 	 *
 	 * @param string $file Main plugin file.
-	 * @return void
 	 */
-	public function __construct( $file ) {	
+	public function __construct( $file ) {
 		// STEP 1.
 		$this->_define_constants( $file );
 		$this->_requires();
@@ -100,7 +80,7 @@ class APL_Core {
 		if ( is_admin() ) {
 			// Admin Class
 			add_action( 'init', array( 'APL_Admin', 'get_instance' ) );
-			
+
 			/* **** ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS **** */
 			$file_dir = APL_DIR . 'advanced-post-list.php';
 			register_activation_hook( $file_dir, array( 'APL_Core', 'activation' ) );
@@ -110,10 +90,11 @@ class APL_Core {
 	}
 
 	/**
-	 * Define APL Constants.
+	 * Define APL Constants
 	 *
 	 * Defines all the constants for APL.
 	 *
+	 * @ignore
 	 * @since 0.3.2
 	 * @access private
 	 *
@@ -140,7 +121,7 @@ class APL_Core {
 		 * @since 0.1.0
 		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
 		 *                APL_Core::_define_constants().
-		 * @var string APL_NAME 'Advanced Post List'.
+		 * @var string $APL_NAME Contains 'Advanced Post List'.
 		 */
 		define( 'APL_NAME', $plugin_data['Name'] );
 
@@ -148,7 +129,7 @@ class APL_Core {
 		 * APL Slug.
 		 *
 		 * @since 0.3.2
-		 * @var string APL_SLUG 'advanced-post-list'.
+		 * @var string $APL_SLUG Contains 'advanced-post-list'.
 		 */
 		define( 'APL_SLUG', $plugin_data['Slug'] );
 
@@ -158,7 +139,7 @@ class APL_Core {
 		 * @since 0.1.0
 		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
 		 *                APL_Core::_define_constants().
-		 * @var string APL_VERSION '1.2.3'.
+		 * @var string $APL_VERSION Ex. '1.2.3'.
 		 */
 		define( 'APL_VERSION', $plugin_data['Version'] );
 
@@ -168,7 +149,7 @@ class APL_Core {
 		 * @since 0.1.0
 		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
 		 *                APL_Core::_define_constants().
-		 * @var string APL_URL 'http://localhost/wordpress/wp-content/plugins/advanced-post-list/'.
+		 * @var string $APL_URL Contains 'http://localhost/wordpress/wp-content/plugins/advanced-post-list/'.
 		 */
 		define( 'APL_URL', plugin_dir_url( $plugin_file ) );
 
@@ -178,16 +159,17 @@ class APL_Core {
 		 * @since 0.1.0
 		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
 		 *                APL_Core::_define_constants().
-		 * @var string APL_DIR 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
+		 * @var string $APL_DIR Contains 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
 		 */
 		define( 'APL_DIR', plugin_dir_path( $plugin_file ) );
 	}
 
 	/**
-	 * Add Required Files.
+	 * Add Required Files
 	 *
 	 * Adds the required files to include.
 	 *
+	 * @ignore
 	 * @since 0.3.0
 	 * @access private
 	 *
@@ -207,27 +189,25 @@ class APL_Core {
 		require_once( APL_DIR . 'includes/class/dep-class-apl-preset.php' );
 		require_once( APL_DIR . 'includes/class/old-APLPresetDbObj.php' );
 		require_once( APL_DIR . 'includes/class/old-APLPresetObj.php' );
-		
+
 		// Functions.
-		require_once( APL_DIR . 'includes/functions.php');
+		require_once( APL_DIR . 'includes/functions.php' );
 
 		// ADMIN
 		require_once( APL_DIR . 'admin/class-apl-admin.php' );
 	}
 
 	/**
-	 * Register the Design Post Type.
+	 * Register the Design Post Type
 	 *
 	 * Hook for loading the textdomain location.
 	 *
 	 * @since 0.4.0
 	 *
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type WP Codex.
-	 *
-	 * @return void
 	 */
 	public function action_register_post_type_post_list() {
-		
+
 		$args = array(
 			'labels' => array(
 				'name'                  => __( 'APL Post Lists', 'advanced-post-list' ),
@@ -278,15 +258,13 @@ class APL_Core {
 	}
 
 	/**
-	 * Register the Design Post Type.
+	 * Register the Design Post Type
 	 *
 	 * Hook for loading the textdomain location.
 	 *
 	 * @since 0.4.0
 	 *
 	 * @link https://codex.wordpress.org/Function_Reference/register_post_type WP Codex.
-	 *
-	 * @return void
 	 */
 	public function action_register_post_type_design() {
 		$args = array(
@@ -338,7 +316,7 @@ class APL_Core {
 	}
 
 	/**
-	 * Hook for APL check version.
+	 * Hook for APL check version
 	 *
 	 * Update method for handling the Upgrader Class.
 	 *
@@ -349,26 +327,24 @@ class APL_Core {
 	 * @see 'plugins_loaded' action hook.
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/plugins_loaded
 	 * @link https://developer.wordpress.org/reference/hooks/plugins_loaded/
-	 *
-	 * @return void
 	 */
 	public function action_check_version() {
 		$options = apl_options_load();
 		if ( isset( $options['version'] ) ) {
 			if ( version_compare( $options['version'], APL_VERSION, '<' ) ) {
 				$preset_db = new APL_Preset_Db( 'default' );
-				
+
 				$update_items = array(
 					'options'   => $options,
 					'preset_db' => $preset_db,
 				);
-				
+
 				$updater = new APL_Updater( $options['version'], $update_items, 'APL' );
 				// IN THIS CASE, BOTH MUST HAVE VALUES FILLED.
 				if ( $updater->update_occurred ) {
 					$options = $updater->options;
 					apl_options_save( $options );
-					
+
 					$this->update_post_list_database( $updater->apl_post_list_arr );
 					$this->update_design_database( $updater->apl_design_arr );
 				}
@@ -377,7 +353,7 @@ class APL_Core {
 	}
 
 	/**
-	 * Update Post List Database.
+	 * Update Post List Database
 	 *
 	 * Updates or adds to database via APL_Post_List object.
 	 *
@@ -385,7 +361,6 @@ class APL_Core {
 	 * @access private
 	 *
 	 * @param array $apl_post_list_arr
-	 * @return void
 	 */
 	public function update_post_list_database( $apl_post_list_arr ) {
 		foreach ( $apl_post_list_arr as $k1_ => $apl_post_list ) {
@@ -394,15 +369,15 @@ class APL_Core {
 	}
 
 	/**
-	 * Update Design Database.
+	 * Update Design Database
 	 *
 	 * Updates or adds to database via APL_Design object.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
 	 * @param array $apl_post_list_arr
-	 * @return void
 	 */
 	private function update_design_database( $apl_design_arr ) {
 		foreach ( $apl_design_arr as $apl_design ) {
@@ -410,15 +385,13 @@ class APL_Core {
 		}
 	}
 	/**
-	 * Load APL's Textdomain.
+	 * Load APL's Textdomain
 	 *
 	 * Hook for loading the textdomain location.
 	 *
 	 * @since 0.4.0
 	 *
 	 * @link https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
-	 *
-	 * @return void
 	 */
 	public function action_load_plugin_textdomain() {
 		$lang_dir = APL_DIR . '/languages/';
@@ -426,7 +399,7 @@ class APL_Core {
 	}
 
 	/**
-	 * Summary.
+	 * WP Plugin Activation
 	 *
 	 * Handles the activation method when the plugin is first activated.
 	 *
@@ -442,7 +415,7 @@ class APL_Core {
 	}
 
 	/**
-	 * Summary.
+	 * WP Plugin De-activation
 	 *
 	 * Handles the deactivation method when plugin is deactivated
 	 *
@@ -453,6 +426,7 @@ class APL_Core {
 	 * @since 0.1.0
 	 * @since 0.2.0 - Added delete_option('APL_preset_db-default') for deleting
 	 *                preset database data.
+	 * @since 0.4.0 - Change database to Post Data to uninstall.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/unregister_post_type/
 	 * @access public
@@ -463,7 +437,7 @@ class APL_Core {
 		// STEP 2.
 		if ( true === $options['delete_core_db'] || ( false !== $options && ! isset( $options['delete_core_db'] ) ) ) {
 			delete_option( 'apl_options' );
-			
+
 			// POST LIST POST DATA.
 			$pl_args = array(
 				'post_type' => 'apl_post_list',
@@ -479,10 +453,10 @@ class APL_Core {
 			);
 			$pl_query = new WP_Query( $pl_args );
 			$post_list_data = $pl_query->posts;
-			
+
 			foreach ( $post_list_data as $v1_pl_post ) {
 				$apl_post_list = new APL_Post_List( $v1_pl_post->post_name );
-				
+
 				$apl_post_list->delete_post_list();
 			}
 			unregister_post_type( 'apl_post_list' );
@@ -499,21 +473,21 @@ class APL_Core {
 					'private',
 					'trash',
 				),
-			);			
+			);
 			$d_query = new WP_Query( $d_args );
 			$design_data = $d_query->posts;
-			
+
 			foreach ( $design_data as $v1_d_post ) {
 				$apl_design = new APL_Design( $v1_d_post->post_name );
-				
+
 				$apl_design->delete_design();
 			}
 			unregister_post_type( 'apl_design' );
-		}
+		}// End if().
 	}
 
 	/**
-	 * Summary.
+	 * WP Plugin Uninstall
 	 *
 	 * Handles the uninstall method when plugin is uninstalled.
 	 *
@@ -561,7 +535,7 @@ class APL_Core {
 				'private',
 				'trash',
 			),
-		);			
+		);
 		$d_query = new WP_Query( $d_args );
 		$design_data = $d_query->posts;
 
@@ -574,7 +548,7 @@ class APL_Core {
 	}
 
 	/**
-	 * (DEPRECATED) Option Defaults.
+	 * (DEPRECATED) Option Defaults
 	 *
 	 * Sets options to default values. Deprecated.
 	 *
@@ -583,6 +557,8 @@ class APL_Core {
 	 * STEP 3 - Return Options.
 	 *
 	 * @since 0.1.0
+	 * @deprecated 0.4.0 Use apl_options_default()
+	 * @see apl_options_default()
 	 * @access private
 	 *
 	 * @return object Core option settings
@@ -602,7 +578,7 @@ class APL_Core {
 	}
 
 	/**
-	 * (DEPRECATED) APL Load Option.
+	 * (DEPRECATED) APL Load Option
 	 *
 	 * Gets APLOptions from WordPress database and send the option data back
 	 * if any. Deprecated.
@@ -612,7 +588,8 @@ class APL_Core {
 	 * STEP 2 - If Options exists, then return object. Otherwise return false.
 	 *
 	 * @since 0.1.0
-	 * @since 0.4.0 - Added a defaults and save if empty.
+	 * @deprecated 0.4.0 Use apl_options_load()
+	 * @see apl_options_load()
 	 * @access private
 	 *
 	 * @see Function/method/class relied on
@@ -636,7 +613,7 @@ class APL_Core {
 	}
 
 	/**
-	 * (DEPRECATED) Save Options.
+	 * (DEPRECATED) Save Options
 	 *
 	 * Deprecated.
 	 *
@@ -644,6 +621,8 @@ class APL_Core {
 	 *               WordPress database.
 	 *
 	 * @since 0.1.0
+	 * @deprecated 0.4.0 Use apl_options_save()
+	 * @see apl_options_save()
 	 * @access private
 	 *
 	 * @see Function/method/class relied on
@@ -660,23 +639,22 @@ class APL_Core {
 	}
 
 	/**
-	 * Summary.
+	 * Widget Initialization
 	 *
-	 * Adds the plugins widget to WordPress.
+	 * Registers the Plugin's Widget to WordPress.
 	 *
-	 * STEP 1 - Register widget.
-	 *
-	 * @since  0.1.0
+	 * @since 0.1.0
 	 *
 	 * @see APL_Widget class 'advanced-post-list/includes/class/class-apl-widget.php
-	 * @link URL
+	 * @link https://developer.wordpress.org/themes/functionality/widgets/
+	 * @link https://codex.wordpress.org/Function_Reference/register_widget
 	 */
 	public function action_widget_init() {
 		register_widget( 'APL_Widget' );
 	}
 
 	/**
-	 * Summary.
+	 * Shortcode [Post_List]
 	 *
 	 * Method handler for 'post_list' shortcode and displaying the target post list.
 	 *
@@ -694,7 +672,7 @@ class APL_Core {
 		if ( isset( $att['name'] ) ) {
 			// STEP 2.
 			return $this->display_post_list( $att['name'] );
-		} elseif( current_user_can( 'manage_options' ) ) {
+		} elseif ( current_user_can( 'manage_options' ) ) {
 			return esc_html__( 'NOTICE: Shortcode name is missing. Ex [post_list name=\'example\']', 'advanced-post-list' );
 		} else {
 			// STEP 3.
@@ -703,7 +681,7 @@ class APL_Core {
 	}
 
 	/**
-	 * Public Hard-code Display Post List.
+	 * Public Hard-code Display Post List
 	 *
 	 * Public function for displaying Post Lists.
 	 *
@@ -719,11 +697,12 @@ class APL_Core {
 	}
 
 	/**
-	 * Post List Looper.
+	 * Post List Looper
 	 *
 	 * Method used for executing the frontend loop. Currently uses an output
 	 * string (HTML) to return.
 	 *
+	 * @ignore
 	 * @since 0.1.0
 	 * @since 0.2.0  - Corrected a typo in the if statement for _postExcludeCurrent.
 	 * @since 0.3.b8 - Complete overhaul. Moved dynamic settings to APLQuery,
@@ -741,10 +720,10 @@ class APL_Core {
 	 * @return string HTML string.
 	 */
 	private function post_list_loop( $post_list_slug ) {
-		// STEP 1 - Get Post List data, and if valid, do initilization. 
+		// STEP 1 - Get Post List data, and if valid, do initilization.
 		// Otherwise, for Admin show an alert message, and nothing to viewers.
 		$apl_post_list = new APL_Post_List( $post_list_slug );
-		if ( $apl_post_list->id  ) {
+		if ( $apl_post_list->id ) {
 			// INIT.
 			require_once( APL_DIR . 'includes/class/class-apl-shortcodes.php' );
 			$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
@@ -775,7 +754,7 @@ class APL_Core {
 		// STEP - Query the posts to retrieve the final WP_Query class.
 		// NOTE: There's got to be a better concept to produce a final WP_Query.
 		$wp_query_class = $apl_query->query_wp( $apl_query->query_args_arr );
-		
+
 		/* ****************************************************************** */
 		/* * The Loop (APL/WP Concept) ************************************** */
 		/* ****************************************************************** */
@@ -812,7 +791,8 @@ class APL_Core {
 
 			// Exit method for apl-shortcodes class; __destroy magic method wasn't working as intended.
 			$internal_shortcodes->remove();
-		} else {// EMPTY.
+		} else {
+			// EMPTY.
 			$apl_options = $this->apl_options_load();
 
 			if ( ! empty( $apl_design->empty ) ) {
@@ -820,7 +800,7 @@ class APL_Core {
 			} elseif ( true === $apl_options['default_empty_enable'] && ! empty( $apl_options['default_empty_output'] ) ) {
 				$output .= $apl_options['default_empty_output'];
 			}
-		}// End if( have_posts ) loop.
+		}// End if().
 
 		wp_reset_postdata();
 

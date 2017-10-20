@@ -4,10 +4,9 @@
  *
  * Query API to WP_Query.
  *
- * @link https://github.com/EkoJr/advanced-post-list/
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
  *
- * @package WordPress
- * @subpackage advanced-post-list.php
+ * @package advanced-post-list
  * @since 0.3.0
  */
 
@@ -24,7 +23,7 @@
 class APL_Query {
 
 	/**
-	 * Stores error message when error occurs.
+	 * Stores error message when error occurs
 	 *
 	 * @todo Possibly Remove, and just use WP_Query API.
 	 *
@@ -34,7 +33,7 @@ class APL_Query {
 	public $_posts;
 
 	/**
-	 * Query_Args Array.
+	 * Query_Args Array
 	 *
 	 * @since 0.3.b7
 	 * @since 0.4.0 - Changed to snake_case.
@@ -43,7 +42,7 @@ class APL_Query {
 	public $query_args_arr = array();
 
 	/**
-	 * Constructor for APL Query.
+	 * Constructor for APL Query
 	 *
 	 * Constructor for APL's Query. Adds post/page dynamics, sets the multi-
 	 * dimensional query array, and reduces the amount of query strings to be used.
@@ -57,7 +56,6 @@ class APL_Query {
 	 * @since 0.4.0 - Change to new object method structure.
 	 *
 	 * @param object $apl_post_list APL Preset Post List Object.
-	 * @return void
 	 */
 	public function __construct( $apl_post_list ) {
 		// STEP 1.
@@ -74,10 +72,11 @@ class APL_Query {
 	}
 
 	/**
-	 * Add Dynamic values to Post List.
+	 * Add Dynamic values to Post List
 	 *
 	 * Adds the current global post values for any dynamic settings checked.
 	 *
+	 * @ignore
 	 * @since 0.3.b8
 	 * @since 0.4.0 - Changed to use APL_Post_List object.
 	 * @access private
@@ -182,19 +181,20 @@ class APL_Query {
 						}
 					}
 				}
-				// Break Post Type Loop ( Just in case ).
+				// Break Post Type Loop (Just in case).
 				break;
 			}// End if().
-		}// End foreach $apl_post_list->post_type.
+		}// End foreach().
 
 		return $apl_post_list;
 	}
 
 	/**
-	 * Set Query Args.
+	 * Set Query Args
 	 *
 	 * Sets multiple query_args in query_args_arr.
 	 *
+	 * @ignore
 	 * @since 0.3.b8
 	 * @since 0.4.0 - Changed to use APL_Post_List structure.
 	 * @access private
@@ -268,6 +268,7 @@ class APL_Query {
 						}
 					}
 				}
+
 				// Post Parents is empty in 'Any'
 				//$tmp_query_args['post_parent__in'] = $apl_post_list->post_parent__in['any'];
 			}// End if().
@@ -299,7 +300,7 @@ class APL_Query {
 	}
 
 	/**
-	 * Summary.
+	 * Query Args Consolidation
 	 *
 	 * Merges any simular query strings.
 	 *
@@ -307,6 +308,7 @@ class APL_Query {
 	 *         or tax query.
 	 * STEP 2: Return (modified) query_str_array.
 	 *
+	 * @ignore
 	 * @since 0.3.b8
 	 * @access private
 	 *
@@ -345,13 +347,14 @@ class APL_Query {
 	}
 
 	/**
-	 * Match Tax Query Args.
+	 * Match Tax Query Args
 	 *
 	 * Checks to see if there is a 100% relation.
 	 *
 	 * STEP 1: Check and return false if taxomonies do not have 100% relation.
 	 * STEP 2: Return true if there is a 100% relation.
 	 *
+	 * @ignore
 	 * @since 0.3.b8
 	 * @access private
 	 *
@@ -403,6 +406,7 @@ class APL_Query {
 	 *
 	 * Modifications for certain enhancements after query array has been consolidated.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @private
 	 *
@@ -441,7 +445,7 @@ class APL_Query {
 	}
 
 	/**
-	 * APL Query WP.
+	 * APL Query WP
 	 *
 	 * Queries multiple instances of this function if there is more than one
 	 * query_str.

@@ -1,22 +1,33 @@
 <?php
 /**
- * APL Import File
+ * APL Import
+ *
+ * Final step to import data.
+ *
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ *
+ * @package advanced-post-list
+ * @package advanced-post-list\APL_Admin
+ * @since 0.4.0
+ */
+
+/**
+ * APL Import from File(s)
  *
  * Used to catch any files that need to be overwritten.
  *
- * @package WordPress
- * @subpackage Advanced Post List
- * @subpackage APL_Core
+ * @since 0.3.0
+ * @since 0.4.0 Changed to Post Data.
  */
 function apl_import() {
-    check_ajax_referer( 'apl_import' );
+	check_ajax_referer( 'apl_import' );
 
 	$tmp_post_list  = get_option( 'apl_import_overwrite_post_list' );
 	$tmp_design     = get_option( 'apl_import_overwrite_design' );
 
 	if ( isset( $_GET['post_list_overwrite'] ) ) {
 		$tmp_post_list_slugs = explode( ',', $_GET['post_list_overwrite'] );
-		
+
 		foreach ( $tmp_post_list_slugs as  $v1_pt_slug ) {
 			foreach ( $tmp_post_list as $k2_index => $v2_post_list_import ) {
 				if ( $v1_pt_slug === $v2_post_list_import->slug ) {
@@ -40,7 +51,7 @@ function apl_import() {
 					$apl_post_list->pl_exclude_current   = $v2_post_list_import->pl_exclude_current   ?: $apl_post_list->pl_exclude_current;
 					$apl_post_list->pl_exclude_dupes     = $v2_post_list_import->pl_exclude_dupes     ?: $apl_post_list->pl_exclude_dupes;
 					$apl_post_list->pl_apl_design        = $v2_post_list_import->pl_apl_design        ?: $apl_post_list->pl_apl_design;
-					
+
 					$apl_post_list->save_post_list();
 					unset( $tmp_post_list[ $k2_index ] );
 				}
@@ -49,19 +60,19 @@ function apl_import() {
 	}
 	if ( isset( $_GET['post_list_overwrite'] ) ) {
 		$tmp_post_list_slugs = explode( ',', $_GET['post_list_overwrite'] );
-		
+
 		foreach ( $tmp_post_list_slugs as  $v1_d_slug ) {
 			foreach ( $tmp_design as $v2_design_import ) {
 				if ( $v1_d_slug === $v2_design_import->slug ) {
-					
+
 					$apl_design = new APL_Design( $v2_design_import->slug );
-					
+
 					$apl_design->title    = $v2_design_import->title    ?: $apl_design->title;
 					$apl_design->before   = $v2_design_import->before   ?: $apl_design->before;
 					$apl_design->content  = $v2_design_import->content  ?: $apl_design->content;
 					$apl_design->after    = $v2_design_import->after    ?: $apl_design->after;
 					$apl_design->empty    = $v2_design_import->empty    ?: $apl_design->empty;
-					
+
 					$apl_design->save_design();
 				}
 			}
@@ -69,29 +80,28 @@ function apl_import() {
 	}
 
 	/* POSSIBLE CONCEPT FOR SELECTING DESIGNS */
-//	if ( isset( $_GET['design_overwrite'] ) ) {
-//		$tmp_design_slugs = explode( ',', $_GET['design_overwrite'] );
-//		
-//		foreach ( $tmp_design_slugs as $v1_d_slug ) {
-//			foreach ( $tmp_design as $v2_design_import ) {
-//				if ( $v1_d_slug === $v2_design_import->slug ) {
-//					
-//					$apl_design = new APL_Design( $v2_design_import->slug );
-//					
-//					$apl_design->title    = $v2_design_import->title    ?: $apl_design->title;
-//					$apl_design->before   = $v2_design_import->before   ?: $apl_design->before;
-//					$apl_design->content  = $v2_design_import->content  ?: $apl_design->content;
-//					$apl_design->after    = $v2_design_import->after    ?: $apl_design->after;
-//					$apl_design->empty    = $v2_design_import->empty    ?: $apl_design->empty;
-//					
-//					$apl_design->save_design();
-//				}
-//			}
-//		}
-//	}
-	
-    delete_option( 'apl_import_overwrite_post_list' );
-    delete_option( 'apl_import_overwrite_design' );
+	//if ( isset( $_GET['design_overwrite'] ) ) {
+	//	$tmp_design_slugs = explode( ',', $_GET['design_overwrite'] );
+	//
+	//	foreach ( $tmp_design_slugs as $v1_d_slug ) {
+	//		foreach ( $tmp_design as $v2_design_import ) {
+	//			if ( $v1_d_slug === $v2_design_import->slug ) {
+	//
+	//				$apl_design = new APL_Design( $v2_design_import->slug );
+	//
+	//				$apl_design->title    = $v2_design_import->title    ?: $apl_design->title;
+	//				$apl_design->before   = $v2_design_import->before   ?: $apl_design->before;
+	//				$apl_design->content  = $v2_design_import->content  ?: $apl_design->content;
+	//				$apl_design->after    = $v2_design_import->after    ?: $apl_design->after;
+	//				$apl_design->empty    = $v2_design_import->empty    ?: $apl_design->empty;
+	//
+	//				$apl_design->save_design();
+	//			}
+	//		}
+	//	}
+	//}
+
+	delete_option( 'apl_import_overwrite_post_list' );
+	delete_option( 'apl_import_overwrite_design' );
 }
 
-?>

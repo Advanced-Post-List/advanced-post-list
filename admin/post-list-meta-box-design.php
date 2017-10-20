@@ -4,8 +4,10 @@
  *
  * Design Meta Box for making new Post Lists.
  *
- * @package WordPress
- * @subpackage APL_Admin
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ *
+ * @package advanced-post-list
+ * @package advanced-post-list\APL_Admin
  * @since 0.4.0
  */
 
@@ -79,7 +81,7 @@ $apl_design = new APL_Design( $apl_post_list->pl_apl_design );
 			</div>
 			<div>
 				<div style="margin: 3px 0px 3px 6px;">
-					<input type="checkbox" id="apl_empty_message_enable" class="apl-empty-message-enable" name="apl_empty_enable" <?php echo !empty( $apl_design->empty ) ? 'checked="checked"' : ''; ?> />
+					<input type="checkbox" id="apl_empty_message_enable" class="apl-empty-message-enable" name="apl_empty_enable" <?php echo ! empty( $apl_design->empty ) ? 'checked="checked"' : ''; ?> />
 					<label for="apl_empty_message_enable"><?php esc_html_e( 'Enable (Overwrites Default)', 'advanced-post-list' ) ?></label>
 				</div>
 				<textarea id="apl_textarea_empty_message" class="apl-textarea-empty-message large-text" name="apl_empty_message" rows="9" style="<?php echo empty( $apl_design->empty ) ? 'display: none;' : ''; ?>" ><?php echo $apl_design->empty; ?></textarea>

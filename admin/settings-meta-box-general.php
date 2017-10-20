@@ -1,10 +1,14 @@
 <?php
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Setting's General Settings Metabox
+ *
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ *
+ * @package advanced-post-list
+ * @package advanced-post-list\APL_Admin
+ * @since 0.4.0
  */
+
 //var_dump( admin_url( 'admin-post.php' ) );
 $options = get_option( 'apl_options' );
 

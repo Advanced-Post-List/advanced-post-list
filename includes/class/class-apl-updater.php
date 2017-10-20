@@ -4,10 +4,9 @@
  *
  * Updater object to Advanced Post List
  *
- * @link https://github.com/EkoJr/advanced-post-list/
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
  *
- * @package WordPress
- * @subpackage advanced-post-list.php
+ * @package advanced-post-list
  * @since 0.3.0
  */
 
@@ -21,7 +20,7 @@
 class APL_Updater {
 
 	/**
-	 * Even Update Occurred.
+	 * Even Update Occurred
 	 *
 	 * @since 0.4.0
 	 * @access public
@@ -39,7 +38,7 @@ class APL_Updater {
 	public $options;
 
 	/**
-	 * Stores the preset post lists.
+	 * Stores the preset post lists
 	 *
 	 * @since 0.3.0
 	 * @access private
@@ -48,7 +47,7 @@ class APL_Updater {
 	public $preset_db;
 
 	/**
-	 * Stores the APL_Post_List Class Data Format.
+	 * Stores the APL_Post_List Class Data Format
 	 *
 	 * @since 0.4.0
 	 * @access public
@@ -58,7 +57,7 @@ class APL_Updater {
 	public $apl_post_list_arr = array();
 
 	/**
-	 * Stores the APL_Design Class Data Format.
+	 * Stores the APL_Design Class Data Format
 	 *
 	 * @since 0.4.0
 	 * @access public
@@ -67,7 +66,7 @@ class APL_Updater {
 	public $apl_design_arr = array();
 
 	/**
-	 * Updater Constructor.
+	 * Updater Constructor
 	 *
 	 * Constructor for the Updater Class.
 	 *
@@ -81,7 +80,6 @@ class APL_Updater {
 	 *                                'OBJECT' - Returns a Standard Class object. 
 	 *                                           NOTE: Used for importing, since objects would
 	 *                                           lose the pointers in that given instance.
-	 * @return void
 	 */
 	public function __construct( $old_version, $update_items, $return_type = 'OBJECT' ) {
 		if ( empty( $old_version ) || empty ( $update_items ) ) {
@@ -189,14 +187,13 @@ class APL_Updater {
 	}
 
 	/**
-	 * Convert Kalin Plugin to APL.
+	 * Convert Kalin Plugin to APL
 	 *
 	 * Converts data from the previous plugin to APL configured data.
 	 *
+	 * @ignore
 	 * @since 0.3.0
 	 * @access private
-	 *
-	 * @return void.
 	 */
 	private function APL_convert_kalin_to_base() {
 		$tmp_preset_array = json_decode( $this->preset_db['preset_arr'] );
@@ -212,10 +209,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Convert Kalin's preset to APL's preset.
+	 * Convert Kalin's preset to APL's preset
 	 *
 	 * Converts individual data from the previous plugin to APL Preset data.
 	 *
+	 * @ignore
 	 * @since 0.3.0
 	 * @access private
 	 *
@@ -256,14 +254,13 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade to "0.3.a1".
+	 * Upgrade to "0.3.a1"
 	 *
 	 * Upgrade APL to 0.3.a1.
 	 *
+	 * @ignore
 	 * @since 0.3.a1
 	 * @access private
-	 *
-	 * @return void
 	 */
 	private function APL_upgrade_to_03a1() {
 		if ( ! empty( $this->options ) ) {
@@ -275,10 +272,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade Options to 0.3.a1.
+	 * Upgrade Options to 0.3.a1
 	 *
 	 * Upgrades Options from Base to "0.3.a1".
 	 *
+	 * @ignore
 	 * @since 0.3.a1
 	 * @access private
 	 *
@@ -305,10 +303,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade Preset Database to 0.3.a1.
+	 * Upgrade Preset Database to 0.3.a1
 	 *
 	 * Upgrade Preset Database Object to "0.3.a1".
 	 *
+	 * @ignore
 	 * @since 0.3.a1
 	 * @access private
 	 *
@@ -332,10 +331,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade preset to 0.3.a1.
+	 * Upgrade preset to 0.3.a1
 	 *
 	 * Upgrades Preset object to "0.3.a1".
 	 *
+	 * @ignore
 	 * @since 0.3.a1
 	 * @access private
 	 *
@@ -422,10 +422,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade APL to 0.3.b5.
+	 * Upgrade APL to 0.3.b5
 	 *
 	 * Upgrades Plugin to "0.3.b5".
 	 *
+	 * @ignore
 	 * @since 0.3.b5
 	 * @access private
 	 *
@@ -433,8 +434,6 @@ class APL_Updater {
 	 * @link URL
 	 * @global type $varname Description.
 	 * @global type $varname Description.
-	 *
-	 * @return void
 	 */
 	private function APL_upgrade_to_03b5() {
 		if ( ! empty( $this->options ) ) {
@@ -446,10 +445,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade Options from 0.3.a1 to 0.3.b5.
+	 * Upgrade Options from 0.3.a1 to 0.3.b5
 	 *
 	 * Upgrades APL's options "0.3.a1" to "0.3.b5".
 	 *
+	 * @ignore
 	 * @since 0.3.b5
 	 * @access private
 	 *
@@ -479,10 +479,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade Preset Database from 0.3.a1 to 0.3.b5.
+	 * Upgrade Preset Database from 0.3.a1 to 0.3.b5
 	 *
 	 * Upgrades the Preset Database from "0.3.a1" to "0.3.b5".
 	 *
+	 * @ignore
 	 * @since 0.3.b5
 	 * @access private
 	 *
@@ -507,10 +508,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade Preset from 0.3.a1 to 0.3.b5.
+	 * Upgrade Preset from 0.3.a1 to 0.3.b5
 	 *
 	 * Upgrades Preset from "0.3.a1" to "0.3.b5".
 	 *
+	 * @ignore
 	 * @since 0.3.b5
 	 * @access private
 	 *
@@ -580,6 +582,7 @@ class APL_Updater {
 	/**
 	 * Upgrade APL_Options to 0.4.0
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
@@ -601,10 +604,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Upgrade Preset Database from 0.3.b5 to 0.4.0.
+	 * Upgrade Preset Database from 0.3.b5 to 0.4.0
 	 *
 	 * Upgrades the Preset Database from "0.3.b5" to "0.4.0".
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
@@ -879,10 +883,11 @@ class APL_Updater {
 		);
 	}
 	/**
-	 * Post List Object.
+	 * Post List Object
 	 *
 	 * Sets the object as a stdClass for better handling with various class conflicts.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
@@ -917,10 +922,11 @@ class APL_Updater {
 	}
 
 	/**
-	 * Design Object.
+	 * Design Object
 	 *
 	 * Sets the object as a stdClass for better handling with various class conflicts.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
@@ -946,6 +952,7 @@ class APL_Updater {
 	 * Used to set the post list to the correct configuration in a given
 	 * website environment.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
@@ -1052,6 +1059,7 @@ class APL_Updater {
 	 * Used to set the post list's tax_query to the correct configuration in a given
 	 * website environment.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
@@ -1114,6 +1122,7 @@ class APL_Updater {
 	 *
 	 * This sets the Post Lists as the custom APL_Post_List object.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *
@@ -1156,6 +1165,7 @@ class APL_Updater {
 	 *
 	 * This sets the Designs as the custom APL_Design object.
 	 *
+	 * @ignore
 	 * @since 0.4.0
 	 * @access private
 	 *

@@ -5,10 +5,9 @@
  *
  * Preset Post List Object used by Preset Db.
  *
- * @link https://github.com/EkoJr/advanced-post-list/
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
  *
- * @package WordPress
- * @subpackage advanced-post-list.php
+ * @package advanced-post-list
  * @since 0.1.0
  */
 
@@ -23,7 +22,7 @@
 class APL_Post_List {
 
 	/**
-	 * Post Data ID.
+	 * Post Data ID
 	 *
 	 * @since 0.4.0
 	 * @access public
@@ -32,7 +31,7 @@ class APL_Post_List {
 	public $id = 0;
 
 	/**
-	 * Post Data Title.
+	 * Post Data Title
 	 *
 	 * @since 0.4.0
 	 * @access public
@@ -41,7 +40,7 @@ class APL_Post_List {
 	public $title = '';
 
 	/**
-	 * Post Data slug.
+	 * Post Data slug
 	 *
 	 * @since 0.4.0
 	 * @access public
@@ -50,7 +49,7 @@ class APL_Post_List {
 	public $slug = '';
 
 	/**
-	 * Post Types filter.
+	 * Post Types filter
 	 *
 	 * Also used to determine which Tax_Queries are active and to pull data from.
 	 *
@@ -111,7 +110,7 @@ class APL_Post_List {
 	public $tax_query = array();
 
 	/**
-	 * Filter by Page Parents.
+	 * Filter by Page Parents
 	 *
 	 * @since 0.1.0
 	 * @since 0.4.0 - Changed to an array.
@@ -139,7 +138,7 @@ class APL_Post_List {
 	public $post_parent_dynamic = array();
 
 	/**
-	 * Post List Amount.
+	 * Post List Amount
 	 *
 	 * @since 0.1.0
 	 * @version 0.3.0  - Changed (string) to (int).
@@ -148,7 +147,7 @@ class APL_Post_List {
 	public $posts_per_page = 5;
 
 	/**
-	 * Offset.
+	 * Offset
 	 *
 	 * @since 0.4.0
 	 * @var int
@@ -156,7 +155,7 @@ class APL_Post_List {
 	public $offset = 0;
 
 	/**
-	 * Order Filter By.
+	 * Order Filter By
 	 *
 	 * @since 0.1.0
 	 * @since 0.4.0 Changed from $_list_order_by to $order_by.
@@ -166,7 +165,7 @@ class APL_Post_List {
 	public $order_by = 'none';
 
 	/**
-	 * Order Filter Ascending or Descending.
+	 * Order Filter Ascending or Descending
 	 *
 	 * @since 0.1.0
 	 * @since 0.4.0 Changed from $_list_order to $order
@@ -176,7 +175,7 @@ class APL_Post_List {
 	public $order = 'DESC';
 
 	/**
-	 * Filter by Post Status.
+	 * Filter by Post Status
 	 *
 	 * Note: Empty default as array( 'public', 'publish' )
 	 *
@@ -189,7 +188,7 @@ class APL_Post_List {
 	public $post_status = 'none';
 
 	/**
-	 * Filter by User Permissions.
+	 * Filter by User Permissions
 	 *
 	 * @since 0.3.0
 	 * @var string 'none' || 'readable' || 'editable'
@@ -197,7 +196,7 @@ class APL_Post_List {
 	public $perm = 'none';
 
 	/**
-	 * Operator for Author ID filter.
+	 * Operator for Author ID filter
 	 *
 	 * @since 0.3.0
 	 * @since 0.4.0 - Changed from $post_author_operator to $author__bool.
@@ -206,7 +205,7 @@ class APL_Post_List {
 	public $author__bool = 'none';
 
 	/**
-	 * Filter by Author ID.
+	 * Filter by Author ID
 	 *
 	 * @since 0.3.0
 	 * @since 0.4.0 - Change from $post_author_ids to $author__in
@@ -217,7 +216,7 @@ class APL_Post_List {
 	public $author__in = array();
 
 	/**
-	 * Filter Stickies.
+	 * Filter Stickies
 	 *
 	 * @since 0.3.0
 	 * @var boolean
@@ -225,7 +224,7 @@ class APL_Post_List {
 	public $ignore_sticky_posts = true;
 
 	/**
-	 * Filter Posts.
+	 * Filter Posts
 	 *
 	 * @since 0.3.0
 	 * @var array => int
@@ -233,7 +232,7 @@ class APL_Post_List {
 	public $post__not_in = array();
 
 	/**
-	 * Filter Current Post/Page.
+	 * Filter Current Post/Page
 	 *
 	 * @since 0.1.0
 	 * @version 0.3.0 - changed (string) to (boolean).
@@ -242,7 +241,7 @@ class APL_Post_List {
 	public $pl_exclude_current = true;
 
 	/**
-	 * Filter Duplicates.
+	 * Filter Duplicates
 	 *
 	 * @since 0.3.0
 	 * @var boolean
@@ -250,7 +249,7 @@ class APL_Post_List {
 	public $pl_exclude_dupes = false;
 
 	/**
-	 * Design for APL Preset Loop.
+	 * Design for APL Preset Loop
 	 *
 	 * @since 0.4.0
 	 * @var string
@@ -258,7 +257,7 @@ class APL_Post_List {
 	public $pl_apl_design = '';
 
 	/**
-	 * APL Post List Constructor.
+	 * APL Post List Constructor
 	 *
 	 * Class Constructor.
 	 *
@@ -270,7 +269,6 @@ class APL_Post_List {
 	 * @global type $varname Description.
 	 *
 	 * @param string $post_list_name Post List slug.
-	 * @return void
 	 */
 	public function __construct( $post_list_name ) {
 		//$this->title = $post_list_name;
@@ -292,7 +290,7 @@ class APL_Post_List {
 	}
 
 	/**
-	 * Get Data.
+	 * Get APL Post List Data
 	 *
 	 * Get Post Data and set as Post List class.
 	 *
@@ -370,14 +368,12 @@ class APL_Post_List {
 	}
 
 	/**
-	 * Save APL Design Object.
+	 * Save APL Post List Object
 	 *
-	 * Inserts or updates the Design post data with $this object.
+	 * Inserts or updates the Post List post data with $this object.
 	 *
 	 * @since 0.4.0
 	 * @access public
-	 *
-	 * @return void
 	 */
 	public function save_post_list() {
 		if ( empty( $this->slug ) ) {
@@ -404,28 +400,25 @@ class APL_Post_List {
 	}
 
 	/**
-	 * Deletes the Post List.
+	 * Deletes the Post List
 	 *
 	 * @since 0.4.0
 	 *
 	 * @link https://codex.wordpress.org/Function_Reference/wp_delete_post
-	 *
-	 * @return void
 	 */
 	public function delete_post_list() {
 		wp_delete_post( $this->id, true );
 	}
 
 	/**
-	 * Insert Design post data.
+	 * Insert Post List post data
 	 *
-	 * Inserts APL Design's post args to the database to create a new WP_Post.
+	 * Inserts APL Post List's post args to the database to create a new WP_Post.
 	 *
 	 * @since 0.4.0
 	 * @access private
 	 *
 	 * @param array $args Post arg array for creating Post objects.
-	 * @return void
 	 */
 	private function insert_post_list_post( $args = array() ) {
 		$defaults = $this->default_postarr();
@@ -437,15 +430,14 @@ class APL_Post_List {
 	}
 
 	/**
-	 * Update Design post data.
+	 * Update Post List post data
 	 *
-	 * Inserts APL Design's post args to the database to update a WP_Post.
+	 * Inserts APL Post List's post args to the database to update a WP_Post.
 	 *
 	 * @since 0.4.0
 	 * @access private
 	 *
 	 * @param type $args Post arg array for creating Post objects.
-	 * @return void
 	 */
 	private function update_post_list_post( $args = array() ) {
 		$defaults = $this->default_postarr();
@@ -466,7 +458,7 @@ class APL_Post_List {
 	}
 
 	/**
-	 * Default Post Arg Array.
+	 * Default Post Arg Array
 	 *
 	 * Sets the default Post Argument Array for WP_Post objects.
 	 *
@@ -506,7 +498,7 @@ class APL_Post_List {
 	}
 
 	/**
-	 * Meta Data Save Post hook.
+	 * Meta Data Save Post APL Post List
 	 *
 	 * Description.
 	 *
@@ -519,7 +511,6 @@ class APL_Post_List {
 	 * @param int     $post_id   Post ID.
 	 * @param WP_Post $post_obj  Post object.
 	 * @param boolean $update    Whether this is an existing post being updated or not.
-	 * @return void
 	 */
 	public function hook_action_save_post_apl_post_list( $post_id, $post_obj, $update ) {
 		$this->id     = $post_id;

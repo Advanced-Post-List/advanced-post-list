@@ -1,7 +1,12 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Settings UI JavaScript
+ *
+ * @summary     Settings JavaScript / jQuery.
+ *
+ * @since       0.4.0
+ * @package     APL_Admin
+ * @requires    jQuery
+ * @requires    jQuery UI
  */
 
 ( function($) {
@@ -10,11 +15,20 @@
 	var restoreNonce = apl_settings_local.restore_nonce;
 	var trans        = apl_settings_local.trans;
 
+	/**
+	 * Save Settings Event
+	 *
+	 * @since 0.4.0
+	 */
 	$( '#apl_save_settings' ).click( function( event ) {
 		console.log('Saving Settings');
 	});
 
-	// EXPORT AJAX
+	/**
+	 * Export AJAX Event
+	 *
+	 * @since 0.4.0
+	 */
 	$('#apl_export').click( function( event ) {
 		console.log( 'Initializing Export...' );
 
@@ -70,6 +84,11 @@
 		});
 	});
 
+	/**
+	 * Import Event (AJAX)
+	 *
+	 * @since 0.4.0
+	 */
 	$('#form_settings_import').submit( function( event ) {
 		event.stopPropagation(); // Stop stuff happening
 		event.preventDefault(); // Totally stop stuff happening
@@ -225,6 +244,16 @@
 		});// End AJAX.
 	});// End .submit().
 
+	/**
+	 * APL Alert Dialog
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param {type} output_msg
+	 * @param {type} title_msg
+	 * @param {type} id
+	 * @returns {undefined}
+	 */
 	function apl_alert( output_msg, title_msg, id ) {
 		if ( !id ) 
 			id = '';

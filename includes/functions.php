@@ -5,10 +5,9 @@
  *
  * Common APL functions publicly accessible across multiple classes.
  *
- * @link https://github.com/EkoJr/advanced-post-list/
+ * @link https://github.com/Advanced-Post-List/advanced-post-list/
  *
- * @package WordPress
- * @subpackage Advanced Post List
+ * @package advanced-post-list
  * @since 0.4.0
  */
 
@@ -83,7 +82,7 @@ function apl_options_load() {
 function apl_options_save( $options ) {
 	$default_options = apl_options_default();
 	$options = wp_parse_args( $options, $default_options );
-	
+
 	if ( isset( $options ) ) {
 		update_option( 'apl_options', $options );
 	}
@@ -103,7 +102,7 @@ function apl_options_save( $options ) {
  */
 function apl_get_display_post_types() {
 	$rtn_post_types = array();
-	
+
 	$options = apl_options_load();
 	$ignore_post_types = apl_default_ignore_post_types();
 	$ignore_post_types = apply_filters( 'apl_display_post_types_ignore', $ignore_post_types );
@@ -123,6 +122,11 @@ function apl_get_display_post_types() {
 	return $rtn_post_types;
 }
 
+/**
+ * APL's Default Ignore Post Types
+ *
+ * @since 0.4.0
+ */
 function apl_default_ignore_post_types() {
 	return array(
 		'attachment',
