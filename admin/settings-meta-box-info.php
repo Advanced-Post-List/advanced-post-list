@@ -26,5 +26,5 @@
 		<li><a href="https://github.com/Advanced-Post-List/advanced-post-list/wiki" target="_blank">GitHub Wiki</a> - Open Source Documentation.</li>
 		<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VFUYQGQ7VXEDC" target="_blank">Donate</a> - Completely optional, but goes towards APL development.</li>
 	</ul>
-	<div style="float: left;">Version: <?php echo APL_VERSION; ?></div>
+	<div style="float: right;">Version: <?php echo APL_VERSION; ?></div>
 </div>
