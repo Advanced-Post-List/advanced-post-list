@@ -42,6 +42,7 @@ class APL_Admin {
 	public static function get_instance() {
 		if ( null === static::$instance ) {
 			static::$instance = new static();
+			// TODO - Catch WP Error.
 		}
 		return static::$instance;
 	}
@@ -83,6 +84,9 @@ class APL_Admin {
 	 * @since 0.4.0
 	 * @access private
 	 *
+	 * @todo Complete Admin Encapsulation. Concept linked.
+	 * @link https://florianbrinkmann.com/en/3815/wordpress-backend-request/
+	 *
 	 * @return void
 	 */
 	private function __construct() {
@@ -90,61 +94,45 @@ class APL_Admin {
 		if ( ! is_admin() ) {
 			return new WP_Error( 'apl_admin', esc_html__( 'You do not have admin capabilities in APL_Admin.', 'advanced-post-list' ) );
 		}
-		$this->_requires();
 
-		// Menu & Scripts.
-		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
-
-		add_action( 'current_screen', array( $this, 'current_screen_hooks' ) );
-
-		// Screen Options.
-		add_action( 'admin_head', array( $this, 'disable_screen_boxes' ) );
-		add_action( 'load-edit.php', array( $this, 'post_list_screen_all' ) );
-		add_action( 'load-post-new.php', array( $this, 'post_list_screen_add_new' ) );
-
-		add_action( 'manage_apl_post_list_posts_columns', array( $this, 'post_list_posts_columns' ) );
-		add_action( 'manage_apl_post_list_posts_custom_column', array( $this, 'post_list_posts_custom_column' ), 10, 2 );
-		add_action( 'manage_edit-apl_post_list_sortable_columns', array( $this, 'post_list_sortable_columns' ) );
-
-		// Editor Meta Boxes.
-		add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
-		add_action( 'add_meta_boxes', array( $this, 'settings_meta_boxes' ) );
-
-		
-		
 		// Settings Data
 		add_action( 'admin_post_apl_save_general_settings', array( $this, 'save_general_settings' ) );
 		// AJAX.
 		add_action( 'admin_init', array( $this, 'add_settings_ajax_hooks' ) );
 
-		// TESTING
-		
-		
-		/*
-		// Early Hook.
-		add_action( 'plugins_loaded', array( $this, 'hook_action_plugins_loaded' ) );
+		// Check if wp-admin.php is loaded, and WP_Screen is defined.
+		if ( defined( 'WP_ADMIN' ) && WP_ADMIN && is_blog_admin() ) {
+			$this->_requires();
 
-		// Plugin Init Hook.
-		add_action( 'init', array( $this, 'hook_action_init' ) );
+			// Menu & Scripts.
+			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue' ) );
 
-		// After WordPress is fully loaded.
-		add_action( 'wp_loaded', array( $this, 'hook_action_wp_loaded' ) );
+			// Admin Screens for Modular Execution.
+			add_action( 'current_screen', array( $this, 'current_screen_hooks' ) );
 
-		// WordPress Footer.
-		add_action( 'wp_footer', array( $this, 'hook_action_wp_footer' ) );
-		*/
+			// Hook into WP to customize Screens.
+			add_action( 'admin_head', array( $this, 'disable_screen_boxes' ) );
+			add_action( 'load-edit.php', array( $this, 'post_list_screen_all' ) );
+			add_action( 'load-post-new.php', array( $this, 'post_list_screen_add_new' ) );
 
+			add_action( 'manage_apl_post_list_posts_columns', array( $this, 'post_list_posts_columns' ) );
+			add_action( 'manage_apl_post_list_posts_custom_column', array( $this, 'post_list_posts_custom_column' ), 10, 2 );
+			add_action( 'manage_edit-apl_post_list_sortable_columns', array( $this, 'post_list_sortable_columns' ) );
+
+			// Editor Meta Boxes.
+			add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
+			add_action( 'add_meta_boxes', array( $this, 'settings_meta_boxes' ) );
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @param WP_Screen $current_screen Current WP_Screen object.
 	 */
 	public function current_screen_hooks( $current_screen ) {
 		if ( 'apl_post_list'  === $current_screen->id ) {
-			// All Post Lists.
-
+			/* ALL POST LISTS */
 			// Post Data
 			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
 
@@ -158,8 +146,7 @@ class APL_Admin {
 			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
 			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
 		} elseif ( 'edit-apl_post_list'  === $current_screen->id ) {
-			// Add New.
-
+			/* ADD NEW */
 			// Post Data
 			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
 
@@ -172,8 +159,9 @@ class APL_Admin {
 			add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
 			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
 			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
-		} elseif ( 'apl_post_list_page_apl_settings'  === $current_screen->id ) {
-			// Settings (Page).
+		} elseif ( 'adv-post-list_page_apl_settings'  === $current_screen->id ) {
+			/* SETTINGS (Page) */
+			// DOES NOT always work as intended. Use self::_constructor().
 		}
 		
 	}
