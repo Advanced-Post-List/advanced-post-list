@@ -1,74 +1,248 @@
- .txtHeader
-  {
-	width:610px;
-	position:absolute;
-	left:290px;
-  }
+/**
+ * APL Admin UI CSS
+ *
+ * @package WordPress
+ * @subpackage APL_Admin
+ * @subpackage jQuery UI
+ * @subpackage jQuery UI Multiselect
+ * @since 0.4.0
+ */
 
-/*OPTION SECTION ON APL_admin PAGE*/
-#containerOptions {
-	height: 416px;
-	max-width: 800px;
-	min-width: 720px;
+.ui-tabs-anchor {
+	padding: .1em 1em !important;
 }
-#optionsHeader {
-	margin-bottom: 5px;
-	width: auto;
-	min-height: 20px;
+
+.ui-multiselect-close {
+	display: none;
 }
-#optionL {
+
+.apl-tooltip {
+	/*text-align: left;*/
+}
+
+.apl-help {
+	cursor: help;
+}
+
+.apl-help-icon {
+	color: #0073aa;
+}
+
+.apl-info-icon:active,
+.apl-info-icon:focus,
+.apl-info-icon:hover {
+	color: #0096dd
+}
+/*
+ * FILTER META BOX (TOP).
+ */
+
+.apl-filter-box-1 {
+	display: flex;
+	margin-bottom: 18px;
+}
+
+.apl-left-minibar {
 	float: left;
-	width: 48%;
-    height: 100%;
-	margin: 5px;
-}
-#optionR {
-	float: right;
-	width: 48%;
-    height: 100%;
-	margin: 5px;
-}
-.optionL-row {
-    min-height: 26px;
-}
-.optionR-row {
-    min-height: 26px;
-    margin-right: 25px;
-    margin-top: 9px;
-}
-#options1 {
-	width: 335px;
-	margin-right: 25px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	margin-left: 5px;
-}
-#options2 {
-    width: 335px;
-	margin-right: 25px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	margin-left: 5px;
+	width: 20%;
 }
 
-.info-icon {
-    cursor: help;
+.apl-filter-post-type {}
+
+.apl-filter-post-tax-query {
+	float: left;
+	width: 80%;
 }
-.ui-button-text { 
-    padding: .4em 1em !important; 
-} 
-.info_a_link {
-    cursor: help;
-    font-size: 75%
+
+.apl-tabs-post_type-type {
+	height: 405px;
+}
+
+.apl-tabs-post-type-taxonomies {
+	height: 300px;
+}
+
+.apl-t-li-post-type {
+	float: right !important;
+}
+
+.apl-t-li-post-type h5 {
+	margin: initial;
+}
+
+.apl-chk-req-taxonomies {
+	border-bottom: 1px solid #23282d
+}
+
+.apl-tabs-post-type-taxonomies > ul {
+	min-height: 22px;
+}
+
+.apl-t-terms {
+	overflow-x: hidden !important;
+}
+
+.apl-t-terms label {}
+
+/*
+ * FILTER META BOX (BOTTOM).
+ */
+
+.apl-filter-box-2 {
+	display: flex;
+	margin-bottom: 18px;
+}
+
+.apl-filter-box-2-left {
+	float: left;
+	margin-right: 3%;
+	width: 57%;
+}
+
+.apl-filter-box-2-right {
+	float: left;
+	width: 40%;
+}
+
+.apl-filter-field-left-row {
+	min-height: 42px;
+}
+
+.apl-filter-field-left-row > .apl-list-amount-row {
+	height: 84px;
+}
+
+.apl-filter-field-right-row {
+	min-height: 42px;
+}
+
+.apl-filter-field-row-full {
+	min-height: 42px;
+}
+
+.apl-filter-field-left-row > div:first-child {
+	float: left;
+	width: 35%;
+}
+
+.apl-filter-field-left-row > div:nth-child( 2 ) {
+	float: left;
+	width: 65%;
+}
+
+.apl-spinner-posts_per_page-wrap {
+	float: left;
+	width: 25%;
+}
+
+.apl-spinner-posts_per_page-wrap > span {
+	width: 100%;
+}
+
+.apl-slider-posts_per_page-wrap {
+	float: left;
+	width: 64%;
+	margin: 6px 0% 6px 6%;
+}
+
+.apl-slider-handle-posts_per_page {
+	z-index: 0 !important;
+}
+
+.apl-spinner-offset-wrap {
+	float: left;
+	width: 25%;
+}
+
+.apl-spinner-offset-wrap > span {
+	width: 100%;
+}
+
+.apl-slider-offset-wrap {
+	float: left;
+	width: 64%;
+	margin: 6px 0% 6px 6%;
+}
+
+.apl-slider-handle-offset {
+	z-index: 0 !important;
+}
+
+apl-filter-field-right-row > input {
+	float: right;
+}
+
+apl-filter-field-right-row > input:after {
+	clear: both;
+}
+
+.apl-ui-ms {
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	text-decoration: none;
+	cursor: pointer;
+
+	padding: 0 !important;
+}
+
+.apl-ui-ms > span.ui-icon {
+	right: 0.5em;
+	left: auto;
+	margin-top: -8px;
+	position: absolute;
+	top: 50%;
+}
+
+.apl-ui-ms > span:nth-child(2) {
+	float: left;
+	text-align: left;
+	padding: 0.4em 1.5em 0.4em 1em;
+	display: block;
+	line-height: 1.4;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+button.apl-ui-ms-filter-2-row {
+	width: 48.0% !important;
+}
+
+span.apl-ui-ms-filter-2-row {
+	width: 47.2% !important;
+}
+
+input.apl-text-exclude-posts {
+	width: 100%;
+}
+
+.apl-chkbox-input {
+	float: right;
+	margin-top: 5px !important;
 }
 
 /*
-.ui-accordion-header { cursor: none; }
+ * DESIGN META BOX
+ */
+.apl-design-box-1 {
+	display: flex;
+	margin-bottom: 18px;
+}
 
-.ui-accordion-header { padding-left: 0 }
+.apl-design-column {}
 
+.apl-design-row {
+	float: left;
+	width: 100%;
+}
 
-.ui-button { margin-left: -1px; }
+.apl-design-row > div:first-child {
+	float: left;
+	width: 20.3%;
+}
 
-.ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; }
-*/
+.apl-design-row > div:nth-child( 2 ) {
+	float: left;
+	width: 79.7%;
+}

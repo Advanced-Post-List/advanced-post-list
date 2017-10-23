@@ -2,7 +2,7 @@
 Contributors: EkoJr
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VFUYQGQ7VXEDC
 Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
-Requires at least: 2.0.2
+Requires at least: 4.5
 Tested up to: 4.8
 Stable tag: 0.3.7
 License: GPLv2 or later
@@ -71,10 +71,10 @@ Questions/Bug Report submit thread / ticket at [WordPress][wp apl support] or [G
 == Frequently Asked Questions ==
 
 = Where is the settings page? =
-Inside your admin dashboard under Settings->Admin Post List.
+Inside your admin dashboard under Adv. Post List.
 
 = How do I display the post list that I created? =
-You need to locate and copy the shortcode which is in the Advance Post List - Settings page on the saved preset table. Then create a page/post and paste the shortcode on your page/post (e.g. [post_list name='some-preset-name'])
+You need to copy & paste the shortcode to the desired location (e.g. [post_list name='some-preset-name']).
 
 
 == Screenshots ==
@@ -84,6 +84,34 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 4. General options and support.
 
 == Changelog ==
+
+= 0.4.0 =
+* Changed Preset object to use APL_Post_List & APL_Design post data database structure; adds multiple built-in improvements & support.
+* Added APL_Post_List Class for post data database structure.
+* Added APL_Design Class for post data database structure.
+* Changed Preset variables before, content, after, & empty message to APL_Design object.
+* Added Admin Singleton Class.
+* Changed to Custom Admin Menu.
+* Added New Admin templates and multiple UI changes.
+* Changed Info/Help to Tooltips instead of Dialogs.
+* Added Post_Type filter by 'Any'.
+* Changed 'Require Taxonomy' to 'Require Taxonomies' as a Post Type based filter instead.
+* Added Sort by 'None' and 'Slug'.
+* Added Post Status filter by 'None' and 'Any'.
+* Added Perms filter by 'None'.
+* Added Offset filter.
+* Added additional Notice to front-end if attribute 'name' in [post_list] is invalid or missing.
+* Added Sanitazion to shortcode attribute 'name'; ex. [post_list name=""].
+* Changed General Settings to Settings API w/ Meta Boxes.
+* Fixed possible defect with Plugin Options not being initiated.
+* Changed/Fixed Exporting and Importing.
+* Added jQuery (UI) compatability.
+* Removed jQuery UI Theme setting from APL Options.
+* Changed Updater Class param items to update to an array.
+* Changed version check to a hook method.
+* Added Internalization for translations.
+* Added non-class Functions file for common functions.
+* Added hooks.php file to store custom hook examples.
 
 = 0.3.7 =
 * Fixed warning with load_plugin_textdomain.
@@ -181,7 +209,6 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 * Changed Back-up Procedures to Use Both a Handler and a Final Function.
 * Changed Import File Uploads from Single to Multiple Files.
 
-
 = 0.3.b5 =
 * Added ‘Any/All’ term setting to taxonomies.
 * Added User/Visitor Permissions.
@@ -198,7 +225,6 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 * Changed ‘Post Status’ filter to carry multiple values.
 * Changed Admin Dialogs.
 * Changed jQuery register script location.
-
 
 = 0.3.b4 =
 * Fixed dynamics with post lists with 'Include Terms' within taxonomy and 'Current Page' post parent.
@@ -263,6 +289,9 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.4.0 =
+Beta Release. Large database update will occurr.
 
 = 0.3.6 =
 Stable Release. Changed File Structure which may cause a PHP object error

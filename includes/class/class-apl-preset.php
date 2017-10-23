@@ -25,7 +25,7 @@ class APL_Preset {
 	 *
 	 * @since 0.1.0
 	 * @access public
-	 * @var string
+	 * @var array=>string
 	 */
 	public $_postParents;
 
@@ -137,36 +137,12 @@ class APL_Preset {
 	public $_listExcludeCurrent;
 
 	/**
-	 * Design for Exit/Empty message.
+	 * Design for APL Preset Loop.
 	 *
-	 * @since 0.3.0
+	 * @since 0.4.0
 	 * @var string
 	 */
-	public $_exit;
-
-	/**
-	 * Design for Before Content/Loop.
-	 *
-	 * @since 0.1.0
-	 * @var string
-	 */
-	public $_before;
-
-	/**
-	 * Design for Content/Loop.
-	 *
-	 * @since 0.1.0
-	 * @var string
-	 */
-	public $_content;
-
-	/**
-	 * Design for Content/Loop.
-	 *
-	 * @since 0.1.0
-	 * @var string
-	 */
-	public $_after;
+	public $apl_design;
 
 	/**
 	 * Constructor.
@@ -179,6 +155,7 @@ class APL_Preset {
 	 *                       User Perms, Author IDs, Author Include/Exclude,
 	 *                       Ignore Sticky Posts, Exclude Duplicates, Exclude Posts.
 	 *                       Design for Empty Message.
+	 * @since 0.4.0 - Changed: before, content, after, & exit to APL_Design Class.
 	 *
 	 * @return void
 	 */
@@ -201,10 +178,22 @@ class APL_Preset {
 		$this->_listExcludeDuplicates = (bool) false;
 		$this->_listExcludePosts      = array();
 
-		$this->_exit    = (string) '';
-		$this->_before  = (string) '';
-		$this->_content = (string) '';
-		$this->_after   = (string) '';
+		$this->apl_design = (string) '';
+		// TODO Change to Design slug. Default: preset_name.
+	}
+
+	/**
+	 * Returns the APL Design slug.
+	 *
+	 * Gets and returns $this->apl_design.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @return string Returns the slug from variable APL Design.
+	 */
+	public function get_apl_design() {
+		$apl_design = apply_filters( 'apl_design_slug', $this->apl_design, $this );
+		return $apl_design;
 	}
 
 	/**
@@ -218,6 +207,7 @@ class APL_Preset {
 	 * @return void
 	 */
 	public function reset_to_version( $version ) {
+		// STEP - Unsets $this object's variables.
 		foreach ( $this as $key => &$value ) {
 			$value = null;
 			unset( $this->$key );
@@ -226,11 +216,12 @@ class APL_Preset {
 			$this->reset_to_base();
 		} elseif ( version_compare( '0.3.a1', $version, '<=' ) && version_compare( '0.3.b5', $version, '>' ) ) {
 			$this->reset_to_03a1();
-		} else {
-			//if (version_compare('0.3.a1', $oldversion, '>'))
+		} elseif ( version_compare( '0.3.b5', $version, '<=' ) && version_compare( '0.4.0', $version, '>' ) ) {
 			$this->reset_to_03b5();
+		} else {
+			//if ( version_compare( '0.4.0', $version, '<=' ) && version_compare( 'X.X.X', $version, '>' ) )
+			$this->reset_to_040();
 		}
-
 	}
 
 	/**
@@ -286,16 +277,11 @@ class APL_Preset {
 	private function reset_to_03a1() {
 		$this->_postParent         = (array) array();
 		$this->_postTax            = (object) new stdClass();
-
 		$this->_listAmount         = (int) 5;
-
 		$this->_listOrderBy        = (string) '';
 		$this->_listOrder          = (string) '';
-
 		$this->_postStatus         = (string) '';
-
 		$this->_postExcludeCurrent = (bool) true;
-
 		$this->_before             = (string) '';
 		$this->_content            = (string) '';
 		$this->_after              = (string) '';
@@ -313,12 +299,9 @@ class APL_Preset {
 	private function reset_to_03b5() {
 		$this->_postParents            = (array) array();
 		$this->_postTax                = (object) new stdClass();
-
 		$this->_listCount              = (int) 5;
-
 		$this->_listOrderBy            = (string) '';
 		$this->_listOrder              = (string) '';
-
 		$this->_postVisibility         = (array) array( 'public' );
 		$this->_postStatus             = (array) array( 'publish' );
 		$this->_userPerm               = (string) 'readable';
@@ -328,10 +311,37 @@ class APL_Preset {
 		$this->_listExcludeCurrent     = (bool) true;
 		$this->_listExcludeDuplicates  = (bool) false;
 		$this->_listExcludePosts       = array();
-
 		$this->_exit                   = (string) '';
 		$this->_before                 = (string) '';
 		$this->_content                = (string) '';
 		$this->_after                  = (string) '';
+	}
+
+	/**
+	 * Reset to 0.4.0.
+	 *
+	 * Sets the object to version 0.4.0 variables.
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @return void
+	 */
+	private function reset_to_040() {
+		$this->_postParents           = (array) array();
+		$this->_postTax               = (object) new stdClass();
+		$this->_listCount             = (int) 5;
+		$this->_listOrderBy           = (string) '';
+		$this->_listOrder             = (string) '';
+		$this->_postVisibility        = (array) array( 'public' );
+		$this->_postStatus            = (array) array( 'publish' );
+		$this->_userPerm              = (string) 'readable';
+		$this->_postAuthorOperator    = (string) 'none';
+		$this->_postAuthorIDs         = (array) array();
+		$this->_listIgnoreSticky      = (bool) false;
+		$this->_listExcludeCurrent    = (bool) true;
+		$this->_listExcludeDuplicates = (bool) false;
+		$this->_listExcludePosts      = array();
+		$this->apl_design             = '';
 	}
 }
