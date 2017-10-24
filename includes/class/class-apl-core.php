@@ -312,7 +312,7 @@ class APL_Core {
 			'delete_with_user'		=> false,
 		);
 		
-		if ( ICL_SITEPRESS_VERSION ) {
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 			$args['show_ui'] = true;
 		}
 
