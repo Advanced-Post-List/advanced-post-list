@@ -306,8 +306,8 @@ class APL_Post_List {
 	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
-			//'post__in'        => array(), // Need this?
 			'post_type'       => 'apl_post_list',
+			//'post__in'        => array(), // Need this?
 			'post_status'     => array(
 				'draft',
 				'pending',
@@ -449,6 +449,8 @@ class APL_Post_List {
 		remove_all_actions( 'save_post_apl_post_list', 10 );
 		add_action( 'save_post_apl_post_list', array( &$this, 'hook_action_save_post_apl_post_list' ), 10, 3 );
 		$rtn_post_id = wp_update_post( $args );
+
+		// ERROR.
 		if ( is_wp_error( $rtn_post_id ) ) {
 			$errors = $rtn_post_id->get_error_messages();
 			foreach ( $errors as $error ) {
@@ -473,7 +475,7 @@ class APL_Post_List {
 	 */
 	private function default_postarr() {
 		return array(
-			'ID'               => 0,
+			//'ID'               => 0,
 			//'post_author'      => $user_id,
 			//'post_date'        => '', Default: is current time.
 			//'post_date_gmt'    => '', Default: is $post_date.

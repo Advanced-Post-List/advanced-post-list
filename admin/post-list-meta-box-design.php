@@ -35,8 +35,12 @@ $apl_help_text = array(
 	),
 );
 
-$apl_post_list = new APL_Post_List( $post->post_name );
-$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+if ( 'apl_post_list' === $post->post_type ) {
+	$apl_post_list = new APL_Post_List( $post->post_name );
+	$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+} else if ( defined( 'ICL_SITEPRESS_VERSION' )  && 'apl_design' === $post->post_type ) {
+	$apl_design = new APL_Design( $post->post_name );
+}
 
 ?>
 <?php include( APL_DIR . '/admin/admin-dialog-internal-shortcodes.php' ); ?>
@@ -87,5 +91,21 @@ $apl_design = new APL_Design( $apl_post_list->pl_apl_design );
 				<textarea id="apl_textarea_empty_message" class="apl-textarea-empty-message large-text" name="apl_empty_message" rows="9" style="<?php echo empty( $apl_design->empty ) ? 'display: none;' : ''; ?>" ><?php echo $apl_design->empty; ?></textarea>
 			</div>
 		</div>
+		<?php if ( defined( 'ICL_SITEPRESS_VERSION' )  && 'apl_post_list' === $post->post_type ) : ?>
+			<div class="apl-design-row">
+				<div>
+					<h3>WPML Manage</h3>
+				</div>
+				<div>
+					<?php if ( 0 !== $apl_design->id ) : ?>
+						<div style="margin: 1em 0;">
+								<a class="button button-secondary button-edit-post-link" href="<?php echo get_edit_post_link( $apl_design->id ); ?>" target="_blank"><?php _e( 'Edit Translation(s) of this Design.', 'advanced-post-list' ) ?></a>
+						</div>
+					<?php else : ?>
+						<p><?php _e( 'Please save the Post List in order to manage translations of this Design.', 'advanced-post-list' ); ?></p>
+					<?php endif; ?>
+				</div>
+			</div>
+		<?php endif; ?>
 	</div>
 </div>

@@ -292,8 +292,9 @@ class APL_Core {
 			'public'                => true,
 			'exclude_from_search'   => true,
 			'publicly_queryable'    => false,
-			// Shows up in admin menu bar.
+			// Shows up in admin area.
 			'show_ui'               => false,
+			'show_in_menu'          => false,
 			'show_in_nav_menus'     => false,
 			'show_in_admin_bar'		=> false,
 			'menu_icon'				=> 'dashicons-admin-generic',
@@ -310,6 +311,10 @@ class APL_Core {
 			//'can_export'            => true, // Default true.
 			'delete_with_user'		=> false,
 		);
+		
+		if ( ICL_SITEPRESS_VERSION ) {
+			$args['show_ui'] = true;
+		}
 
 		$args = apply_filters( 'apl_register_post_type_design', $args );
 		register_post_type( 'apl_design', $args );

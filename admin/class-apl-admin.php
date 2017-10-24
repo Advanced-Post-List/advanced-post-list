@@ -112,8 +112,8 @@ class APL_Admin {
 
 			// Hook into WP to customize Screens.
 			add_action( 'admin_head', array( $this, 'disable_screen_boxes' ) );
-			add_action( 'load-edit.php', array( $this, 'post_list_screen_all' ) );
-			add_action( 'load-post-new.php', array( $this, 'post_list_screen_add_new' ) );
+			add_action( 'load-edit.php', array( $this, 'post_list_screen_options_all' ) );
+			add_action( 'load-post-new.php', array( $this, 'post_list_screen_options_add_new' ) );
 
 			add_action( 'manage_apl_post_list_posts_columns', array( $this, 'post_list_posts_columns' ) );
 			add_action( 'manage_apl_post_list_posts_custom_column', array( $this, 'post_list_posts_custom_column' ), 10, 2 );
@@ -122,6 +122,9 @@ class APL_Admin {
 			// Editor Meta Boxes.
 			add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
 			add_action( 'add_meta_boxes', array( $this, 'settings_meta_boxes' ) );
+			if ( ICL_SITEPRESS_VERSION ) {
+				add_action( 'add_meta_boxes', array( $this, 'design_meta_boxes' ) );
+			}
 		}
 	}
 
@@ -135,7 +138,7 @@ class APL_Admin {
 	 * @param WP_Screen $current_screen Current WP_Screen object.
 	 */
 	public function current_screen_hooks( $current_screen ) {
-		if ( 'apl_post_list' === $current_screen->id ) {
+		if ( 'apl_post_list' === $current_screen->id || 'edit-apl_post_list' === $current_screen->id ) {
 			/* ALL POST LISTS */
 			// Post Data
 			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
@@ -150,26 +153,27 @@ class APL_Admin {
 			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
 			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
 
-			$current_screen->add_help_tab( array(
-				'id' => 'apl_post_list_help',            //unique id for the tab
-				'title' => 'Testing Help Tab',      //unique visible title for the tab
-				'content' => 'Hello World',  //actual help text
-				//'callback' => $callback //optional function to callback
-			) );
-		} elseif ( 'edit-apl_post_list' === $current_screen->id ) {
-			/* ADD NEW */
+			if ( 'apl_post_list' === $current_screen->id ) {
+				$current_screen->add_help_tab( array(
+					'id' => 'apl_post_list_help',  //unique id for the tab.
+					'title' => 'Testing Help Tab', //unique visible title for the tab.
+					'content' => 'Hello World',    //actual help text.
+					//'callback' => $callback      //optional function to callback.
+				) );
+			}
+		} elseif ( 'apl_design' === $current_screen->id || 'edit-apl_design' === $current_screen->id ) {
 			// Post Data
-			add_action( 'draft_apl_post_list', array( $this, 'draft_post_list' ), 10, 2 );
+			add_action( 'draft_apl_design', array( $this, 'draft_design' ), 10, 2 );
 
-			add_action( 'private_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-			add_action( 'publish_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-			add_action( 'pending_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
-			add_action( 'future_apl_post_list', array( $this, 'save_post_list' ), 10, 2 );
+			add_action( 'private_apl_design', array( $this, 'save_design' ), 10, 2 );
+			add_action( 'publish_apl_design', array( $this, 'save_design' ), 10, 2 );
+			add_action( 'pending_apl_design', array( $this, 'save_design' ), 10, 2 );
+			add_action( 'future_apl_design', array( $this, 'save_design' ), 10, 2 );
 
-			//add_action( 'trash_apl_post_list', array( $this, 'trash_post_list' ), 10, 3 );
-			add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_post_list' ) );
-			add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_post_list' ) );
-			add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_post_list' ) );
+			////add_action( 'trash_apl_post_list', array( $this, 'trash_design' ), 10, 3 );
+			//add_action( 'wp_trash_post', array( $this, 'action_wp_trash_post_apl_design' ) );
+			//add_action( 'untrash_post', array( $this, 'action_untrash_post_apl_design' ) );
+			//add_action( 'before_delete_post', array( $this, 'action_before_delete_post_apl_design' ) );
 		} elseif ( 'adv-post-list_page_apl_settings' === $current_screen->id ) {
 			/* SETTINGS (Page) */
 			// DOES NOT always work as intended. Use self::_constructor().
@@ -215,7 +219,11 @@ class APL_Admin {
 			'dashicons-welcome-widgets-menus',
 			58
 		);
-		// TODO - Add APL Dashboard.
+
+		// TODO Add APL Dashboard.
+
+		// All Post Lists (Submenu) - Submenu setting is added during CPT registration.
+		// Add New (Submenu).
 		add_submenu_page(
 			'advanced_post_list',
 			__( 'Add New Post List', 'advanced-post-list' ),
@@ -224,7 +232,7 @@ class APL_Admin {
 			'post-new.php?post_type=apl_post_list'
 		);
 
-		// TODO - Add APL Settings API.
+		// Settings (Submenu).
 		add_submenu_page(
 			'advanced_post_list',// edit.php?post_type=apl_post_list',
 			__( 'APL Settings', 'advanced-post-list' ),
@@ -297,14 +305,14 @@ class APL_Admin {
 		wp_deregister_style( 'apl-admin-ui-multiselect-filter-css' );
 		wp_deregister_style( 'apl-admin-settings-css' );
 
-		if ( 'apl_post_list' === $screen->id || 'edit-apl_post_list' === $screen->id ) {
+		if ( 'apl_post_list' === $screen->id || 'edit-apl_post_list' === $screen->id || 'apl_design' === $screen->id || 'edit-apl_design' === $screen->id ) {
 
 			/*
 			 * ************** AJAX ACTION HOOKS ***************************
 			 */
 
 			// TODO - Add meta box to side to load different presets from 'edit.php'.
-			add_action( 'wp_ajax_apl_load_preset', array( $this, 'hook_ajax_load_preset' ) );
+			//add_action( 'wp_ajax_apl_load_preset', array( $this, 'hook_ajax_load_preset' ) );
 
 			/*
 			 * ************** REGISTER SCRIPTS ****************************
@@ -441,6 +449,8 @@ class APL_Admin {
 			// '../admin/js/admin-ui.js'.
 			wp_localize_script( 'apl-admin-js', 'apl_admin_local', $admin_localize );
 			wp_localize_script( 'apl-admin-ui-js', 'apl_admin_ui_local', $admin_ui_localize );
+		//} elseif ( 'apl_design' === $screen->id || 'edit-apl_design' === $screen->id ) {
+			// TODO Add handling APL Designs without extra code from APL_Post_Lists..
 		} elseif ( 'adv-post-list_page_apl_settings' === $screen->id ) {
 			// If we are not viewing APL Post List area, then return.
 			// SETTINGS PAGE
@@ -569,7 +579,7 @@ class APL_Admin {
 	 * @see 'load-edit.php' hook.
 	 * @since 0.4.0
 	 */
-	public function post_list_screen_all() {
+	public function post_list_screen_options_all() {
 		$screen = get_current_screen();
 		// Get out of here if we are not on our settings page.
 		if ( ! is_object( $screen ) || 'edit-apl_post_list' !== $screen->id ) {
@@ -587,7 +597,7 @@ class APL_Admin {
 	 * @see 'load-post-new.php' hook.
 	 * @since 0.4.0
 	 */
-	public function post_list_screen_add_new() {
+	public function post_list_screen_options_add_new() {
 		$screen = get_current_screen();
 		// Get out of here if we are not on our settings page.
 		if ( ! is_object( $screen ) || 'apl_post_list' !== $screen->id ) {
@@ -682,6 +692,7 @@ class APL_Admin {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @see $this->_construct Used by.
 	 * @see 'add_meta_boxes' hook.
 	 * @see wp-admin/includes/template.php
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
@@ -699,8 +710,32 @@ class APL_Admin {
 		add_meta_box(
 			'apl-post-list-display',
 			__( 'Display Settings', 'advanced-post-list' ),
-			array( $this, 'post_list_meta_box_display' ),
+			array( $this, 'post_list_meta_box_design' ),
 			'apl_post_list',
+			'normal',
+			'core'
+		);
+	}
+
+	/**
+	 * Design Meta Boxes
+	 *
+	 * Hook 'add_meta_boxes', adds meta boxes used in designs.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see $this->_construct Used by.
+	 * @see 'add_meta_boxes' hook.
+	 * @see wp-admin/includes/template.php
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
+	 * @link https://developer.wordpress.org/reference/functions/add_meta_box/
+	 */
+	public function design_meta_boxes() {
+		add_meta_box(
+			'apl-post-list-display',
+			__( 'Display Settings', 'advanced-post-list' ),
+			array( $this, 'design_meta_box_design' ),
+			'apl_design',
 			'normal',
 			'core'
 		);
@@ -709,8 +744,11 @@ class APL_Admin {
 	/**
 	 * Add Settings Page Meta Boxes
 	 *
-	 * @uses add_meta_box();
-	 * @see https://developer.wordpress.org/reference/functions/add_meta_box/
+	 * @see $this->_construct Used by.
+	 * @see 'add_meta_boxes' hook.
+	 * @see add_meta_box();
+	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/add_meta_boxes
+	 * @link https://developer.wordpress.org/reference/functions/add_meta_box/
 	 */
 	public function settings_meta_boxes() {
 		add_meta_box(
@@ -804,7 +842,22 @@ class APL_Admin {
 	 * @param WP_Post $post Current WP_Post object.
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
-	public function post_list_meta_box_display( $post, $metabox ) {
+	public function post_list_meta_box_design( $post, $metabox ) {
+		include( APL_DIR . 'admin/post-list-meta-box-design.php' );
+	}
+
+	/**
+	 * Post List Design Meta box Template
+	 *
+	 * Renders the Design Meta Box Template.
+	 *
+	 * @see self::design_meta_boxes()
+	 * @since 0.4.0
+	 *
+	 * @param WP_Post $post Current WP_Post object.
+	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
+	 */
+	public function design_meta_box_design( $post, $metabox ) {
 		include( APL_DIR . 'admin/post-list-meta-box-design.php' );
 	}
 
@@ -853,7 +906,12 @@ class APL_Admin {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @see Hook: {status}_{post_type}
+	 * @see self::current_screen_hooks() Used by.
+	 * @see private_apl_post_list hook.
+	 * @see publish_apl_post_list hook.
+	 * @see pending_apl_post_list hook.
+	 * @see future_apl_post_list hook.
+	 * @see {status}_{post_type} Hook Transitions.
 	 * @link https://codex.wordpress.org/Post_Status_Transitions
 	 *
 	 * @param int     $post_id Old post ID.
@@ -873,6 +931,66 @@ class APL_Admin {
 
 		$this->post_list_process( $post_id, $post );
 
+	}
+
+	/**
+	 * Draft Design
+	 *
+	 * Hook for draft Post Transitions with Designs.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @param int      $post_id  Post ID.
+	 * @param WP_Post  $post     (New) Post Data content.
+	 */
+	public function draft_design( $post_id, $post ) {
+		if ( isset( $_REQUEST['action'] ) ) {
+			if ( 'untrash' === $_REQUEST['action'] ) {
+				return;
+			}
+		}
+
+		if ( empty( $post->post_name ) ) {
+			if ( empty( $post->post_title ) ) {
+				$post->post_title = 'APL-' . $post->ID;
+			}
+
+			remove_action( 'draft_apl_design', array( $this, 'draft_design' ) );
+			$post->post_name = sanitize_title_with_dashes( $post->post_title );
+
+			$postarr = array(
+				'ID'          => $post->ID,
+				'post_title'  => $post->post_title,
+				'post_name'   => $post->post_name,
+			);
+			wp_update_post( $postarr );
+
+			add_action( 'draft_apl_design', array( $this, 'draft_design' ), 10, 2 );
+		}
+
+		$this->design_process( $post_id, $post );
+	}
+
+	/**
+	 * Save Design
+	 *
+	 * Hook for saving object during post transitions.
+	 *
+	 * @since 0.4.0
+	 *
+	 * @see self::current_screen_hooks() Used by.
+	 * @see private_apl_design hook.
+	 * @see publish_apl_design hook.
+	 * @see pending_apl_design hook.
+	 * @see future_apl_design hook.
+	 * @see {status}_{post_type} Hook Transitions.
+	 * @link https://codex.wordpress.org/Post_Status_Transitions
+	 *
+	 * @param int     $post_id Old post ID.
+	 * @param WP_Post $post    Current Post object.
+	 */
+	public function save_design( $post_id, $post ) {
+		$this->design_process( $post_id, $post );
 	}
 
 	/**
@@ -1140,7 +1258,6 @@ class APL_Admin {
 			$i++;
 		}
 
-		// TODO UPGRADER
 		$imported_content = array();
 		foreach ( $raw_content as $v1_content ) {
 			$update_items = array();
@@ -1466,10 +1583,7 @@ class APL_Admin {
 
 		$new_design_slug = '';
 		if ( ! empty( $post->post_name ) ) {
-			//$slug_suffix = apply_filters( 'apl_design_slug_suffix', '-design' );
-			$design_slug = apply_filters( 'apl_design_process_slug', $post->post_name, $this );
-			//$new_design_slug = $design_slug . $slug_suffix;
-			$new_design_slug = $design_slug;
+			$new_design_slug = $post->post_name;
 		}
 
 		$apl_post_list->pl_apl_design = $this->post_list_process_apl_design( $apl_post_list->pl_apl_design, $new_design_slug );
@@ -1611,6 +1725,48 @@ class APL_Admin {
 		$rtn_apl_design_slug = $apl_design->slug;
 
 		return $rtn_apl_design_slug;
+	}
+
+	/**
+	 * Process APL Design Class
+	 *
+	 * @since 0.4.0
+	 * @access private
+	 *
+	 * @param int      $post_id  Contains the ID of the post type.
+	 * @param WP_Post  $post     New Post Data content to save/update.
+	 */
+	private function design_process( $post_id, $post ) {
+		$old_post = get_post( $post_id );
+		$apl_design = new APL_Design( $old_post->post_name );
+
+		// BEFORE.
+		$tmp_apl_design_before = '';
+		if ( isset( $_POST['apl_before'] ) ) {
+			$tmp_apl_design_before = filter_input( INPUT_POST, 'apl_before', FILTER_UNSAFE_RAW );
+		}
+		$apl_design->before = $tmp_apl_design_before;
+
+		// CONTENT.
+		$tmp_apl_design_content = '';
+		if ( isset( $_POST['apl_content'] ) ) {
+			$tmp_apl_design_content = filter_input( INPUT_POST, 'apl_content', FILTER_UNSAFE_RAW );
+		}
+		$apl_design->content = $tmp_apl_design_content;
+
+		// AFTER.
+		$tmp_apl_design_after = '';
+		if ( isset( $_POST['apl_after'] ) ) {
+			$tmp_apl_design_after = filter_input( INPUT_POST, 'apl_after', FILTER_UNSAFE_RAW );
+		}
+		$apl_design->after = $tmp_apl_design_after;
+
+		// EMPTY MESSAGE.
+		$tmp_apl_design_empty = '';
+		if ( isset( $_POST['apl_empty_enable'] ) && isset( $_POST['apl_empty_message'] ) ) {
+			$tmp_apl_design_empty = filter_input( INPUT_POST, 'apl_empty_message', FILTER_UNSAFE_RAW );
+		}
+		$apl_design->empty = $tmp_apl_design_empty;
 	}
 
 	/*

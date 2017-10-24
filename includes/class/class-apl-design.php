@@ -133,8 +133,8 @@ class APL_Design {
 	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
-			'name'            => '',
 			'post_type'       => 'apl_design',
+			//'name'            => '',
 			'post_status'     => array(
 				'draft',
 				'pending',
@@ -237,7 +237,23 @@ class APL_Design {
 
 		remove_all_actions( 'save_post_apl_design', 10 );
 		add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );
-		wp_insert_post( $args );
+		$old_id = $this->id;
+		$rtn_post_id = wp_insert_post( $args );
+
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			global $sitepress;
+			if ( 0 === $old_id ) {
+				$sitepress->set_element_language_details( $rtn_post_id, 'post_apl_design', null, ICL_LANGUAGE_CODE );
+			}
+		}
+
+		// ERROR.
+		if ( is_wp_error( $rtn_post_id ) ) {
+			$errors = $rtn_post_id->get_error_messages();
+			foreach ( $errors as $error ) {
+				echo $error;
+			}
+		}
 	}
 
 	/**
@@ -256,10 +272,13 @@ class APL_Design {
 		$args = wp_parse_args( $args, $defaults );
 
 		global $wp_rewrite;
+		$wp_rewrite = new WP_Rewrite();
 
 		remove_all_actions( 'save_post_apl_design', 10 );
 		add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );
 		$rtn_post_id = wp_update_post( $args );
+
+		// ERROR.
 		if ( is_wp_error( $rtn_post_id ) ) {
 			$errors = $rtn_post_id->get_error_messages();
 			foreach ( $errors as $error ) {
@@ -285,7 +304,7 @@ class APL_Design {
 	 */
 	private function default_postarr() {
 		return array(
-			'ID'               => 0,
+			//'ID'               => 0,
 			//'post_author'      => $user_id,
 			//'post_date'        => '', Default: is current time.
 			//'post_date_gmt'    => '', Default: is $post_date.
