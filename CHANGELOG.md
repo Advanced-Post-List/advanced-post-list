@@ -1,5 +1,79 @@
 == Changelog ==
 
+= 0.4.0 =
+* Added APL_Post_List Class for post data database structure with presets.
+* Added APL_Design Class for post data database structure with preset designs; before, content, after, & empty message.
+* Changed Preset data to use post data database structure (APL_Post_List & APL_Design).
+* Added Admin Singleton Class.
+* Changed to Custom Admin Menu.
+* Added New Admin templates and multiple UI changes.
+* Changed Info/Help to Tooltips instead of Dialogs.
+* Added Post_Type filter by 'Any'.
+* Changed 'Require Taxonomy' to 'Require Taxonomies' as a Post Type based filter instead.
+* Added Sort by 'None' and 'Slug'.
+* Added Post Status filter by 'None' and 'Any'.
+* Added Perms filter by 'None'.
+* Added Offset filter.
+* Added additional Notice to front-end if attribute 'name' in [post_list] is invalid or missing.
+* Added Sanitazion to shortcode attribute 'name'; ex. [post_list name=""].
+* Fixed Link attribute in post_category & post_tags shortcode.
+* Added additional checks with php_function shortcode.
+* Changed General Settings to Settings API w/ Meta Boxes.
+* Added Ignore Post Types on Admin Post List screen.
+* Changed/Fixed Exporting and Importing.
+* Fixed possible defect with Plugin Options not being initiated.
+* Added jQuery (UI) compatability.
+* Removed jQuery UI Theme setting from APL Options.
+* Changed Updater Class param items to update to an array.
+* Changed version check to a hook method.
+* Added WPML Support.
+* Added Internalization for translations.
+* Added non-class Functions file for common functions.
+* Added hooks.php file to store custom hook examples.
+
+= 0.3.7 =
+* Fixed warning with load_plugin_textdomain.
+
+= 0.3.6 = 
+* Added load_plugin_textdomain and .pot files.
+
+= 0.3.5 =
+* Fixed [post_excerpt] breaking last word.
+* Fixed [post_excerpt length=""] not trimming if post excerpt is found.
+* Fixed [php_function] Undefined Constant with KALIN_ALLOW_PHP when APL_ALLOW_PHP is defined.
+* Added [post_title length=""] attribute.
+
+= 0.3.4 =
+* Fixed [final_end] not updating output string.
+
+= 0.3.3 =
+* Fixed [final_end] missing a param.
+* Fixed Undefined index: post__not_in.
+* Added initial Localization to prep support for multiple languages.
+
+= 0.3.2 =
+* Changed Internal Shortcodes to a Class Object as a Shortcode API.
+* Changed support to Internal Shortcode to allow Attributes to be added in any order.
+* Added attributes aliases user_name & user_description for the Labels attribute in [post_author].
+* Removed attribute labels that no longer exist in WP for the Labels attribute in [post_author].
+* Added custom max size support for the Size attribute in [post_thumb].
+* Fixed extract to correctly grab img tags for the Extract attribute in [post_thumb].
+* Fixed encoding when creating an excerpt from post/page content in [post_excerpt].
+* Added [post_type] shortcode, and label attribute.
+* Added error check in [item_number].
+* Added check if other plugin is active in [post_pdf].
+* Added APL_ALLOW_PHP constant as a required varible for [php_function].
+* Removed APLCallback Class Object file.
+* Changed Dialog location for Internal Shortcode to a seperate file.
+* Added more encapsulation to initializing other class files.
+
+= 0.3.1 =
+* Added Assets.
+* Added Icon to Assets.
+* Changed Screenshots directory to Assets folder.
+* Updated jQuery MultiSelect UI Widget files version 1.14 to 1.16.
+* Fixed [post_terms] grabbing a wrong param.
+
 = 0.3.0 = 08/29/2016
 * Fixed error 'Un-Defined Variables and Non-Objects' with Excluding Duplicates.
 * Fixed List Amount '-1' Returning Nothing.

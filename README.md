@@ -1,98 +1,80 @@
-﻿=== Advanced Post List ===
-Contributors: EkoJr
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2E6Z4VQ6NF4CQ&lc=US&item_name=Wordpress%20%2d%20Advanced%20Post%20List&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
-Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
-Requires at least: 2.0.2
-Tested up to: 4.6
-Stable tag: 0.3.0
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
-
-Create custom post lists to display various content. Easy to use Filter & Design 
-as well as highly configurable and extensive.
+Post List builder with highly customizable filter & custom designs. Whether it's displaying Recent Posts, Related Posts, Dynamic Posts, or a list of posts in general.
 
 == Description ==
-[wordpress forum]: https://wordpress.org/support/plugin/advanced-post-list
-                "Default WordPress Support"
-[wordpress kalins post list]: http://wordpress.org/extend/plugins/kalins-post-list/
-		"Kalin's Plugin"
-[github issues]: https://github.com/EkoJr/wp-advanced-post-list/issues
-		"Ticket Handling"
-[github wiki]: https://github.com/EkoJr/wp-advanced-post-list/wiki
-		"Contribute or Learn about APL"
+[apl getting started]:  https://support.advancedpostlist.com/getting-started/
+                        "Getting Started w/ APL"
+[apl qa]:               https://support.advancedpostlist.com/qa/
+                        "Questions & Answers"
+[apl docs]:             https://support.advancedpostlist.com/documentation/
+                        "APL Documentation"
+[apl shortcodes]:       https://support.advancedpostlist.com/doc/internal-shortcodes/
+                        "List of Internal Shortcodes"
+[wp apl support]:       https://wordpress.org/support/plugin/advanced-post-list
+                        "WordPress.org - Support for APL"
+[github issues]:        https://github.com/Advanced-Post-List/advanced-post-list/issues
+                        "Report an Issue"
+[github wiki]:          https://github.com/Advanced-Post-List/advanced-post-list/wiki
+                        "Learn or Contribute to APL"
 
-Highly customizable plugin for designing a large variety of post lists. Allowing 
-the Webmaster to create any design for displaying Recent Posts, Related Posts, 
-Future Posts, etc., and easily positioning it with a shortcode inside a Page or Post. 
-All that is required is you know HTML, but the plugin can also use CSS, 
-JavaScript, and PHP.
+This tool functions much like a Post List builder to give Admins the most amount of control over managing content to display. Developed with Web Designers & Developers in mind, makes this a highly customizable tool to have around. However, there is a sharp learning curve for most.
 
-Version 0.3 post query was switch to WP_Query to take advantage of the Custom Post 
-Types and Taxonomies featured within WordPress, and also has additional filter settings 
-added to further reach alternate methods of displaying posts.
+You must know:
 
-APL's Documentation/Wiki is located on [GitHub Wiki][github wiki].
+* HTML
+* CSS
+* _(Optional)_
+  * JavaScript
+  * PHP
 
-Discovered a bug or an enhancement? Please submit thread/ticket at 
-[WordPress][wordpress forum] or [GitHub Issue Tickets][github issues].
+## Summary
 
-When designing site with better navigation. This plugin accomplishes 3 main 
-tasks when displaying the site’s content through various lists.
+Advanced Post List (aka APL) is designed to operate much like The Loop in WordPress; which is most notable in Themes. However, that concept is taken and turned into an Admin tool that can easily be changed, moved, or added/removed. This eliminates much of the backend work, and prevents being limited to what is hardcoded into a theme.
 
-**Content of the post list**
+This also makes multiple Featured Content with different configurations more of a breeze, and the complexity of it is a challenge that APL achieves unlike any other.
 
-* **Custom Post Type and Taxonomy Support** – New addition adds the ability to 
-add even more posts and/or pages to your lists. Display any page from any 
-post type and has even more filter options with any additional taxonomies that 
-have been added.
-* **Add/Require Any Number of Terms** – Create diverse post lists through any 
-configuration of terms within different taxonomies, and show any posts/pages 
-that has one related term, but if needed, post lists can be required to have 
-all terms selected.
-* **Show Page Children** – Once only able to display one page’s children pages 
-from one hierarchical post type (WP built-in Pages). This plugin can now display 
-multitude of children pages from multiple pages from multiple hierarchical 
-post types. Making it easy to display sub-pages
-* **Dynamically Add Terms and Page Parent** – Sometimes pages are expected to 
-change, and some area’s like the header, footer, and any sidebars are expected 
-to change. So it’s just plain simple and nice to have one configuration that 
-changes according to the visitor’s/user’s current page/post.
-* **Show Content from Private, Future, Published, and More** – A new addition 
-added to show posts/page from not only publicly published posts/pages, but from 
-any status. Opening up the ability for creating private sections on a website 
-for users.
+APL can accomplish a large degree of variations, but can be broken down to 3 main types of tasks. With Filter, Design, and Placement, here are some of the key features.
 
-**Style of the post list**
+### Filter
 
-* **Customizable Loop** – Any plugin of this design has to have a loop of some 
-kind to list the posts and/or pages. Most have their own style of design, but 
-this plugin gives the webmaster the tools to create his own style.
-* **Shortcodes for Post/Page Content** – Part of the heart of the Customizable 
-Loop, shortcodes have made it possible to pull content from each post/page and 
-add it to the post list.
-
-**Location of the post list**
-
-* **Post List Shortcode** – User friendly method of adding any post list to a 
-section of a site.
-* **PHP Hardcode** – Add post lists where some situations require a more 
-technical use where WordPress features and functions aren’t fully present.
-* **Sidebar Widget (Coming soon)** – Originally was removed until 0.3 was 
-developed. Shortcodes have made it easy to add post lists to a text sidebar, 
-but there’s still plans to take full advantage of implementing the widget class.
+* **Custom Post Type and Taxonomy Support (CPT)** - Displays Posts/Pages from custom post types, taxonomies, and terms. This includes other plugins with post data. but may store its data differently than post_content. (**Advanced Users, see php_function shortcode.**)
+* **Enhanced/Diverse Queries** - Capable of diverse filter configuration when displaying posts. This feature allows...
+  * Cross Filtering with Custom Post Types.
+  * Diverse Post Types -> Taxonomies query configurations.
+  * Multiple Query configurations with include and require.
+* **Optimized with Complex Queries** - Once deemed an Achilles Heel to WP Query, steps are taken to reduce the server load as much as possible.
+* **Dynamic Filters** - Grabs values to filter by based on the current posts/pages being viewed. _Ex. Displaying Related Posts in a Header, Footer, Sidebar, etc.._
+* **Show Content from Published, Private, Future, etc.** - This is a *development feature* and may not provide intended results. Display content on the frontend so users don’t have to navigate to the admin side. Allowing private landing pages to be created. _Note: Requires advanced knowledge on how WP Query and User Perms operate._
 
 
-This is an alternate version of [Kalins Post List][wordpress kalins post list] 
-which was unfortunately declared abandoned. Most of the credit for creating an 
-extraordinary plugin like this goes to Kalin. Currently, the plugin is still in 
-the first stages of its target design. Version 1.0.0 will feature many of the 
-functionalities that Kalin and others have mentioned, and will have a completely 
-new layout to accommodate for the extra tools that will be added.
+### Design
 
+* **Layout and Style 99.9% Customizable** - There's nearly no limitations to the design, with some exceptions that may surface with (Child) Theme's CSS. This does require some knowledge in Web Design. *Note: This is NOT to be confused with Drag and Drop UI/UX.*
+* **Internal Shortcodes** - Adds various data from Post object, and is one of the extensive features. Being able to extend to shortcodes with custom PHP functions make the possibilities practically limitless. [See full list & details][apl shortcodes].
+* **Encapsulated for Zero Conflicts** - With a large number of shortcodes on any given site. Isolating Internal Shortcodes to its own instance eliminates any plugin conflicts.
+* **Custom Formats to Loop ( The Loop )** - Themes follow this concept, but APL turns that concept into a tool. The “List Content” loop, as well as the before & after, is where most of the work is done with preset HTML, CSS, JS, & PHP designs. It is also optional to set an Empty Message (No Posts Found) to display.
 
-**Pre-Release Projects for Version 1.0.0**
+### Placement
 
-* **(Completed)** Import/export - Export is broken until 0.3 stable (including importing data from Kalins Post List)
-* **(Completed)** Custom Post Type & Taxonomies Support. Available in the 0.3 release.
-* Additional sort methods for 'Orderby' combo box.
-* Additional shortcodes.
+* **Post List Shortcode** - User friendly method of adding Preset Post Lists to a section of a page.
+* **Sidebar Widget** - Easier to use. However, adding post list shortcodes to the text sidebar also produces the same results.
+* **PHP Hardcode** - For more extensive design work. There is a public function for displaying Preset Post Lists where WordPress support and functions for admins aren’t fully present.
+
+## Other Plugins Tested/Supported
+
+There's various plugins that offer a unique capability, and some of which APL can use as intended, but there are also some don't. Here is a list of popular plugins that have been tested and verified by Advanced Post List.
+
+* **Advanced Custom Fields** - Requires php_function shortcode.
+* **WPML** - With WordPress Multilingual installed, additional Designs can be created for rendering a Post List in different languages. Posts/Pages are handled automatically and will display content in various languages.
+
+APL is open to development requests and welcomes those willing to report on any issues.
+
+## Help & Support
+
+Currently, information can be found in 2 different locations. This is due to recent changes, and is only temporary.
+
+* [Getting Started][apl getting started]
+* [Documentation][apl docs]
+	* [Internal Shortcodes][apl shortcodes]
+* [GitHub Wiki][github wiki]
+
+Questions/Bug Report submit thread / ticket at [WordPress][wp apl support] or [GitHub Issue / Tickets][github issues].
