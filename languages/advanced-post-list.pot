@@ -1,38 +1,858 @@
-# Copyright (C) 2017 Advanced Post List
-# This file is distributed under the same license as the Advanced Post List package.
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Advanced Post List 0.3.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/advanced-post-list\n"
-"POT-Creation-Date: 2017-05-24 05:50:57+00:00\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Advanced Post List\n"
+"POT-Creation-Date: 2017-10-29 12:22-0700\n"
+"PO-Revision-Date: 2017-10-29 12:21-0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: Poedit 2.0.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: advanced-post-list.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: advanced-post-list.php:42
+#: admin/class-apl-admin.php:62 admin/class-apl-admin.php:74
+msgid "Cheatin' huh?"
+msgstr ""
+
+#: admin/class-apl-admin.php:92
+msgid "You do not have admin capabilities in APL_Admin."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: admin/class-apl-admin.php:214
+msgid "Advanced Post List"
+msgstr ""
+
+#: admin/class-apl-admin.php:215
+msgid "Adv. Post List"
+msgstr ""
+
+#: admin/class-apl-admin.php:229 includes/class/class-apl-core.php:216
+msgid "Add New Post List"
+msgstr ""
+
+#: admin/class-apl-admin.php:230
+msgid "Add New"
+msgstr ""
+
+#: admin/class-apl-admin.php:238
+msgid "APL Settings"
+msgstr ""
+
+#: admin/class-apl-admin.php:239
+msgid "Settings"
+msgstr ""
+
+#: admin/class-apl-admin.php:430
+msgid "Select Taxonomy"
+msgstr ""
+
+#: admin/class-apl-admin.php:431
+msgid "# of # taxonomies selected"
+msgstr ""
+
+#: admin/class-apl-admin.php:432 admin/post-list-meta-box-filter.php:578
+#: admin/post-list-meta-box-filter.php:606
+#: admin/post-list-meta-box-filter.php:641
+#: admin/post-list-meta-box-filter.php:664
+msgid "- None -"
+msgstr ""
+
+#: admin/class-apl-admin.php:433 admin/class-apl-admin.php:437
+msgid "# Selected"
+msgstr ""
+
+#: admin/class-apl-admin.php:434
+msgid "Select Status"
+msgstr ""
+
+#: admin/class-apl-admin.php:435
+msgid "Both"
+msgstr ""
+
+#: admin/class-apl-admin.php:436 admin/post-list-meta-box-filter.php:647
+msgid "Published"
+msgstr ""
+
+#: admin/class-apl-admin.php:517
+msgid "Alert"
+msgstr ""
+
+#: admin/class-apl-admin.php:518
+msgid "No Message to Display."
+msgstr ""
+
+#: admin/class-apl-admin.php:519
+msgid "Filename Required"
+msgstr ""
+
+#: admin/class-apl-admin.php:520
+msgid "A filename doesn't exist. \\n Please enter a filename before exporting."
+msgstr ""
+
+#: admin/class-apl-admin.php:521
+msgid "No file(s) selected. Please choose a JSON file to upload."
+msgstr ""
+
+#: admin/class-apl-admin.php:522
+msgid "No File"
+msgstr ""
+
+#: admin/class-apl-admin.php:523
+msgid "Invalid file type. Please choose a JSON file to upload."
+msgstr ""
+
+#: admin/class-apl-admin.php:524
+msgid "Invalid File"
+msgstr ""
+
+#: admin/class-apl-admin.php:525
+msgid "Data successfully imported."
+msgstr ""
+
+#: admin/class-apl-admin.php:526
+msgid "Complete"
+msgstr ""
+
+#: admin/class-apl-admin.php:527
+msgid "Overwrite Presets"
+msgstr ""
+
+#: admin/class-apl-admin.php:528 admin/class-apl-admin.php:534
+msgid "Illegal Characters"
+msgstr ""
+
+#: admin/class-apl-admin.php:529 admin/class-apl-admin.php:535
+msgid "Cannot use (< > : \" / \\ | , ? *)."
+msgstr ""
+
+#: admin/class-apl-admin.php:530 admin/class-apl-admin.php:536
+msgid "Please rename your filename."
+msgstr ""
+
+#: admin/class-apl-admin.php:627 admin/post-list-meta-box-filter.php:581
+msgid "Slug"
+msgstr ""
+
+#: admin/class-apl-admin.php:628
+msgid "Shortcode"
+msgstr ""
+
+#: admin/class-apl-admin.php:704
+msgid "Filter Settings"
+msgstr ""
+
+#: admin/class-apl-admin.php:712 admin/class-apl-admin.php:736
+msgid "Display Settings"
+msgstr ""
+
+#: admin/class-apl-admin.php:756
+msgid "About"
+msgstr ""
+
+#: admin/class-apl-admin.php:767
+msgid "General Settings"
+msgstr ""
+
+#: admin/class-apl-admin.php:775
+msgid "Import / Export"
+msgstr ""
+
+#: admin/class-apl-admin.php:1267
+msgid "Version number is not present in imported file."
+msgstr ""
+
+#: admin/class-apl-admin.php:1419 admin/class-apl-admin.php:1795
+msgid "Any / All"
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:21
+msgid ""
+"Used to store any HTML & CSS code that exists before the post/content "
+"listings. Useful for div, ul, ol, tables, etc.. As well as storing CSS "
+"styling for IDs and Classes."
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:25
+msgid ""
+"This where you design how your posts are going to display in the post list. "
+"In here you can use HTML, CSS, PHP (requires the PHP shortcode), and the "
+"plugin's internal shortcodes. Info can be found at the bottom, or by "
+"clicking on the shortcode info found below \"List content\"."
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:29
+msgid ""
+"Used for ending any elements that are still open, or to display a final "
+"message to the users/visitors."
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:33
+msgid ""
+"This container holds the HTML & CSS content and if no posts are found to be "
+"listed in the preset. Then the preset post list will display this message. "
+"If no Empty Message is found, then the post list will use the Default Empty "
+"Message if enabled in the Plugin's Admin Settings. Otherwise, the plugin "
+"will display nothing like it was originally set as. Please Note: if you are "
+"using the Default Empty Message but you don't want to display anything in a "
+"certain preset post list. Then simple create an empty element to fall back "
+"on. For example, an empty \"span\" HTML element."
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:51
+msgid "Before list:"
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:60
+msgid "List content:"
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:64
+msgid "List of Shortcodes"
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:74
+msgid "After list:"
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:83
+msgid "Empty Message:"
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:89
+msgid "Enable (Overwrites Default)"
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:102
+msgid "Edit Translation(s) of this Design."
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:105
+msgid ""
+"Please save the Post List in order to manage translations of this Design."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:24
+msgid ""
+"Each (jQuiry UI) accordion contains a separate individual post type. The "
+"default post types built into WordPress are Post and Page. Any additional "
+"post types are dynamically added in the manner WordPress does. Please Note: "
+"Each post/page can have only one post type, which may explain why it has "
+"been divided by post types."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:26
+msgid ""
+"Each taxonomy is generally spit up in two sections, and divided into "
+"separate tabs. Hierarchies (categories) are located on the left, and non-"
+"hierarchies (tags) are located on the right."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:34
+msgid ""
+"If selected, and more than one term is checked, then each term must be "
+"required within the CPT/taxonomy in order to be displayed in the post list."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:36
+msgid ""
+"If selected, the post list preset will include any terms the current page/"
+"post has within the CTP/taxonomy."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:38
+msgid "When checked, any terms will be included within that CPT/taxonomy."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:40
+msgid ""
+"The numeric value of how many posts you want the post list to display. "
+"Negative one (-1) will display all the posts that are available after "
+"filtering."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:42
+msgid ""
+"Choose which page properties to sort from. All of which are built in params "
+"used in WP_Query."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:56
+msgid ""
+"Uses the user permission via. user capabilities to determine what posts to "
+"display in the post list to the visitor/user."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:62
+msgid ""
+"Add post/page IDs, seperated by a comma (,), will prevent those posts from "
+"being added to the post list."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:64
+msgid ""
+"Meant for the built-in post type (Posts) function. When checked, this will "
+"prevent sticky posts from always displaying at the top of the post list."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:66
+msgid ""
+"When checked, the current post being viewed will be excluded from the post "
+"list."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:68
+msgid ""
+"In the \"order that it is received\", each preset post list being viewed "
+"will add the post IDs to a global exclude list built into APL. When checked, "
+"the preset post list will add the post IDs (listed at the time) to the "
+"exclude filter settings in WP_Query. This will remove any posts that have "
+"already been displayed to the user by the APL plugin."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:121
+msgid "Any / All Terms"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:187
+msgid ""
+"Adds the Current Page being displayed as a Parent Page, which will then add "
+"those child pages."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:193
+msgid "Dynamic Parent Page"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:200
+#: admin/post-list-meta-box-filter.php:237
+msgid "Add"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:201
+#: admin/post-list-meta-box-filter.php:238
+#: admin/post-list-meta-box-filter.php:579
+msgid "ID"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:202
+#: admin/post-list-meta-box-filter.php:239
+msgid "Page Title"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:344
+msgid "Post Types"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:381
+msgid "Taxonomies"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:389
+msgid "Parent Pages"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:409
+msgid "Req. Taxonomies"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:494
+msgid "Require Terms"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:501
+msgid "Dynamic Terms"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:536
+msgid "List Amount:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:554
+msgid "Offset:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:573
+msgid "Order By:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:580
+msgid "Title"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:582
+msgid "Date"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:583
+msgid "Modified Date"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:584
+msgid "Comments"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:585
+msgid "Author"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:586
+msgid "Parent"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:587
+msgid "Menu Order"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:588
+msgid "Random"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:591
+msgid "Descending"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:592
+msgid "Ascending"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:599
+msgid "Authors:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:607
+msgid "From"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:608
+msgid "Not From"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:636
+msgid "Post Status:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:642
+msgid "Any"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:643
+msgid "Public"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:644
+msgid "Private (BETA)"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:648
+msgid "Pending Review"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:649
+msgid "Draft"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:650
+msgid "Auto-Draft"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:651
+msgid "Scheduled"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:652
+msgid "Revisions"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:653
+msgid "Trash"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:659
+msgid "User Perms:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:665
+msgid "Readable"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:666
+msgid "Editable"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:675
+msgid "Exclude Post by ID:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:683
+msgid "Enable Sticky Posts:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:689
+msgid "Exclude Current Post:"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:695
+msgid "Exclude Duplicate Posts:"
+msgstr ""
+
+#: admin/settings-meta-box-general.php:28
+msgid "Used for ignoring post types when creating/editing a post list."
+msgstr ""
+
+#: admin/settings-meta-box-general.php:30
+msgid ""
+"If \"No\" is selected, then the plugin's database data will not be removed "
+"when the plugin is deactivated. When re-activated, the plugin data will "
+"restored as it was left. Please Note: If the plugin is removed/uninstalled, "
+"then the plugin's data will be removed regardless."
+msgstr ""
+
+#: admin/settings-meta-box-general.php:32
+msgid "Enable Default Empty Message: "
+msgstr ""
+
+#: admin/settings-meta-box-general.php:33
+msgid ""
+"Used as a default option to use if no posts are found and the Empty Message "
+"is empty within the preset post list."
+msgstr ""
+
+#: admin/settings-meta-box-general.php:34
+msgid "Enable Global Exit (boolean): "
+msgstr ""
+
+#: admin/settings-meta-box-general.php:35
+msgid ""
+"If enabled (yes), the all presets will fallback on the global/default Empty "
+"Message."
+msgstr ""
+
+#: admin/settings-meta-box-general.php:36
+msgid "Empty Message: "
+msgstr ""
+
+#: admin/settings-meta-box-general.php:37
+msgid ""
+"Contains the message that will be displayed if no posts are found. HTML and "
+"CSS can be used."
+msgstr ""
+
+#: admin/settings-meta-box-general.php:86
+msgid "Save Settings"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:14
+msgid ""
+"Exports the whole APL preset database/table. Illegal (< > : \" / \\ | , ? *) "
+"characters cannot be used as the exported filename."
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:16
+msgid ""
+"Imports data into the database. If there are any pre-existing data, you will "
+"be prompted list of overwrite items."
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:18
+msgid ""
+"Designed to restore only the default preset table the plugin initially came "
+"with."
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:23
+msgid "Export Post List Database"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:26
+msgid "Filename:"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:31
+msgid "Export"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:37
+msgid "Import Post List File"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:42
+msgid "Upload File:"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:48
+msgid "Import"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:55
+msgid "Restore Defaults ( WIP )"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:58
+msgid "Default Post Lists:"
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:63
+msgid ""
+"Restores the plugin's default preset table only, and will overwrite/add the "
+"default Post Lists. This will not delete other Post Lists (as long as the "
+"name isn't a default name)."
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:66
+msgid ""
+"Note: This is currently a Work In Progress. The functionality is relatively "
+"simple, however, many updates have taken place since then, and many of the "
+"defaults are relatively old."
+msgstr ""
+
+#: admin/settings-meta-box-import-export.php:69
+msgid "Restore"
+msgstr ""
+
+#: admin/settings-page.php:19
+msgid "APL - Settings"
+msgstr ""
+
+#: advanced-post-list.php:39
 msgid "This plugin requires Wordpress 2.0.2 or higher to operate. "
 msgstr ""
 
-#: advanced-post-list.php:43
-msgid "<a href=\"http://codex.wordpress.org/Upgrading_WordPress\">Please update!</a>"
+#: advanced-post-list.php:40
+msgid ""
+"<a href=\"http://codex.wordpress.org/Upgrading_WordPress\">Please update!</a>"
 msgstr ""
 
-#: advanced-post-list.php:47
+#: advanced-post-list.php:41 advanced-post-list.php:45
+msgid "Advanced Post List: Error"
+msgstr ""
+
+#: advanced-post-list.php:44
 msgid "You are attempting to access this plugin directly."
 msgstr ""
 
-#: includes/class/class-apl-widget.php:27
+#: includes/class/class-apl-core.php:213
+msgid "APL Post Lists"
+msgstr ""
+
+#: includes/class/class-apl-core.php:214
+msgid "Post List"
+msgstr ""
+
+#: includes/class/class-apl-core.php:215
+msgctxt "List"
+msgid "Add New"
+msgstr ""
+
+#: includes/class/class-apl-core.php:217
+msgid "Edit Post List"
+msgstr ""
+
+#: includes/class/class-apl-core.php:218
+msgid "New Post List"
+msgstr ""
+
+#: includes/class/class-apl-core.php:219
+msgid "View Post List"
+msgstr ""
+
+#: includes/class/class-apl-core.php:220
+msgid "View Post Lists"
+msgstr ""
+
+#: includes/class/class-apl-core.php:221
+msgid "Search Post Lists"
+msgstr ""
+
+#: includes/class/class-apl-core.php:222
+msgid "No Post Lists found"
+msgstr ""
+
+#: includes/class/class-apl-core.php:223
+msgid "No Post Lists found in Trash"
+msgstr ""
+
+#: includes/class/class-apl-core.php:224 includes/class/class-apl-core.php:283
+msgid ":"
+msgstr ""
+
+#: includes/class/class-apl-core.php:225
+msgid "All Post Lists"
+msgstr ""
+
+#: includes/class/class-apl-core.php:226
+msgid "Post List Archives"
+msgstr ""
+
+#: includes/class/class-apl-core.php:227
+msgid "Post List Attributes"
+msgstr ""
+
+#: includes/class/class-apl-core.php:228
+msgid "Insert into Post List"
+msgstr ""
+
+#: includes/class/class-apl-core.php:229
+msgid "Upload to this Post List"
+msgstr ""
+
+#: includes/class/class-apl-core.php:230
+msgid "APL Post List"
+msgstr ""
+
+#: includes/class/class-apl-core.php:232
+msgid "APL Preset Post Lists."
+msgstr ""
+
+#: includes/class/class-apl-core.php:272
+msgid "APL Designs"
+msgstr ""
+
+#: includes/class/class-apl-core.php:273
+msgid "Design"
+msgstr ""
+
+#: includes/class/class-apl-core.php:274
+msgctxt "design"
+msgid "Add New"
+msgstr ""
+
+#: includes/class/class-apl-core.php:275
+msgid "Add New Design"
+msgstr ""
+
+#: includes/class/class-apl-core.php:276
+msgid "Edit Design"
+msgstr ""
+
+#: includes/class/class-apl-core.php:277
+msgid "New Design"
+msgstr ""
+
+#: includes/class/class-apl-core.php:278
+msgid "View Design"
+msgstr ""
+
+#: includes/class/class-apl-core.php:279
+msgid "View Designs"
+msgstr ""
+
+#: includes/class/class-apl-core.php:280
+msgid "Search Designs"
+msgstr ""
+
+#: includes/class/class-apl-core.php:281
+msgid "No Design found"
+msgstr ""
+
+#: includes/class/class-apl-core.php:282
+msgid "No Design found in Trash"
+msgstr ""
+
+#: includes/class/class-apl-core.php:284
+msgid "All Designs"
+msgstr ""
+
+#: includes/class/class-apl-core.php:285
+msgid "Design Archives"
+msgstr ""
+
+#: includes/class/class-apl-core.php:286
+msgid "Design Attributes"
+msgstr ""
+
+#: includes/class/class-apl-core.php:287
+msgid "Insert into Design"
+msgstr ""
+
+#: includes/class/class-apl-core.php:288
+msgid "Upload to this Design"
+msgstr ""
+
+#: includes/class/class-apl-core.php:289
+msgid "APL Design"
+msgstr ""
+
+#: includes/class/class-apl-core.php:291
+msgid "APL Designs for Preset Post Lists."
+msgstr ""
+
+#: includes/class/class-apl-core.php:579
+#: includes/class/class-apl-updater.php:882 includes/functions.php:37
+msgid "Sorry, but no content is available at this time."
+msgstr ""
+
+#: includes/class/class-apl-core.php:681
+msgid "NOTICE: Shortcode name is missing. Ex [post_list name='example']"
+msgstr ""
+
+#: includes/class/class-apl-core.php:737
+msgid "NOTICE: Post list 'name' does not exist or is invalid."
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1334
+msgid ""
+"Error: Add define(\"APL_ALLOW_PHP\", true); to wp-config.php for "
+"php_function to work."
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1336
+msgid "Error: Change define(\"APL_ALLOW_PHP\", true); in "
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1337
+msgid "wp-config.php for php_function to work."
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1339
+msgid "Error: Name shortcode attribute must have a name. "
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1341
+msgid ""
+"Error: Function does not exist. Check name in shortcode or is function name "
+"is loaded."
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1359
+msgid "Error: Unknown Error."
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1361
+msgid "defined APL_ALLOW_PHP: "
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1363
+msgid "$atts name:"
+msgstr ""
+
+#: includes/class/class-apl-shortcodes.php:1365
+msgid "$atts param:"
+msgstr ""
+
+#: includes/class/class-apl-updater.php:86
+msgid ""
+"APL Updater Class Error: empty version and/or empty APL Options & APL Preset "
+"Db is being passed to the Updater Class."
+msgstr ""
+
+#: includes/class/class-apl-widget.php:31
 msgid "Advanced Post Lists"
 msgstr ""
 
-#: includes/class/class-apl-widget.php:28
+#: includes/class/class-apl-widget.php:32
 msgid "Display preset post lists"
-msgstr ""
-#. Plugin Name of the plugin/theme
-msgid "Advanced Post List"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
@@ -40,7 +860,10 @@ msgid "http://wordpress.org/plugins/advanced-post-list/"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies."
+msgid ""
+"Create highly customizable post lists to display to your users and visitors. "
+"Provides a wide array of static settings and dynamic features. Also supports "
+"Custom Post Types and Taxonomies."
 msgstr ""
 
 #. Author of the plugin/theme
