@@ -1302,16 +1302,15 @@ class APL_Internal_Shortcodes {
 	 * the returned data as a string.
 	 *
 	 * STEP 1: Check to see if Constant Variable is set, if not, add error then do Step 4.
-	 * STEP 2: Check to see if a function 'name' is given, if empty, add error
-	 *         then do Step 4.
-	 * STEP 3: If the function exists, do the function /w 'param'.
-	 * STEP 4: Return string.
+	 * STEP 2: If the function exists, do the function /w 'param'.
+	 * STEP 3: Return string.
 	 *
 	 * @since 0.3.0
 	 * @since 0.4.0 - Changed to Class function, and uses WP's built-in functions
 	 *                for setting default attributes & do_shortcode().
 	 *                Added Constant APL_ALLOW_PHP to require.
 	 *                Added Check if function exists.
+	 *                Added Else Check for unknown error.
 	 *
 	 * @param array $atts {
 	 *
@@ -1332,16 +1331,18 @@ class APL_Internal_Shortcodes {
 
 		// STEP 1.
 		if ( ! defined( 'KALINS_ALLOW_PHP' ) && ! defined( 'APL_ALLOW_PHP' ) ) {
-			$return_str .= 'Error: Add define("APL_ALLOW_PHP", true); to wp-config.php for php_function to work.';
+			$return_str  .= __( 'Error: Add define("APL_ALLOW_PHP", true); to wp-config.php for php_function to work.', 'advanced-post-list' );
 		} elseif ( true !== APL_ALLOW_PHP || true !== APL_ALLOW_PHP ) {
-			$return_str .= 'Error: Change define("APL_ALLOW_PHP", true); in ' .
-							'wp-config.php for php_function to work.';
-		} elseif ( empty( $atts_value['name'] ) && is_admin() ) {
-			// STEP 2.
-			$return_str .= 'Error: Name shortcode attribute must have a name. ' .
-						   'For ex. [php_function name="FUNCTION_NAME"]';
+			$return_str  .= __( 'Error: Change define("APL_ALLOW_PHP", true); in ', 'advanced-post-list' ) .
+							__( 'wp-config.php for php_function to work.', 'advanced-post-list' );
+		} elseif ( empty( $atts_value['name'] ) ) {
+			$return_str  .= __( 'Error: Name shortcode attribute must have a name. ', 'advanced-post-list' );
+		} elseif ( ! function_exists( $atts_value['name'] ) ) {
+			$return_str  .= __( 'Error: Function does not exist. Check name in shortcode or is function name is loaded.', 'advanced-post-list');
+							//__( 'For ex. ', 'advanced-post-list' ) . '\[php_function name=\"' . __( 'FUNCTION_NAME', 'advanced-post-list' ) . '\"\]';
+							//__( 'For ex. &#91;php_function name="FUNCTION_NAME"&#93;', 'advanced-post-list' );
 		} elseif ( function_exists( $atts_value['name'] ) ) {
-			// STEP 3.
+			// STEP 2.
 			if ( ! empty( $atts_value['param'] ) ) {
 				$return_str .= call_user_func(
 					$atts_value['name'],
@@ -1354,9 +1355,18 @@ class APL_Internal_Shortcodes {
 					$this->_post
 				);
 			}
+		} else {
+			$return_str  .= __( 'Error: Unknown Error.', 'advanced-post-list');
+			$return_str  .= '<br />';
+			$return_str  .= __( 'defined APL_ALLOW_PHP: ', 'advanced-post-list' ) . ! defined( 'APL_ALLOW_PHP' );
+			$return_str  .= '<br />';
+			$return_str  .= __( '$atts name:', 'advanced-post-list' ) . $atts_value['name'];
+			$return_str  .= '<br />';
+			$return_str  .= __( '$atts param:', 'advanced-post-list' ) . $atts_value['param'];
+			$return_str  .= '<hr />';
 		}
 
-		// STEP 4.
+		// STEP 3.
 		return $return_str;
 	}
 
