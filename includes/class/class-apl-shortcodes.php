@@ -1073,9 +1073,9 @@ class APL_Internal_Shortcodes {
 		$return_str = '';
 
 		// STEP 1.
-		$atts_value['links'] = true;
+		$links = true;
 		if ( 'false' === strtolower( $atts_value['links'] ) ) {
-			$atts_value['links'] = false;
+			$links = false;
 		}
 
 		// STEP 2.
@@ -1085,7 +1085,7 @@ class APL_Internal_Shortcodes {
 		if ( $post_categories ) {
 			// STEP 3.
 			foreach ( $post_categories as $category ) {
-				if ( $atts_value['links'] ) {
+				if ( $links ) {
 					$return_str .= '<a href="' . get_tag_link( $category->term_id ) . '" >' . $category->name . '</a>';
 				} else {
 					$return_str .= $category->name;
