@@ -86,10 +86,9 @@ You need to copy & paste the shortcode to the desired location (e.g. [post_list 
 == Changelog ==
 
 = 0.4.0 =
-* Changed Preset object to use APL_Post_List & APL_Design post data database structure; adds multiple built-in improvements & support.
-* Added APL_Post_List Class for post data database structure.
-* Added APL_Design Class for post data database structure.
-* Changed Preset variables before, content, after, & empty message to APL_Design object.
+* Added APL_Post_List Class for post data database structure with presets.
+* Added APL_Design Class for post data database structure with preset designs; before, content, after, & empty message.
+* Changed Preset data to use post data database structure (APL_Post_List & APL_Design).
 * Added Admin Singleton Class.
 * Changed to Custom Admin Menu.
 * Added New Admin templates and multiple UI changes.
@@ -102,13 +101,17 @@ You need to copy & paste the shortcode to the desired location (e.g. [post_list 
 * Added Offset filter.
 * Added additional Notice to front-end if attribute 'name' in [post_list] is invalid or missing.
 * Added Sanitazion to shortcode attribute 'name'; ex. [post_list name=""].
+* Fixed Link attribute in post_category & post_tags shortcode.
+* Added additional checks with php_function shortcode.
 * Changed General Settings to Settings API w/ Meta Boxes.
-* Fixed possible defect with Plugin Options not being initiated.
+* Added Ignore Post Types on Admin Post List screen.
 * Changed/Fixed Exporting and Importing.
+* Fixed possible defect with Plugin Options not being initiated.
 * Added jQuery (UI) compatability.
 * Removed jQuery UI Theme setting from APL Options.
 * Changed Updater Class param items to update to an array.
 * Changed version check to a hook method.
+* Added WPML Support.
 * Added Internalization for translations.
 * Added non-class Functions file for common functions.
 * Added hooks.php file to store custom hook examples.
@@ -291,7 +294,7 @@ You need to copy & paste the shortcode to the desired location (e.g. [post_list 
 == Upgrade Notice ==
 
 = 0.4.0 =
-Beta Release. Large database update will occurr.
+Back up website. Large database update will occurr.
 
 = 0.3.6 =
 Stable Release. Changed File Structure which may cause a PHP object error
