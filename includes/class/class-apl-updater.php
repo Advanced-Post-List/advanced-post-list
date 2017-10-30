@@ -156,9 +156,12 @@ class APL_Updater {
 
 		if ( $this->update_occurred ) {
 			// Fallback option if things go wrong.
-			update_option( 'apl_backup_update_items', $update_items );
+			update_option( 'apl_backup_update_dev_' . date( 'YmdHi' ), $update_items );
 			foreach ( $update_items as $k1_index => $u_item ) {
-				update_option( 'apl_backup_update_item_' . $k1_index . '_' . sanitize_key( $old_version ), $u_item );
+				$option_name1 = 'apl_backup_update_' . sanitize_key( $old_version ) . '_apl_' . $k1_index;
+				$option_name2 = 'apl_backup_update_' . sanitize_key( $old_version ) . '_' . date( 'YmdHi' ) . '_apl_' . $k1_index;
+				update_option( $option_name1, $u_item );
+				update_option( $option_name2, $u_item );
 			}
 		}
 

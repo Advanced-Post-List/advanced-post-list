@@ -347,11 +347,11 @@ class APL_Core {
 				$updater = new APL_Updater( $options['version'], $update_items, 'APL' );
 				// IN THIS CASE, BOTH MUST HAVE VALUES FILLED.
 				if ( $updater->update_occurred ) {
-					$options = $updater->options;
-					apl_options_save( $options );
-
 					$this->update_post_list_database( $updater->apl_post_list_arr );
 					$this->update_design_database( $updater->apl_design_arr );
+					
+					$options = $updater->options;
+					apl_options_save( $options );
 				}
 			}
 		}
