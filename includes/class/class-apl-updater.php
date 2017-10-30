@@ -766,22 +766,28 @@ class APL_Updater {
 								}
 								$tmp_page = get_post( $v3_page_id );
 								if ( ! empty( $tmp_page ) ) {
-									// Process Post Types and Page Parent corralations.
-									foreach ( $tmp_post_type_arr as $post_type_arr ) {
-										if ( is_array( $post_type_arr ) ) {
-											if ( in_array( $tmp_page->post_type, $post_type_arr ) ) {
-												// If post_type already exists.
-												$tmp_post_parent__in_arr[ $tmp_page->post_type ] = $tmp_page->ID;
+									if ( empty( $tmp_post_type_arr ) ) {
+										// IF no post_type set
+										$tmp_post_type_arr[] = array( $tmp_page->post_type );
+										$tmp_post_parent__in_arr[ $tmp_page->post_type ][] = $tmp_page->ID;
+									} else {
+										// Process Post Types and Page Parent corralations.
+										foreach ( $tmp_post_type_arr as $post_type_arr ) {
+											if ( is_array( $post_type_arr ) ) {
+												if ( in_array( $tmp_page->post_type, $post_type_arr ) ) {
+													// If post_type already exists.
+													$tmp_post_parent__in_arr[ $tmp_page->post_type ][] = $tmp_page->ID;
+												} else {
+													// IF no post_type set
+													$tmp_post_type_arr[] = array( $tmp_page->post_type );
+													$tmp_post_parent__in_arr[ $tmp_page->post_type ][] = $tmp_page->ID;
+												}
 											} else {
-												// IF no post_type set
-												$tmp_post_type_arr[] = array( $tmp_page->post_type );
-												$tmp_post_parent__in_arr[ $tmp_page->post_type ] = $tmp_page->ID;
+												// ANY.
+												unset( $tmp_post_type_arr );
+												$tmp_post_type_arr = array( $tmp_page->post_type );
+												$tmp_post_parent__in_arr[ $tmp_page->post_type ][] = $tmp_page->ID;
 											}
-										} else {
-											// ANY.
-											unset( $tmp_post_type_arr );
-											$tmp_post_type_arr = array( $tmp_page->post_type );
-											$tmp_post_parent__in_arr[ $tmp_page->post_type ] = $tmp_page->ID;
 										}
 									}
 
