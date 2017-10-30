@@ -133,7 +133,8 @@ class APL_Updater {
 					$this->apl_post_list_arr  = $new_preset_arr['apl_post_list'];
 					$this->apl_design_arr     = $new_preset_arr['apl_design'];
 
-					delete_option( 'APL_preset_db-default' );
+					// Don't delete incase there is a revert.
+					//delete_option( 'APL_preset_db-default' );
 				}
 			}
 
@@ -595,10 +596,10 @@ class APL_Updater {
 
 		$rtn_options['version'] = APL_VERSION;
 
-		$rtn_options['ignore_post_types']     = $options['ignore_post_types'] ?: $rtn_options['ignore_post_types'];
-		$rtn_options['delete_core_db']        = $options['delete_core_db']    ?: $rtn_options['delete_core_db'];
-		$rtn_options['default_empty_enable']  = $options['default_exit']      ?: $rtn_options['default_empty_enable'];
-		$rtn_options['default_empty_output']  = $options['default_exit_msg']  ?: $rtn_options['default_empty_output'];
+		$rtn_options['ignore_post_types']     = isset( $options['ignore_post_types'] ) ? $options['ignore_post_types'] : $rtn_options['ignore_post_types'];
+		$rtn_options['delete_core_db']        = isset( $options['delete_core_db'] )    ? $options['delete_core_db']    : $rtn_options['delete_core_db'];
+		$rtn_options['default_empty_enable']  = isset( $options['default_exit'] )      ? $options['default_exit']      : $rtn_options['default_empty_enable'];
+		$rtn_options['default_empty_output']  = isset( $options['default_exit_msg'] )  ? $options['default_exit_msg']  : $rtn_options['default_empty_output'];
 
 		return $rtn_options;
 	}
@@ -987,7 +988,7 @@ class APL_Updater {
 
 					////////////////////////////////////////////////////////////
 
-					$p_post_parent__in = json_decode( json_encode( $p_post_parent__in ), true );
+					$p_post_parent__in = json_decode( json_encode( $apl_post_list->post_parent__in ), true );
 					if ( isset( $p_post_parent__in[ $v2_pt_slug ] ) && ! empty( $p_post_parent__in[ $v2_pt_slug ] ) ) {
 						$tmp_post_parents = array();
 						foreach ( $p_post_parent__in[ $v2_pt_slug ] as $k3_ => $v3_post_id ) {
