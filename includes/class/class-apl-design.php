@@ -234,6 +234,9 @@ class APL_Design {
 		$args = wp_parse_args( $args, $defaults );
 
 		global $wp_rewrite;
+		if ( is_null( $wp_rewrite ) ) {
+			$wp_rewrite = new WP_Rewrite();
+		}
 
 		remove_all_actions( 'save_post_apl_design', 10 );
 		add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );
@@ -272,7 +275,9 @@ class APL_Design {
 		$args = wp_parse_args( $args, $defaults );
 
 		global $wp_rewrite;
-		$wp_rewrite = new WP_Rewrite();
+		if ( is_null( $wp_rewrite ) ) {
+			$wp_rewrite = new WP_Rewrite();
+		}
 
 		remove_all_actions( 'save_post_apl_design', 10 );
 		add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );

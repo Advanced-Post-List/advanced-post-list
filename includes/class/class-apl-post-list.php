@@ -424,9 +424,22 @@ class APL_Post_List {
 		$defaults = $this->default_postarr();
 		$args = wp_parse_args( $args, $defaults );
 
+		global $wp_rewrite;
+		if ( is_null( $wp_rewrite ) ) {
+			$wp_rewrite = new WP_Rewrite();
+		}
+
 		remove_all_actions( 'save_post_apl_post_list', 10 );
 		add_action( 'save_post_apl_post_list', array( &$this, 'hook_action_save_post_apl_post_list' ), 10, 3 );
-		wp_insert_post( $args );
+		$rtn_post_id = wp_insert_post( $args );
+
+		// ERROR.
+		if ( is_wp_error( $rtn_post_id ) ) {
+			$errors = $rtn_post_id->get_error_messages();
+			foreach ( $errors as $error ) {
+				echo $error;
+			}
+		}
 	}
 
 	/**
@@ -444,7 +457,9 @@ class APL_Post_List {
 		$args = wp_parse_args( $args, $defaults );
 
 		global $wp_rewrite;
-		$wp_rewrite = new WP_Rewrite();
+		if ( is_null( $wp_rewrite ) ) {
+			$wp_rewrite = new WP_Rewrite();
+		}
 
 		remove_all_actions( 'save_post_apl_post_list', 10 );
 		add_action( 'save_post_apl_post_list', array( &$this, 'hook_action_save_post_apl_post_list' ), 10, 3 );
