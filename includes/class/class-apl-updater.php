@@ -123,7 +123,7 @@ class APL_Updater {
 				$this->APL_upgrade_to_03b5();
 			}
 			// VERSION 0.4.0
-			if ( version_compare( '0.4.0', $old_version, '>' ) ) {
+			if ( version_compare( '0.4.1', $old_version, '>' ) ) {
 				if ( ! empty( $this->options ) ) {
 					$new_options = $this->upgrade_options_03b5_to_040( $this->options );
 					$this->options = $new_options;
