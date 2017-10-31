@@ -621,7 +621,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 							<?php if ( $apl_authors ) : ?>
 								<optgroup label="<?php echo esc_attr( $v_role_name ); ?>">
 									<?php foreach ( $apl_authors as $k2_index => $v2_user ) : ?>
-										<option <?php echo ( in_array( $v2_user->data->ID , $apl_post_list->author__in, true ) ) ? 'selected="selected"' : ''; ?> value="<?php echo esc_attr( $v2_user->data->ID ); ?>" ><?php echo esc_html( $v2_user->data->display_name ); ?></option>
+										<option <?php echo ( in_array( $v2_user->ID , $apl_post_list->author__in, true ) ) ? 'selected="selected"' : ''; ?> value="<?php echo esc_attr( $v2_user->data->ID ); ?>" ><?php echo esc_html( $v2_user->data->display_name ); ?></option>
 									<?php endforeach; ?>
 								</optgroup>
 							<?php endif; ?>

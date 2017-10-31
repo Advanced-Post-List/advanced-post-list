@@ -1059,7 +1059,7 @@ class APL_Updater {
 		if ( isset( $apl_post_list->author__in ) ) {
 			$tmp_author__in = array();
 			foreach ( $apl_post_list->author__in as $v1_author_ID ) {
-				$tmp_author__in[] = inval( $v1_author_ID );
+				$tmp_author__in[] = intval( $v1_author_ID );
 			}
 			$new_post_list->author__in       = $tmp_author__in;
 		} else {
