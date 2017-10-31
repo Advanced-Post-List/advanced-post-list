@@ -1,13 +1,15 @@
 msgid ""
 msgstr ""
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Project-Id-Version: Advanced Post List\n"
-"POT-Creation-Date: 2017-10-29 12:22-0700\n"
-"PO-Revision-Date: 2017-10-29 12:48-0700\n"
+"POT-Creation-Date: 2017-10-30 16:58-0700\n"
+"PO-Revision-Date: 2017-10-30 16:58-0700\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.0.4\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
@@ -16,8 +18,6 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"Last-Translator: \n"
-"Language: nl\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
@@ -97,9 +97,8 @@ msgid "Alert"
 msgstr "Alarm"
 
 #: admin/class-apl-admin.php:518
-#, fuzzy
 msgid "No Message to Display."
-msgstr "Te tonen berichtmelding"
+msgstr "Te tonen berichtmelding."
 
 #: admin/class-apl-admin.php:519
 #, fuzzy
@@ -249,9 +248,8 @@ msgid "Before list:"
 msgstr "Voordat de lijst:"
 
 #: admin/post-list-meta-box-design.php:60
-#, fuzzy
 msgid "List content:"
-msgstr "Lijstinhoud"
+msgstr "Lijstinhoud:"
 
 #: admin/post-list-meta-box-design.php:64
 #, fuzzy
@@ -264,9 +262,8 @@ msgid "After list:"
 msgstr "Na lijst:"
 
 #: admin/post-list-meta-box-design.php:83
-#, fuzzy
 msgid "Empty Message:"
-msgstr "Leeg bericht"
+msgstr "Leeg bericht:"
 
 #: admin/post-list-meta-box-design.php:89
 #, fuzzy
@@ -566,9 +563,8 @@ msgid "Draft"
 msgstr "Concept"
 
 #: admin/post-list-meta-box-filter.php:650
-#, fuzzy
 msgid "Auto-Draft"
-msgstr "Auto ontwerp / Auto Draft ??????"
+msgstr "Auto ontwerp / Auto Draft"
 
 #: admin/post-list-meta-box-filter.php:651
 msgid "Scheduled"
@@ -588,18 +584,16 @@ msgid "User Perms:"
 msgstr "Permanenten van de gebruiker:"
 
 #: admin/post-list-meta-box-filter.php:665
-#, fuzzy
 msgid "Readable"
-msgstr "leesbaar"
+msgstr "Leesbaar"
 
 #: admin/post-list-meta-box-filter.php:666
 msgid "Editable"
 msgstr "Bewerken"
 
 #: admin/post-list-meta-box-filter.php:675
-#, fuzzy
 msgid "Exclude Post by ID:"
-msgstr "Post-ID uitsluiten"
+msgstr "Post-ID uitsluiten:"
 
 #: admin/post-list-meta-box-filter.php:683
 #, fuzzy
@@ -607,9 +601,8 @@ msgid "Enable Sticky Posts:"
 msgstr "Inschakelen van kleverige posten:"
 
 #: admin/post-list-meta-box-filter.php:689
-#, fuzzy
 msgid "Exclude Current Post:"
-msgstr "Sluit huidig bericht uit"
+msgstr "Sluit huidig bericht uit:"
 
 #: admin/post-list-meta-box-filter.php:695
 #, fuzzy
@@ -638,9 +631,8 @@ msgstr ""
 "gegevens verwijderd ongeacht."
 
 #: admin/settings-meta-box-general.php:32
-#, fuzzy
 msgid "Enable Default Empty Message: "
-msgstr "Lege standaardbericht inschakelen"
+msgstr "Lege standaardbericht inschakelen: "
 
 #: admin/settings-meta-box-general.php:33
 #, fuzzy
@@ -653,9 +645,8 @@ msgstr ""
 "is."
 
 #: admin/settings-meta-box-general.php:34
-#, fuzzy
 msgid "Enable Global Exit (boolean): "
-msgstr "Inschakelen van globale Exit (boolean):"
+msgstr "Inschakelen van globale Exit (boolean): "
 
 #: admin/settings-meta-box-general.php:35
 #, fuzzy
@@ -667,9 +658,8 @@ msgstr ""
 "wereldwijde/default leeg bericht."
 
 #: admin/settings-meta-box-general.php:36
-#, fuzzy
 msgid "Empty Message: "
-msgstr "Leeg bericht"
+msgstr "Leeg bericht: "
 
 #: admin/settings-meta-box-general.php:37
 #, fuzzy
@@ -718,7 +708,7 @@ msgstr "Post lijst Database exporteren"
 
 #: admin/settings-meta-box-import-export.php:26
 msgid "Filename:"
-msgstr "bestandsnaam:"
+msgstr "bestandsnaam: "
 
 #: admin/settings-meta-box-import-export.php:31
 msgid "Export"
@@ -730,9 +720,8 @@ msgid "Import Post List File"
 msgstr "Post lijst importbestand"
 
 #: admin/settings-meta-box-import-export.php:42
-#, fuzzy
 msgid "Upload File:"
-msgstr "Bestand uploaden"
+msgstr "Bestand uploaden: "
 
 #: admin/settings-meta-box-import-export.php:48
 msgid "Import"
@@ -978,7 +967,7 @@ msgid "APL Designs for Preset Post Lists."
 msgstr "APL ontwerpen voor vooraf ingestelde Post lijsten."
 
 #: includes/class/class-apl-core.php:579
-#: includes/class/class-apl-updater.php:882 includes/functions.php:37
+#: includes/class/class-apl-updater.php:892 includes/functions.php:37
 #, fuzzy
 msgid "Sorry, but no content is available at this time."
 msgstr "Sorry, maar er is op dit moment geen inhoud beschikbaar."
@@ -1004,9 +993,8 @@ msgstr ""
 "php_function om te werken."
 
 #: includes/class/class-apl-shortcodes.php:1336
-#, fuzzy
 msgid "Error: Change define(\"APL_ALLOW_PHP\", true); in "
-msgstr "Fout: Verandering define (\"APL_ALLOW_PHP\", true); in"
+msgstr "Fout: Verandering define (\"APL_ALLOW_PHP\", true); in "
 
 #: includes/class/class-apl-shortcodes.php:1337
 #, fuzzy
@@ -1014,9 +1002,8 @@ msgid "wp-config.php for php_function to work."
 msgstr "wp-config.php voor php_function om te werken."
 
 #: includes/class/class-apl-shortcodes.php:1339
-#, fuzzy
 msgid "Error: Name shortcode attribute must have a name. "
-msgstr "Fout: Naam shortcode kenmerk moet een naam hebben."
+msgstr "Fout: Naam shortcode kenmerk moet een naam hebben. "
 
 #: includes/class/class-apl-shortcodes.php:1341
 #, fuzzy
@@ -1033,9 +1020,8 @@ msgid "Error: Unknown Error."
 msgstr "Fout: Onbekende fout."
 
 #: includes/class/class-apl-shortcodes.php:1361
-#, fuzzy
 msgid "defined APL_ALLOW_PHP: "
-msgstr "gedefinieerde APL_ALLOW_PHP:"
+msgstr "gedefinieerde APL_ALLOW_PHP: "
 
 #: includes/class/class-apl-shortcodes.php:1363
 #, fuzzy
