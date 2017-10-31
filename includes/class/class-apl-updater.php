@@ -123,7 +123,7 @@ class APL_Updater {
 				$this->APL_upgrade_to_03b5();
 			}
 			// VERSION 0.4.0
-			if ( version_compare( '0.4.0', $old_version, '>' ) ) {
+			if ( version_compare( '0.4.1', $old_version, '>' ) ) {
 				if ( ! empty( $this->options ) ) {
 					$new_options = $this->upgrade_options_03b5_to_040( $this->options );
 					$this->options = $new_options;
@@ -822,9 +822,9 @@ class APL_Updater {
 					// (string)
 					$new_post_list->perm                 = $old_value->_userPerm               ?: $new_post_list->perm;
 
+					// Default already set.
 					// (string)
-					// (array)=>(int)
-					//$new_post_list->author__bool         = $old_value->_postAuthorOperator     ?: $new_post_list->author__bool;
+					//$new_post_list->author__bool         = 'none';
 					if ( isset( $old_value->_postAuthorOperator ) ) {
 						if ( 'include' === $old_value->_postAuthorOperator ) {
 							$new_post_list->author__bool = 'in';
@@ -832,7 +832,7 @@ class APL_Updater {
 							$new_post_list->author__bool = 'not_in';
 						}
 					}
-
+					// (array)=>(int)
 					$new_post_list->author__in           = $old_value->_postAuthorIDs          ?: $new_post_list->author__in;
 
 					// (boolean)
@@ -1053,7 +1053,18 @@ class APL_Updater {
 		$new_post_list->post_status          = isset( $apl_post_list->post_status )          ? $apl_post_list->post_status          : $new_post_list->post_status;
 		$new_post_list->perm                 = isset( $apl_post_list->perm )                 ? $apl_post_list->perm                 : $new_post_list->perm;
 		$new_post_list->author__bool         = isset( $apl_post_list->author__bool )         ? $apl_post_list->author__bool         : $new_post_list->author__bool;
-		$new_post_list->author__in           = isset( $apl_post_list->author__in )           ? $apl_post_list->author__in           : $new_post_list->author__in;
+
+		// Hotfix for Authod IDs not updating - If Else to keep structure the same.
+		//$new_post_list->author__in           = isset( $apl_post_list->author__in )           ? $apl_post_list->author__in           : $new_post_list->author__in;
+		if ( isset( $apl_post_list->author__in ) ) {
+			$tmp_author__in = array();
+			foreach ( $apl_post_list->author__in as $v1_author_ID ) {
+				$tmp_author__in[] = intval( $v1_author_ID );
+			}
+			$new_post_list->author__in       = $tmp_author__in;
+		} else {
+			$new_post_list->author__in       = $new_post_list->author__in;
+		}
 		$new_post_list->ignore_sticky_posts  = isset( $apl_post_list->ignore_sticky_posts )  ? $apl_post_list->ignore_sticky_posts  : $new_post_list->ignore_sticky_posts;
 		$new_post_list->post__not_in         = isset( $apl_post_list->post__not_in )         ? $apl_post_list->post__not_in         : $new_post_list->post__not_in;
 		$new_post_list->pl_exclude_current   = isset( $apl_post_list->pl_exclude_current )   ? $apl_post_list->pl_exclude_current   : $new_post_list->pl_exclude_current;

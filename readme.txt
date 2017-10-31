@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Post List, Tool, Editor, Featured, Related Posts, Author, Authors, Auto, Automate, Builder, Categories, Category, Child Pages, CMS, Content, Comment, Comments, CPT, CSS, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Design, Developer, Draft, Draft Posts, Excerpt, Feature, Featured, Featured Content, Filter, Future, Future Posts, HTML, Image, Images, Links, List, Links, Magazine, Magazines, News, Page, Pages, Parent, Parent Pages, Photos, PHP, Popular Posts, Post, Posts, Private, Private Posts, Programming, Published, Related Post, Related Posts, Recent, Recent Post, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Web Design, Web Development, Webmaster, Widget, Widgets, WPML
 Requires at least: 4.5
 Tested up to: 4.8.2
-Stable tag: 0.4.0
+Stable tag: 0.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,16 +91,11 @@ Currently, information can be found in 2 different locations. This is due to rec
 
 Questions/Bug Report submit thread / ticket at [WordPress][wp apl support] or [GitHub Issue / Tickets][github issues].
 
-== Installation ==
-1. Upload zip to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Go to Settings->Advanced Post List to access the settings.
- 
 
 == Frequently Asked Questions ==
 
 = For FAQ =
-Go to [Q&A][apl qa].
+Go to [Q&A](https://support.advancedpostlist.com/qa/).
 
 
 == Screenshots ==

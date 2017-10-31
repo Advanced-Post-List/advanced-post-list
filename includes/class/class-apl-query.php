@@ -328,8 +328,8 @@ class APL_Query {
 				for ( $j = $i + 1; $j < $query_count; $j++ ) {
 					// IF there is a post_parents; which would conflict.
 					// IF both query_arg's tax_query match.
-					if ( isset( $arg_arr[ $i ]['post_parent'] ) && empty( $arg_arr[ $i ]['post_parent'] &&
-					$this->tax_query_match( $arg_arr[ $i ]['tax_query'], $arg_arr[ $j ]['tax_query'] ) ) ) {
+					if ( isset( $arg_arr[ $i ]['post_parent'] ) && empty( $arg_arr[ $i ]['post_parent'] ) &&
+					$this->tax_query_match( $arg_arr[ $i ]['tax_query'], $arg_arr[ $j ]['tax_query'] ) ) {
 
 						$arg_arr[ $i ]['post_type'][] = $arg_arr['post_type'][0];
 
