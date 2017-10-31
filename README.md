@@ -1,21 +1,6 @@
 Post List builder with highly customizable filter & custom designs. Whether it's displaying Recent Posts, Related Posts, Dynamic Posts, or a list of posts in general.
 
 == Description ==
-[apl getting started]:  https://support.advancedpostlist.com/getting-started/
-                        "Getting Started w/ APL"
-[apl qa]:               https://support.advancedpostlist.com/qa/
-                        "Questions & Answers"
-[apl docs]:             https://support.advancedpostlist.com/documentation/
-                        "APL Documentation"
-[apl shortcodes]:       https://support.advancedpostlist.com/doc/internal-shortcodes/
-                        "List of Internal Shortcodes"
-[wp apl support]:       https://wordpress.org/support/plugin/advanced-post-list
-                        "WordPress.org - Support for APL"
-[github issues]:        https://github.com/Advanced-Post-List/advanced-post-list/issues
-                        "Report an Issue"
-[github wiki]:          https://github.com/Advanced-Post-List/advanced-post-list/wiki
-                        "Learn or Contribute to APL"
-
 This tool functions much like a Post List builder to give Admins the most amount of control over managing content to display. Developed with Web Designers & Developers in mind, makes this a highly customizable tool to have around. However, there is a sharp learning curve for most.
 
 You must know:
@@ -72,9 +57,37 @@ APL is open to development requests and welcomes those willing to report on any 
 
 Currently, information can be found in 2 different locations. This is due to recent changes, and is only temporary.
 
+* [Getting Started](https://support.advancedpostlist.com/getting-started/)
+* [Documentation](https://support.advancedpostlist.com/documentation/)
+	* [Internal Shortcodes](https://support.advancedpostlist.com/doc/internal-shortcodes/)
+* [GitHub Wiki](https://github.com/Advanced-Post-List/advanced-post-list/wiki)
+
+Questions/Bug Report submit thread / ticket at [WordPress](https://wordpress.org/support/plugin/advanced-post-list) or [GitHub Issue / Tickets](https://github.com/Advanced-Post-List/advanced-post-list/issues).
+
+----------------------
+
 * [Getting Started][apl getting started]
 * [Documentation][apl docs]
 	* [Internal Shortcodes][apl shortcodes]
 * [GitHub Wiki][github wiki]
 
-Questions/Bug Report submit thread / ticket at [WordPress][wp apl support] or [GitHub Issue / Tickets][github issues].
+[apl getting started]:  https://support.advancedpostlist.com/getting-started/
+                        "Getting Started w/ APL"
+
+[apl qa]:               https://support.advancedpostlist.com/qa/
+                        "Questions & Answers"
+
+[apl docs]:             https://support.advancedpostlist.com/documentation/
+                        "APL Documentation"
+
+[apl shortcodes]:       https://support.advancedpostlist.com/doc/internal-shortcodes/
+                        "List of Internal Shortcodes"
+
+[wp apl support]:       https://wordpress.org/support/plugin/advanced-post-list
+                        "WordPress.org - Support for APL"
+
+[github issues]:        https://github.com/Advanced-Post-List/advanced-post-list/issues
+                        "Report an Issue"
+
+[github wiki]:          https://github.com/Advanced-Post-List/advanced-post-list/wiki
+                        "Learn or Contribute to APL"
