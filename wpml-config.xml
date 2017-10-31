@@ -1,0 +1,169 @@
+<wpml-config>
+  <custom-types>
+    <custom-type translate="0">apl_post_list</custom-type>
+    <custom-type translate="1">apl_design</custom-type>
+  </custom-types>
+  <custom-fields>
+    <custom-field action="translate">apl_content</custom-field>
+    <custom-field action="translate">apl_before</custom-field>
+    <custom-field action="translate">apl_after</custom-field>
+    <custom-field action="ignore">apl_post_type</custom-field>
+    <custom-field action="ignore">apl_tax_query</custom-field>
+    <custom-field action="ignore">apl_post_parent__in</custom-field>
+    <custom-field action="ignore">apl_post_parent_dynamic</custom-field>
+    <custom-field action="ignore">apl_posts_per_page</custom-field>
+    <custom-field action="ignore">apl_offset</custom-field>
+    <custom-field action="ignore">apl_order_by</custom-field>
+    <custom-field action="ignore">apl_order</custom-field>
+    <custom-field action="ignore">apl_author__bool</custom-field>
+    <custom-field action="ignore">apl_author__in</custom-field>
+    <custom-field action="ignore">apl_post_status</custom-field>
+    <custom-field action="ignore">apl_perm</custom-field>
+    <custom-field action="ignore">apl_post__not_in</custom-field>
+    <custom-field action="ignore">apl_ignore_sticky_posts</custom-field>
+    <custom-field action="ignore">apl_pl_exclude_current</custom-field>
+    <custom-field action="ignore">apl_pl_exclude_dupes</custom-field>
+    <custom-field action="ignore">apl_pl_apl_design</custom-field>
+    <custom-field action="translate">apl_empty</custom-field>
+  </custom-fields>
+  <admin-texts>
+    <key name="apl_options">
+      <key name="default_empty_output"/>
+    </key>
+  </admin-texts>
+  <shortcodes>
+    <shortcode>
+      <tag>ID</tag>
+    </shortcode>
+    <shortcode>
+      <tag>post_name</tag>
+    </shortcode>
+    <shortcode>
+      <tag>post_slug</tag>
+    </shortcode>
+    <shortcode>
+      <tag>post_title</tag>
+    </shortcode>
+    <shortcode>
+      <tag>post_permalink</tag>
+    </shortcode>
+    <shortcode>
+      <tag>guid</tag>
+    </shortcode>
+    <shortcode>
+      <tag>post_date</tag>
+      <attributes>
+        <attribute>format</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_date_gmt</tag>
+      <attributes>
+        <attribute>format</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_modified</tag>
+      <attributes>
+        <attribute>format</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_modified_gmt</tag>
+      <attributes>
+        <attribute>format</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_author</tag>
+      <attributes>
+        <attribute>label</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_thumb</tag>
+      <attributes>
+        <attribute>size</attribute>
+        <attribute>extract</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_content</tag>
+    </shortcode>
+    <shortcode>
+      <tag>post_excerpt</tag>
+      <attributes>
+        <attribute>length</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>comment_count</tag>
+    </shortcode>
+    <shortcode>
+      <tag>post_comments</tag>
+      <attributes>
+        <attribute>before</attribute>
+        <attribute>after</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_parent</tag>
+      <attributes>
+        <attribute>link</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_type</tag>
+      <attributes>
+        <attribute>label</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_categories</tag>
+      <attributes>
+        <attribute>delimiter</attribute>
+        <attribute>links</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_tags</tag>
+      <attributes>
+        <attribute>delimiter</attribute>
+        <attribute>links</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_terms</tag>
+      <attributes>
+        <attribute>taxonomy</attribute>
+        <attribute>delimiter</attribute>
+        <attribute>links</attribute>
+        <attribute>max</attribute>
+        <attribute>empty_message</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>post_meta</tag>
+      <attributes>
+        <attribute>name</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>php_funtion</tag>
+      <attributes>
+        <attribute>name</attribute>
+        <attribute>param</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>item_number</tag>
+      <attributes>
+        <attribute>offset</attribute>
+        <attribute>increment</attribute>
+      </attributes>
+    </shortcode>
+    <shortcode>
+      <tag>final_end</tag>
+    </shortcode>
+  </shortcodes>
+</wpml-config>

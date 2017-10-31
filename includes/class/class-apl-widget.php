@@ -6,8 +6,7 @@
  *
  * @link https://github.com/EkoJr/advanced-post-list/
  *
- * @package WordPress
- * @subpackage advanced-post-list.php
+ * @package advanced-post-list
  * @since 0.3.0
  */
 
@@ -21,6 +20,11 @@
  * @since 0.3.0
  */
 class APL_Widget extends WP_Widget {
+	/**
+	 * Constructor
+	 *
+	 * @since 0.3.0
+	 */
 	public function __construct() {
 		parent::__construct(
 			'advanced-post-list_default',
@@ -29,7 +33,17 @@ class APL_Widget extends WP_Widget {
 		);
 	}
 
-	// This code displays the widget on the screen.
+	/**
+	 * Widget
+	 *
+	 * This code displays the widget on the screen.
+	 *
+	 * @since 0.3.0
+	 *
+	 * @global  APL_Core  $advanced_post_list
+	 * @param   array     $args
+	 * @param   ?         $instance
+	 */
 	public function widget( $args, $instance ) {
 		global $advanced_post_list;
 		extract( $args );
@@ -44,6 +58,13 @@ class APL_Widget extends WP_Widget {
 		echo $after_widget;
 	}
 
+	/**
+	 * Form
+	 *
+	 * @since 0.3.0
+	 *
+	 * @param type $instance
+	 */
 	public function form( $instance ) {
 		$preset_db = new APL_Preset_Db( 'default' );
 
@@ -70,7 +91,17 @@ class APL_Widget extends WP_Widget {
 		echo '</select><br/><br/></div>';
 	}
 
-	// Updates the settings.
+	/**
+	 * Update
+	 *
+	 * Updates the settings.
+	 *
+	 * @since 0.3.0
+	 *
+	 * @param type $new_instance
+	 * @param type $old_instance
+	 * @return type
+	 */
 	public function update( $new_instance, $old_instance ) {
 		return $new_instance;
 	}

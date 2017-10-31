@@ -9,6 +9,7 @@
  * @package WordPress
  * @subpackage advanced-post-list.php
  * @since 0.1.0
+ * @deprecated 0.4.0 Use Builtin Post Meta
  */
 
 /**
@@ -37,6 +38,25 @@ class APL_Preset_Db {
 	 * @var array
 	 */
 	var $_preset_db;
+	
+	/**
+	 * Database Array.
+	 *
+	 * @since 0.1.0
+	 * @since 0.4.0  changed name from $_preset_db to $post_list_db.
+	 * @access public
+	 * @var array
+	 */
+	var $post_list_db;
+	
+	/**
+	 * Database Array.
+	 *
+	 * @since 0.4.0
+	 * @access public
+	 * @var array=>string
+	 */
+	var $design_db;
 
 	/**
 	 * Delete on Deactivate.
@@ -65,8 +85,8 @@ class APL_Preset_Db {
 	 * @return void
 	 */
 	public function __construct( $db_name = '' ) {
-		// INIT.
-		$this->_preset_db_name = '';
+		// DEFAULTS.
+		$this->_preset_db_name = 'default';
 		$this->_preset_db = new stdClass();
 		$this->_delete = 'true';
 
@@ -91,6 +111,21 @@ class APL_Preset_Db {
 	 */
 	public function reset_to_version( $version ) {
 		$this->reset_to_base();
+		
+		foreach ( $this as $key => &$value ) {
+			$value = null;
+			unset( $this->$key );
+		}
+		if ( version_compare( '0.4.0', $version, '>' ) ) {
+			$this->reset_to_base();
+		} elseif ( version_compare( '0.3.a1', $version, '<=' ) && version_compare( '0.3.b5', $version, '>' ) ) {
+			$this->reset_to_03a1();
+		} elseif ( version_compare( '0.3.b5', $version, '<=' ) && version_compare( '0.4.0', $version, '>' ) ) {
+			$this->reset_to_03b5();
+		} else {
+			//if ( version_compare( '0.4.0', $version, '<=' ) && version_compare( 'X.X.X', $version, '>' ) )
+			$this->reset_to_040();
+		}
 	}
 
 	/**
@@ -106,6 +141,16 @@ class APL_Preset_Db {
 	private function reset_to_base() {
 		$this->_preset_db_name = '';
 		$this->_preset_db = new stdClass();
+		$this->_delete = 'true';
+	}
+	
+	/**
+	 * 
+	 */
+	private function reset_to_040() {
+		$this->_preset_db_name = '';
+		$this->post_list_db = array();
+		$this->design_db = array();
 		$this->_delete = 'true';
 	}
 

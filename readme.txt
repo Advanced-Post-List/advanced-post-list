@@ -1,28 +1,34 @@
 === Advanced Post List ===
 Contributors: EkoJr
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VFUYQGQ7VXEDC
-Tags: Advanced, Post List, Categories, Category, Children, Children Pages, Content, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Draft, Draft Posts, Excerpt, Filter, Future, Future Posts, Links, List, Links, News, Page, Pages, Parent, Parent Pages, Popular Posts, Post, Posts, Private, Private Posts, Related, Related Posts, Recent, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Widget, Widgets
-Requires at least: 2.0.2
-Tested up to: 4.8
-Stable tag: 0.3.7
+Tags: Post List, Tool, Editor, Featured, Related Posts, Author, Authors, Auto, Automate, Builder, Categories, Category, Child Pages, CMS, Content, Comment, Comments, CPT, CSS, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Design, Developer, Draft, Draft Posts, Excerpt, Feature, Featured, Featured Content, Filter, Future, Future Posts, HTML, Image, Images, Links, List, Links, Magazine, Magazines, News, Page, Pages, Parent, Parent Pages, Photos, PHP, Popular Posts, Post, Posts, Private, Private Posts, Programming, Published, Related Post, Related Posts, Recent, Recent Post, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Web Design, Web Development, Webmaster, Widget, Widgets, WPML
+Requires at least: 4.5
+Tested up to: 4.8.2
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Create Post Lists that are highly customizable in both design and query filter. Which can then be placed multiple times without showing duplicates.
+Post List builder with highly customizable filter & custom designs. Whether it's displaying Recent Posts, Related Posts, Dynamic Posts, or a list of posts in general.
 
 == Description ==
-[wp kpl]:     https://wordpress.org/plugins/kalins-post-list/
-                  "WordPress.org - Kalin's Post List"
-[wp apl support]: https://wordpress.org/support/plugin/advanced-post-list
-                  "WordPress.org - Support for APL"
-[github issues]:  https://github.com/Advanced-Post-List/advanced-post-list/issues
-                  "Report an Issue"
-[github wiki]:    https://github.com/Advanced-Post-List/advanced-post-list/wiki
-                  "Learn or Contribute to APL"
-[wiki shortcodes]: https://github.com/Advanced-Post-List/advanced-post-list/wiki/Internal-Shortcode-Page
-                  "Documentaion for Internal Shortcodes"
+[wp kpl]:               https://wordpress.org/plugins/kalins-post-list/
+                        "WordPress.org - Kalin's Post List"
+[apl getting started]:  https://support.advancedpostlist.com/getting-started/
+                        "Getting Started w/ APL"
+[apl qa]:               https://support.advancedpostlist.com/qa/
+                        "Questions & Answers"
+[apl docs]:             https://support.advancedpostlist.com/documentation/
+                        "APL Documentation"
+[apl shortcodes]:       https://support.advancedpostlist.com/doc/internal-shortcodes/
+                        "List of Internal Shortcodes"
+[wp apl support]:       https://wordpress.org/support/plugin/advanced-post-list
+                        "WordPress.org - Support for APL"
+[github issues]:        https://github.com/Advanced-Post-List/advanced-post-list/issues
+                        "Report an Issue"
+[github wiki]:          https://github.com/Advanced-Post-List/advanced-post-list/wiki
+                        "Learn or Contribute to APL"
 
-Advanced Post Lists (APL) sets itself apart from being “Just Another Post List Plugin” by giving admins the most amount of control when displaying Recent Posts, Related Posts, Future Posts, or a list of posts in general. However, there is a learning curve.
+This tool functions much like a Post List builder to give Admins the most amount of control over managing content to display. Developed with Web Designers & Developers in mind, makes this a highly customizable tool to have around. However, there is a sharp learning curve for most.
 
 You must know:
 
@@ -32,22 +38,31 @@ You must know:
   * JavaScript
   * PHP
 
-In many ways, APL is designed to act much like The Loop which is most notable in Themes, but APL takes that concept and turns it into an Admin tool that can easily be changed, moved, or added/removed. This eliminates much of the backend work, and prevents being limited to what is hardcoded into a theme.
+## Summary
 
-APL accomplishes 3 main types of tasks. Filter, Design, and Placement.
+Advanced Post List (aka APL) is designed to operate much like The Loop in WordPress; which is most notable in Themes. However, that concept is taken and turned into an Admin tool that can easily be changed, moved, or added/removed. This eliminates much of the backend work, and prevents being limited to what is hardcoded into a theme.
 
-# Filter
+This also makes multiple Featured Content with different configurations more of a breeze, and the complexity of it is a challenge that APL achieves unlike any other.
 
-* **Custom Post Type and Taxonomy Support** - Displays Posts/Pages from custom post types, taxonomies, and terms. This includes other plugins, but may not be compatibly supported.
+APL can accomplish a large degree of variations, but can be broken down to 3 main types of tasks. With Filter, Design, and Placement, here are some of the key features.
+
+### Filter
+
+* **Custom Post Type and Taxonomy Support (CPT)** - Displays Posts/Pages from custom post types, taxonomies, and terms. This includes other plugins with post data. but may store its data differently than post_content. (**Advanced Users, see php_function shortcode.**)
 * **Enhanced/Diverse Queries** - Capable of diverse filter configuration when displaying posts. This feature allows...
-  * Different Post Types -> Taxonomies query configurations.
-  * Multiple Page Parents from multiple Post Types.
-* **Dynamic Filters (Terms & Page Parents)** - Grabs values to filter by that is based on the current page being viewed. _Ex. Displaying Related Posts in a Header, Footer, Sidebar, etc.._
-* **Show Content from Published, Private, Future, etc.** - Display content on the frontend so users don’t have to navigate to the admin side. Allowing private landing pages to be created. _Note: Further development may be required._
+  * Cross Filtering with Custom Post Types.
+  * Diverse Post Types -> Taxonomies query configurations.
+  * Multiple Query configurations with include and require.
+* **Optimized with Complex Queries** - Once deemed an Achilles Heel to WP Query, steps are taken to reduce the server load as much as possible.
+* **Dynamic Filters** - Grabs values to filter by based on the current posts/pages being viewed. _Ex. Displaying Related Posts in a Header, Footer, Sidebar, etc.._
+* **Show Content from Published, Private, Future, etc.** - This is a *development feature* and may not provide intended results. Display content on the frontend so users don’t have to navigate to the admin side. Allowing private landing pages to be created. _Note: Requires advanced knowledge on how WP Query and User Perms operate._
 
-## Design
 
-* **Internal Shortcodes** - Primarily used to add various data from a given Post/Page, but the capabilities is rather extensive, and being able to extend to custom PHP functions the options are practically limitless. [See documentation for a full list & details][wiki shortcodes].
+### Design
+
+* **Layout and Style 99.9% Customizable** - There's nearly no limitations to the design, with some exceptions that may surface with (Child) Theme's CSS. This does require some knowledge in Web Design. *Note: This is NOT to be confused with Drag and Drop UI/UX.*
+* **Internal Shortcodes** - Adds various data from Post object, and is one of the extensive features. Being able to extend to shortcodes with custom PHP functions make the possibilities practically limitless. [See full list & details][apl shortcodes].
+* **Encapsulated for Zero Conflicts** - With a large number of shortcodes on any given site. Isolating Internal Shortcodes to its own instance eliminates any plugin conflicts.
 * **Custom Formats to Loop ( The Loop )** - Themes follow this concept, but APL turns that concept into a tool. The “List Content” loop, as well as the before & after, is where most of the work is done with preset HTML, CSS, JS, & PHP designs. It is also optional to set an Empty Message (No Posts Found) to display.
 
 ### Placement
@@ -56,9 +71,23 @@ APL accomplishes 3 main types of tasks. Filter, Design, and Placement.
 * **Sidebar Widget** - Easier to use. However, adding post list shortcodes to the text sidebar also produces the same results.
 * **PHP Hardcode** - For more extensive design work. There is a public function for displaying Preset Post Lists where WordPress support and functions for admins aren’t fully present.
 
-This is an evolved version of [Kalins Post List][wp kpl]. Most of the credit for the idea behind APL goes to that plugin. As you may have noticed, APL is still in the development stages of its target version (1.0.0).
+## Other Plugins Tested/Supported
 
-APL’s Documentation is located on [GitHub Wiki][github wiki] (WIP). Which is also open for others to contribute.
+There's various plugins that offer a unique capability, and some of which APL can use as intended, but there are also some don't. Here is a list of popular plugins that have been tested and verified by Advanced Post List.
+
+* **Advanced Custom Fields** - Requires php_function shortcode.
+* **WPML** - With WordPress Multilingual installed, additional Designs can be created for rendering a Post List in different languages. Posts/Pages are handled automatically and will display content in various languages.
+
+APL is open to development requests and welcomes those willing to report on any issues.
+
+## Help & Support
+
+Currently, information can be found in 2 different locations. This is due to recent changes, and is only temporary.
+
+* [Getting Started][apl getting started]
+* [Documentation][apl docs]
+	* [Internal Shortcodes][apl shortcodes]
+* [GitHub Wiki][github wiki]
 
 Questions/Bug Report submit thread / ticket at [WordPress][wp apl support] or [GitHub Issue / Tickets][github issues].
 
@@ -70,20 +99,50 @@ Questions/Bug Report submit thread / ticket at [WordPress][wp apl support] or [G
 
 == Frequently Asked Questions ==
 
-= Where is the settings page? =
-Inside your admin dashboard under Settings->Admin Post List.
-
-= How do I display the post list that I created? =
-You need to locate and copy the shortcode which is in the Advance Post List - Settings page on the saved preset table. Then create a page/post and paste the shortcode on your page/post (e.g. [post_list name='some-preset-name'])
+= For FAQ =
+Go to [Q&A][apl qa].
 
 
 == Screenshots ==
-1. A few samples of the plugin.
-2. Insert saved presets via shortcodes to display it on a page/post.
-3. A basic view of the Admin UI.
-4. General options and support.
+1. Using a simple shortcode, you can display amazing content.
+2. A Few more examples.
+3. Complex lists coupled together.
+4. Admin Screen for All Post Lists.
+5. Admin UI for Creating/Editing Post lists.
+6. Admin Screen for Settings.
 
 == Changelog ==
+
+= 0.4.0 =
+* Added APL_Post_List Class for post data database structure with presets.
+* Added APL_Design Class for post data database structure with preset designs; before, content, after, & empty message.
+* Changed Preset data to use post data database structure (APL_Post_List & APL_Design).
+* Added Admin Singleton Class.
+* Changed to Custom Admin Menu.
+* Added New Admin templates and multiple UI changes.
+* Changed Info/Help to Tooltips instead of Dialogs.
+* Added Post_Type filter by 'Any'.
+* Changed 'Require Taxonomy' to 'Require Taxonomies' as a Post Type based filter instead.
+* Added Sort by 'None' and 'Slug'.
+* Added Post Status filter by 'None' and 'Any'.
+* Added Perms filter by 'None'.
+* Added Offset filter.
+* Added additional Notice to front-end if attribute 'name' in [post_list] is invalid or missing.
+* Added Sanitazion to shortcode attribute 'name'; ex. [post_list name=""].
+* Fixed Link attribute in post_category & post_tags shortcode.
+* Added additional checks with php_function shortcode.
+* Changed General Settings to Settings API w/ Meta Boxes.
+* Added Ignore Post Types on Admin Post List screen.
+* Changed/Fixed Exporting and Importing.
+* Fixed possible defect with Plugin Options not being initiated.
+* Added jQuery (UI) compatability.
+* Removed jQuery UI Theme setting from APL Options.
+* Changed Updater Class param items to update to an array.
+* Changed version check to a hook method.
+* Added WPML Support.
+* Added Internalization for translations.
+* Added non-class Functions file for common functions.
+* Added hooks.php file to store custom hook examples.
 
 = 0.3.7 =
 * Fixed warning with load_plugin_textdomain.
@@ -181,7 +240,6 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 * Changed Back-up Procedures to Use Both a Handler and a Final Function.
 * Changed Import File Uploads from Single to Multiple Files.
 
-
 = 0.3.b5 =
 * Added ‘Any/All’ term setting to taxonomies.
 * Added User/Visitor Permissions.
@@ -198,7 +256,6 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 * Changed ‘Post Status’ filter to carry multiple values.
 * Changed Admin Dialogs.
 * Changed jQuery register script location.
-
 
 = 0.3.b4 =
 * Fixed dynamics with post lists with 'Include Terms' within taxonomy and 'Current Page' post parent.
@@ -264,95 +321,96 @@ You need to locate and copy the shortcode which is in the Advance Post List - Se
 
 == Upgrade Notice ==
 
+= 0.4.0 =
+* Please be sure to Back Up the website. Large database update will occur.
+* Completely new Admin UI.
+* WPML Support and Plugin Internalization.
+
 = 0.3.6 =
-Stable Release. Changed File Structure which may cause a PHP object error
-( Please report PHP errors ). If upgrading from 0.2, make sure to back
-up the plugin data and website.
+* Stable Release. Changed File Structure which may cause a PHP object error ( Please report PHP errors ). 
+* If upgrading from 0.2, make sure to back up the plugin data and website.
 
 = 0.3.5 =
-Stable Release. Changed File Structure which may cause a PHP object error
-( Please report PHP errors ). If upgrading from 0.2, make sure to back
-up the plugin data and website.
+* Stable Release. Changed File Structure which may cause a PHP object error ( Please report PHP errors ).
+* If upgrading from 0.2, make sure to back up the plugin data and website.
 
 = 0.3.4 =
-Stable Release. If upgrading from 0.2, make sure to back up the plugin data
-and website.
+* Stable Release. If upgrading from 0.2, make sure to back up the plugin data and website.
 
 = 0.3.3 =
-Stable Release. If upgrading from 0.2, make sure to back up the plugin data
+* Stable Release. If upgrading from 0.2, make sure to back up the plugin data
 and website.
 
 = 0.3.2 =
-Stable Release. If upgrading from 0.2, make sure to back up the plugin data
+* Stable Release. If upgrading from 0.2, make sure to back up the plugin data
 and website.
 
 = 0.3.1 =
-Stable Release. If upgrading from 0.2, make sure to back up the plugin data
+* Stable Release. If upgrading from 0.2, make sure to back up the plugin data
 and website.
 
 = 0.3.0 =
-Stable Release. If upgrading from 0.2, make sure to back up the plugin data
+* Stable Release. If upgrading from 0.2, make sure to back up the plugin data
 and website.
 
 = 0.3.b9 =
-Beta Version. Candidate for Stable Release (0.3.0). If upgrading from 0.2, make
-sure you back up the plugin data and/or website.
+* Beta Version. Candidate for Stable Release (0.3.0). 
+* If upgrading from 0.2, make sure you back up the plugin data and/or website.
 
 = 0.3.b8 =
-Beta Version. If upgrading from 0.2, make sure you back up the plugin data
+* Beta Version. If upgrading from 0.2, make sure you back up the plugin data
 and/or website. This update includes a couple major and blocker bugs to the
 Admin UI. Further development may be required before releasing the stable
 version (0.3.0).
 
 = 0.3.b7 =
-Beta Version. If upgrading from 0.2, make sure you back up the plugin data
+* Beta Version. If upgrading from 0.2, make sure you back up the plugin data
 and/or website. This update includes a couple major and blocker bugs to the
 Admin UI. Further testing is required before releasing the stable version.
 
 = 0.3.b6 =
-Beta Version. As always, make sure you back up your website since
+* Beta Version. As always, make sure you back up your website since
 0.3 has a couple of database updates. This version fixes some critical issues
 when being used on a large site. Fixes to the Backup feature have also been
 included in this.
 
 = 0.3.b5 =
-Beta Version. Beta 5 has another database upgrade, so it is recommended you
+* Beta Version. Beta 5 has another database upgrade, so it is recommended you
 backup your data, and use a test site first. No issues with the database have
 been posted. Contains additional filter settings that are built-in the WP_Query
 params, and added a couple custom function. Also fixed a few issues. Look at
 the changelog for more details.
 
 = 0.3.b4 =
-Beta Version. It is recommended you backup, but no issues with the database
+* Beta Version. It is recommended you backup, but no issues with the database
 have been posted. Contains fixes for querying posts, and deactivation.
 
 = 0.3.b3 =
-Beta Version. It is recommended you back up data prior to upgrading.Fixed some
+* Beta Version. It is recommended you back up data prior to upgrading.Fixed some
 'strict' errors that were being tossed that could cause an issue.
 
 = 0.3.b2 =
-Beta Version. It is recommended you back up data prior to upgrading. A few
+* Beta Version. It is recommended you back up data prior to upgrading. A few
 added preset settings. Fixed a problem with script handling that was
 interfering with built-in scripting.
 
 = 0.3.b1 =
-Beta Version. Please back up your plugin data prior to upgrading. This version
+* Beta Version. Please back up your plugin data prior to upgrading. This version
 introduces custom post type and taxonomy support. Along with a few added
 settings.
 
 = 0.3.a1 =
-Alpha Version. Please back up your plugin data prior to upgrading. This version
+* Alpha Version. Please back up your plugin data prior to upgrading. This version
 introduces custom post type and taxonomy support. Along with a few added
 settings.
 
 = 0.2.0 =
-Upgrade adds a new export/import feature to back up your data, and fixes the
+* Upgrade adds a new export/import feature to back up your data, and fixes the
 PHP hardcode, exclude current, and TextArea element. See change log for more
 details.
 
 = 0.1.1 =
-The require() functions in advanced-post-list.php didn't have a dynamic value
-set.
+* The require() functions in advanced-post-list.php didn't have a dynamic value set.
 
 = 0.1.0 =
-First stable version.
+* First stable version.
