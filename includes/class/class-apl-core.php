@@ -399,7 +399,7 @@ class APL_Core {
 	 * @link https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
 	 */
 	public function action_load_plugin_textdomain() {
-		$lang_dir = APL_DIR . '/languages/';
+		$lang_dir = 'advanced-post-list/languages/';
 		load_plugin_textdomain( APL_SLUG, false, $lang_dir );
 	}
 
