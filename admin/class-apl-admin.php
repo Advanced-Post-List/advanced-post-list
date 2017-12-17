@@ -129,6 +129,22 @@ class APL_Admin {
 	}
 
 	/**
+	 * Requires Files
+	 *
+	 * Files that this class object needs to load.
+	 *
+	 * @ignore
+	 * @since 0.4.0
+	 * @access private
+	 */
+	private function _requires() {
+		// Example.
+		// 'require_once( APL_DIR . 'includes/example.php' )'.
+		require_once( APL_DIR . 'admin/export.php' );
+		require_once( APL_DIR . 'admin/import.php' );
+	}
+
+	/**
 	 * Current Admin Screen Hooks
 	 *
 	 * Adds hooks according to the admin screen in use.
@@ -179,22 +195,6 @@ class APL_Admin {
 			// DOES NOT always work as intended. Use self::_constructor().
 		}// End if().
 
-	}
-
-	/**
-	 * Requires Files
-	 *
-	 * Files that this class object needs to load.
-	 *
-	 * @ignore
-	 * @since 0.4.0
-	 * @access private
-	 */
-	private function _requires() {
-		// Example.
-		// 'require_once( APL_DIR . 'includes/example.php' )'.
-		require_once( APL_DIR . 'admin/export.php' );
-		require_once( APL_DIR . 'admin/import.php' );
 	}
 
 	/**
