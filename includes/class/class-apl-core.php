@@ -415,6 +415,8 @@ class APL_Core {
 		// Step 1.
 		$options = apl_options_load();
 
+		require_once( APL_DIR . 'admin/class-apl-notices.php' );
+		apl_notice_set_activation_review_plugin( false, true );
 		// Any Need? apl_options_load() already sets defaults if no data is found.
 		apl_options_save( $options );
 	}

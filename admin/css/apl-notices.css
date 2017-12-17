@@ -1,0 +1,16 @@
+/**
+ * APL_Notices CSS
+ *
+ * @package Advanced-Post-List
+ * @subpackage APL_Notices
+ * @since 0.4.2
+ */
+
+.apl-notice-actions {
+    display: inline-block;
+}
+
+.apl-notice-actions-left {
+    float: left;
+    clear: left;
+}

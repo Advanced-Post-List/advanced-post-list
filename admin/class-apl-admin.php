@@ -94,6 +94,7 @@ class APL_Admin {
 
 		// Initialize Core Class functions.
 		$this->_requires();
+		apl_notice_set_activation_review_plugin( false, false );
 
 		// Settings Data
 		add_action( 'admin_post_apl_save_general_settings', array( $this, 'save_general_settings' ) );
@@ -101,6 +102,7 @@ class APL_Admin {
 		add_action( 'admin_init', array( $this, 'add_settings_ajax_hooks' ) );
 
 		// Check if wp-admin.php is loaded, and WP_Screen is defined.
+		// is_admin_bar_showing()
 		if ( defined( 'WP_ADMIN' ) && WP_ADMIN && is_blog_admin() ) {
 			// Menu & Scripts.
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -142,6 +144,7 @@ class APL_Admin {
 		// 'require_once( APL_DIR . 'includes/example.php' )'.
 		require_once( APL_DIR . 'admin/export.php' );
 		require_once( APL_DIR . 'admin/import.php' );
+		require_once( APL_DIR . 'admin/class-apl-notices.php' );
 	}
 
 	/**
