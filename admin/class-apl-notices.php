@@ -151,7 +151,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				add_action( 'all_admin_notices', array( $this, 'display_notice_apl' ) );
 			} elseif ( isset( $current_screen->id ) ) {
 				// Default WP Notice.
-				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+				add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 				add_action( 'all_admin_notices', array( $this, 'display_notice_default' ) );
 			}
 		}
