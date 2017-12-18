@@ -94,6 +94,7 @@ class APL_Admin {
 
 		// Initialize Core Class functions.
 		$this->_requires();
+		apl_notice_set_activation_review_plugin( false, false );
 
 		// Settings Data
 		add_action( 'admin_post_apl_save_general_settings', array( $this, 'save_general_settings' ) );
@@ -101,6 +102,7 @@ class APL_Admin {
 		add_action( 'admin_init', array( $this, 'add_settings_ajax_hooks' ) );
 
 		// Check if wp-admin.php is loaded, and WP_Screen is defined.
+		// is_admin_bar_showing()
 		if ( defined( 'WP_ADMIN' ) && WP_ADMIN && is_blog_admin() ) {
 			// Menu & Scripts.
 			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -126,6 +128,23 @@ class APL_Admin {
 				add_action( 'add_meta_boxes', array( $this, 'design_meta_boxes' ) );
 			}
 		}
+	}
+
+	/**
+	 * Requires Files
+	 *
+	 * Files that this class object needs to load.
+	 *
+	 * @ignore
+	 * @since 0.4.0
+	 * @access private
+	 */
+	private function _requires() {
+		// Example.
+		// 'require_once( APL_DIR . 'includes/example.php' )'.
+		require_once( APL_DIR . 'admin/export.php' );
+		require_once( APL_DIR . 'admin/import.php' );
+		require_once( APL_DIR . 'admin/class-apl-notices.php' );
 	}
 
 	/**
@@ -177,24 +196,11 @@ class APL_Admin {
 		} elseif ( 'adv-post-list_page_apl_settings' === $current_screen->id ) {
 			/* SETTINGS (Page) */
 			// DOES NOT always work as intended. Use self::_constructor().
+		} else {
+//			add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
+//			add_filter( 'mce_buttons', array( $this, 'mce_register_buttons' ) );
 		}// End if().
 
-	}
-
-	/**
-	 * Requires Files
-	 *
-	 * Files that this class object needs to load.
-	 *
-	 * @ignore
-	 * @since 0.4.0
-	 * @access private
-	 */
-	private function _requires() {
-		// Example.
-		// 'require_once( APL_DIR . 'includes/example.php' )'.
-		require_once( APL_DIR . 'admin/export.php' );
-		require_once( APL_DIR . 'admin/import.php' );
 	}
 
 	/**
@@ -552,6 +558,19 @@ class APL_Admin {
 			do_action( 'add_meta_boxes', $hook_suffix );
 			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
 
+		} else {
+			// REGISTER.
+
+			// LOCALIZE.
+
+			// ENQUEUE.
+			wp_enqueue_style(
+				'apl-admin-wp-editor-css',
+				APL_URL . 'admin/css/wp-editor.css',
+				false,
+				APL_VERSION,
+				false
+			);
 		}// End if().
 	}
 
@@ -1188,6 +1207,89 @@ class APL_Admin {
 
 		add_action( 'wp_ajax_apl_settings_import', array( $this, 'ajax_settings_import' ) );
 		add_action( 'wp_ajax_apl_import', 'apl_import' );
+
+		add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
+		add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
+		add_action ( 'after_wp_tiny_mce', array( $this, 'tinymce_extra_vars' ) );
+		add_action ( 'admin_init', array( $this, 'add_editor_style' ) );
+	}
+
+	/**
+	 * MCE External Plugins
+	 *
+	 * @since 0.4.2
+	 *
+	 * @see 'mce_external_plugins' filter hook
+	 * @link https://codex.wordpress.org/Plugin_API/Filter_Reference/mce_external_plugins
+	 *
+	 * @param $plugin_array
+	 * @return mixed
+	 */
+	public function mce_external_plugins( $plugin_array ) {
+		$plugin_array['advanced_post_list'] = APL_URL . 'admin/js/wp-editor-mce.js';
+
+		return $plugin_array;
+
+	}
+
+	/**
+	 * MCE Buttons
+	 *
+	 * @since 0.4.2
+	 *
+	 * @uses 'mce_buttons' filter hook
+	 * @link https://codex.wordpress.org/Plugin_API/Filter_Reference/mce_buttons,_mce_buttons_2,_mce_buttons_3,_mce_buttons_4
+	 *
+	 * @param $buttons
+	 * @return mixed
+	 */
+	public function mce_buttons( $buttons ) {
+		array_push( $buttons, 'apl_post_list' );
+		array_push( $buttons, 'dropcap', 'showrecent' );
+
+		return $buttons;
+	}
+
+	/**
+	 * TinyMCE Extra Vars
+	 *
+	 * @since 0.4.0
+	 */
+	public function tinymce_extra_vars() {
+		$args = array(
+			'post_type' => 'apl_post_list',
+			'post_status'     => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
+		);
+		$pl_query = new WP_Query( $args );
+		$post_lists = array();
+		foreach ( $pl_query->posts as $apl_post ) {
+			$post_lists[ $apl_post->post_name ] = $apl_post->post_title;
+		}
+		$trans = array(
+			'button_title'          => __( 'APL Post List', 'advanced-post-list' ),
+			'button_tooltip'        => __( 'Insert APL Shortcode', 'advanced-post-list' ),
+			'window_title'          => __( 'APL Shortcode', 'advanced-post-list' ),
+			'window_body_1_label'   => __( 'Post List', 'advanced-post-list' ),
+			'window_body_1_tooltip' => __( 'Select the Post List you want.', 'advanced-post-list' ),
+
+		);
+		?>
+		<script type="text/javascript">
+			var apl_tinyMCE = <?php echo json_encode(
+				array(
+					'post_lists'         => $post_lists,
+					'trans'              => $trans,
+				)
+			);?>;
+		</script>
+		<?php
 	}
 
 	/**

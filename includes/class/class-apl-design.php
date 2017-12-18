@@ -135,6 +135,7 @@ class APL_Design {
 		$defaults = array(
 			'post_type'       => 'apl_design',
 			//'name'            => '',
+			'p' => 0,
 			'post_status'     => array(
 				'draft',
 				'pending',
@@ -150,7 +151,10 @@ class APL_Design {
 
 		// If there is a design, set this variable to the meta data it has.
 		// Else no designs stored, return false.
+		add_action( 'parse_query', array( $this, 'parse_query' ), 99, 1 );
 		$d_query = new WP_Query( $args );
+		remove_action( 'parse_query', array( $this, 'parse_query' ), 99 );
+
 		if ( 1 > $d_query->post_count ) {
 			return false;
 		}
@@ -169,6 +173,24 @@ class APL_Design {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Parse Query
+	 *
+	 * @see APL_Design::get_date() action hook 'parse_query'
+	 * @param $d_query
+	 * @return mixed
+	 */
+	public function parse_query( $d_query ) {
+		if ( 'apl_design' === $d_query->query['post_type'] || in_array( 'apl_design', $d_query->query['post_type'] ) ) {
+			$d_query->query['post_type'] = 'apl_design';
+			$d_query->query_vars['post_type'] = 'apl_design';
+			$d_query->query['p'] = 0;
+			$d_query->query_vars['p'] = 0;
+		}
+
+		return $d_query;
 	}
 
 	/**
