@@ -273,13 +273,13 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * @return array Delay Options with new values added to old.
 		 */
 		private function set_action_options( $action_options ) {
+			$rtn_action_options = array();
 			if ( empty( $action_options ) && ! is_array( $action_options ) ) {
-				return array(
-					[ 0 ] => $this->action_options_defaults(),
-				);
+				$rtn_action_options[] = $this->action_options_defaults();
+				return $rtn_action_options;
 			}
 
-			$rtn_action_options = array();
+
 			foreach ( $action_options as $action_option ) {
 				$tmp_delay_o = $this->action_options_defaults();
 
