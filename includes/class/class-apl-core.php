@@ -704,6 +704,20 @@ class APL_Core {
 	}
 
 	/**
+	 * DEPRECATED Public Hard-code Display
+	 *
+	 * Public function for displaying Post Lists.
+	 *
+	 * @deprecated 0.4
+	 * @since 0.1.0
+	 *
+	 * @param string $preset_name
+	 * @return string
+	 */
+	public function APL_Display( $preset_name ) {
+		return $this->display_post_list( $preset_name );
+	}
+	/**
 	 * Post List Looper
 	 *
 	 * Method used for executing the frontend loop. Currently uses an output
