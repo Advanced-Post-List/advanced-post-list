@@ -495,10 +495,10 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				'notice_nonce'  => wp_create_nonce( 'apl_ajax_notice' ),
 				'notice_delays' => $notice_delays,
 			);
-			wp_localize_script( 'apl-admin-notice-js', 'apl_notice_data', $admin_notice_localize );
+			wp_localize_script( 'apl-notice-js', 'apl_notice_data', $admin_notice_localize );
 
 			// Enqueue.
-			wp_enqueue_script( 'apl-admin-notice-js' );
+			wp_enqueue_script( 'apl-notice-js' );
 
 			wp_enqueue_style(
 				'apl-notices-css',
