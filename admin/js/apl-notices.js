@@ -22,7 +22,7 @@
      */
     function apl_notice_delay_ajax_action( noticeSlug, delayIndex ) {
         var noticeNonce = apl_notice_data.notice_nonce;
-        var noticeDelayID = "#apl-notice-delay-" + noticeSlug + "-" + delayIndex;
+        var noticeDelayID = "#apl-notice-action-" + noticeSlug + "-" + delayIndex;
         $( noticeDelayID ).on( "click", function( event ) {
             var elem_href = $( this ).attr( "href" );
             if ( "#" === elem_href || "" === elem_href ) {
