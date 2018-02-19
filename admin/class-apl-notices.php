@@ -517,12 +517,16 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * have the same functionality, but serves as a future development concept.
 		 *
 		 * @since 0.4.2
+		 * @since 0.4.4 Fixed displaying content when JS hasn't loaded.
 		 *
 		 * @uses APL_DIR . 'admin/display/notice-default.php' Template for default notices.
 		 *
 		 * @return void
 		 */
 		public function display_notice_default() {
+			if ( ! wp_script_is( 'apl-notice-js', 'enqueued' ) ) {
+				return;
+			}
 
 			$current_screen = get_current_screen();
 			$current_user_id = get_current_user_id();
@@ -572,6 +576,10 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * @return void
 		 */
 		public function display_notice_apl() {
+			if ( ! wp_script_is( 'apl-notice-js', 'enqueued' ) ) {
+				return;
+			}
+
 			$current_screen = get_current_screen();
 			$current_user_id = get_current_user_id();
 			foreach ( $this->active_notices as $a_notice_slug => $a_notice_time_display ) {
