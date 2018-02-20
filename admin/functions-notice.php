@@ -27,13 +27,12 @@ if ( class_exists( 'APL_Notices' ) ) {
 		global $apl_notices;
 
 		$notice = array(
-			'slug'          => 'apl_review_plugin',
-			'delay_time'    => 1036800,
-			'message'       => __( 'Looks like you\'ve been using Advanced Post List for awhile now, and that\'s awesome! By helping with a 5-star review, it also helps to reach out to more people.', 'advanced-post-list' ),
+			'slug'           => 'apl_review_plugin',
+			'delay_time'     => 1036800,
+			'message'        => __( 'Looks like you\'ve been using Advanced Post List for awhile now, and that\'s awesome! By helping with a 5-star review, it also helps to reach out to more people.', 'advanced-post-list' ),
 			'action_options' => array(),
-
-			'target'        => 'user',
-			'screens'       => array(),
+			'target'         => 'user',
+			'screens'        => array(),
 		);
 
 		$notice['action_options'][] = array(

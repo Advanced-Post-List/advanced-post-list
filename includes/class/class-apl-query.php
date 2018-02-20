@@ -55,20 +55,13 @@ class APL_Query {
 	 * @since 0.3.0
 	 * @since 0.4.0 - Change to new object method structure.
 	 *
-	 * @param object $apl_post_list APL Preset Post List Object.
+	 * @param APL_Post_List $apl_post_list APL Preset Post List Object.
 	 */
 	public function __construct( $apl_post_list ) {
-		// STEP 1.
-		$apl_post_list         = $this->add_list_dynamics( $apl_post_list );
-
-		// STEP 2.
-		$this->query_args_arr  = $this->set_query_args_arr( $apl_post_list );
-
-		// STEP 3.
-		$this->query_args_arr  = $this->query_arg_consolidate( $this->query_args_arr );
-
-		// STEP 4.
-		$this->query_args_arr  = $this->query_args_accommodate( $this->query_args_arr );
+		$apl_post_list        = $this->add_list_dynamics( $apl_post_list );
+		$this->query_args_arr = $this->set_query_args_arr( $apl_post_list );
+		$this->query_args_arr = $this->query_arg_consolidate( $this->query_args_arr );
+		$this->query_args_arr = $this->query_args_accommodate( $this->query_args_arr );
 	}
 
 	/**
@@ -81,7 +74,7 @@ class APL_Query {
 	 * @since 0.4.0 - Changed to use APL_Post_List object.
 	 * @access private
 	 *
-	 * @param APL_Post_List $apl_post_list
+	 * @param APL_Post_List $apl_post_list APL Post List object.
 	 * @return APL_Post_List Modified post list object.
 	 */
 	private function add_list_dynamics( $apl_post_list ) {
@@ -90,18 +83,18 @@ class APL_Query {
 			return $apl_post_list;
 		}
 
-		// EXCLUDE CURRENT POST
+		// EXCLUDE CURRENT POST.
 		if ( $apl_post_list->pl_exclude_current ) {
 			$apl_post_list->post__not_in[] = $post_id;
 		}
 
-		$current_post_type = get_post_type( $post_id );
+		$current_post_type  = get_post_type( $post_id );
 		$current_taxonomies = get_post_taxonomies( $post_id );
 
 		$terms_args = array(
-			'orderby'  => 'term_id',
-			'order'    => 'ASC',
-			'fields'   => 'ids',
+			'orderby' => 'term_id',
+			'order'   => 'ASC',
+			'fields'  => 'ids',
 		);
 
 		foreach ( $apl_post_list->post_type as $k1_index => $v1_pt_arr ) {
@@ -115,7 +108,7 @@ class APL_Query {
 							if ( $apl_post_list->post_parent_dynamic[ $v2_pt_slug ] ) {
 								// Add current Page as Parent and prevent doubles.
 								$apl_post_list->post_parent__in[ $v2_pt_slug ][] = $post_id;
-								$apl_post_list->post_parent__in[ $v2_pt_slug ] = array_values( array_unique( $apl_post_list->post_parent__in[ $v2_pt_slug ] ) );
+								$apl_post_list->post_parent__in[ $v2_pt_slug ]   = array_values( array_unique( $apl_post_list->post_parent__in[ $v2_pt_slug ] ) );
 							}
 						}
 					}
@@ -135,8 +128,8 @@ class APL_Query {
 											)
 										);
 										if ( is_wp_error( $current_taxonomy_terms ) ) {
-											echo '<div id="message" class="error"><p>' . $current_taxonomy_terms->get_error_message() . '</p></div>';
-											return;
+											echo '<div id="message" class="error"><p>' . esc_html( $current_taxonomy_terms->get_error_message() ) . '</p></div>';
+											return $apl_post_list;
 										}
 
 										foreach ( $current_taxonomy_terms as $current_term_id ) {
@@ -168,7 +161,7 @@ class APL_Query {
 										)
 									);
 									if ( is_wp_error( $current_taxonomy_terms ) ) {
-										echo '<div id="message" class="error"><p>' . $current_taxonomy_terms->get_error_message() . '</p></div>';
+										echo '<div id="message" class="error"><p>' . esc_html( $current_taxonomy_terms->get_error_message() ) . '</p></div>';
 									}
 
 									foreach ( $current_taxonomy_terms as $current_term_id ) {
@@ -202,7 +195,7 @@ class APL_Query {
 	 * @see $query_args for WP_Query.
 	 * @link https://gist.github.com/luetkemj/2023628
 	 *
-	 * @param APL_Post_List $apl_post_list
+	 * @param APL_Post_List $apl_post_list APL Post List object.
 	 * @return array Multiple query_args
 	 */
 	private function set_query_args_arr( $apl_post_list ) {
@@ -228,8 +221,9 @@ class APL_Query {
 							if ( isset( $tax_arr['terms'][0] ) && 0 === $tax_arr['terms'][0] ) {
 								$terms_args = array(
 									'taxonomy' => $tax_arr['taxonomy'],
-									'fields' => 'ids',
+									'fields'   => 'ids',
 								);
+
 								$tax_arr['terms'] = get_terms( $terms_args );
 
 								$tmp_query_args['tax_query'][] = $tax_arr;
@@ -249,7 +243,7 @@ class APL_Query {
 				//$tmp_query_args['tax_query'] = $apl_post_list->tax_query['any'];
 
 				if ( ! empty( $apl_post_list->tax_query[ $v1_pt_arr ] ) ) {
-					$tmp_tax_query = $apl_post_list->tax_query[ $v1_pt_arr ];
+					$tmp_tax_query                           = $apl_post_list->tax_query[ $v1_pt_arr ];
 					$tmp_query_args['tax_query']['relation'] = $tmp_tax_query['relation'];
 					unset( $tmp_tax_query['relation'] );
 
@@ -258,8 +252,9 @@ class APL_Query {
 						if ( 0 === $tax_arr['terms'][0] ) {
 							$terms_args = array(
 								'taxonomy' => $tax_arr['taxonomy'],
-								'fields' => 'ids',
+								'fields'   => 'ids',
 							);
+
 							$tax_arr['terms'] = get_terms( $terms_args );
 
 							$tmp_query_args['tax_query'][] = $tax_arr;
@@ -275,9 +270,9 @@ class APL_Query {
 
 			// General Filter.
 			$tmp_query_args['posts_per_page'] = $apl_post_list->posts_per_page;
-			$tmp_query_args['offset'] = $apl_post_list->offset;
-			$tmp_query_args['orderby'] = $apl_post_list->order_by;
-			$tmp_query_args['order'] = $apl_post_list->order;
+			$tmp_query_args['offset']         = $apl_post_list->offset;
+			$tmp_query_args['orderby']        = $apl_post_list->order_by;
+			$tmp_query_args['order']          = $apl_post_list->order;
 			// Handle post_status in accommodate method.
 			$tmp_query_args['post_status'] = $apl_post_list->post_status;
 			if ( 'none' !== $apl_post_list->perm ) {
@@ -291,10 +286,10 @@ class APL_Query {
 				}
 			}
 			$tmp_query_args['ignore_sticky_posts'] = $apl_post_list->ignore_sticky_posts;
-			$tmp_query_args['post__not_in'] = $apl_post_list->post__not_in;
+			$tmp_query_args['post__not_in']        = $apl_post_list->post__not_in;
 
 			$rtn_query_args_arr[] = $tmp_query_args;
-		}// End foreach();
+		}// End foreach().
 
 		return $rtn_query_args_arr;
 	}
@@ -312,13 +307,8 @@ class APL_Query {
 	 * @since 0.3.b8
 	 * @access private
 	 *
-	 * @see Function/method/class relied on
-	 * @link URL
-	 * @global type $varname Description.
-	 * @global type $varname Description.
-	 *
-	 * @param array $arg_arr     Multi-dimensional  query_str array.
-	 * @return $query_str_array  Multi-dimensional  query_str array.
+	 * @param array $arg_arr Multi-dimensional query_str array.
+	 * @return array Multi-dimensional query_str array.
 	 */
 	private function query_arg_consolidate( $arg_arr ) {
 		$query_count = count( $arg_arr );
@@ -358,11 +348,6 @@ class APL_Query {
 	 * @since 0.3.b8
 	 * @access private
 	 *
-	 * @see Function/method/class relied on
-	 * @link URL
-	 * @global type $varname Description.
-	 * @global type $varname Description.
-	 *
 	 * @param array $tax_query1 The query string's tax query.
 	 * @param array $tax_query2 The query string's tax query.
 	 * @return boolean Similar Tax_Querys.
@@ -370,10 +355,10 @@ class APL_Query {
 	private function tax_query_match( $tax_query1, $tax_query2 ) {
 		// STEP 1.
 		if ( $tax_query1['relation'] === $tax_query2['relation'] ) {
-			$tax_query_count1 = count( $tax_query1 ) - 1 ;
+			$tax_query_count1 = count( $tax_query1 ) - 1;
 			for ( $i = 0; $i < $tax_query_count1; $i++ ) {
-				$tax_match_found = false;
-				$tax_query_count2 = count( $tax_query2 ) - 1 ;
+				$tax_match_found  = false;
+				$tax_query_count2 = count( $tax_query2 ) - 1;
 				for ( $j = 0; $j < $tax_query_count2; $j++ ) {
 					// Would have included the next IF statement if the 2 weren't
 					// required to have and not have an else return false.
@@ -410,15 +395,15 @@ class APL_Query {
 	 * @since 0.4.0
 	 * @private
 	 *
-	 * @param type $query_args_arr
-	 * @return string
+	 * @param array $query_args_arr Old query argument array.
+	 * @return array
 	 */
 	private function query_args_accommodate( $query_args_arr ) {
 		$rtn_query_args_arr = array();
 		foreach ( $query_args_arr as $v1_query_args ) {
 			if ( is_array( $v1_query_args['post_status'] ) ) {
-				$public   = array_search( 'public', $v1_query_args['post_status'], true );
-				$private  = array_search( 'private', $v1_query_args['post_status'], true );
+				$public  = array_search( 'public', $v1_query_args['post_status'], true );
+				$private = array_search( 'private', $v1_query_args['post_status'], true );
 
 				if ( $public && $private ) {
 					unset( $v1_query_args['post_status'][ $public ] );
@@ -434,10 +419,10 @@ class APL_Query {
 			} elseif ( 'none' === $v1_query_args['post_status'] ) {
 				// WP Default.
 				$v1_query_args['post_status'] = array( 'publish' );
-				$rtn_query_args_arr[] = $v1_query_args;
+				$rtn_query_args_arr[]         = $v1_query_args;
 			} elseif ( 'any' === $v1_query_args['post_status'] ) {
 				$v1_query_args['post_status'] = 'any';
-				$rtn_query_args_arr[] = $v1_query_args;
+				$rtn_query_args_arr[]         = $v1_query_args;
 			}
 		}
 
@@ -467,7 +452,7 @@ class APL_Query {
 	 * @return mixed WP_Query class if unrepeated, otherwise array of post_IDs.
 	 */
 	public function query_wp( $query_str_array, $repeated = false ) {
-		$post_in_IDs = array();
+		$post_in_IDs     = array();
 		$post_not_in_IDs = array();
 
 		/*
@@ -478,7 +463,6 @@ class APL_Query {
 		// TODO Create function for the repeated query_wp function.
 		// STEP 1.
 		if ( true === $repeated ) {
-			// STEP.
 			// Shift the args when repeating this method / function.
 			// If more args exist, then repeat this function.
 			// Merge returned post ids for pre-final query.
@@ -487,7 +471,6 @@ class APL_Query {
 				$post_in_IDs = array_merge( $this->query_wp( $query_str_array, true ), $post_in_IDs );
 			}
 
-			// STEP.
 			// Since post__in and post__not_in don't mix at all. The 2 variables
 			// are stored seperately.
 			// TODO Create function for Post Include/Exclude.
@@ -503,36 +486,31 @@ class APL_Query {
 			}
 			unset( $query_str['post__in'] );
 
-			// STEP.
 			// If Posts Per Page is set to -1/Unlimited, then set nopaging to true.
 			if ( -1 === $query_str['posts_per_page'] ) {
 				$query_str['nopaging'] = true;
 				$query_str['offset']   = 0;
 			}
-			// STEP.
+
 			// Sets the query string to just query IDs.
 			$query_str['fields'] = 'ids';
-			$Query_Obj = new WP_Query( $query_str );
+			$query_obj = new WP_Query( $query_str );
 
-			// STEP.
 			// Collect an array of Post IDs.
 			$post_IDs = array();
-			if ( ! empty( $Query_Obj->posts ) ) {
-				foreach ( $Query_Obj->posts as $i => $post_ID ) {
+			if ( ! empty( $query_obj->posts ) ) {
+				foreach ( $query_obj->posts as $i => $post_ID ) {
 					$post_IDs[] = intval( $post_ID );
 				}
 			}
 
 			$post_IDs = array_merge( $post_IDs, $post_in_IDs );
 
-			// STEP.
 			wp_reset_postdata();
-			// STEP.
 			return $post_IDs;
 
 		} else {
 			// STEP 2.
-			// Repeated === false
 
 			/*
 			 * This is the Initial and Final Query. This is used to collect IDs first
@@ -543,9 +521,8 @@ class APL_Query {
 			 */
 
 			$post_in_IDs = array_merge( $this->query_wp( $query_str_array, true ) );
-			$query_str = array_shift( $query_str_array );
+			$query_str   = array_shift( $query_str_array );
 
-			// STEP.
 			// Filter out excluded posts.
 			foreach ( $query_str['post__not_in'] as $post_not_value ) {
 				foreach ( $post_in_IDs as $key => $post_in_value ) {
@@ -556,7 +533,7 @@ class APL_Query {
 			}
 			$post_in_IDs = array_merge( $post_in_IDs );
 
-			// STEP - Prevent defaulting when there's no posts.
+			// Prevent defaulting when there's no posts.
 			if ( empty( $post_in_IDs ) ) {
 				$post_in_IDs[] = 0;
 			}
@@ -564,20 +541,20 @@ class APL_Query {
 			// STEP.
 			// Set FINAL query_str with post IDs.
 			$final_query_str = array(
-				'post__in'             => $post_in_IDs,
-				'post_type'            => 'any',
-				'posts_per_page'       => $query_str['posts_per_page'],
-				'offset'               => $query_str['offset'],
-				'nopaging'             => ( -1 === $query_str['posts_per_page'] ) ? true : false,
-				'order'                => $query_str['order'],
-				'orderby'              => $query_str['orderby'],
-				'ignore_sticky_posts'  => $query_str['ignore_sticky_posts'],
+				'post__in'            => $post_in_IDs,
+				'post_type'           => 'any',
+				'posts_per_page'      => $query_str['posts_per_page'],
+				'offset'              => $query_str['offset'],
+				'nopaging'            => ( -1 === $query_str['posts_per_page'] ) ? true : false,
+				'order'               => $query_str['order'],
+				'orderby'             => $query_str['orderby'],
+				'ignore_sticky_posts' => $query_str['ignore_sticky_posts'],
 			);
 
 			// Get FINAL Query Object.
-			$final_Query_Obj = new WP_Query( $final_query_str );
+			$final_query_obj = new WP_Query( $final_query_str );
 
-			return $final_Query_Obj;
+			return $final_query_obj;
 		}// End if().
 	}
 }

@@ -152,10 +152,10 @@ class APL_Design {
 	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
-			'post_type'       => 'apl_design',
-			'name'            => '',
-			'p' => 0,
-			'post_status'     => array(
+			'post_type'      => 'apl_design',
+			'name'           => '',
+			'p'              => 0,
+			'post_status'    => array(
 				'auto-draft',
 				'draft',
 				'pending',
@@ -164,7 +164,7 @@ class APL_Design {
 				'private',
 				'trash',
 			),
-			'posts_per_page'  => 1,
+			'posts_per_page' => 1,
 			//'suppress_filters' => true,
 		);
 		$args = wp_parse_args( $args, $defaults );
@@ -188,15 +188,15 @@ class APL_Design {
 		$design = $d_query->post;
 
 		if ( $design->post_name === $args['name'] && ! empty( $args['name'] ) && isset( $args['name'] ) ||
-			 $design->ID === $args['p'] && ! empty( $args['p'] ) && isset( $args['p'] ) )  {
-			$this->id      = absint( $design->ID );
-			$this->title   = esc_html( $design->post_title );
-			$this->slug    = $design->post_name;
+			 $design->ID === $args['p'] && ! empty( $args['p'] ) && isset( $args['p'] ) ) {
+			$this->id    = absint( $design->ID );
+			$this->title = esc_html( $design->post_title );
+			$this->slug  = $design->post_name;
 
-			$this->before  = get_post_meta( $this->id, 'apl_before', true )   ?: '';
-			$this->content = get_post_meta( $this->id, 'apl_content', true )  ?: '';
-			$this->after   = get_post_meta( $this->id, 'apl_after', true )    ?: '';
-			$this->empty   = get_post_meta( $this->id, 'apl_empty', true )    ?: '';
+			$this->before  = get_post_meta( $this->id, 'apl_before', true )  ?: '';
+			$this->content = get_post_meta( $this->id, 'apl_content', true ) ?: '';
+			$this->after   = get_post_meta( $this->id, 'apl_after', true )   ?: '';
+			$this->empty   = get_post_meta( $this->id, 'apl_empty', true )   ?: '';
 			return true;
 		} else {
 			return false;
@@ -207,15 +207,15 @@ class APL_Design {
 	 * Parse Query
 	 *
 	 * @see APL_Design::get_date() action hook 'parse_query'
-	 * @param $d_query
+	 * @param array $d_query Query to parse.
 	 * @return mixed
 	 */
 	public function parse_query( $d_query ) {
-		if ( 'apl_design' === $d_query->query['post_type'] || in_array( 'apl_design', $d_query->query['post_type'] ) ) {
-			$d_query->query['post_type'] = 'apl_design';
+		if ( 'apl_design' === $d_query->query['post_type'] || in_array( 'apl_design', $d_query->query['post_type'], true ) ) {
+			$d_query->query['post_type']      = 'apl_design';
 			$d_query->query_vars['post_type'] = 'apl_design';
-			$d_query->query['p'] = $this->id;
-			$d_query->query_vars['p'] = $this->id;
+			$d_query->query['p']              = $this->id;
+			$d_query->query_vars['p']         = $this->id;
 		}
 
 		return $d_query;
@@ -234,18 +234,18 @@ class APL_Design {
 			return;
 		}
 		$get_args = array(
-			'post__in'   => array( $this->id ),
-			//'name'       => $this->slug,
-			'post_type'  => 'apl_design',
+			'post__in'  => array( $this->id ),
+			//'name'      => $this->slug,
+			'post_type' => 'apl_design',
 		);
 		$designs = new WP_Query( $get_args );
 
 		$save_postarr = array(
-			'ID'               => $this->id,
-			'post_title'       => $this->title,
-			'post_name'        => $this->slug,
-			'post_status'      => 'publish',
-			'post_type'        => 'apl_design',
+			'ID'          => $this->id,
+			'post_title'  => $this->title,
+			'post_name'   => $this->slug,
+			'post_status' => 'publish',
+			'post_type'   => 'apl_design',
 		);
 
 		if ( 1 > $designs->post_count || 0 === $this->id ) {
@@ -281,7 +281,7 @@ class APL_Design {
 	 */
 	private function insert_design_post( $args = array() ) {
 		$defaults = $this->default_postarr();
-		$args = wp_parse_args( $args, $defaults );
+		$args     = wp_parse_args( $args, $defaults );
 
 		global $wp_rewrite;
 		if ( is_null( $wp_rewrite ) ) {
@@ -290,7 +290,7 @@ class APL_Design {
 
 		remove_all_actions( 'save_post_apl_design', 10 );
 		add_action( 'save_post_apl_design', array( &$this, 'hook_action_save_post_apl_design' ), 10, 3 );
-		$old_id = $this->id;
+		$old_id      = $this->id;
 		$rtn_post_id = wp_insert_post( $args );
 
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
@@ -318,11 +318,11 @@ class APL_Design {
 	 * @since 0.4.0
 	 * @access private
 	 *
-	 * @param type $args Post arg array for creating Post objects.
+	 * @param array $args Post arg array for creating Post objects.
 	 */
 	private function update_design_post( $args = array() ) {
 		$defaults = $this->default_postarr();
-		$args = wp_parse_args( $args, $defaults );
+		$args     = wp_parse_args( $args, $defaults );
 
 		global $wp_rewrite;
 		if ( is_null( $wp_rewrite ) ) {
@@ -359,27 +359,9 @@ class APL_Design {
 	 */
 	private function default_postarr() {
 		return array(
-			//'ID'               => 0,
-			//'post_author'      => $user_id,
-			//'post_date'        => '', Default: is current time.
-			//'post_date_gmt'    => '', Default: is $post_date.
-			//'post_content'     => '',
-			//'post_content_filtered' => '',
-			'post_title'       => '',
-			'post_name'        => '',
-			//'post_excerpt'     => '',
-			//'post_status'      => 'draft',
-			'post_type'        => 'apl_design',
-			//'comment_status'   => '',
-			//'ping_status'      => '',
-			//'post_password'    => '',
-			//'to_ping' =>  '',
-			//'pinged' => '',
-			//'post_parent'      => 0,
-			//'menu_order'       => 0,
-			//'guid' => '',
-			//'import_id'        => 0,
-			//'context'          => '',
+			'post_title' => '',
+			'post_name'  => '',
+			'post_type'  => 'apl_design',
 		);
 	}
 
@@ -391,12 +373,14 @@ class APL_Design {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param int $post_id Post ID that is past by WP when saving post.
+	 * @param int     $post_id  Post ID that is past by WP when saving post.
+	 * @param WP_Post $post_obj WordPress Post Object.
+	 * @param boolean $update   Whether an updated occurred or not.
 	 */
 	public function hook_action_save_post_apl_design( $post_id, $post_obj, $update ) {
-		$this->id     = $post_id;
-		$this->title  = $post_obj->post_title;
-		$this->slug   = $post_obj->post_name;
+		$this->id    = $post_id;
+		$this->title = $post_obj->post_title;
+		$this->slug  = $post_obj->post_name;
 
 		$old_before  = get_post_meta( $this->id, 'apl_before', true );
 		$old_content = get_post_meta( $this->id, 'apl_content', true );

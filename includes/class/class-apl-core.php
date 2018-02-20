@@ -78,7 +78,7 @@ class APL_Core {
 
 		// STEP 3.
 		if ( is_admin() ) {
-			// Admin Class
+			// Admin Class.
 			add_action( 'init', array( 'APL_Admin', 'get_instance' ) );
 
 			/* **** ACTIVATE/DE-ACTIVATE/UNINSTALL HOOKS **** */
@@ -179,22 +179,22 @@ class APL_Core {
 	private function _requires() {
 		// PUBLIC.
 		// Class Objects.
-		require_once( APL_DIR . 'includes/class/class-apl-post-list.php' );
-		require_once( APL_DIR . 'includes/class/class-apl-design.php' );
-		require_once( APL_DIR . 'includes/class/class-apl-widget.php' );
-		require_once( APL_DIR . 'includes/class/class-apl-query.php' );
-		require_once( APL_DIR . 'includes/class/class-apl-updater.php' );
+		require_once APL_DIR . 'includes/class/class-apl-post-list.php';
+		require_once APL_DIR . 'includes/class/class-apl-design.php';
+		require_once APL_DIR . 'includes/class/class-apl-widget.php';
+		require_once APL_DIR . 'includes/class/class-apl-query.php';
+		require_once APL_DIR . 'includes/class/class-apl-updater.php';
 		// OLD - Remove between 0.4 - 0.6.
-		require_once( APL_DIR . 'includes/class/dep-class-apl-preset-db.php' );
-		require_once( APL_DIR . 'includes/class/dep-class-apl-preset.php' );
-		require_once( APL_DIR . 'includes/class/old-APLPresetDbObj.php' );
-		require_once( APL_DIR . 'includes/class/old-APLPresetObj.php' );
+		require_once APL_DIR . 'includes/class/dep-class-apl-preset-db.php';
+		require_once APL_DIR . 'includes/class/dep-class-apl-preset.php';
+		require_once APL_DIR . 'includes/class/old-APLPresetDbObj.php';
+		require_once APL_DIR . 'includes/class/old-APLPresetObj.php';
 
 		// Functions.
-		require_once( APL_DIR . 'includes/functions.php' );
+		require_once APL_DIR . 'includes/functions.php';
 
-		// ADMIN
-		require_once( APL_DIR . 'admin/class-apl-admin.php' );
+		// ADMIN.
+		require_once APL_DIR . 'admin/class-apl-admin.php';
 	}
 
 	/**
@@ -209,7 +209,7 @@ class APL_Core {
 	public function action_register_post_type_post_list() {
 
 		$args = array(
-			'labels' => array(
+			'labels'              => array(
 				'name'                  => __( 'APL Post Lists', 'advanced-post-list' ),
 				'singular_name'         => __( 'Post List', 'advanced-post-list' ),
 				'add_new'               => _x( 'Add New', 'List', 'advanced-post-list' ),
@@ -227,30 +227,27 @@ class APL_Core {
 				'attributes'            => __( 'Post List Attributes', 'advanced-post-list' ),
 				'insert_into_item'      => __( 'Insert into Post List', 'advanced-post-list' ),
 				'uploaded_to_this_item' => __( 'Upload to this Post List', 'advanced-post-list' ),
-				'menu_name'				=> __( 'APL Post List', 'advanced-post-list' ),
+				'menu_name'             => __( 'APL Post List', 'advanced-post-list' ),
 			),
-			'description'           => __( 'APL Preset Post Lists.', 'advanced-post-list' ),
-			'public'                => true,
-			'exclude_from_search'   => true,
-			'publicly_queryable'    => false,
-			'show_ui'               => true, // Shows up in admin menu bar.
-			'show_in_menu'          => 'advanced_post_list',
-			'show_in_nav_menus'     => false,
-			'show_in_admin_bar'		=> true,
-			'menu_position'         => 58,
-			'menu_icon'				=> 'dashicons-welcome-widgets-menus',
-			'hierarchical'          => true,
-			'supports' 				=> array(
+			'description'         => __( 'APL Preset Post Lists.', 'advanced-post-list' ),
+			'public'              => true,
+			'exclude_from_search' => true,
+			'publicly_queryable'  => false,
+			'show_ui'             => true, // Shows up in admin menu bar.
+			'show_in_menu'        => 'advanced_post_list',
+			'show_in_nav_menus'   => false,
+			'show_in_admin_bar'   => true,
+			'menu_position'       => 58,
+			'menu_icon'           => 'dashicons-welcome-widgets-menus',
+			'hierarchical'        => true,
+			'supports'            => array(
 				'title',
-				//'author',
-				//'thumbnail',
-				//'revisions',
 			),
-			'has_archive'			=> false,
+			'has_archive'         => false,
 			// Disables the URL query /?{query_var}={single_post_slug}.
-			'query_var'             => false,
-			//'can_export'            => true, // Default true.
-			'delete_with_user'		=> false,
+			'query_var'           => false,
+			// 'can_export'            => true, // Default true.
+			'delete_with_user'    => false,
 		);
 
 		$args = apply_filters( 'apl_register_post_type_post_list', $args );
@@ -268,7 +265,7 @@ class APL_Core {
 	 */
 	public function action_register_post_type_design() {
 		$args = array(
-			'labels' => array(
+			'labels'              => array(
 				'name'                  => __( 'APL Designs', 'advanced-post-list' ),
 				'singular_name'         => __( 'Design', 'advanced-post-list' ),
 				'add_new'               => _x( 'Add New', 'design', 'advanced-post-list' ),
@@ -286,32 +283,29 @@ class APL_Core {
 				'attributes'            => __( 'Design Attributes', 'advanced-post-list' ),
 				'insert_into_item'      => __( 'Insert into Design', 'advanced-post-list' ),
 				'uploaded_to_this_item' => __( 'Upload to this Design', 'advanced-post-list' ),
-				'menu_name'				=> __( 'APL Design', 'advanced-post-list' ),
+				'menu_name'             => __( 'APL Design', 'advanced-post-list' ),
 			),
-			'description'           => __( 'APL Designs for Preset Post Lists.', 'advanced-post-list' ),
-			'public'                => true,
-			'exclude_from_search'   => true,
-			'publicly_queryable'    => false,
+			'description'         => __( 'APL Designs for Preset Post Lists.', 'advanced-post-list' ),
+			'public'              => true,
+			'exclude_from_search' => true,
+			'publicly_queryable'  => false,
 			// Shows up in admin area.
-			'show_ui'               => false,
-			'show_in_menu'          => false,
-			'show_in_nav_menus'     => false,
-			'show_in_admin_bar'		=> false,
-			'menu_icon'				=> 'dashicons-admin-generic',
-			'hierarchical'          => true,
-			'supports' 				=> array(
+			'show_ui'             => false,
+			'show_in_menu'        => false,
+			'show_in_nav_menus'   => false,
+			'show_in_admin_bar'   => false,
+			'menu_icon'           => 'dashicons-admin-generic',
+			'hierarchical'        => true,
+			'supports'            => array(
 				'title',
-				//'thumbnail',
-				//'excerpt',
-				//'revisions',
 			),
-			'has_archive'			=> false,
+			'has_archive'         => false,
 			// Disables the URL query /?{query_var}={single_post_slug}.
-			'query_var'             => false,
-			//'can_export'            => true, // Default true.
-			'delete_with_user'		=> false,
+			'query_var'           => false,
+			// 'can_export'            => true, // Default true.
+			'delete_with_user'    => false,
 		);
-		
+
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 			$args['show_ui'] = true;
 		}
@@ -339,17 +333,17 @@ class APL_Core {
 		if ( isset( $options['version'] ) ) {
 			if ( version_compare( $options['version'], APL_VERSION, '<' ) ) {
 				$update_items = array();
-				// 0.3 Database.
+
 				if ( version_compare( '0.3.0', $options['version'], '<' ) && version_compare( '0.4.0', $options['version'], '>' ) ) {
+					// 0.3 Database.
 					$preset_db = new APL_Preset_Db( 'default' );
 
 					$update_items = array(
 						'options'   => $options,
 						'preset_db' => $preset_db,
 					);
-				}
-				// 0.4+ Database.
-				elseif( version_compare( '0.4.0', $options['version'], '<' ) ) {
+				} elseif ( version_compare( '0.4.0', $options['version'], '<' ) ) {
+					// 0.4+ Database.
 					$post_lists = apl_get_post_lists( array(), 'apl_post_list' );
 					$designs    = apl_get_designs( array(), 'apl_design' );
 
@@ -381,7 +375,7 @@ class APL_Core {
 	 * @since 0.4.0
 	 * @access private
 	 *
-	 * @param array $apl_post_list_arr
+	 * @param array $apl_post_list_arr Array of Post Lists.
 	 */
 	public function update_post_list_database( $apl_post_list_arr ) {
 		foreach ( $apl_post_list_arr as $k1_ => $apl_post_list ) {
@@ -398,13 +392,14 @@ class APL_Core {
 	 * @since 0.4.0
 	 * @access private
 	 *
-	 * @param array $apl_post_list_arr
+	 * @param array $apl_design_arr Array of Designs.
 	 */
 	private function update_design_database( $apl_design_arr ) {
 		foreach ( $apl_design_arr as $apl_design ) {
 			$apl_design->save_design();
 		}
 	}
+
 	/**
 	 * Load APL's Textdomain
 	 *
@@ -431,7 +426,7 @@ class APL_Core {
 		// Step 1.
 		$options = apl_options_load();
 
-		require_once( APL_DIR . 'admin/class-apl-notices.php' );
+		require_once APL_DIR . 'admin/class-apl-notices.php';
 		apl_notice_set_activation_review_plugin( false, true );
 		// Any Need? apl_options_load() already sets defaults if no data is found.
 		apl_options_save( $options );
@@ -464,9 +459,9 @@ class APL_Core {
 
 			// POST LIST POST DATA.
 			$pl_args = array(
-				'post_type' => 'apl_post_list',
-				'posts_per_page'  => -1,
-				'post_status'     => array(
+				'post_type'      => 'apl_post_list',
+				'posts_per_page' => -1,
+				'post_status'    => array(
 					'draft',
 					'pending',
 					'publish',
@@ -475,7 +470,8 @@ class APL_Core {
 					'trash',
 				),
 			);
-			$pl_query = new WP_Query( $pl_args );
+
+			$pl_query       = new WP_Query( $pl_args );
 			$post_list_data = $pl_query->posts;
 
 			foreach ( $post_list_data as $v1_pl_post ) {
@@ -487,9 +483,9 @@ class APL_Core {
 
 			// DESIGN POST DATA.
 			$d_args = array(
-				'post_type' => 'apl_design',
-				'posts_per_page'  => -1,
-				'post_status'     => array(
+				'post_type'      => 'apl_design',
+				'posts_per_page' => -1,
+				'post_status'    => array(
 					'draft',
 					'pending',
 					'publish',
@@ -498,7 +494,8 @@ class APL_Core {
 					'trash',
 				),
 			);
-			$d_query = new WP_Query( $d_args );
+
+			$d_query     = new WP_Query( $d_args );
 			$design_data = $d_query->posts;
 
 			foreach ( $design_data as $v1_d_post ) {
@@ -527,9 +524,9 @@ class APL_Core {
 
 		// POST LIST POST DATA.
 		$pl_args = array(
-			'post_type' => 'apl_post_list',
-			'posts_per_page'  => -1,
-			'post_status'     => array(
+			'post_type'      => 'apl_post_list',
+			'posts_per_page' => -1,
+			'post_status'    => array(
 				'draft',
 				'pending',
 				'publish',
@@ -538,7 +535,8 @@ class APL_Core {
 				'trash',
 			),
 		);
-		$pl_query = new WP_Query( $pl_args );
+
+		$pl_query       = new WP_Query( $pl_args );
 		$post_list_data = $pl_query->posts;
 
 		foreach ( $post_list_data as $v1_pl_post ) {
@@ -550,9 +548,9 @@ class APL_Core {
 
 		// DESIGN POST DATA.
 		$d_args = array(
-			'post_type' => 'apl_design',
-			'posts_per_page'  => -1,
-			'post_status'     => array(
+			'post_type'      => 'apl_design',
+			'posts_per_page' => -1,
+			'post_status'    => array(
 				'draft',
 				'pending',
 				'publish',
@@ -561,7 +559,8 @@ class APL_Core {
 				'trash',
 			),
 		);
-		$d_query = new WP_Query( $d_args );
+
+		$d_query     = new WP_Query( $d_args );
 		$design_data = $d_query->posts;
 
 		foreach ( $design_data as $v1_d_post ) {
@@ -586,17 +585,17 @@ class APL_Core {
 	 * @see apl_options_default()
 	 * @access private
 	 *
-	 * @return object Core option settings
+	 * @return array Core option settings
 	 */
 	private function apl_options_default() {
 		// New name ( default_options ).
 		// Step 1.
 		$options = array();
 		// Step 2.
-		$options['version']               = APL_VERSION;
-		$options['delete_core_db']        = false;
-		$options['default_empty_enable']  = false;
-		$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
+		$options['version']              = APL_VERSION;
+		$options['delete_core_db']       = false;
+		$options['default_empty_enable'] = false;
+		$options['default_empty_output'] = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
 
 		// Step 3.
 		return $options;
@@ -620,7 +619,7 @@ class APL_Core {
 	 * @see Function/method/class relied on
 	 * @link URL
 	 *
-	 * @return object APL option settings.
+	 * @return array APL option settings.
 	 */
 	private function apl_options_load() {
 		// New Name ( get_options ).
@@ -653,7 +652,7 @@ class APL_Core {
 	 * @see Function/method/class relied on
 	 * @link URL
 	 *
-	 * @param object $options Core option settings.
+	 * @param array $options Core option settings.
 	 */
 	private function apl_options_save( $options ) {
 		// New name ( set_options ).
@@ -689,7 +688,7 @@ class APL_Core {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param string $att Carries the preset name.
+	 * @param array $att Carries the preset name.
 	 * @return string HTML content, if param is set. Otherwise return an empty string.
 	 */
 	public function shortcode_post_list( $att ) {
@@ -729,7 +728,7 @@ class APL_Core {
 	 * @deprecated 0.4
 	 * @since 0.1.0
 	 *
-	 * @param string $preset_name
+	 * @param string $preset_name Slug of the preset post list.
 	 * @return string
 	 */
 	public function APL_Display( $preset_name ) {
@@ -758,7 +757,7 @@ class APL_Core {
 	 * @uses `wpml_object_id`
 	 * @link https://wpml.org/wpml-hook/wpml_object_id/
 	 *
-	 * @param string $preset_name Preset slug/name.
+	 * @param string $post_list_slug Preset slug/name.
 	 * @return string HTML string.
 	 */
 	private function post_list_loop( $post_list_slug ) {
@@ -767,12 +766,12 @@ class APL_Core {
 		$apl_post_list = new APL_Post_List( $post_list_slug );
 		if ( $apl_post_list->id ) {
 			// INIT.
-			require_once( APL_DIR . 'includes/class/class-apl-shortcodes.php' );
+			require_once APL_DIR . 'includes/class/class-apl-shortcodes.php';
 
 			// Get APL Design.
 			$design_id = $apl_post_list->pl_apl_design_id;
 			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-				$design_id = apply_filters( 'wpml_object_id', $apl_post_list->pl_apl_design_id,'apl_design', true );
+				$design_id = apply_filters( 'wpml_object_id', $apl_post_list->pl_apl_design_id, 'apl_design', true );
 			}
 			$apl_design = new APL_Design( $design_id );
 		} elseif ( current_user_can( 'manage_options' ) ) {
@@ -795,21 +794,22 @@ class APL_Core {
 		// STEP - Init APL_Query object (sets the query strings).
 		// The constructor will process and produce a final array of query_args.
 		// Then APL_Query will need to query_wp and return a final WP_Query class.
-		// NOTE: Look into class inheritence for enhancing, or change the label
-		//       of the concept; APL_Process, *_Factory.
+		// NOTE: Look into class inheritance, or change the class name to match the concept; APL_Process, *_Factory.
 		$apl_query = new APL_Query( $apl_post_list );
 
 		// STEP - Query the posts to retrieve the final WP_Query class.
 		// NOTE: There's got to be a better concept to produce a final WP_Query.
 		$wp_query_class = $apl_query->query_wp( $apl_query->query_args_arr );
 
-		/* ****************************************************************** */
-		/* * The Loop (APL/WP Concept) ************************************** */
-		/* ****************************************************************** */
+		/*
+		 * ******************************************************************
+		 * * The Loop (APL/WP Concept) **************************************
+		 * ******************************************************************
+		 */
 		// STEP 5 - If there are posts, the use the loop to display posts.
 		// Otherwise return an exit message if no posts are found.
 		$output = '';
-		$count = 0;
+		$count  = 0;
 		if ( $wp_query_class->have_posts() ) {
 			// BEFORE.
 			$output .= $apl_design->before;
@@ -824,7 +824,7 @@ class APL_Core {
 				$wp_query_class->the_post();
 
 				$this->_remove_duplicates[] = $wp_query_class->post->ID;
-				$output .= $internal_shortcodes->replace( $apl_design->content, $wp_query_class->post );
+				$output                    .= $internal_shortcodes->replace( $apl_design->content, $wp_query_class->post );
 				$count++;
 			}
 			// [final_end] internal shortcode.
@@ -841,7 +841,7 @@ class APL_Core {
 			$internal_shortcodes->remove();
 		} else {
 			// EMPTY.
-			$apl_options = $this->apl_options_load();
+			$apl_options = apl_options_load();
 
 			if ( ! empty( $apl_design->empty ) ) {
 				$output .= $apl_design->empty;

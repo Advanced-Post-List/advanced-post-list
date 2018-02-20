@@ -23,18 +23,18 @@
  * @since 0.1.0
  * @access private
  *
- * @return object Core option settings
+ * @return array Core option settings
  */
 function apl_options_default() {
 	// New name ( default_options ).
 	// Step 1.
 	$options = array();
 	// Step 2.
-	$options['version']               = APL_VERSION;
-	$options['ignore_post_types']     = array();
-	$options['delete_core_db']        = false;
-	$options['default_empty_enable']  = false;
-	$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
+	$options['version']              = APL_VERSION;
+	$options['ignore_post_types']    = array();
+	$options['delete_core_db']       = false;
+	$options['default_empty_enable'] = false;
+	$options['default_empty_output'] = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
 
 	// Step 3.
 	return $options;
@@ -77,10 +77,11 @@ function apl_options_load() {
  * @see Function/method/class relied on
  * @link URL
  *
- * @param object $options Core option settings.
+ * @param array $options Core option settings.
  */
 function apl_options_save( $options ) {
 	$default_options = apl_options_default();
+
 	$options = wp_parse_args( $options, $default_options );
 
 	if ( isset( $options ) ) {
@@ -104,6 +105,7 @@ function apl_get_display_post_types() {
 	$rtn_post_types = array();
 
 	$options = apl_options_load();
+
 	$ignore_post_types = apl_default_ignore_post_types();
 	$ignore_post_types = apply_filters( 'apl_display_post_types_ignore', $ignore_post_types );
 	$ignore_post_types = wp_parse_args( $ignore_post_types, $options['ignore_post_types'] );
@@ -148,7 +150,7 @@ if ( ! function_exists( 'apl_get_post_lists' ) ) {
 	 * @return array
 	 */
 	function apl_get_post_lists( $args = array(), $field = 'id' ) {
-		$default_args = array(
+		$default_args     = array(
 			'post_type'   => 'apl_post_list',
 			'post_status' => array(
 				'draft',
@@ -159,7 +161,7 @@ if ( ! function_exists( 'apl_get_post_lists' ) ) {
 				'trash',
 			),
 		);
-		$args = wp_parse_args( $args, $default_args );
+		$args             = wp_parse_args( $args, $default_args );
 		$query_post_lists = new WP_Query( $args );
 
 		$rtn_post_lists = array();
@@ -202,7 +204,7 @@ if ( ! function_exists( 'apl_get_designs' ) ) {
 	 * @return array
 	 */
 	function apl_get_designs( $args = array(), $field = 'id' ) {
-		$default_args = array(
+		$default_args  = array(
 			'post_type'   => 'apl_design',
 			'post_status' => array(
 				'draft',
@@ -213,7 +215,7 @@ if ( ! function_exists( 'apl_get_designs' ) ) {
 				'trash',
 			),
 		);
-		$args = wp_parse_args( $args, $default_args );
+		$args          = wp_parse_args( $args, $default_args );
 		$query_designs = new WP_Query( $args );
 
 		$rtn_designs = array();

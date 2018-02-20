@@ -283,17 +283,12 @@ class APL_Post_List {
 	 *
 	 * @since 0.4.0
 	 *
-	 * @see Function/method/class relied on
-	 * @link URL
-	 * @global type $varname Description.
-	 * @global type $varname Description.
-	 *
 	 * @param string $post_list_name Post List slug.
 	 */
 	public function __construct( $post_list_name ) {
 		//$this->title = $post_list_name;
-		$this->slug  = (string) sanitize_title_with_dashes( $post_list_name );
-		$args = array(
+		$this->slug = (string) sanitize_title_with_dashes( $post_list_name );
+		$args       = array(
 			'name' => $this->slug,
 		);
 		$this->get_data( $args );
@@ -327,9 +322,9 @@ class APL_Post_List {
 	 */
 	private function get_data( $args = array() ) {
 		$defaults = array(
-			'post_type'       => 'apl_post_list',
-			//'post__in'        => array(), // Need this?
-			'post_status'     => array(
+			'post_type'      => 'apl_post_list',
+			//'post__in'       => array(), // Need this?
+			'post_status'    => array(
 				'draft',
 				'pending',
 				'publish',
@@ -337,7 +332,7 @@ class APL_Post_List {
 				'private',
 				'trash',
 			),
-			'posts_per_page'  => 1,
+			'posts_per_page' => 1,
 			//'suppress_filters' => true,
 		);
 		$args = wp_parse_args( $args, $defaults );
@@ -351,39 +346,37 @@ class APL_Post_List {
 		$post_list = $pl_query->post;
 
 		if ( $post_list->post_name === $args['name'] && ! empty( $args['name'] ) ) {
-			$this->id      = absint( $post_list->ID );
-			$this->title   = esc_html( $post_list->post_title );
-			$this->slug    = sanitize_title_with_dashes( $post_list->post_name );
+			$this->id    = absint( $post_list->ID );
+			$this->title = esc_html( $post_list->post_title );
+			$this->slug  = sanitize_title_with_dashes( $post_list->post_name );
 
-			$this->post_type            = get_post_meta( $this->id, 'apl_post_type', true )            ?: array( 'any' );
-			$this->tax_query            = get_post_meta( $this->id, 'apl_tax_query', true )            ?: array();
-			$this->post_parent__in      = get_post_meta( $this->id, 'apl_post_parent__in', true )      ?: array();
-			$this->post_parent_dynamic  = get_post_meta( $this->id, 'apl_post_parent_dynamic', true )  ?: array();
+			$this->post_type           = get_post_meta( $this->id, 'apl_post_type', true )           ?: array( 'any' );
+			$this->tax_query           = get_post_meta( $this->id, 'apl_tax_query', true )           ?: array();
+			$this->post_parent__in     = get_post_meta( $this->id, 'apl_post_parent__in', true )     ?: array();
+			$this->post_parent_dynamic = get_post_meta( $this->id, 'apl_post_parent_dynamic', true ) ?: array();
+			$this->posts_per_page      = get_post_meta( $this->id, 'apl_posts_per_page', true )      ?: 5;
+			$this->offset              = get_post_meta( $this->id, 'apl_offset', true )              ?: 0;
+			$this->order_by            = get_post_meta( $this->id, 'apl_order_by', true )            ?: 'none';
+			$this->order               = get_post_meta( $this->id, 'apl_order', true )               ?: 'DESC';
+			$this->author__bool        = get_post_meta( $this->id, 'apl_author__bool', true )        ?: 'none';
+			$this->author__in          = get_post_meta( $this->id, 'apl_author__in', true )          ?: array();
+			$this->post_status         = get_post_meta( $this->id, 'apl_post_status', true )         ?: 'none';
+			$this->perm                = get_post_meta( $this->id, 'apl_perm', true )                ?: 'none';
+			$this->post__not_in        = get_post_meta( $this->id, 'apl_post__not_in', true )        ?: array();
 
-			$this->posts_per_page       = get_post_meta( $this->id, 'apl_posts_per_page', true )       ?: 5;
-			$this->offset               = get_post_meta( $this->id, 'apl_offset', true )               ?: 0;
-			$this->order_by             = get_post_meta( $this->id, 'apl_order_by', true )             ?: 'none';
-			$this->order                = get_post_meta( $this->id, 'apl_order', true )                ?: 'DESC';
-			$this->author__bool         = get_post_meta( $this->id, 'apl_author__bool', true )         ?: 'none';
-			$this->author__in           = get_post_meta( $this->id, 'apl_author__in', true )           ?: array();
-			$this->post_status          = get_post_meta( $this->id, 'apl_post_status', true )          ?: 'none';
-			$this->perm                 = get_post_meta( $this->id, 'apl_perm', true )                 ?: 'none';
-			$this->post__not_in         = get_post_meta( $this->id, 'apl_post__not_in', true )         ?: array();
+			$tmp_ignore_sticky_posts   = get_post_meta( $this->id, 'apl_ignore_sticky_posts', true );
+			$this->ignore_sticky_posts = ( false !== $tmp_ignore_sticky_posts )  ? (bool) $tmp_ignore_sticky_posts : true;
 
-			$tmp_ignore_sticky_posts  = get_post_meta( $this->id, 'apl_ignore_sticky_posts', true );
-			$this->ignore_sticky_posts  = ( false !== $tmp_ignore_sticky_posts )  ? (bool) $tmp_ignore_sticky_posts : true;
+			$tmp_pl_exclude_current    = get_post_meta( $this->id, 'apl_pl_exclude_current', true );
+			$this->pl_exclude_current  = ( false !== $tmp_pl_exclude_current )   ? (bool) $tmp_pl_exclude_current  : true;
 
-			$tmp_pl_exclude_current   = get_post_meta( $this->id, 'apl_pl_exclude_current', true );
-			$this->pl_exclude_current   = ( false !== $tmp_pl_exclude_current )   ? (bool) $tmp_pl_exclude_current  : true;
+			$tmp_pl_exclude_dupes      = get_post_meta( $this->id, 'apl_pl_exclude_dupes', true );
+			$this->pl_exclude_dupes    = ( false !== $tmp_pl_exclude_dupes )     ? (bool) $tmp_pl_exclude_dupes    : false;
 
-			$tmp_pl_exclude_dupes     = get_post_meta( $this->id, 'apl_pl_exclude_dupes', true );
-			$this->pl_exclude_dupes     = ( false !== $tmp_pl_exclude_dupes )     ? (bool) $tmp_pl_exclude_dupes    : false;
-
-			//$apl_design_slug            = apply_filters( 'apl_post_list_get_data_apl_design_slug', $this->slug );
-			$this->pl_apl_design        = get_post_meta( $this->id, 'apl_pl_apl_design', true )      ?: '';
-			$this->pl_apl_design_id     = get_post_meta( $this->id, 'apl_pl_apl_design_id', true )   ?: 0;
-			$this->pl_apl_design_id     = intval( $this->pl_apl_design_id );
-			$this->pl_apl_design_slug   = get_post_meta( $this->id, 'apl_pl_apl_design_slug', true ) ?: '';
+			$this->pl_apl_design       = get_post_meta( $this->id, 'apl_pl_apl_design', true )      ?: '';
+			$this->pl_apl_design_id    = get_post_meta( $this->id, 'apl_pl_apl_design_id', true )   ?: 0;
+			$this->pl_apl_design_id    = intval( $this->pl_apl_design_id );
+			$this->pl_apl_design_slug  = get_post_meta( $this->id, 'apl_pl_apl_design_slug', true ) ?: '';
 
 			return true;
 		} else {
@@ -407,6 +400,7 @@ class APL_Post_List {
 			'post__in'  => array( $this->id ),
 			'post_type' => 'apl_post_list',
 		);
+
 		$post_lists = new WP_Query( $get_args );
 
 		$save_postarr = array(
@@ -446,7 +440,7 @@ class APL_Post_List {
 	 */
 	private function insert_post_list_post( $args = array() ) {
 		$defaults = $this->default_postarr();
-		$args = wp_parse_args( $args, $defaults );
+		$args     = wp_parse_args( $args, $defaults );
 
 		global $wp_rewrite;
 		if ( is_null( $wp_rewrite ) ) {
@@ -474,11 +468,11 @@ class APL_Post_List {
 	 * @since 0.4.0
 	 * @access private
 	 *
-	 * @param type $args Post arg array for creating Post objects.
+	 * @param array $args Post arg array for creating Post objects.
 	 */
 	private function update_post_list_post( $args = array() ) {
 		$defaults = $this->default_postarr();
-		$args = wp_parse_args( $args, $defaults );
+		$args     = wp_parse_args( $args, $defaults );
 
 		global $wp_rewrite;
 		if ( is_null( $wp_rewrite ) ) {
@@ -514,27 +508,10 @@ class APL_Post_List {
 	 */
 	private function default_postarr() {
 		return array(
-			//'ID'               => 0,
-			//'post_author'      => $user_id,
-			//'post_date'        => '', Default: is current time.
-			//'post_date_gmt'    => '', Default: is $post_date.
-			//'post_content'     => '',
-			//'post_content_filtered' => '',
-			'post_title'       => '',
-			'post_name'        => '',
-			//'post_excerpt'     => '',
-			'post_status'      => 'draft',
-			'post_type'        => 'apl_post_list',
-			//'comment_status'   => '',
-			//'ping_status'      => '',
-			//'post_password'    => '',
-			//'to_ping' =>  '',
-			//'pinged' => '',
-			//'post_parent'      => 0,
-			//'menu_order'       => 0,
-			//'guid' => '',
-			//'import_id'        => 0,
-			//'context'          => '',
+			'post_title'  => '',
+			'post_name'   => '',
+			'post_status' => 'draft',
+			'post_type'   => 'apl_post_list',
 		);
 	}
 
@@ -559,37 +536,32 @@ class APL_Post_List {
 	 * @param boolean $update    Whether this is an existing post being updated or not.
 	 */
 	public function hook_action_save_post_apl_post_list( $post_id, $post_obj, $update ) {
-		$this->id     = $post_id;
-		$this->title  = $post_obj->post_title;
-		$this->slug   = $post_obj->post_name;
+		$this->id    = $post_id;
+		$this->title = $post_obj->post_title;
+		$this->slug  = $post_obj->post_name;
 
-		$old_post_type            = get_post_meta( $this->id, 'apl_post_type', true );
-		$old_tax_query            = get_post_meta( $this->id, 'apl_tax_query', true );
-		$old_post_parent__in      = get_post_meta( $this->id, 'apl_post_parent__in', true );
-		$old_post_parent_dynamic  = get_post_meta( $this->id, 'apl_post_parent_dynamic', true );
-
-		$old_posts_per_page       = get_post_meta( $this->id, 'apl_posts_per_page', true );
-		$old_offset               = get_post_meta( $this->id, 'apl_offset', true );
-		$old_order_by             = get_post_meta( $this->id, 'apl_order_by', true );
-		$old_order                = get_post_meta( $this->id, 'apl_order', true );
-		$old_author__bool         = get_post_meta( $this->id, 'apl_author__bool', true );
-		$old_author__in           = get_post_meta( $this->id, 'apl_author__in', true );
-		$old_post_status          = get_post_meta( $this->id, 'apl_post_status', true );
-		$old_perm                 = get_post_meta( $this->id, 'apl_perm', true );
-		$old_post__not_in         = get_post_meta( $this->id, 'apl_post__not_in', true );
-
-		$old_ignore_sticky_posts  = get_post_meta( $this->id, 'apl_ignore_sticky_posts', true );
-		$old_ignore_sticky_posts  = ( false !== $old_ignore_sticky_posts )  ? (bool) $old_ignore_sticky_posts : null;
-
-		$old_pl_exclude_current   = get_post_meta( $this->id, 'apl_pl_exclude_current', true );
-		$old_pl_exclude_current   = ( false !== $old_pl_exclude_current )   ? (bool) $old_pl_exclude_current  : null;
-
-		$old_pl_exclude_dupes     = get_post_meta( $this->id, 'apl_pl_exclude_dupes', true );
-		$old_pl_exclude_dupes     = ( false !== $old_pl_exclude_dupes )     ? (bool) $old_pl_exclude_dupes    : null;
-
-		$old_pl_apl_design        = get_post_meta( $this->id, 'apl_pl_apl_design', true );
-		$old_pl_apl_design_id     = intval( get_post_meta( $this->id, 'apl_pl_apl_design_id', true ) );
-		$old_pl_apl_design_slug   = get_post_meta( $this->id, 'apl_pl_apl_design_slug', true );
+		$old_post_type           = get_post_meta( $this->id, 'apl_post_type', true );
+		$old_tax_query           = get_post_meta( $this->id, 'apl_tax_query', true );
+		$old_post_parent__in     = get_post_meta( $this->id, 'apl_post_parent__in', true );
+		$old_post_parent_dynamic = get_post_meta( $this->id, 'apl_post_parent_dynamic', true );
+		$old_posts_per_page      = get_post_meta( $this->id, 'apl_posts_per_page', true );
+		$old_offset              = get_post_meta( $this->id, 'apl_offset', true );
+		$old_order_by            = get_post_meta( $this->id, 'apl_order_by', true );
+		$old_order               = get_post_meta( $this->id, 'apl_order', true );
+		$old_author__bool        = get_post_meta( $this->id, 'apl_author__bool', true );
+		$old_author__in          = get_post_meta( $this->id, 'apl_author__in', true );
+		$old_post_status         = get_post_meta( $this->id, 'apl_post_status', true );
+		$old_perm                = get_post_meta( $this->id, 'apl_perm', true );
+		$old_post__not_in        = get_post_meta( $this->id, 'apl_post__not_in', true );
+		$old_ignore_sticky_posts = get_post_meta( $this->id, 'apl_ignore_sticky_posts', true );
+		$old_ignore_sticky_posts = ( false !== $old_ignore_sticky_posts )  ? (bool) $old_ignore_sticky_posts : null;
+		$old_pl_exclude_current  = get_post_meta( $this->id, 'apl_pl_exclude_current', true );
+		$old_pl_exclude_current  = ( false !== $old_pl_exclude_current )   ? (bool) $old_pl_exclude_current  : null;
+		$old_pl_exclude_dupes    = get_post_meta( $this->id, 'apl_pl_exclude_dupes', true );
+		$old_pl_exclude_dupes    = ( false !== $old_pl_exclude_dupes )     ? (bool) $old_pl_exclude_dupes    : null;
+		$old_pl_apl_design       = get_post_meta( $this->id, 'apl_pl_apl_design', true );
+		$old_pl_apl_design_id    = intval( get_post_meta( $this->id, 'apl_pl_apl_design_id', true ) );
+		$old_pl_apl_design_slug  = get_post_meta( $this->id, 'apl_pl_apl_design_slug', true );
 
 		// Compare and update if modified.
 		if ( $this->post_type !== $old_post_type ) {
@@ -642,7 +614,7 @@ class APL_Post_List {
 		}
 
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-			$default_lang = apply_filters('wpml_default_language', NULL );
+			$default_lang       = apply_filters( 'wpml_default_language', null );
 			$apl_design_post_id = apply_filters( 'wpml_object_id', $this->pl_apl_design_id, 'apl_design', false, $default_lang );
 			if ( ! empty( $apl_design_post_id ) ) {
 				$this->pl_apl_design_id = intval( $apl_design_post_id );

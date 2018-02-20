@@ -237,5 +237,3 @@ class APLPresetObj
         $this->_after = (string) '';
     }
 }
-
-?>

@@ -142,7 +142,7 @@
 .apl-slider-posts_per_page-wrap {
 	float: left;
 	width: 64%;
-	margin: 6px 0% 6px 6%;
+	margin: 6px 0 6px 6%;
 }
 
 .apl-slider-handle-posts_per_page {
@@ -161,7 +161,7 @@
 .apl-slider-offset-wrap {
 	float: left;
 	width: 64%;
-	margin: 6px 0% 6px 6%;
+	margin: 6px 0 6px 6%;
 }
 
 .apl-slider-handle-offset {

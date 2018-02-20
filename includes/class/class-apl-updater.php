@@ -73,16 +73,16 @@ class APL_Updater {
 	 * @since 0.3.0
 	 * @since 0.4.0 - Changed diverse upgrade params to upgrade_items array.
 	 *
-	 * @param string  $old_version    Version number the plugin is currently operating at.
-	 * $param array   $upgrade_items  Items needed to be upgraded from the old_version.
-	 * @param string  $return_type    (Optional) Type of values to return. Default: 'APL' ('APL' || 'OBJECT')
-	 *                                'APL'    - Returns the APL Classes/Method objects.
-	 *                                'OBJECT' - Returns a Standard Class object. 
-	 *                                           NOTE: Used for importing, since objects would
-	 *                                           lose the pointers in that given instance.
+	 * @param string $old_version  Version number the plugin is currently operating at.
+	 * @param array  $update_items Items needed to be upgraded from the old_version.
+	 * @param string $return_type  (Optional) Type of values to return. Default: 'APL' ('APL' || 'OBJECT')
+	 *                             'APL'    - Returns the APL Classes/Method objects.
+	 *                             'OBJECT' - Returns a Standard Class object.
+	 *                                        NOTE: Used for importing, since objects would
+	 *                                        lose the pointers in that given instance.
 	 */
 	public function __construct( $old_version, $update_items, $return_type = 'OBJECT' ) {
-		if ( empty( $old_version ) || empty ( $update_items ) ) {
+		if ( empty( $old_version ) || empty( $update_items ) ) {
 			return new WP_Error( 'apl_updater', __( 'APL Updater Class Error: empty version and/or empty APL Options & APL Preset Db is being passed to the Updater Class.', 'advanced-post-list' ) );
 		}
 
@@ -118,34 +118,34 @@ class APL_Updater {
 			if ( version_compare( '0.3.a1', $old_version, '>' ) ) {
 				$this->APL_upgrade_to_03a1();
 			}
-			// VERSION 0.3.b5
+			// VERSION 0.3.b5.
 			if ( version_compare( '0.3.b5', $old_version, '>' ) ) {
 				$this->APL_upgrade_to_03b5();
 			}
-			// VERSION 0.4.0
+			// VERSION 0.4.0.
 			if ( version_compare( '0.4.0', $old_version, '>' ) ) {
 				if ( ! empty( $this->options ) ) {
-					$new_options = $this->upgrade_options_03b5_to_040( $this->options );
+					$new_options   = $this->upgrade_options_03b5_to_040( $this->options );
 					$this->options = $new_options;
 				}
 				if ( ! empty( $this->preset_db ) ) {
-					$new_preset_arr = $this->upgrade_preset_db_03b5_to_040( $this->preset_db );
-					$this->apl_post_list_arr  = $new_preset_arr['apl_post_list'];
-					$this->apl_design_arr     = $new_preset_arr['apl_design'];
+					$new_preset_arr          = $this->upgrade_preset_db_03b5_to_040( $this->preset_db );
+					$this->apl_post_list_arr = $new_preset_arr['apl_post_list'];
+					$this->apl_design_arr    = $new_preset_arr['apl_design'];
 
 					// Don't delete incase there is a revert.
-					//delete_option( 'APL_preset_db-default' );
+					// //delete_option( 'APL_preset_db-default' );
 				}
 			}
 			if ( version_compare( '0.4.4', $old_version, '>' ) ) {
 				if ( ! empty( $this->apl_post_list_arr ) ) {
-					$new_post_list_arr = $this->upgrade_apl_post_list_db_040_to_044( $this->apl_post_list_arr );
+					$new_post_list_arr       = $this->upgrade_apl_post_list_db_040_to_044( $this->apl_post_list_arr );
 					$this->apl_post_list_arr = $new_post_list_arr;
 				}
 			}
 
 			$this->options['version'] = APL_VERSION;
-			$this->update_occurred = true;
+			$this->update_occurred    = true;
 		}
 
 		// This is likely to never happen, but just in case...fundamental example.
@@ -184,12 +184,12 @@ class APL_Updater {
 		// During Importing, class instances are lost when a static method or
 		// seperate instance is used.
 		switch ( $return_type ) {
-			case 'APL' :
-				$this->apl_post_list_arr  = $this->return_type_apl_post_lists( $this->apl_post_list_arr );
-				$this->apl_design_arr     = $this->return_type_apl_designs( $this->apl_design_arr );
+			case 'APL':
+				$this->apl_post_list_arr = $this->return_type_apl_post_lists( $this->apl_post_list_arr );
+				$this->apl_design_arr    = $this->return_type_apl_designs( $this->apl_design_arr );
 				break;
-			case 'OBJECT' :
-			default :
+			case 'OBJECT':
+			default:
 				// Do nothing since everything is already a StdObject.
 				break;
 		}
@@ -623,7 +623,7 @@ class APL_Updater {
 	 * @access private
 	 *
 	 * @param object $old_preset_db Old Preset Database.
-	 * @return object New Preset structure.
+	 * @return array New Preset structure.
 	 */
 	private function upgrade_preset_db_03b5_to_040( $old_preset_db ) {
 		$rtn_new_preset_arr = array(
@@ -1204,8 +1204,6 @@ class APL_Updater {
 				$tmp_author__in[] = intval( $v1_author_ID );
 			}
 			$new_post_list->author__in       = $tmp_author__in;
-		} else {
-			$new_post_list->author__in       = $new_post_list->author__in;
 		}
 		$new_post_list->ignore_sticky_posts  = isset( $apl_post_list->ignore_sticky_posts )  ? $apl_post_list->ignore_sticky_posts  : $new_post_list->ignore_sticky_posts;
 		$new_post_list->post__not_in         = isset( $apl_post_list->post__not_in )         ? $apl_post_list->post__not_in         : $new_post_list->post__not_in;
@@ -1292,7 +1290,7 @@ class APL_Updater {
 	 * @access private
 	 *
 	 * @param array $apl_post_list_arr Post List array for $this->apl_post_list_arr.
-	 * @return APL_Post_List Custom APL Post List object.
+	 * @return array Custom APL Post List object.
 	 */
 	private function return_type_apl_post_lists( $apl_post_list_arr ) {
 		$rtn_apl_post_list_arr = array();
@@ -1335,7 +1333,7 @@ class APL_Updater {
 	 * @access private
 	 *
 	 * @param array $apl_design_arr Design array for $this->apl_design_arr.
-	 * @return APL_Design Custom APL Design object.
+	 * @return array Custom APL Design object.
 	 */
 	private function return_type_apl_designs( $apl_design_arr ) {
 		$rtn_apl_design_arr = array();

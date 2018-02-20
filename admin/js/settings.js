@@ -64,8 +64,7 @@
 
 			data: formData,
 			dataFilter: function( data, type ){
-				var dataRtn = JSON.parse( data );
-				return dataRtn;
+				return JSON.parse( data );
 			},
 			success: function( data, textStatus, jqXHR ){
 				var paramStr = '';
@@ -208,7 +207,7 @@
 								paramStr += '&design_overwrite='     + design_overwrite;
 
 								var elemIF = document.createElement("iframe");
-								elemIF.id = 'apl_exportIF'
+								elemIF.id = 'apl_exportIF';
 								elemIF.style.display = "none";
 								elemIF.src = ajaxurl + paramStr;
 

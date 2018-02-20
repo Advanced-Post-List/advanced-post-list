@@ -52,7 +52,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 }
 
 ?>
-<?php include( APL_DIR . '/admin/admin-dialog-internal-shortcodes.php' ); ?>
+<?php include APL_DIR . '/admin/admin-dialog-internal-shortcodes.php'; ?>
 <div class="apl-design-box-1">
 	<div class="apl-design-column">
 		<div class="apl-design-row">
@@ -93,7 +93,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['empty_message']; ?>"></span>
 			</div>
 			<div>
-				<div style="margin: 3px 0px 3px 6px;">
+				<div style="margin: 3px 0 3px 6px;">
 					<input type="checkbox" id="apl_empty_message_enable" class="apl-empty-message-enable" name="apl_empty_enable" <?php echo ! empty( $apl_design->empty ) ? 'checked="checked"' : ''; ?> />
 					<label for="apl_empty_message_enable"><?php esc_html_e( 'Enable (Overwrites Default)', 'advanced-post-list' ) ?></label>
 				</div>
