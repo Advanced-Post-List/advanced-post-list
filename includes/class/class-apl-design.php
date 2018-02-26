@@ -141,7 +141,11 @@ class APL_Design {
 	 *
 	 * @ignore
 	 * @since 0.4.0
+	 * @since 0.4.4 - Added compatability with WPML.
 	 * @access private
+	 *
+	 * @uses `wpml_object_id`
+	 * @link https://wpml.org/wpml-hook/wpml_object_id/
 	 *
 	 * @param array $args Query args for get_posts ( Same as WP_Query ).
 	 * @return boolean Will return false on failure.
@@ -149,9 +153,10 @@ class APL_Design {
 	private function get_data( $args = array() ) {
 		$defaults = array(
 			'post_type'       => 'apl_design',
-			//'name'            => '',
+			'name'            => '',
 			'p' => 0,
 			'post_status'     => array(
+				'auto-draft',
 				'draft',
 				'pending',
 				'publish',
@@ -163,6 +168,13 @@ class APL_Design {
 			//'suppress_filters' => true,
 		);
 		$args = wp_parse_args( $args, $defaults );
+
+		if ( defined( 'ICL_SITEPRESS_VERSION' && ! empty( $args['p'] ) ) ) {
+			$apl_design_post_id = apply_filters( 'wpml_object_id', $args['p'], 'apl_design', true );
+			if ( ! empty( $apl_design_post_id ) ) {
+				$args['p'] = $apl_design_post_id;
+			}
+		}
 
 		// If there is a design, set this variable to the meta data it has.
 		// Else no designs stored, return false.

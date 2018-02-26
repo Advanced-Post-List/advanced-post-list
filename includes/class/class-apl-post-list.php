@@ -544,10 +544,15 @@ class APL_Post_List {
 	 * Description.
 	 *
 	 * @since 0.4.0
+	 * @since 0.4.4 - Added compatibility with WPML, and stricter object referencing.
 	 *
 	 * @see Function/method/class relied on
 	 * @link https://codex.wordpress.org/Plugin_API/Action_Reference/wp_insert_post
 	 * @global global $_POST Description.
+	 * @uses `wpml_object_id`
+	 * @link https://wpml.org/wpml-hook/wpml_object_id/
+	 * @uses `wpml_default_language`
+	 * @link https://wpml.org/wpml-hook/wpml_default_language/
 	 *
 	 * @param int     $post_id   Post ID.
 	 * @param WP_Post $post_obj  Post object.
@@ -634,6 +639,14 @@ class APL_Post_List {
 		}
 		if ( $this->pl_exclude_dupes !== $old_pl_exclude_dupes ) {
 			update_post_meta( $this->id, 'apl_pl_exclude_dupes', $this->pl_exclude_dupes );
+		}
+
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			$default_lang = apply_filters('wpml_default_language', NULL );
+			$apl_design_post_id = apply_filters( 'wpml_object_id', $this->pl_apl_design_id, 'apl_design', false, $default_lang );
+			if ( ! empty( $apl_design_post_id ) ) {
+				$this->pl_apl_design_id = intval( $apl_design_post_id );
+			}
 		}
 
 		// APL Design.

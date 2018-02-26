@@ -4,11 +4,13 @@
  *
  * Design Meta Box for making new Post Lists.
  *
- * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ * @uses `wpml_object_id`
+ * @link https://wpml.org/wpml-hook/wpml_object_id/
  *
  * @package advanced-post-list
  * @package advanced-post-list\APL_Admin
  * @since 0.4.0
+ * @since 0.4.4 Added stricter APL_Design object referencing, and WPML compatibility.
  */
 
 /*
@@ -38,8 +40,14 @@ $apl_help_text = array(
 if ( 'apl_post_list' === $post->post_type ) {
 	$apl_post_list = new APL_Post_List( $post->post_name );
 	$apl_design_post_id = $apl_post_list->pl_apl_design_id;
+	if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+		$apl_design_post_id = apply_filters( 'wpml_object_id', $apl_post_list->pl_apl_design_id, 'apl_design', true );
+	}
 	$apl_design = new APL_Design( $apl_design_post_id );
 } else if ( defined( 'ICL_SITEPRESS_VERSION' )  && 'apl_design' === $post->post_type ) {
+	$wpml_post_id = apply_filters( 'wpml_object_id', $post->ID,'apl_design', true );
+
+	$design_post_id = intval( $post->ID );
 	$apl_design = new APL_Design( $design_post_id );
 }
 

@@ -748,12 +748,15 @@ class APL_Core {
 	 *                 implemented WP's loop.
 	 * @since 0.4.0  - Changed 'Preset' database objects to APL_Post_List
 	 *                 and APL_Design database objects.
+	 * @since 0.4.4  - Added compatability with WPML.
 	 * @access private
 	 *
 	 * @see APL_Post_List class
 	 * @see APL_Design class
 	 * @see APL_Query class
 	 * @see APL_Internal_Shortcodes class
+	 * @uses `wpml_object_id`
+	 * @link https://wpml.org/wpml-hook/wpml_object_id/
 	 *
 	 * @param string $preset_name Preset slug/name.
 	 * @return string HTML string.
@@ -768,6 +771,9 @@ class APL_Core {
 
 			// Get APL Design.
 			$design_id = $apl_post_list->pl_apl_design_id;
+			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+				$design_id = apply_filters( 'wpml_object_id', $apl_post_list->pl_apl_design_id,'apl_design', true );
+			}
 			$apl_design = new APL_Design( $design_id );
 		} elseif ( current_user_can( 'manage_options' ) ) {
 			// Admin Message.
