@@ -246,3 +246,24 @@ input.apl-text-exclude-posts {
 	float: left;
 	width: 79.7%;
 }
+
+/*
+ * INTERNAL SHORTCODE DIALOG
+ */
+.apl_internal_shortcodes dl > dt {
+	margin-bottom: 3px;
+}
+
+.apl_internal_shortcodes dl ul {
+	margin: 0;
+}
+
+.apl_internal_shortcodes dl ul > li {
+	list-style-type: disc;
+	margin-left: 18px;
+}
+
+.apl_internal_shortcodes dl ul > li ul > li {
+	list-style-type: circle;
+	margin-left: 36px;
+}
