@@ -29,6 +29,15 @@ class APL_Design {
 	public $id = 0;
 
 	/**
+	 * Slug
+	 *
+	 * @since 0.4.0
+	 * @access public
+	 * @var string
+	 */
+	public $slug = '';
+
+	/**
 	 * Title
 	 *
 	 * @since 0.4.0
@@ -37,14 +46,7 @@ class APL_Design {
 	 */
 	public $title = '';
 
-	/**
-	 * Slug
-	 *
-	 * @since 0.4.0
-	 * @access public
-	 * @var string
-	 */
-	public $slug = '';
+
 
 	/**
 	 * Before List
@@ -96,17 +98,30 @@ class APL_Design {
 	 * Creates or loads an APL Design Object.
 	 *
 	 * @since 0.4.0
+	 * @since 0.4.4 Added stricter object referencing.
 	 *
-	 * @param string $design_name Saved as title, but is converted to a slug.
+	 * @param int|string $design Saved as title, but is converted to a slug.
 	 */
-	public function __construct( $design_name ) {
+	public function __construct( $design ) {
 		// Add Hooks.
-		$this->slug = sanitize_title_with_dashes( $design_name );
-		$this->title = (string) $design_name;
+		$args = array();
+		if ( is_int( $design ) ) {
+			$this->id = intval( $design );
 
-		$args = array(
-			'name' => $this->slug,
-		);
+			$args = array(
+				'p' => $this->id,
+			);
+		} elseif ( is_numeric( $design ) ) {
+			$this->id = intval( $design );
+		} elseif ( is_string( $design ) ) {
+			$this->slug  = sanitize_title_with_dashes( $design );
+			$this->title = (string) $design;
+
+			$args = array(
+				'name' => $this->slug,
+			);
+		}
+
 		$this->get_data( $args );
 
 		if ( is_admin() ) {
@@ -160,7 +175,8 @@ class APL_Design {
 		}
 		$design = $d_query->post;
 
-		if ( $design->post_name === $args['name'] && ! empty( $args['name'] ) ) {
+		if ( $design->post_name === $args['name'] && ! empty( $args['name'] ) && isset( $args['name'] ) ||
+			 $design->ID === $args['p'] && ! empty( $args['p'] ) && isset( $args['p'] ) )  {
 			$this->id      = absint( $design->ID );
 			$this->title   = esc_html( $design->post_title );
 			$this->slug    = $design->post_name;
@@ -186,8 +202,8 @@ class APL_Design {
 		if ( 'apl_design' === $d_query->query['post_type'] || in_array( 'apl_design', $d_query->query['post_type'] ) ) {
 			$d_query->query['post_type'] = 'apl_design';
 			$d_query->query_vars['post_type'] = 'apl_design';
-			$d_query->query['p'] = 0;
-			$d_query->query_vars['p'] = 0;
+			$d_query->query['p'] = $this->id;
+			$d_query->query_vars['p'] = $this->id;
 		}
 
 		return $d_query;

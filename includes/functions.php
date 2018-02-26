@@ -137,3 +137,108 @@ function apl_default_ignore_post_types() {
 	);
 }
 
+if ( ! function_exists( 'apl_get_post_lists' ) ) {
+	/**
+	 * Get Post Lists
+	 *
+	 * @since 0.4.4
+	 *
+	 * @param array  $args  Arguments for WP_Query.
+	 * @param string $field The type of value to return.
+	 * @return array
+	 */
+	function apl_get_post_lists( $args = array(), $field = 'id' ) {
+		$default_args = array(
+			'post_type'   => 'apl_post_list',
+			'post_status' => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
+		);
+		$args = wp_parse_args( $args, $default_args );
+		$query_post_lists = new WP_Query( $args );
+
+		$rtn_post_lists = array();
+		switch ( $field ) {
+			case 'id':
+				foreach ( $query_post_lists->posts as $v1_post ) {
+					$rtn_post_lists[] = $v1_post->ID;
+				}
+				break;
+			case 'slug':
+				foreach ( $query_post_lists->posts as $v1_post ) {
+					$rtn_post_lists[] = $v1_post->post_name;
+				}
+				break;
+			case 'wp_post':
+				$rtn_post_lists = $query_post_lists->posts;
+				break;
+			case 'apl_post_list':
+			default:
+				foreach ( $query_post_lists->posts as $v1_post ) {
+					$rtn_post_lists[] = new APL_Post_List( $v1_post->post_name );
+					// TODO Change to ID.
+					//$rtn_post_lists[] = new APL_Post_List( $v1_post->ID );
+				}
+				break;
+		}
+
+		return $rtn_post_lists;
+	}
+}
+
+if ( ! function_exists( 'apl_get_designs' ) ) {
+	/**
+	 * Get Designs
+	 *
+	 * @since 0.4.4
+	 *
+	 * @param array  $args  Arguments for WP_Query.
+	 * @param string $field The type of value to return.
+	 * @return array
+	 */
+	function apl_get_designs( $args = array(), $field = 'id' ) {
+		$default_args = array(
+			'post_type'   => 'apl_design',
+			'post_status' => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
+		);
+		$args = wp_parse_args( $args, $default_args );
+		$query_designs = new WP_Query( $args );
+
+		$rtn_designs = array();
+		switch ( $field ) {
+			case 'id':
+				foreach ( $query_designs->posts as $v1_post ) {
+					$rtn_designs[] = $v1_post->ID;
+				}
+				break;
+			case 'slug':
+				foreach ( $query_designs->posts as $v1_post ) {
+					$rtn_designs[] = $v1_post->post_name;
+				}
+				break;
+			case 'wp_post':
+				$rtn_designs = $query_designs->posts;
+				break;
+			case 'apl_design':
+			default:
+				foreach ( $query_designs->posts as $v1_post ) {
+					$rtn_designs[] = new APL_Design( $v1_post->ID );
+				}
+				break;
+		}
+
+		return $rtn_designs;
+	}
+}

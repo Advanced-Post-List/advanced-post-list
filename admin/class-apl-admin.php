@@ -1062,6 +1062,7 @@ class APL_Admin {
 	 * Hook for untrash Post Transition with Post Lists.
 	 *
 	 * @since 0.4.0
+	 * @since 0.4.4 Added stricter APL_Design object referencing.
 	 *
 	 * @param int $post_id
 	 * @return boolean
@@ -1084,7 +1085,7 @@ class APL_Admin {
 
 		$apl_post_list = new APL_Post_List( $post_list->post_name );
 
-		$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+		$apl_design = new APL_Design( $apl_post_list->pl_apl_design_id );
 
 		$new_post_list_slug = str_replace( '__trashed', '', $post_list->post_name );
 		$new_design_slug = '';
@@ -1106,6 +1107,7 @@ class APL_Admin {
 	 * Host for delete post transitions with Post Lists.
 	 *
 	 * @since 0.4.0
+	 * @since 0.4.4 Added stricter APL_Design object referencing.
 	 * @see https://codex.wordpress.org/Plugin_API/Action_Reference/before_delete_post
 	 *
 	 * @param int $post_id
@@ -1128,7 +1130,7 @@ class APL_Admin {
 		}
 
 		$apl_post_list = new APL_Post_List( $post_list->post_name );
-		$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+		$apl_design = new APL_Design( $apl_post_list->pl_apl_design_id );
 
 		$apl_design->delete_design();
 	}
@@ -1296,6 +1298,9 @@ class APL_Admin {
 	 * AJAX Settings Page Export
 	 *
 	 * Handles the AJAX call for exporting data.
+	 *
+	 * @since 0.3
+	 * @since 0.4.4 Added stricter APL_Design object referencing.
 	 */
 	public function ajax_settings_export() {
 		check_ajax_referer( 'apl_settings_export' );
@@ -1327,7 +1332,7 @@ class APL_Admin {
 
 		foreach ( $apl_post_lists->posts as $post_obj ) {
 			$apl_post_list  = new APL_Post_List( $post_obj->post_name );
-			$apl_design     = new APL_Design( $apl_post_list->pl_apl_design );
+			$apl_design     = new APL_Design( $apl_post_list->pl_apl_design_id );
 
 			$export_data['apl_post_list_arr'][] = $apl_post_list->slug;
 			$export_data['apl_design_arr'][] = $apl_design->slug;
@@ -1344,6 +1349,7 @@ class APL_Admin {
 	 * AJAX Settings Import
 	 *
 	 * @since 0.4.0
+	 * @since 0.4.4 Handle 0.3 and 0.4 database types separately, and stricter handling APL_Design with APL_Post_List.
 	 *
 	 * @uses add_settings_ajax_hooks().
 	 * @uses wp_ajax_apl_settings_import.
@@ -1369,14 +1375,21 @@ class APL_Admin {
 				return new WP_Error( 'apl_admin', __( 'Version number is not present in imported file.', 'advanced-post-list' ) );
 				die();
 			}
-			if ( isset( $v1_content->presetDbObj ) ) {
-				$update_items['preset_db'] = $v1_content->presetDbObj;
+
+			// 0.3 Database.
+			if ( version_compare( '0.3.0', $version, '<' ) && version_compare( '0.4.0', $version, '>' ) ) {
+				if ( isset( $v1_content->presetDbObj ) ) {
+					$update_items['preset_db'] = $v1_content->presetDbObj;
+				}
 			}
-			if ( isset( $v1_content->apl_post_list_arr ) ) {
-				$update_items['apl_post_list_arr'] = $v1_content->apl_post_list_arr;
-			}
-			if ( isset( $v1_content->apl_design_arr ) ) {
-				$update_items['apl_design_arr'] = $v1_content->apl_design_arr;
+			// 0.4+ Database.
+			elseif( version_compare( '0.4.0', $version, '<' ) ) {
+				if ( isset( $v1_content->apl_post_list_arr ) ) {
+					$update_items['apl_post_list_arr'] = $v1_content->apl_post_list_arr;
+				}
+				if ( isset( $v1_content->apl_design_arr ) ) {
+					$update_items['apl_design_arr'] = $v1_content->apl_design_arr;
+				}
 			}
 
 			$updater = new APL_Updater( $version, $update_items, 'OBJECT' );
@@ -1402,17 +1415,58 @@ class APL_Admin {
 				if ( 0 !== $db_post_list->id ) {
 					$overwrite_apl_post_list[] = $v2_post_list;
 					$data_overwrite_post_list[] = $v2_post_list->slug;
+					// DESIGNS.
+					foreach ( $v1_content['apl_design_arr'] as $k3_design => $v3_design ) {
+						if ( $v3_design->slug === $v2_post_list->pl_apl_design ) {
+							$overwrite_apl_design[]  = $v3_design;
+							$data_overwrite_design[] = $v3_design->slug;
+
+							unset( $v1_content['apl_design_arr'][ $k3_design ] );
+							break;
+						}
+					}
 				} else {
+
+					// DESIGNS.
+					foreach ( $v1_content['apl_design_arr'] as $k3_design => $v3_design ) {
+						if ( $v3_design->slug === $v2_post_list->pl_apl_design ) {
+							// Uses slug instead of ID.
+							$db_design = new APL_Design( $v3_design->slug );
+							if ( 0 !== $db_design->id ) {
+								// Add Variable to Database.
+								//$v2_post_list->pl_apl_design_id   = $v3_design->id;
+								//$v2_post_list->pl_apl_design_slug = $v3_design->slug;
+								//$this->import_process_post_list( $v2_post_list );
+								$overwrite_apl_post_list[]  = $v2_post_list;
+								$data_overwrite_post_list[] = $v2_post_list->slug;
+
+								$overwrite_apl_design[]  = $v3_design;
+								$data_overwrite_design[] = $v3_design->slug;
+							} else {
+								// Add Variable to Database.
+								//$db_design = $this->import_process_design( $v3_design );
+								$db_design = $v3_design;
+								$this->import_process_post_list_design( $v2_post_list, $db_design );
+							}
+
+
+							unset( $v1_content['apl_design_arr'][ $k3_design ] );
+							break;
+						}
+					}
 					// Add Variable to Database.
-					$this->import_process_post_list( $v2_post_list );
+					//$this->import_process_post_list( $v2_post_list, $db_design );
+
 				}
 			}
 
 			// DESIGNS.
+			// Catch any remaining designs that may be left.
 			foreach ( $v1_content['apl_design_arr'] as $v2_design ) {
+				// Uses slug instead of ID.
 				$db_design = new APL_Design( $v2_design->slug );
 				if ( 0 !== $db_design->id ) {
-					$overwrite_apl_design[] = $v2_design;
+					$overwrite_apl_design[]  = $v2_design;
 					$data_overwrite_design[] = $v2_design->slug;
 				} else {
 					// Add Variable to Database.
@@ -1441,30 +1495,71 @@ class APL_Admin {
 	 *
 	 * @ignore
 	 * @since 0.4.0
+	 * @since 0.4.4 Added APL_Design ID, but disabled for future use.
 	 *
 	 * @param APL_Post_List $apl_post_list
 	 */
 	private function import_process_post_list( $apl_post_list ) {
 		$tmp_apl_post_list = new APL_Post_List( $apl_post_list->slug );
 
-		$tmp_apl_post_list->title                = $apl_post_list->title                ?: $tmp_apl_post_list->title;
-		$tmp_apl_post_list->post_type            = $apl_post_list->post_type            ? json_decode( json_encode( $apl_post_list->post_type ), true ) : $tmp_apl_post_list->post_type ;
-		$tmp_apl_post_list->tax_query            = $apl_post_list->tax_query            ? json_decode( json_encode( $apl_post_list->tax_query ), true ) : $tmp_apl_post_list->tax_query;
-		$tmp_apl_post_list->post_parent__in      = $apl_post_list->post_parent__in      ? json_decode( json_encode( $apl_post_list->post_parent__in ), true ) : $tmp_apl_post_list->post_parent__in;
-		$tmp_apl_post_list->post_parent_dynamic  = $apl_post_list->post_parent_dynamic  ? json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true ) : $tmp_apl_post_list->post_parent_dynamic;
-		$tmp_apl_post_list->posts_per_page       = $apl_post_list->posts_per_page       ?: $tmp_apl_post_list->posts_per_page;
-		$tmp_apl_post_list->offset               = $apl_post_list->offset               ?: $tmp_apl_post_list->offset;
-		$tmp_apl_post_list->order_by             = $apl_post_list->order_by             ?: $tmp_apl_post_list->order_by;
-		$tmp_apl_post_list->order                = $apl_post_list->order                ?: $tmp_apl_post_list->order;
-		$tmp_apl_post_list->post_status          = $apl_post_list->post_status          ? json_decode( json_encode( $apl_post_list->post_status ), true ) : $tmp_apl_post_list->post_status;
-		$tmp_apl_post_list->perm                 = $apl_post_list->perm                 ?: $tmp_apl_post_list->perm;
-		$tmp_apl_post_list->author__bool         = $apl_post_list->author__bool         ?: $tmp_apl_post_list->author__bool;
-		$tmp_apl_post_list->author__in           = $apl_post_list->author__in           ?: $tmp_apl_post_list->author__in;
-		$tmp_apl_post_list->ignore_sticky_posts  = $apl_post_list->ignore_sticky_posts  ?: $tmp_apl_post_list->ignore_sticky_posts;
-		$tmp_apl_post_list->post__not_in         = $apl_post_list->post__not_in         ?: $tmp_apl_post_list->post__not_in;
-		$tmp_apl_post_list->pl_exclude_current   = $apl_post_list->pl_exclude_current   ?: $tmp_apl_post_list->pl_exclude_current;
-		$tmp_apl_post_list->pl_exclude_dupes     = $apl_post_list->pl_exclude_dupes     ?: $tmp_apl_post_list->pl_exclude_dupes;
-		$tmp_apl_post_list->pl_apl_design        = $apl_post_list->pl_apl_design        ?: $tmp_apl_post_list->pl_apl_design;
+		$tmp_apl_post_list->title               = $apl_post_list->title               ?: $tmp_apl_post_list->title;
+		$tmp_apl_post_list->post_type           = $apl_post_list->post_type           ? json_decode( json_encode( $apl_post_list->post_type ), true ) : $tmp_apl_post_list->post_type ;
+		$tmp_apl_post_list->tax_query           = $apl_post_list->tax_query           ? json_decode( json_encode( $apl_post_list->tax_query ), true ) : $tmp_apl_post_list->tax_query;
+		$tmp_apl_post_list->post_parent__in     = $apl_post_list->post_parent__in     ? json_decode( json_encode( $apl_post_list->post_parent__in ), true ) : $tmp_apl_post_list->post_parent__in;
+		$tmp_apl_post_list->post_parent_dynamic = $apl_post_list->post_parent_dynamic ? json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true ) : $tmp_apl_post_list->post_parent_dynamic;
+		$tmp_apl_post_list->posts_per_page      = $apl_post_list->posts_per_page      ?: $tmp_apl_post_list->posts_per_page;
+		$tmp_apl_post_list->offset              = $apl_post_list->offset              ?: $tmp_apl_post_list->offset;
+		$tmp_apl_post_list->order_by            = $apl_post_list->order_by            ?: $tmp_apl_post_list->order_by;
+		$tmp_apl_post_list->order               = $apl_post_list->order               ?: $tmp_apl_post_list->order;
+		$tmp_apl_post_list->post_status         = $apl_post_list->post_status         ? json_decode( json_encode( $apl_post_list->post_status ), true ) : $tmp_apl_post_list->post_status;
+		$tmp_apl_post_list->perm                = $apl_post_list->perm                ?: $tmp_apl_post_list->perm;
+		$tmp_apl_post_list->author__bool        = $apl_post_list->author__bool        ?: $tmp_apl_post_list->author__bool;
+		$tmp_apl_post_list->author__in          = $apl_post_list->author__in          ?: $tmp_apl_post_list->author__in;
+		$tmp_apl_post_list->ignore_sticky_posts = $apl_post_list->ignore_sticky_posts ?: $tmp_apl_post_list->ignore_sticky_posts;
+		$tmp_apl_post_list->post__not_in        = $apl_post_list->post__not_in        ?: $tmp_apl_post_list->post__not_in;
+		$tmp_apl_post_list->pl_exclude_current  = $apl_post_list->pl_exclude_current  ?: $tmp_apl_post_list->pl_exclude_current;
+		$tmp_apl_post_list->pl_exclude_dupes    = $apl_post_list->pl_exclude_dupes    ?: $tmp_apl_post_list->pl_exclude_dupes;
+		$tmp_apl_post_list->pl_apl_design       = $apl_post_list->pl_apl_design       ?: $tmp_apl_post_list->pl_apl_design;
+		$tmp_apl_post_list->pl_apl_design_id    = $apl_post_list->pl_apl_design_id    ?: $tmp_apl_post_list->pl_apl_design_id;
+		$tmp_apl_post_list->pl_apl_design_slug  = $apl_post_list->pl_apl_design_slug  ?: $tmp_apl_post_list->pl_apl_design_slug;
+
+		$tmp_apl_post_list->save_post_list();
+	}
+
+	/**
+	 * Process Import for Post List with Design
+	 *
+	 * @ignore
+	 * @since 0.4.0
+	 *
+	 * @param APL_Post_List $apl_post_list
+	 * @param APL_Design    $apl_design
+	 */
+	private function import_process_post_list_design( $apl_post_list, $apl_design ) {
+		$tmp_apl_post_list = new APL_Post_List( $apl_post_list->slug );
+
+		$tmp_apl_post_list->title               = $apl_post_list->title               ?: $tmp_apl_post_list->title;
+		$tmp_apl_post_list->post_type           = $apl_post_list->post_type           ? json_decode( json_encode( $apl_post_list->post_type ), true ) : $tmp_apl_post_list->post_type ;
+		$tmp_apl_post_list->tax_query           = $apl_post_list->tax_query           ? json_decode( json_encode( $apl_post_list->tax_query ), true ) : $tmp_apl_post_list->tax_query;
+		$tmp_apl_post_list->post_parent__in     = $apl_post_list->post_parent__in     ? json_decode( json_encode( $apl_post_list->post_parent__in ), true ) : $tmp_apl_post_list->post_parent__in;
+		$tmp_apl_post_list->post_parent_dynamic = $apl_post_list->post_parent_dynamic ? json_decode( json_encode( $apl_post_list->post_parent_dynamic ), true ) : $tmp_apl_post_list->post_parent_dynamic;
+		$tmp_apl_post_list->posts_per_page      = $apl_post_list->posts_per_page      ?: $tmp_apl_post_list->posts_per_page;
+		$tmp_apl_post_list->offset              = $apl_post_list->offset              ?: $tmp_apl_post_list->offset;
+		$tmp_apl_post_list->order_by            = $apl_post_list->order_by            ?: $tmp_apl_post_list->order_by;
+		$tmp_apl_post_list->order               = $apl_post_list->order               ?: $tmp_apl_post_list->order;
+		$tmp_apl_post_list->post_status         = $apl_post_list->post_status         ? json_decode( json_encode( $apl_post_list->post_status ), true ) : $tmp_apl_post_list->post_status;
+		$tmp_apl_post_list->perm                = $apl_post_list->perm                ?: $tmp_apl_post_list->perm;
+		$tmp_apl_post_list->author__bool        = $apl_post_list->author__bool        ?: $tmp_apl_post_list->author__bool;
+		$tmp_apl_post_list->author__in          = $apl_post_list->author__in          ?: $tmp_apl_post_list->author__in;
+		$tmp_apl_post_list->ignore_sticky_posts = $apl_post_list->ignore_sticky_posts ?: $tmp_apl_post_list->ignore_sticky_posts;
+		$tmp_apl_post_list->post__not_in        = $apl_post_list->post__not_in        ?: $tmp_apl_post_list->post__not_in;
+		$tmp_apl_post_list->pl_exclude_current  = $apl_post_list->pl_exclude_current  ?: $tmp_apl_post_list->pl_exclude_current;
+		$tmp_apl_post_list->pl_exclude_dupes    = $apl_post_list->pl_exclude_dupes    ?: $tmp_apl_post_list->pl_exclude_dupes;
+
+		$apl_design = $this->import_process_design( $apl_design );
+		$tmp_apl_post_list->pl_apl_design      = $apl_post_list->pl_apl_design ?: $tmp_apl_post_list->pl_apl_design;
+		$tmp_apl_post_list->pl_apl_design_id   = $apl_design->id               ?: $tmp_apl_post_list->pl_apl_design_id;
+		$tmp_apl_post_list->pl_apl_design_slug = $apl_design->slug             ?: $tmp_apl_post_list->pl_apl_design_slug;
 
 		$tmp_apl_post_list->save_post_list();
 	}
@@ -1476,17 +1571,20 @@ class APL_Admin {
 	 * @since 0.4.0
 	 *
 	 * @param APL_Design $apl_design
+	 * @return APL_Design
 	 */
 	private function import_process_design( $apl_design ) {
-		$tmp_apl_design = new APL_Design( $apl_design->slug );
+		$new_apl_design = new APL_Design( $apl_design->slug );
 
-		$tmp_apl_design->title    = $apl_design->title    ?: $tmp_apl_design->title;
-		$tmp_apl_design->before   = $apl_design->before   ?: $tmp_apl_design->before;
-		$tmp_apl_design->content  = $apl_design->content  ?: $tmp_apl_design->content;
-		$tmp_apl_design->after    = $apl_design->after    ?: $tmp_apl_design->after;
-		$tmp_apl_design->empty    = $apl_design->empty    ?: $tmp_apl_design->empty;
+		$new_apl_design->title   = $apl_design->title   ?: $new_apl_design->title;
+		$new_apl_design->before  = $apl_design->before  ?: $new_apl_design->before;
+		$new_apl_design->content = $apl_design->content ?: $new_apl_design->content;
+		$new_apl_design->after   = $apl_design->after   ?: $new_apl_design->after;
+		$new_apl_design->empty   = $apl_design->empty   ?: $new_apl_design->empty;
 
-		$tmp_apl_design->save_design();
+		$new_apl_design->save_design();
+
+		return $new_apl_design;
 	}
 
 	/**
@@ -1496,6 +1594,7 @@ class APL_Admin {
 	 *
 	 * @ignore
 	 * @since 0.4.0
+	 * @since 0.4.4 Added stricter APL_Design object referencing.
 	 * @access private
 	 *
 	 * @see $this->save_post_list()
@@ -1688,7 +1787,11 @@ class APL_Admin {
 			$new_design_slug = $post->post_name;
 		}
 
-		$apl_post_list->pl_apl_design = $this->post_list_process_apl_design( $apl_post_list->pl_apl_design, $new_design_slug );
+		$tmp_apl_design = $this->post_list_process_apl_design( $apl_post_list->pl_apl_design, $new_design_slug );
+
+		$apl_post_list->pl_apl_design      = $tmp_apl_design->slug;
+		$apl_post_list->pl_apl_design_id   = $tmp_apl_design->id;
+		$apl_post_list->pl_apl_design_slug = $tmp_apl_design->slug;
 	}
 
 	/**
@@ -1775,11 +1878,12 @@ class APL_Admin {
 	 *
 	 * @ignore
 	 * @since 0.4.0
+	 * @since 0.4.4 Added stricter APL_Design object referencing; Changed to return APL_Design.
 	 * @access private
 	 *
 	 * @param string $apl_design_slug Current active slug.
 	 * @param string $new_design_slug New slug relative to $this->pl_apl_design.
-	 * @return string Slug used in $this->pl_apl_design.
+	 * @return APL_Design Slug used in $this->pl_apl_design.
 	 */
 	private function post_list_process_apl_design( $apl_design_slug, $new_design_slug ) {
 		$apl_design = new APL_Design( $apl_design_slug );
@@ -1822,25 +1926,21 @@ class APL_Admin {
 		// Save APL_Design.
 		$apl_design->save_design();
 
-		// SLUG/KEY.
-		$rtn_apl_design_slug = '';
-		$rtn_apl_design_slug = $apl_design->slug;
-
-		return $rtn_apl_design_slug;
+		return $apl_design;
 	}
 
 	/**
 	 * Process APL Design Class
 	 *
 	 * @since 0.4.0
+	 * @since 0.4.4 Added stricter APL_Design object referencing.
 	 * @access private
 	 *
 	 * @param int      $post_id  Contains the ID of the post type.
 	 * @param WP_Post  $post     New Post Data content to save/update.
 	 */
 	private function design_process( $post_id, $post ) {
-		$old_post = get_post( $post_id );
-		$apl_design = new APL_Design( $old_post->post_name );
+		$apl_design = new APL_Design( $post_id );
 
 		// BEFORE.
 		$tmp_apl_design_before = '';

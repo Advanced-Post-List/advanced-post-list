@@ -327,6 +327,7 @@ class APL_Core {
 	 *
 	 * @since 0.3.0
 	 * @since 0.4.0 - Changed to action hook.
+	 * @since 0.4.4 Handle 0.3 and 0.4 database types separately.
 	 * @access public
 	 *
 	 * @see 'plugins_loaded' action hook.
@@ -337,19 +338,34 @@ class APL_Core {
 		$options = apl_options_load();
 		if ( isset( $options['version'] ) ) {
 			if ( version_compare( $options['version'], APL_VERSION, '<' ) ) {
-				$preset_db = new APL_Preset_Db( 'default' );
+				$update_items = array();
+				// 0.3 Database.
+				if ( version_compare( '0.3.0', $options['version'], '<' ) && version_compare( '0.4.0', $options['version'], '>' ) ) {
+					$preset_db = new APL_Preset_Db( 'default' );
 
-				$update_items = array(
-					'options'   => $options,
-					'preset_db' => $preset_db,
-				);
+					$update_items = array(
+						'options'   => $options,
+						'preset_db' => $preset_db,
+					);
+				}
+				// 0.4+ Database.
+				elseif( version_compare( '0.4.0', $options['version'], '<' ) ) {
+					$post_lists = apl_get_post_lists( array(), 'apl_post_list' );
+					$designs    = apl_get_designs( array(), 'apl_design' );
+
+					$update_items = array(
+						'options'           => $options,
+						'apl_post_list_arr' => $post_lists,
+						'apl_design_arr'    => $designs,
+					);
+				}
 
 				$updater = new APL_Updater( $options['version'], $update_items, 'APL' );
 				// IN THIS CASE, BOTH MUST HAVE VALUES FILLED.
 				if ( $updater->update_occurred ) {
 					$this->update_post_list_database( $updater->apl_post_list_arr );
 					$this->update_design_database( $updater->apl_design_arr );
-					
+
 					$options = $updater->options;
 					apl_options_save( $options );
 				}
@@ -434,6 +450,7 @@ class APL_Core {
 	 * @since 0.2.0 - Added delete_option('APL_preset_db-default') for deleting
 	 *                preset database data.
 	 * @since 0.4.0 - Change database to Post Data to uninstall.
+	 * @since 0.4.4 Added stricter APL_Design object referencing.
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/unregister_post_type/
 	 * @access public
@@ -485,7 +502,7 @@ class APL_Core {
 			$design_data = $d_query->posts;
 
 			foreach ( $design_data as $v1_d_post ) {
-				$apl_design = new APL_Design( $v1_d_post->post_name );
+				$apl_design = new APL_Design( intval( $v1_d_post->ID ) );
 
 				$apl_design->delete_design();
 			}
@@ -502,6 +519,7 @@ class APL_Core {
 	 * @since 0.2.0 - Changed to delete all plugin data, whether 'delete plugin
 	 *                data upon deactivation' is set or not.
 	 * @since 0.4.0 - Changed to delete Post Data.
+	 * @since 0.4.4 Added stricter APL_Design object referencing.
 	 * @access public
 	 */
 	public static function uninstall() {
@@ -547,7 +565,7 @@ class APL_Core {
 		$design_data = $d_query->posts;
 
 		foreach ( $design_data as $v1_d_post ) {
-			$apl_design = new APL_Design( $v1_d_post->post_name );
+			$apl_design = new APL_Design( intval( $v1_d_post->ID ) );
 
 			$apl_design->delete_design();
 		}
@@ -747,7 +765,10 @@ class APL_Core {
 		if ( $apl_post_list->id ) {
 			// INIT.
 			require_once( APL_DIR . 'includes/class/class-apl-shortcodes.php' );
-			$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+
+			// Get APL Design.
+			$design_id = $apl_post_list->pl_apl_design_id;
+			$apl_design = new APL_Design( $design_id );
 		} elseif ( current_user_can( 'manage_options' ) ) {
 			// Admin Message.
 			return esc_html__( 'NOTICE: Post list \'name\' does not exist or is invalid.', 'advanced-post-list' );
