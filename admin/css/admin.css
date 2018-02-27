@@ -230,7 +230,9 @@ input.apl-text-exclude-posts {
 	margin-bottom: 18px;
 }
 
-.apl-design-column {}
+.apl-design-column {
+	width: 100%;
+}
 
 .apl-design-row {
 	float: left;
@@ -245,6 +247,39 @@ input.apl-text-exclude-posts {
 .apl-design-row > div:nth-child( 2 ) {
 	float: left;
 	width: 79.7%;
+}
+
+/*
+ * CODE MIRROR
+ */
+.apl-design-column .CodeMirror {
+	margin: 0px 0px 18px 0;
+	padding-bottom: 30px;
+	min-height: 300px;
+	border: 1px solid #ddd;
+	border-bottom: 2px solid #ddd;
+	resize: vertical;
+	overflow: overlay;
+}
+
+.apl-design-column .CodeMirror .CodeMirror-vscrollbar {
+	margin-bottom: 23px;
+}
+
+.apl-design-column .CodeMirror .CodeMirror-scroll {
+	width: 100.5%;
+}
+
+/* BEFORE */
+.apl-textarea-before-wrap > .CodeMirror {
+	min-height: 100px;
+	height: 100px;
+}
+
+/* AFTER */
+.apl-textarea-after-wrap > .CodeMirror {
+	min-height: 100px;
+	height: 100px;
 }
 
 /*

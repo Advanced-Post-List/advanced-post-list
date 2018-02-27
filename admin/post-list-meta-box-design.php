@@ -10,7 +10,7 @@
  * @package advanced-post-list
  * @package advanced-post-list\APL_Admin
  * @since 0.4.0
- * @since 0.4.4 Added stricter APL_Design object referencing, and WPML compatibility.
+ * @since 0.4.4 Added stricter APL_Design object referencing, WPML compatibility, and CodeMirror.
  */
 
 /*
@@ -60,7 +60,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<label for="apl_textarea_before"><?php esc_html_e( 'Before list:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['before_list']; ?>"></span>
 			</div>
-			<div>
+			<div class="apl-textarea-before-wrap">
 				<textarea id="apl_textarea_before" class="apl-textarea-before large-text" name="apl_before" rows="3"><?php echo $apl_design->before; ?></textarea>
 			</div>
 		</div>
@@ -74,7 +74,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 					<span class="dashicons dashicons-clipboard"></span>
 				</a>
 			</div>
-			<div>
+			<div class="apl-textarea-content-wrap">
 				<textarea id="apl_textarea_content" class="apl-textarea-content large-text" name="apl_content" rows="9"><?php echo $apl_design->content; ?></textarea>
 			</div>
 		</div>
@@ -83,7 +83,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<label for="apl_textarea_after"><?php esc_html_e( 'After list:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['after_list']; ?>"></span>
 			</div>
-			<div>
+			<div class="apl-textarea-after-wrap">
 				<textarea id="apl_textarea_after" class="apl-textarea-after large-text" name="apl_after" rows="3"><?php echo $apl_design->after; ?></textarea>
 			</div>
 		</div>
@@ -92,7 +92,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<label for="apl_textarea_empty_message"><?php esc_html_e( 'Empty Message:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['empty_message']; ?>"></span>
 			</div>
-			<div>
+			<div class="apl-textarea-empty-message-wrap">
 				<div style="margin: 3px 0 3px 6px;">
 					<input type="checkbox" id="apl_empty_message_enable" class="apl-empty-message-enable" name="apl_empty_enable" <?php echo ! empty( $apl_design->empty ) ? 'checked="checked"' : ''; ?> />
 					<label for="apl_empty_message_enable"><?php esc_html_e( 'Enable (Overwrites Default)', 'advanced-post-list' ) ?></label>

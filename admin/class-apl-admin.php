@@ -376,6 +376,40 @@ class APL_Admin {
 				false
 			);
 
+			global $wp_version;
+			if ( version_compare( $wp_version, '4.9', '>' ) ) {
+				// Enqueue code editor and settings for manipulating HTML.
+				// https://developer.wordpress.org/reference/functions/wp_enqueue_code_editor/
+				$args = array( 'type' => 'application/x-httpd-php' );
+				$settings = wp_enqueue_code_editor( $args );
+
+				if ( false !== $settings ) {
+					wp_add_inline_script(
+						'code-editor',
+						sprintf(
+							'jQuery( function() { wp.codeEditor.initialize( "apl_textarea_before", %s ); } );',
+							wp_json_encode( $settings )
+						)
+					);
+					wp_add_inline_script(
+						'code-editor',
+						sprintf(
+							'jQuery( function() { wp.codeEditor.initialize( "apl_textarea_content", %s ); } );',
+							wp_json_encode( $settings )
+						)
+					);
+					wp_add_inline_script(
+						'code-editor',
+						sprintf(
+							'jQuery( function() { wp.codeEditor.initialize( "apl_textarea_after", %s ); } );',
+							wp_json_encode( $settings )
+						)
+					);
+					// Empty is disabled for now, but will need to be hidden when checkbox is unchecked.
+					// Hold off until 5.0.
+				}
+			}
+
 			// STEP 3 - Enqueue scripts.
 			wp_enqueue_script( 'apl-admin-js' );
 			wp_enqueue_script( 'apl-admin-ui-js' );
