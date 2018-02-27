@@ -25,9 +25,9 @@
 	</p>
 	<h3>Additional Links</h3>
 	<ul>
-		<li><a href="https://support.advancedpostlist.com/getting-started/" target="_blank">Documentation</a> - Support</li>
-		<li><a href="https://support.advancedpostlist.com/documentation/" target="_blank">GitHub Wiki</a> - Documentation.</li>
-		<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VFUYQGQ7VXEDC" target="_blank">Donate</a> - Whole-heartedly goes towards APL development.</li>
+		<li><a href="https://support.advancedpostlist.com/documentation/" target="_blank">Documentation</a></li>
+		<li><a href="https://github.com/Advanced-Post-List/advanced-post-list/wiki" target="_blank">GitHub Wiki</a> - Old Documentation.</li>
+		<li><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VFUYQGQ7VXEDC" target="_blank">Donate</a> - Much appreciated and helps APL.</li>
 	</ul>
 	<div style="float: right;">Version: <?php echo APL_VERSION; ?></div>
 </div>
