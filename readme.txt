@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Post List, Tool, Editor, Featured, Related Posts, Author, Authors, Auto, Automate, Builder, Categories, Category, Child Pages, CMS, Content, Comment, Comments, CPT, CSS, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Design, Developer, Draft, Draft Posts, Excerpt, Feature, Featured, Featured Content, Filter, Future, Future Posts, HTML, Image, Images, Links, List, Links, Magazine, Magazines, News, Page, Pages, Parent, Parent Pages, Photos, PHP, Popular Posts, Post, Posts, Private, Private Posts, Programming, Published, Related Post, Related Posts, Recent, Recent Post, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Web Design, Web Development, Webmaster, Widget, Widgets, WPML
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 0.4.3.1
+Stable tag: 0.4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,14 @@ Go to [Q&A](https://support.advancedpostlist.com/qa/).
 6. Admin Screen for Settings.
 
 == Changelog ==
+
+= 0.4.4 =
+* Added CodeMirror to Display metabox in Post List editor.
+* Added stricter handling with APL_Design data to fix post lists not rendering.
+* Fixed WPML Compatability with translated posts.
+* Fixed APL Notice displaying when no JS is present to delay/dismiss.
+* Changed Internal Shortcodes Dialog.
+* Changed Settings Info metabox.
 
 = 0.4.3.1 =
 * Fixed Delay/Dismiss Operation.
@@ -335,6 +343,9 @@ Go to [Q&A](https://support.advancedpostlist.com/qa/).
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.4.4 =
+* Possible fix with displaying post list. IMPORTANT: Minor database update. PLEASE BACK UP DATA.
 
 = 0.4.2.1 =
 * Fixed Delay/Dismiss Operation.
