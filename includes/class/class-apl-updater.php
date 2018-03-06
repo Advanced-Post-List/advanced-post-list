@@ -1121,10 +1121,24 @@ class APL_Updater {
 
 				$tmp2_post_type = array();
 				foreach ( $v1_post_types as $k2_ => $v2_pt_slug ) {
-					//$tmp2_post_type[] = $v2_pt_slug;
-					if ( ! post_type_exists( $v2_pt_slug  ) ) {
+					$args = array(
+						'post_type'       => $v2_pt_slug,
+						'post_status'     => array(
+							'draft',
+							'pending',
+							'publish',
+							'future',
+							'private',
+							'trash',
+						),
+						'posts_per_page'  => 1,
+					);
+					$pl_query = new WP_Query( $args );
+
+					if ( 1 > $pl_query->post_count ) {
 						continue;
 					}
+
 					$tmp2_post_type[] = $v2_pt_slug;
 
 					$p_tax_query = json_decode( json_encode( $apl_post_list->tax_query ), true );
@@ -1179,7 +1193,9 @@ class APL_Updater {
 
 				$p_tax_query = json_decode( json_encode( $apl_post_list->tax_query ), true );
 				$tmp_tax_query[ $v2_pt_slug ] = array();
-				$tmp_tax_query[ $v2_pt_slug ] = $this->reform_post_list_tax_query( $p_tax_query[ $v2_pt_slug ] );
+				if ( isset( $p_tax_query[ $v2_pt_slug ]  ) ) {
+					$tmp_tax_query[ $v2_pt_slug ] = $this->reform_post_list_tax_query( $p_tax_query[ $v2_pt_slug ] );
+				}
 			}
 		}
 
@@ -1240,7 +1256,12 @@ class APL_Updater {
 
 		$tmp2_tax_arr = array();
 		foreach ( $tax_query as $k3_ => $v3_tax_arr ) {
-			if ( ! taxonomy_exists( $v3_tax_arr['taxonomy'] ) ) {
+			$args = array(
+				'taxonomy'   => $v3_tax_arr['taxonomy'],
+				'hide_empty' => false,
+			);
+			$taxonomy_terms = new WP_Term_Query( $args );
+			if ( null === $taxonomy_terms->terms ) {
 				continue;
 			}
 			$tmp_tq_item = array(
@@ -1262,11 +1283,20 @@ class APL_Updater {
 				if ( 0 >= $v4_term_id ) {
 					$tmp_tq_item['terms'][] = 0;
 					continue;
-				} elseif ( term_exists( $v3_tax_arr['apl_terms_slug'][ $v4_term_id ], $v3_tax_arr['taxonomy'] ) ) {
-					$p_term_obj = get_term_by( 'slug', $v3_tax_arr['apl_terms_slug'][ $v4_term_id ], $v3_tax_arr['taxonomy'] );
+				} else {
+					foreach ( $taxonomy_terms->terms as $v5_term_obj ) {
+						if ( $v5_term_obj->term_id === $v4_term_id && $v5_term_obj->slug === $v3_tax_arr['apl_terms_slug'][ $v4_term_id ] ) {
+							$tmp_tq_item['terms'][]                                  = $v5_term_obj->term_id;
+							$tmp_tq_item['apl_terms_slug'][ $v5_term_obj->term_id ]  = $v5_term_obj->slug;
 
-					$tmp_tq_item['terms'][]                                 = $p_term_obj->term_id;
-					$tmp_tq_item['apl_terms_slug'][ $p_term_obj->term_id ]  = $p_term_obj->slug;
+							continue;
+						} elseif ( $v5_term_obj->slug === $v3_tax_arr['apl_terms_slug'][ $v4_term_id ] ) {
+							$tmp_tq_item['terms'][]                                  = $v5_term_obj->term_id;
+							$tmp_tq_item['apl_terms_slug'][ $v5_term_obj->term_id ]  = $v5_term_obj->slug;
+
+							continue;
+						}
+					}
 				}
 			}
 			if ( empty( $tmp_tq_item['terms'] ) ) {
@@ -1316,7 +1346,9 @@ class APL_Updater {
 			$tmp_apl_post_list->pl_exclude_current   = $apl_post_list->pl_exclude_current   ?: $tmp_apl_post_list->pl_exclude_current;
 			$tmp_apl_post_list->pl_exclude_dupes     = $apl_post_list->pl_exclude_dupes     ?: $tmp_apl_post_list->pl_exclude_dupes;
 			$tmp_apl_post_list->pl_apl_design        = $apl_post_list->pl_apl_design        ?: $tmp_apl_post_list->pl_apl_design;
-			
+			$tmp_apl_post_list->pl_apl_design_id     = $apl_post_list->pl_apl_design_id     ?: $tmp_apl_post_list->pl_apl_design_id;
+			$tmp_apl_post_list->pl_apl_design_slug   = $apl_post_list->pl_apl_design_slug   ?: $tmp_apl_post_list->pl_apl_design_slug;
+
 			$rtn_apl_post_list_arr[] = $tmp_apl_post_list;
 		}
 		

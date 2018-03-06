@@ -160,6 +160,7 @@ if ( ! function_exists( 'apl_get_post_lists' ) ) {
 				'private',
 				'trash',
 			),
+			'nopaging'    => true,
 		);
 		$args             = wp_parse_args( $args, $default_args );
 		$query_post_lists = new WP_Query( $args );
@@ -214,6 +215,7 @@ if ( ! function_exists( 'apl_get_designs' ) ) {
 				'private',
 				'trash',
 			),
+			'nopaging'    => true,
 		);
 		$args          = wp_parse_args( $args, $default_args );
 		$query_designs = new WP_Query( $args );

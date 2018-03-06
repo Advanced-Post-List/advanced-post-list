@@ -67,10 +67,10 @@ class APL_Core {
 
 		// STEP 2.
 		/* **** ACTION & FILTERS HOOKS **** */
-		add_action( 'plugins_loaded', array( $this, 'action_check_version' ) );
-		add_action( 'init', array( $this, 'action_register_post_type_post_list' ) );
-		add_action( 'init', array( $this, 'action_register_post_type_design' ) );
+		add_action( 'plugins_loaded', array( $this, 'action_check_version' ), 6 );
 		add_action( 'plugins_loaded', array( $this, 'action_load_plugin_textdomain' ) );
+		add_action( 'init', array( $this, 'action_register_post_type_post_list' ), 6 );
+		add_action( 'init', array( $this, 'action_register_post_type_design' ), 6 );
 
 		// Public Hooks.
 		add_shortcode( 'post_list', array( $this, 'shortcode_post_list' ) );
@@ -321,7 +321,7 @@ class APL_Core {
 	 *
 	 * @since 0.3.0
 	 * @since 0.4.0 - Changed to action hook.
-	 * @since 0.4.4 Handle 0.3 and 0.4 database types separately.
+	 * @since 0.4.4 Handle 0.3 and 0.4 database types separately, and stricter updating with APL_Post_Lists and APL_Designs.
 	 * @access public
 	 *
 	 * @see 'plugins_loaded' action hook.
@@ -355,11 +355,34 @@ class APL_Core {
 				}
 
 				$updater = new APL_Updater( $options['version'], $update_items, 'APL' );
-				// IN THIS CASE, BOTH MUST HAVE VALUES FILLED.
+				// If update occurred, save post lists and designs associated with the post list, and then
+				// save the remaining designs. When completed, save apl_options to finalize version update.
 				if ( $updater->update_occurred ) {
-					$this->update_post_list_database( $updater->apl_post_list_arr );
-					$this->update_design_database( $updater->apl_design_arr );
+					$apl_post_list_arr = $updater->apl_post_list_arr;
+					$apl_design_arr    = $updater->apl_design_arr;
 
+					// APL_Post_List and APL_Designs.
+					foreach ( $apl_post_list_arr as $k1_ => &$apl_post_list ) {
+						foreach ( $apl_design_arr as $k2_design_key => $apl_design ) {
+							if ( $apl_design->slug === $apl_post_list->pl_apl_design || $apl_design->slug === $apl_post_list->pl_apl_design_slug ) {
+								$apl_design->save_design();
+
+								$apl_post_list->pl_apl_design_id = $apl_design->id;
+
+								unset( $apl_design_arr[ $k2_design_key ] );
+								array_values( $apl_design_arr );
+								break;
+							}
+						}
+						$apl_post_list->save_post_list();
+					}
+
+					// Remaining APL Designs.
+					foreach ( $apl_design_arr as $apl_design ) {
+						$apl_design->save_design();
+					}
+
+					// Update and save plugin options.
 					$options = $updater->options;
 					apl_options_save( $options );
 				}
@@ -371,6 +394,8 @@ class APL_Core {
 	 * Update Post List Database
 	 *
 	 * Updates or adds to database via APL_Post_List object.
+	 *
+	 * @deprecated 0.4.4 Was used in version update, but needed to be updated with APL_Designs.
 	 *
 	 * @since 0.4.0
 	 * @access private
@@ -387,6 +412,8 @@ class APL_Core {
 	 * Update Design Database
 	 *
 	 * Updates or adds to database via APL_Design object.
+	 *
+	 * @deprecated 0.4.4
 	 *
 	 * @ignore
 	 * @since 0.4.0

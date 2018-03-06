@@ -297,6 +297,8 @@ class APL_Post_List {
 			// Save Design Meta Data Hook.
 			// Only use 'save_post_{post_type}' for saving object as meta data
 			// after post has been saved, and data has been process via {status}_{post_type}.
+			// TODO Try to delete and use in `save_post_list`.
+			// What screens need this here? Edit-Post_List screen?
 			add_action( 'save_post_apl_post_list', array( &$this, 'hook_action_save_post_apl_post_list' ), 10, 3 );
 
 			// Delete Design Hook.
