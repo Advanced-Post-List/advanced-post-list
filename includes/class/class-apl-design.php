@@ -113,6 +113,10 @@ class APL_Design {
 			);
 		} elseif ( is_numeric( $design ) ) {
 			$this->id = intval( $design );
+
+			$args = array(
+				'p' => $this->id,
+			);
 		} elseif ( is_string( $design ) ) {
 			$this->slug  = sanitize_title_with_dashes( $design );
 			$this->title = (string) $design;
