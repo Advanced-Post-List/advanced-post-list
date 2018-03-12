@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Advanced Post List\n"
-"POT-Creation-Date: 2018-03-04 07:28-0800\n"
-"PO-Revision-Date: 2018-03-04 07:28-0800\n"
+"POT-Creation-Date: 2018-03-11 17:04-0700\n"
+"PO-Revision-Date: 2018-03-11 17:04-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -1055,19 +1055,19 @@ msgstr "APL Design"
 msgid "APL Designs for Preset Post Lists."
 msgstr "APL ontwerpen voor vooraf ingestelde Post lijsten."
 
-#: includes/class/class-apl-core.php:598
+#: includes/class/class-apl-core.php:625
 #: includes/class/class-apl-updater.php:959 includes/functions.php:37
 #, fuzzy
 msgid "Sorry, but no content is available at this time."
 msgstr "Sorry, maar er is op dit moment geen inhoud beschikbaar."
 
-#: includes/class/class-apl-core.php:700
+#: includes/class/class-apl-core.php:727
 #, fuzzy
 msgid "NOTICE: Shortcode name is missing. Ex [post_list name='example']"
 msgstr ""
 "Let op: De naam van de Shortcode ontbreekt. Ex [post_list naam = 'voorbeeld']"
 
-#: includes/class/class-apl-core.php:779
+#: includes/class/class-apl-core.php:806
 #, fuzzy
 msgid "NOTICE: Post list 'name' does not exist or is invalid."
 msgstr "AANKONDIGING: Post lijst 'naam' bestaat niet of is ongeldig."

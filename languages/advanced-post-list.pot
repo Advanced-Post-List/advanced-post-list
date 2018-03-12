@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Advanced Post List\n"
-"POT-Creation-Date: 2018-03-04 07:27-0800\n"
+"POT-Creation-Date: 2018-03-11 17:04-0700\n"
 "PO-Revision-Date: 2017-10-31 16:40-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -870,16 +870,16 @@ msgstr ""
 msgid "APL Designs for Preset Post Lists."
 msgstr ""
 
-#: includes/class/class-apl-core.php:598
+#: includes/class/class-apl-core.php:625
 #: includes/class/class-apl-updater.php:959 includes/functions.php:37
 msgid "Sorry, but no content is available at this time."
 msgstr ""
 
-#: includes/class/class-apl-core.php:700
+#: includes/class/class-apl-core.php:727
 msgid "NOTICE: Shortcode name is missing. Ex [post_list name='example']"
 msgstr ""
 
-#: includes/class/class-apl-core.php:779
+#: includes/class/class-apl-core.php:806
 msgid "NOTICE: Post list 'name' does not exist or is invalid."
 msgstr ""
 
