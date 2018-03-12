@@ -36,6 +36,7 @@ function apl_export() {
 		}
 	}
 	foreach ( $export_data['apl_design_arr'] as $apl_design_slug ) {
+		// TODO Change to Unique ID.
 		$design = new APL_Design( $apl_design_slug );
 
 		if ( ! empty( $design->id ) ) {

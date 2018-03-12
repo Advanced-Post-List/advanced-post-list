@@ -640,7 +640,10 @@
 		$( '#info-shortcodes' ).click( function() {
 			$( '#d-shortcodes' ).dialog({
 				width: '32%',
-				height: 450
+				height: 450,
+				open: function () {
+					$( this ).scrollTop(0);
+				}
 			});
 		});
 	}

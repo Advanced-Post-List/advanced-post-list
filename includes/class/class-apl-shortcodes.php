@@ -901,7 +901,7 @@ class APL_Internal_Shortcodes {
 			'status' => 'approve',
 			'post_id' => $this->_post->ID,
 		);
-		$post_comments = get_comments( $args, $this->_post->ID );
+		$post_comments = get_comments( $args );
 
 		// STEP 3.
 		$return_str .= $atts_value['before'];

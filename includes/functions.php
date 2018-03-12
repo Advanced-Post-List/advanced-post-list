@@ -23,18 +23,18 @@
  * @since 0.1.0
  * @access private
  *
- * @return object Core option settings
+ * @return array Core option settings
  */
 function apl_options_default() {
 	// New name ( default_options ).
 	// Step 1.
 	$options = array();
 	// Step 2.
-	$options['version']               = APL_VERSION;
-	$options['ignore_post_types']     = array();
-	$options['delete_core_db']        = false;
-	$options['default_empty_enable']  = false;
-	$options['default_empty_output']  = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
+	$options['version']              = APL_VERSION;
+	$options['ignore_post_types']    = array();
+	$options['delete_core_db']       = false;
+	$options['default_empty_enable'] = false;
+	$options['default_empty_output'] = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
 
 	// Step 3.
 	return $options;
@@ -77,10 +77,11 @@ function apl_options_load() {
  * @see Function/method/class relied on
  * @link URL
  *
- * @param object $options Core option settings.
+ * @param array $options Core option settings.
  */
 function apl_options_save( $options ) {
 	$default_options = apl_options_default();
+
 	$options = wp_parse_args( $options, $default_options );
 
 	if ( isset( $options ) ) {
@@ -104,6 +105,7 @@ function apl_get_display_post_types() {
 	$rtn_post_types = array();
 
 	$options = apl_options_load();
+
 	$ignore_post_types = apl_default_ignore_post_types();
 	$ignore_post_types = apply_filters( 'apl_display_post_types_ignore', $ignore_post_types );
 	$ignore_post_types = wp_parse_args( $ignore_post_types, $options['ignore_post_types'] );
@@ -137,3 +139,110 @@ function apl_default_ignore_post_types() {
 	);
 }
 
+if ( ! function_exists( 'apl_get_post_lists' ) ) {
+	/**
+	 * Get Post Lists
+	 *
+	 * @since 0.4.4
+	 *
+	 * @param array  $args  Arguments for WP_Query.
+	 * @param string $field The type of value to return.
+	 * @return array
+	 */
+	function apl_get_post_lists( $args = array(), $field = 'id' ) {
+		$default_args     = array(
+			'post_type'   => 'apl_post_list',
+			'post_status' => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
+			'nopaging'    => true,
+		);
+		$args             = wp_parse_args( $args, $default_args );
+		$query_post_lists = new WP_Query( $args );
+
+		$rtn_post_lists = array();
+		switch ( $field ) {
+			case 'id':
+				foreach ( $query_post_lists->posts as $v1_post ) {
+					$rtn_post_lists[] = $v1_post->ID;
+				}
+				break;
+			case 'slug':
+				foreach ( $query_post_lists->posts as $v1_post ) {
+					$rtn_post_lists[] = $v1_post->post_name;
+				}
+				break;
+			case 'wp_post':
+				$rtn_post_lists = $query_post_lists->posts;
+				break;
+			case 'apl_post_list':
+			default:
+				foreach ( $query_post_lists->posts as $v1_post ) {
+					$rtn_post_lists[] = new APL_Post_List( $v1_post->post_name );
+					// TODO Change to ID.
+					//$rtn_post_lists[] = new APL_Post_List( $v1_post->ID );
+				}
+				break;
+		}
+
+		return $rtn_post_lists;
+	}
+}
+
+if ( ! function_exists( 'apl_get_designs' ) ) {
+	/**
+	 * Get Designs
+	 *
+	 * @since 0.4.4
+	 *
+	 * @param array  $args  Arguments for WP_Query.
+	 * @param string $field The type of value to return.
+	 * @return array
+	 */
+	function apl_get_designs( $args = array(), $field = 'id' ) {
+		$default_args  = array(
+			'post_type'   => 'apl_design',
+			'post_status' => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+				'trash',
+			),
+			'nopaging'    => true,
+		);
+		$args          = wp_parse_args( $args, $default_args );
+		$query_designs = new WP_Query( $args );
+
+		$rtn_designs = array();
+		switch ( $field ) {
+			case 'id':
+				foreach ( $query_designs->posts as $v1_post ) {
+					$rtn_designs[] = $v1_post->ID;
+				}
+				break;
+			case 'slug':
+				foreach ( $query_designs->posts as $v1_post ) {
+					$rtn_designs[] = $v1_post->post_name;
+				}
+				break;
+			case 'wp_post':
+				$rtn_designs = $query_designs->posts;
+				break;
+			case 'apl_design':
+			default:
+				foreach ( $query_designs->posts as $v1_post ) {
+					$rtn_designs[] = new APL_Design( $v1_post->ID );
+				}
+				break;
+		}
+
+		return $rtn_designs;
+	}
+}

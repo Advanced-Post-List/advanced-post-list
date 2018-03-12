@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Advanced Post List\n"
-"POT-Creation-Date: 2017-10-31 16:41-0700\n"
-"PO-Revision-Date: 2017-10-31 16:41-0700\n"
+"POT-Creation-Date: 2018-03-11 17:04-0700\n"
+"PO-Revision-Date: 2018-03-11 17:04-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: advanced-post-list.php\n"
@@ -21,183 +21,222 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: admin/class-apl-admin.php:62 admin/class-apl-admin.php:74
+#: admin/class-apl-admin.php:61 admin/class-apl-admin.php:73
 msgid "Cheatin' huh?"
 msgstr "Wat ben jij aan het proberen?"
 
-#: admin/class-apl-admin.php:92
+#: admin/class-apl-admin.php:91
 #, fuzzy
 msgid "You do not have admin capabilities in APL_Admin."
 msgstr "U hoeft niet admin mogelijkheden in APL_Admin."
 
 #. Plugin Name of the plugin/theme
-#: admin/class-apl-admin.php:214
+#: admin/class-apl-admin.php:218
 #, fuzzy
 msgid "Advanced Post List"
 msgstr "Geavanceerde Post lijst"
 
-#: admin/class-apl-admin.php:215
+#: admin/class-apl-admin.php:219
 #, fuzzy
 msgid "Adv. Post List"
 msgstr "Adv. Post lijst"
 
-#: admin/class-apl-admin.php:229 includes/class/class-apl-core.php:216
+#: admin/class-apl-admin.php:232 includes/class/class-apl-core.php:216
 #, fuzzy
 msgid "Add New Post List"
 msgstr "Nieuw Bericht toevoegen"
 
-#: admin/class-apl-admin.php:230
+#: admin/class-apl-admin.php:233
 msgid "Add New"
 msgstr "Nieuwe rij aanmaken"
 
-#: admin/class-apl-admin.php:238
+#: admin/class-apl-admin.php:242
 #, fuzzy
 msgid "APL Settings"
 msgstr "APL-instellingen"
 
-#: admin/class-apl-admin.php:239
+#: admin/class-apl-admin.php:243
 msgid "Settings"
 msgstr "Instellingen"
 
-#: admin/class-apl-admin.php:430
+#: admin/class-apl-admin.php:465
 msgid "Select Taxonomy"
 msgstr "Selecteer Rangschikking"
 
-#: admin/class-apl-admin.php:431
+#: admin/class-apl-admin.php:466
 #, fuzzy
 msgid "# of # taxonomies selected"
 msgstr "# van # taxonomieën geselecteerd"
 
-#: admin/class-apl-admin.php:432 admin/post-list-meta-box-filter.php:578
-#: admin/post-list-meta-box-filter.php:606
-#: admin/post-list-meta-box-filter.php:641
-#: admin/post-list-meta-box-filter.php:664
+#: admin/class-apl-admin.php:467 admin/post-list-meta-box-filter.php:559
+#: admin/post-list-meta-box-filter.php:587
+#: admin/post-list-meta-box-filter.php:623
+#: admin/post-list-meta-box-filter.php:646
 msgid "- None -"
 msgstr "-Geen-"
 
-#: admin/class-apl-admin.php:433 admin/class-apl-admin.php:437
+#: admin/class-apl-admin.php:468 admin/class-apl-admin.php:472
 #, fuzzy
 msgid "# Selected"
 msgstr "Geselecteerd"
 
-#: admin/class-apl-admin.php:434
+#: admin/class-apl-admin.php:469
 msgid "Select Status"
 msgstr "Selecteer Status"
 
-#: admin/class-apl-admin.php:435
+#: admin/class-apl-admin.php:470
 msgid "Both"
 msgstr "Beide"
 
-#: admin/class-apl-admin.php:436 admin/post-list-meta-box-filter.php:647
+#: admin/class-apl-admin.php:471 admin/post-list-meta-box-filter.php:629
 msgid "Published"
 msgstr "Gepubliceerd"
 
-#: admin/class-apl-admin.php:517
+#: admin/class-apl-admin.php:544
 msgid "Alert"
 msgstr "Alarm"
 
-#: admin/class-apl-admin.php:518
+#: admin/class-apl-admin.php:545
 msgid "No Message to Display."
 msgstr "Te tonen berichtmelding."
 
-#: admin/class-apl-admin.php:519
+#: admin/class-apl-admin.php:546
 #, fuzzy
 msgid "Filename Required"
 msgstr "Bestandsnaam vereist"
 
-#: admin/class-apl-admin.php:520
+#: admin/class-apl-admin.php:547
 #, fuzzy
 msgid "A filename doesn't exist. \\n Please enter a filename before exporting."
 msgstr ""
 "Een bestandsnaam bestaat niet. \\n Voer een bestandsnaam in voordat u "
 "exporteert."
 
-#: admin/class-apl-admin.php:521
+#: admin/class-apl-admin.php:548
 #, fuzzy
 msgid "No file(s) selected. Please choose a JSON file to upload."
 msgstr "Geen bestanden geselecteerd. Kies een JSON-bestand om te uploaden."
 
-#: admin/class-apl-admin.php:522
+#: admin/class-apl-admin.php:549
 msgid "No File"
 msgstr "Geen bestand"
 
-#: admin/class-apl-admin.php:523
+#: admin/class-apl-admin.php:550
 #, fuzzy
 msgid "Invalid file type. Please choose a JSON file to upload."
 msgstr "Ongeldig bestandstype. Kies een JSON-bestand om te uploaden."
 
-#: admin/class-apl-admin.php:524
+#: admin/class-apl-admin.php:551
 msgid "Invalid File"
 msgstr "Onjuist bestand"
 
-#: admin/class-apl-admin.php:525
+#: admin/class-apl-admin.php:552
 #, fuzzy
 msgid "Data successfully imported."
 msgstr "Gegevens succesvol geimporteerd."
 
-#: admin/class-apl-admin.php:526
+#: admin/class-apl-admin.php:553
 msgid "Complete"
 msgstr "Markeer als geïmporteerd"
 
-#: admin/class-apl-admin.php:527
+#: admin/class-apl-admin.php:554
 #, fuzzy
 msgid "Overwrite Presets"
 msgstr "Voorinstellingen worden overschreven"
 
-#: admin/class-apl-admin.php:528 admin/class-apl-admin.php:534
+#: admin/class-apl-admin.php:555 admin/class-apl-admin.php:561
 #, fuzzy
 msgid "Illegal Characters"
 msgstr "Verkeerde tekens"
 
-#: admin/class-apl-admin.php:529 admin/class-apl-admin.php:535
+#: admin/class-apl-admin.php:556 admin/class-apl-admin.php:562
 #, fuzzy
 msgid "Cannot use (< > : \" / \\ | , ? *)."
 msgstr "Niet gebruiken (< >: \"/ \\ |,? *)."
 
-#: admin/class-apl-admin.php:530 admin/class-apl-admin.php:536
+#: admin/class-apl-admin.php:557 admin/class-apl-admin.php:563
 #, fuzzy
 msgid "Please rename your filename."
 msgstr "Wijzig uw filename."
 
-#: admin/class-apl-admin.php:627 admin/post-list-meta-box-filter.php:581
+#: admin/class-apl-admin.php:670 admin/post-list-meta-box-filter.php:562
 msgid "Slug"
 msgstr "Afkorting"
 
-#: admin/class-apl-admin.php:628
+#: admin/class-apl-admin.php:671
 msgid "Shortcode"
 msgstr "Shortcode"
 
-#: admin/class-apl-admin.php:704
+#: admin/class-apl-admin.php:749
 msgid "Filter Settings"
 msgstr "Filterinstellingen"
 
-#: admin/class-apl-admin.php:712 admin/class-apl-admin.php:736
+#: admin/class-apl-admin.php:759 admin/class-apl-admin.php:783
 msgid "Display Settings"
 msgstr "Tonen/uitstraling instellingen"
 
-#: admin/class-apl-admin.php:756
+#: admin/class-apl-admin.php:803
 msgid "About"
 msgstr "Over"
 
-#: admin/class-apl-admin.php:767
+#: admin/class-apl-admin.php:816
 msgid "General Settings"
 msgstr "Algemene Instellingen"
 
-#: admin/class-apl-admin.php:775
+#: admin/class-apl-admin.php:824
 msgid "Import / Export"
 msgstr "Importeren / Exporteren"
 
-#: admin/class-apl-admin.php:1267
+#: admin/class-apl-admin.php:1317 includes/class/class-apl-core.php:230
+#, fuzzy
+msgid "APL Post List"
+msgstr "APL Post lijst"
+
+#: admin/class-apl-admin.php:1318
+#, fuzzy
+msgid "Insert APL Shortcode"
+msgstr "Lijst van Shortcodes"
+
+#: admin/class-apl-admin.php:1319
+#, fuzzy
+#| msgid "Shortcode"
+msgid "APL Shortcode"
+msgstr "Shortcode"
+
+#: admin/class-apl-admin.php:1320 includes/class/class-apl-core.php:214
+msgid "Post List"
+msgstr "Post lijst"
+
+#: admin/class-apl-admin.php:1321
+msgid "Select the Post List you want."
+msgstr ""
+
+#: admin/class-apl-admin.php:1415
 #, fuzzy
 msgid "Version number is not present in imported file."
 msgstr "Versienummer is niet aanwezig in het geïmporteerde bestand."
 
-#: admin/class-apl-admin.php:1419 admin/class-apl-admin.php:1795
+#: admin/class-apl-admin.php:1659 admin/class-apl-admin.php:2036
 #, fuzzy
 msgid "Any / All"
 msgstr "Elke / alle"
 
-#: admin/post-list-meta-box-design.php:21
+#: admin/class-apl-notices.php:254
+msgid "Dismiss"
+msgstr ""
+
+#: admin/functions-notice.php:32
+msgid ""
+"Looks like you've been using Advanced Post List for awhile now, and that's "
+"awesome! By helping with a 5-star review, it also helps to reach out to more "
+"people."
+msgstr ""
+
+#: admin/functions-notice.php:40
+msgid "Yes, absolutely!"
+msgstr ""
+
+#: admin/post-list-meta-box-design.php:23
 #, fuzzy
 msgid ""
 "Used to store any HTML & CSS code that exists before the post/content "
@@ -208,7 +247,7 @@ msgstr ""
 "inhoud aanbiedingen bestaat. Handig voor div, ul, ol, tabellen, enz... Naast "
 "het opslaan van CSS styling voor pijpleidingen en instrumentatie en klassen."
 
-#: admin/post-list-meta-box-design.php:25
+#: admin/post-list-meta-box-design.php:27
 #, fuzzy
 msgid ""
 "This where you design how your posts are going to display in the post list. "
@@ -221,7 +260,7 @@ msgstr ""
 "plugin interne shortcodes. Info kan worden gevonden op de bodem, of door te "
 "klikken op de info van de shortcode vinden onder \"De inhoud van de lijst\"."
 
-#: admin/post-list-meta-box-design.php:29
+#: admin/post-list-meta-box-design.php:31
 #, fuzzy
 msgid ""
 "Used for ending any elements that are still open, or to display a final "
@@ -230,7 +269,7 @@ msgstr ""
 "Gebruikt voor het beëindigen van alle elementen die nog open zijn of om een "
 "laatste boodschap aan de gebruikers/bezoekers weer te geven."
 
-#: admin/post-list-meta-box-design.php:33
+#: admin/post-list-meta-box-design.php:35
 msgid ""
 "This container holds the HTML & CSS content and if no posts are found to be "
 "listed in the preset. Then the preset post list will display this message. "
@@ -242,46 +281,46 @@ msgid ""
 "on. For example, an empty \"span\" HTML element."
 msgstr ""
 
-#: admin/post-list-meta-box-design.php:51
+#: admin/post-list-meta-box-design.php:60
 #, fuzzy
 msgid "Before list:"
 msgstr "Voordat de lijst:"
 
-#: admin/post-list-meta-box-design.php:60
+#: admin/post-list-meta-box-design.php:69
 msgid "List content:"
 msgstr "Lijstinhoud:"
 
-#: admin/post-list-meta-box-design.php:64
+#: admin/post-list-meta-box-design.php:73
 #, fuzzy
 msgid "List of Shortcodes"
 msgstr "Lijst van Shortcodes"
 
-#: admin/post-list-meta-box-design.php:74
+#: admin/post-list-meta-box-design.php:83
 #, fuzzy
 msgid "After list:"
 msgstr "Na lijst:"
 
-#: admin/post-list-meta-box-design.php:83
+#: admin/post-list-meta-box-design.php:92
 msgid "Empty Message:"
 msgstr "Leeg bericht:"
 
-#: admin/post-list-meta-box-design.php:89
+#: admin/post-list-meta-box-design.php:98
 #, fuzzy
 msgid "Enable (Overwrites Default)"
 msgstr "Inschakelen (overschrijft de standaard)"
 
-#: admin/post-list-meta-box-design.php:102
+#: admin/post-list-meta-box-design.php:111
 #, fuzzy
 msgid "Edit Translation(s) of this Design."
 msgstr "Bewerken Translation(s) van dit ontwerp."
 
-#: admin/post-list-meta-box-design.php:105
+#: admin/post-list-meta-box-design.php:114
 #, fuzzy
 msgid ""
 "Please save the Post List in order to manage translations of this Design."
 msgstr "Sla de lijst met berichten om beheer vertalingen van dit ontwerp."
 
-#: admin/post-list-meta-box-filter.php:24
+#: admin/post-list-meta-box-filter.php:23
 #, fuzzy
 msgid ""
 "Each (jQuiry UI) accordion contains a separate individual post type. The "
@@ -296,7 +335,7 @@ msgstr ""
 "Let op: Elke post/pagina kan slechts één post type, wat kan verklaren waarom "
 "het is opgedeeld door bericht typen hebben."
 
-#: admin/post-list-meta-box-filter.php:26
+#: admin/post-list-meta-box-filter.php:24
 #, fuzzy
 msgid ""
 "Each taxonomy is generally spit up in two sections, and divided into "
@@ -307,7 +346,25 @@ msgstr ""
 "in afzonderlijke tabbladen. Hiërarchieën (categorieën) bevinden zich aan de "
 "linkerkant, en niet-hiërarchieën (tags) bevinden zich aan de rechterkant."
 
-#: admin/post-list-meta-box-filter.php:34
+#: admin/post-list-meta-box-filter.php:25
+msgid ""
+"Each hierarchical post type has a Parent selector for selecting which "
+"children pages to display. You can add multiple Post Parents of dynamically "
+"add children pages according to the Current Page."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:26
+#, fuzzy
+msgid ""
+"MULTISELECT Each taxonomy is generally spit up in two sections, and divided "
+"into separate tabs. Hierarchies (categories) are located on the left, and "
+"non-hierarchies (tags) are located on the right."
+msgstr ""
+"Elke taxonomie is over het algemeen spugen in twee secties, en onderverdeeld "
+"in afzonderlijke tabbladen. Hiërarchieën (categorieën) bevinden zich aan de "
+"linkerkant, en niet-hiërarchieën (tags) bevinden zich aan de rechterkant."
+
+#: admin/post-list-meta-box-filter.php:29
 #, fuzzy
 msgid ""
 "If selected, and more than one term is checked, then each term must be "
@@ -317,7 +374,7 @@ msgstr ""
 "elke term moet binnen de CPT/taxonomie vereist om te kunnen worden "
 "weergegeven in de lijst met berichten."
 
-#: admin/post-list-meta-box-filter.php:36
+#: admin/post-list-meta-box-filter.php:30
 #, fuzzy
 msgid ""
 "If selected, the post list preset will include any terms the current page/"
@@ -326,14 +383,14 @@ msgstr ""
 "Indien geselecteerd, zal de post lijst voorinstelling eventuele voorwaarden "
 "die de huidige pagina/post binnen de CTP/taxonomie heeft omvatten."
 
-#: admin/post-list-meta-box-filter.php:38
+#: admin/post-list-meta-box-filter.php:31
 #, fuzzy
 msgid "When checked, any terms will be included within that CPT/taxonomy."
 msgstr ""
 "Wanneer gecontroleerd, worden eventuele voorwaarden opgenomen binnen dat CPT/"
 "taxonomie."
 
-#: admin/post-list-meta-box-filter.php:40
+#: admin/post-list-meta-box-filter.php:32
 #, fuzzy
 msgid ""
 "The numeric value of how many posts you want the post list to display. "
@@ -344,7 +401,7 @@ msgstr ""
 "om weer te geven. Negatieve één (-1) alle berichten die beschikbaar na "
 "filtering zijn wordt weergegeven."
 
-#: admin/post-list-meta-box-filter.php:42
+#: admin/post-list-meta-box-filter.php:33
 #, fuzzy
 msgid ""
 "Choose which page properties to sort from. All of which are built in params "
@@ -353,7 +410,40 @@ msgstr ""
 "Kies welke paginaeigenschappen om te sorteren. Die allemaal zijn opgebouwd "
 "uit params gebruikt in WP_Query."
 
-#: admin/post-list-meta-box-filter.php:56
+#: admin/post-list-meta-box-filter.php:34
+msgid ""
+"Show or remove posts that were created by a certain author, or authors. You "
+"can only choose between adding or removing, not both."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:36
+msgid "Operator - Determines whether you want to include or exclude authors."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:38
+msgid ""
+"Author Names/IDs - Displays a list of authors the site currently has and is "
+"divided/grouped into separate role groups."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:39
+msgid ""
+"Holds the settings to show which posts to display based on the user "
+"visibility and/or the page states. To which is only visible to the users "
+"with the necessary capabilities to view them."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:41
+msgid "<b>Visibility</b> - Display posts as either Public, Private, or Both"
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:43
+msgid ""
+"<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, "
+"Auto-save, Inherit, and/or Trash."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:44
 #, fuzzy
 msgid ""
 "Uses the user permission via. user capabilities to determine what posts to "
@@ -363,7 +453,15 @@ msgstr ""
 "te bepalen wat posten weer te geven in de lijst van de post voor de bezoeker/"
 "gebruiker."
 
-#: admin/post-list-meta-box-filter.php:62
+#: admin/post-list-meta-box-filter.php:45
+msgid "Number of posts to skip/displace."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:46
+msgid "NOTE: Offset is ignored when List Amount is set to -1 (show all posts)."
+msgstr ""
+
+#: admin/post-list-meta-box-filter.php:47
 #, fuzzy
 msgid ""
 "Add post/page IDs, seperated by a comma (,), will prevent those posts from "
@@ -372,7 +470,7 @@ msgstr ""
 "Voeg bericht/pagina-IDs, gescheiden door een komma (,), voorkomt u dat deze "
 "posten worden toegevoegd aan de lijst met berichten."
 
-#: admin/post-list-meta-box-filter.php:64
+#: admin/post-list-meta-box-filter.php:48
 #, fuzzy
 msgid ""
 "Meant for the built-in post type (Posts) function. When checked, this will "
@@ -382,7 +480,7 @@ msgstr ""
 "ingeschakeld, zal dit verhinderen kleverige posten altijd aan de bovenkant "
 "van de lijst met berichten weer te geven."
 
-#: admin/post-list-meta-box-filter.php:66
+#: admin/post-list-meta-box-filter.php:49
 #, fuzzy
 msgid ""
 "When checked, the current post being viewed will be excluded from the post "
@@ -391,7 +489,7 @@ msgstr ""
 "Wanneer ingeschakeld, zal het huidige bericht wordt bekeken worden "
 "uitgesloten van de lijst met berichten."
 
-#: admin/post-list-meta-box-filter.php:68
+#: admin/post-list-meta-box-filter.php:50
 #, fuzzy
 msgid ""
 "In the \"order that it is received\", each preset post list being viewed "
@@ -408,12 +506,12 @@ msgstr ""
 "verwijdert u alle posten die al zijn weergegeven aan de gebruiker door de "
 "APL-plugin."
 
-#: admin/post-list-meta-box-filter.php:121
+#: admin/post-list-meta-box-filter.php:103
 #, fuzzy
 msgid "Any / All Terms"
 msgstr "Elke / alle voorwaarden"
 
-#: admin/post-list-meta-box-filter.php:187
+#: admin/post-list-meta-box-filter.php:169
 #, fuzzy
 msgid ""
 "Adds the Current Page being displayed as a Parent Page, which will then add "
@@ -422,189 +520,189 @@ msgstr ""
 "De huidige pagina wordt weergegeven als een bovenliggende pagina, die "
 "vervolgens die onderliggende pagina's toevoegen zal toegevoegd."
 
-#: admin/post-list-meta-box-filter.php:193
+#: admin/post-list-meta-box-filter.php:175
 #, fuzzy
 msgid "Dynamic Parent Page"
 msgstr "Dynamische bovenliggende pagina"
 
-#: admin/post-list-meta-box-filter.php:200
-#: admin/post-list-meta-box-filter.php:237
+#: admin/post-list-meta-box-filter.php:182
+#: admin/post-list-meta-box-filter.php:219
 msgid "Add"
 msgstr "Toevoegen"
 
-#: admin/post-list-meta-box-filter.php:201
-#: admin/post-list-meta-box-filter.php:238
-#: admin/post-list-meta-box-filter.php:579
+#: admin/post-list-meta-box-filter.php:183
+#: admin/post-list-meta-box-filter.php:220
+#: admin/post-list-meta-box-filter.php:560
 msgid "ID"
 msgstr "ID"
 
-#: admin/post-list-meta-box-filter.php:202
-#: admin/post-list-meta-box-filter.php:239
+#: admin/post-list-meta-box-filter.php:184
+#: admin/post-list-meta-box-filter.php:221
 msgid "Page Title"
 msgstr "Paginatitel"
 
-#: admin/post-list-meta-box-filter.php:344
+#: admin/post-list-meta-box-filter.php:327
 msgid "Post Types"
 msgstr "Berichtsoorten"
 
-#: admin/post-list-meta-box-filter.php:381
+#: admin/post-list-meta-box-filter.php:364
 msgid "Taxonomies"
 msgstr "Taxonomiën"
 
-#: admin/post-list-meta-box-filter.php:389
+#: admin/post-list-meta-box-filter.php:372
 #, fuzzy
 msgid "Parent Pages"
 msgstr "Bovenliggende pagina 's"
 
-#: admin/post-list-meta-box-filter.php:409
+#: admin/post-list-meta-box-filter.php:392
 #, fuzzy
 msgid "Req. Taxonomies"
 msgstr "Req. taxonomieën"
 
-#: admin/post-list-meta-box-filter.php:494
+#: admin/post-list-meta-box-filter.php:477
 #, fuzzy
 msgid "Require Terms"
 msgstr "Voorwaarden vereisen"
 
-#: admin/post-list-meta-box-filter.php:501
+#: admin/post-list-meta-box-filter.php:484
 #, fuzzy
 msgid "Dynamic Terms"
 msgstr "Dynamische voorwaarden"
 
-#: admin/post-list-meta-box-filter.php:536
+#: admin/post-list-meta-box-filter.php:519
 #, fuzzy
 msgid "List Amount:"
 msgstr "Lijst bedrag:"
 
-#: admin/post-list-meta-box-filter.php:554
+#: admin/post-list-meta-box-filter.php:536
 msgid "Offset:"
 msgstr "Offset:"
 
-#: admin/post-list-meta-box-filter.php:573
+#: admin/post-list-meta-box-filter.php:554
 msgid "Order By:"
 msgstr "Bestelling:"
 
-#: admin/post-list-meta-box-filter.php:580
+#: admin/post-list-meta-box-filter.php:561
 msgid "Title"
 msgstr "Titel"
 
-#: admin/post-list-meta-box-filter.php:582
+#: admin/post-list-meta-box-filter.php:563
 msgid "Date"
 msgstr "Datum"
 
-#: admin/post-list-meta-box-filter.php:583
+#: admin/post-list-meta-box-filter.php:564
 msgid "Modified Date"
 msgstr "Aangepaste datum"
 
-#: admin/post-list-meta-box-filter.php:584
+#: admin/post-list-meta-box-filter.php:565
 msgid "Comments"
 msgstr "Reacties"
 
-#: admin/post-list-meta-box-filter.php:585
+#: admin/post-list-meta-box-filter.php:566
 msgid "Author"
 msgstr "Schrijver"
 
-#: admin/post-list-meta-box-filter.php:586
+#: admin/post-list-meta-box-filter.php:567
 msgid "Parent"
 msgstr "Puder"
 
-#: admin/post-list-meta-box-filter.php:587
+#: admin/post-list-meta-box-filter.php:568
 msgid "Menu Order"
 msgstr "Menu volgorde"
 
-#: admin/post-list-meta-box-filter.php:588
+#: admin/post-list-meta-box-filter.php:569
 msgid "Random"
 msgstr "Willekeurig"
 
-#: admin/post-list-meta-box-filter.php:591
+#: admin/post-list-meta-box-filter.php:572
 msgid "Descending"
 msgstr "Aflopend"
 
-#: admin/post-list-meta-box-filter.php:592
+#: admin/post-list-meta-box-filter.php:573
 msgid "Ascending"
 msgstr "Oplopend"
 
-#: admin/post-list-meta-box-filter.php:599
+#: admin/post-list-meta-box-filter.php:580
 msgid "Authors:"
 msgstr "Auteurs:"
 
-#: admin/post-list-meta-box-filter.php:607
+#: admin/post-list-meta-box-filter.php:588
 msgid "From"
 msgstr "Van"
 
-#: admin/post-list-meta-box-filter.php:608
+#: admin/post-list-meta-box-filter.php:589
 #, fuzzy
 msgid "Not From"
 msgstr "Niet uit"
 
-#: admin/post-list-meta-box-filter.php:636
+#: admin/post-list-meta-box-filter.php:618
 msgid "Post Status:"
 msgstr "Bericht status:"
 
-#: admin/post-list-meta-box-filter.php:642
+#: admin/post-list-meta-box-filter.php:624
 msgid "Any"
 msgstr "Geen voorkeur"
 
-#: admin/post-list-meta-box-filter.php:643
+#: admin/post-list-meta-box-filter.php:625
 msgid "Public"
 msgstr "Openbare"
 
-#: admin/post-list-meta-box-filter.php:644
+#: admin/post-list-meta-box-filter.php:626
 #, fuzzy
 msgid "Private (BETA)"
 msgstr "Privé (BETA)"
 
-#: admin/post-list-meta-box-filter.php:648
+#: admin/post-list-meta-box-filter.php:630
 msgid "Pending Review"
 msgstr "Wachtend op review"
 
-#: admin/post-list-meta-box-filter.php:649
+#: admin/post-list-meta-box-filter.php:631
 msgid "Draft"
 msgstr "Concept"
 
-#: admin/post-list-meta-box-filter.php:650
+#: admin/post-list-meta-box-filter.php:632
 msgid "Auto-Draft"
 msgstr "Auto ontwerp / Auto Draft"
 
-#: admin/post-list-meta-box-filter.php:651
+#: admin/post-list-meta-box-filter.php:633
 msgid "Scheduled"
 msgstr "Ingepland"
 
-#: admin/post-list-meta-box-filter.php:652
+#: admin/post-list-meta-box-filter.php:634
 msgid "Revisions"
 msgstr "Revisies"
 
-#: admin/post-list-meta-box-filter.php:653
+#: admin/post-list-meta-box-filter.php:635
 msgid "Trash"
 msgstr "Prullenbak"
 
-#: admin/post-list-meta-box-filter.php:659
+#: admin/post-list-meta-box-filter.php:641
 #, fuzzy
 msgid "User Perms:"
 msgstr "Permanenten van de gebruiker:"
 
-#: admin/post-list-meta-box-filter.php:665
+#: admin/post-list-meta-box-filter.php:647
 msgid "Readable"
 msgstr "Leesbaar"
 
-#: admin/post-list-meta-box-filter.php:666
+#: admin/post-list-meta-box-filter.php:648
 msgid "Editable"
 msgstr "Bewerken"
 
-#: admin/post-list-meta-box-filter.php:675
+#: admin/post-list-meta-box-filter.php:657
 msgid "Exclude Post by ID:"
 msgstr "Post-ID uitsluiten:"
 
-#: admin/post-list-meta-box-filter.php:683
+#: admin/post-list-meta-box-filter.php:665
 #, fuzzy
 msgid "Enable Sticky Posts:"
 msgstr "Inschakelen van kleverige posten:"
 
-#: admin/post-list-meta-box-filter.php:689
+#: admin/post-list-meta-box-filter.php:671
 msgid "Exclude Current Post:"
 msgstr "Sluit huidig bericht uit:"
 
-#: admin/post-list-meta-box-filter.php:695
+#: admin/post-list-meta-box-filter.php:677
 #, fuzzy
 msgid "Exclude Duplicate Posts:"
 msgstr "Duplicate Posts uitsluiten:"
@@ -770,7 +868,7 @@ msgstr "APL - instellingen"
 
 #: advanced-post-list.php:39
 #, fuzzy
-msgid "This plugin requires Wordpress 2.0.2 or higher to operate. "
+msgid "This plugin requires WordPress 4.5 or higher to operate. "
 msgstr "Deze plugin vereist Wordpress 2.0.2 of hoger om te opereren."
 
 #: advanced-post-list.php:40
@@ -795,10 +893,6 @@ msgstr "U wilt deze plugin direct benaderen."
 #, fuzzy
 msgid "APL Post Lists"
 msgstr "APL Post lijsten"
-
-#: includes/class/class-apl-core.php:214
-msgid "Post List"
-msgstr "Post lijst"
 
 #: includes/class/class-apl-core.php:215
 msgctxt "List"
@@ -840,7 +934,7 @@ msgstr "Geen lijsten gevonden"
 msgid "No Post Lists found in Trash"
 msgstr "Geen Post lijsten gevonden in Prullenbak"
 
-#: includes/class/class-apl-core.php:224 includes/class/class-apl-core.php:283
+#: includes/class/class-apl-core.php:224 includes/class/class-apl-core.php:280
 msgid ":"
 msgstr ":"
 
@@ -869,116 +963,111 @@ msgstr "In bericht invoegen"
 msgid "Upload to this Post List"
 msgstr "Uploaden naar deze Post lijst"
 
-#: includes/class/class-apl-core.php:230
-#, fuzzy
-msgid "APL Post List"
-msgstr "APL Post lijst"
-
 #: includes/class/class-apl-core.php:232
 #, fuzzy
 msgid "APL Preset Post Lists."
 msgstr "APL voorinstelling Post lijst."
 
-#: includes/class/class-apl-core.php:272
+#: includes/class/class-apl-core.php:269
 #, fuzzy
 msgid "APL Designs"
 msgstr "APL ontwerpen"
 
-#: includes/class/class-apl-core.php:273
+#: includes/class/class-apl-core.php:270
 msgid "Design"
 msgstr "Ontwerp"
 
-#: includes/class/class-apl-core.php:274
+#: includes/class/class-apl-core.php:271
 msgctxt "design"
 msgid "Add New"
 msgstr "Nieuwe rij aanmaken"
 
-#: includes/class/class-apl-core.php:275
+#: includes/class/class-apl-core.php:272
 #, fuzzy
 msgid "Add New Design"
 msgstr "Nieuw Ontwerp"
 
-#: includes/class/class-apl-core.php:276
+#: includes/class/class-apl-core.php:273
 msgid "Edit Design"
 msgstr "Ontwerp bewerken"
 
-#: includes/class/class-apl-core.php:277
+#: includes/class/class-apl-core.php:274
 #, fuzzy
 msgid "New Design"
 msgstr "Nieuw Ontwerp"
 
-#: includes/class/class-apl-core.php:278
+#: includes/class/class-apl-core.php:275
 msgid "View Design"
 msgstr "Ontwerp Bekijken"
 
-#: includes/class/class-apl-core.php:279
+#: includes/class/class-apl-core.php:276
 #, fuzzy
 msgid "View Designs"
 msgstr "Weergave ontwerpen"
 
-#: includes/class/class-apl-core.php:280
+#: includes/class/class-apl-core.php:277
 #, fuzzy
 msgid "Search Designs"
 msgstr "Zoek ontwerpen"
 
-#: includes/class/class-apl-core.php:281
+#: includes/class/class-apl-core.php:278
 #, fuzzy
 msgid "No Design found"
 msgstr "Geen model gevonden"
 
-#: includes/class/class-apl-core.php:282
+#: includes/class/class-apl-core.php:279
 #, fuzzy
 msgid "No Design found in Trash"
 msgstr "Geen model gevonden in Prullenbak"
 
-#: includes/class/class-apl-core.php:284
+#: includes/class/class-apl-core.php:281
 #, fuzzy
 msgid "All Designs"
 msgstr "Alle ontwerpen"
 
-#: includes/class/class-apl-core.php:285
+#: includes/class/class-apl-core.php:282
 #, fuzzy
 msgid "Design Archives"
 msgstr "Ontwerp archieven"
 
-#: includes/class/class-apl-core.php:286
+#: includes/class/class-apl-core.php:283
 #, fuzzy
 msgid "Design Attributes"
 msgstr "Ontwerp kenmerken"
 
-#: includes/class/class-apl-core.php:287
+#: includes/class/class-apl-core.php:284
 #, fuzzy
 msgid "Insert into Design"
 msgstr "Invoegen van Design"
 
-#: includes/class/class-apl-core.php:288
+#: includes/class/class-apl-core.php:285
 #, fuzzy
 msgid "Upload to this Design"
 msgstr "Uploaden naar dit ontwerp"
 
-#: includes/class/class-apl-core.php:289
+#: includes/class/class-apl-core.php:286
 #, fuzzy
 msgid "APL Design"
 msgstr "APL Design"
 
-#: includes/class/class-apl-core.php:291
+#: includes/class/class-apl-core.php:288
 #, fuzzy
 msgid "APL Designs for Preset Post Lists."
 msgstr "APL ontwerpen voor vooraf ingestelde Post lijsten."
 
-#: includes/class/class-apl-core.php:579
-#: includes/class/class-apl-updater.php:892 includes/functions.php:37
+#: includes/class/class-apl-core.php:625
+#: includes/class/class-apl-updater.php:959 includes/functions.php:37
 #, fuzzy
 msgid "Sorry, but no content is available at this time."
 msgstr "Sorry, maar er is op dit moment geen inhoud beschikbaar."
 
-#: includes/class/class-apl-core.php:681
+#: includes/class/class-apl-core.php:727
 #, fuzzy
 msgid "NOTICE: Shortcode name is missing. Ex [post_list name='example']"
 msgstr ""
 "Let op: De naam van de Shortcode ontbreekt. Ex [post_list naam = 'voorbeeld']"
 
-#: includes/class/class-apl-core.php:737
+#: includes/class/class-apl-core.php:806
 #, fuzzy
 msgid "NOTICE: Post list 'name' does not exist or is invalid."
 msgstr "AANKONDIGING: Post lijst 'naam' bestaat niet of is ongeldig."

@@ -3,7 +3,7 @@
 Plugin Name: Advanced Post List
 Plugin URI: http://wordpress.org/plugins/advanced-post-list/
 Description: Create highly customizable post lists to display to your users and visitors. Provides a wide array of static settings and dynamic features. Also supports Custom Post Types and Taxonomies.
-Version: 0.4.3.1
+Version: 0.4.4
 Author: EkoJR
 Author URI: http://ekojr.com
 License: GPLv2
@@ -35,8 +35,8 @@ global $wp_version;
 
 if ( isset( $wp_version ) ) {
 	if ( version_compare( $wp_version, '4.5', '<' ) ) {
-		$error_msg = '';
-		$error_msg .= esc_html__( 'This plugin requires Wordpress 2.0.2 or higher to operate. ', 'advanced-post-list' );
+		$error_msg  = '';
+		$error_msg .= esc_html__( 'This plugin requires WordPress 4.5 or higher to operate. ', 'advanced-post-list' );
 		$error_msg .= esc_html__( '<a href="http://codex.wordpress.org/Upgrading_WordPress">Please update!</a>', 'advanced-post-list' );
 		wp_die( esc_html( $error_msg ), esc_html__( 'Advanced Post List: Error', 'advanced-post-list' ) );
 	}
@@ -46,7 +46,7 @@ if ( isset( $wp_version ) ) {
 }
 
 /* **** Core Singleton Class **** */
-require_once( plugin_dir_path( __FILE__ ) . 'includes/class/class-apl-core.php' );
+require_once plugin_dir_path( __FILE__ ) . 'includes/class/class-apl-core.php';
 $advanced_post_list = new APL_Core( __FILE__ );
 
 // A LIST DEBUGGIN METHODS THAT USERS MAY USE OR BE

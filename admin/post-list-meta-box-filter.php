@@ -20,52 +20,34 @@
 //var_dump( $apl_tax_terms );
 //var_dump( $apl_display_post_types );
 $apl_help_text = array(
-	'post_types' =>
-		esc_html__( 'Each (jQuiry UI) accordion contains a separate individual post type. The default post types built into WordPress are Post and Page. Any additional post types are dynamically added in the manner WordPress does. Please Note: Each post/page can have only one post type, which may explain why it has been divided by post types.', 'advanced-post-list' ),
-	'taxonomy_tab' =>
-		esc_html__(	'Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.', 'advanced-post-list' ),
-	'parent_page_tab' =>
-		esc_html( 'Each hierarchical post type has a Parent selector for selecting which children pages to display. You can add multiple Post Parents of dynamically add children pages according to the Current Page.', 'advanced-post-list' ),
-	'taxonomy_multiselect' =>
-		esc_html( 'MULTISELECT Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.', 'advanced-post-list' ) .
+	'post_types'              => esc_html__( 'Each (jQuiry UI) accordion contains a separate individual post type. The default post types built into WordPress are Post and Page. Any additional post types are dynamically added in the manner WordPress does. Please Note: Each post/page can have only one post type, which may explain why it has been divided by post types.', 'advanced-post-list' ),
+	'taxonomy_tab'            => esc_html__( 'Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.', 'advanced-post-list' ),
+	'parent_page_tab'         => esc_html__( 'Each hierarchical post type has a Parent selector for selecting which children pages to display. You can add multiple Post Parents of dynamically add children pages according to the Current Page.', 'advanced-post-list' ),
+	'taxonomy_multiselect'    => esc_html__( 'MULTISELECT Each taxonomy is generally spit up in two sections, and divided into separate tabs. Hierarchies (categories) are located on the left, and non-hierarchies (tags) are located on the right.', 'advanced-post-list' ) .
 		'<br /><br />' .
 		esc_html( 'Req. Taxonomies: If more than one ‘Require Taxonomy’ is checked and terms (or include) are selected, or "any", then each taxonomy must be required within the post type.', 'advanced-post-list' ),
-	'require_terms' =>
-		esc_html__( 'If selected, and more than one term is checked, then each term must be required within the CPT/taxonomy in order to be displayed in the post list.', 'advanced-post-list' ),
-	'dynamic_terms' =>
-		esc_html__( 'If selected, the post list preset will include any terms the current page/post has within the CTP/taxonomy.', 'advanced-post-list' ),
-	'any_terms' =>
-		esc_html__( 'When checked, any terms will be included within that CPT/taxonomy.', 'advanced-post-list' ),
-	'list_amount' =>
-		esc_html__( 'The numeric value of how many posts you want the post list to display. Negative one (-1) will display all the posts that are available after filtering.', 'advanced-post-list' ),
-	'order_by' =>
-		esc_html__(	'Choose which page properties to sort from. All of which are built in params used in WP_Query.', 'advanced-post-list' ),
-	'authors' =>
-		esc_html( 'Show or remove posts that were created by a certain author, or authors. You can only choose between adding or removing, not both.', 'advanced-post-list' ) .
+	'require_terms'           => esc_html__( 'If selected, and more than one term is checked, then each term must be required within the CPT/taxonomy in order to be displayed in the post list.', 'advanced-post-list' ),
+	'dynamic_terms'           => esc_html__( 'If selected, the post list preset will include any terms the current page/post has within the CTP/taxonomy.', 'advanced-post-list' ),
+	'any_terms'               => esc_html__( 'When checked, any terms will be included within that CPT/taxonomy.', 'advanced-post-list' ),
+	'list_amount'             => esc_html__( 'The numeric value of how many posts you want the post list to display. Negative one (-1) will display all the posts that are available after filtering.', 'advanced-post-list' ),
+	'order_by'                => esc_html__( 'Choose which page properties to sort from. All of which are built in params used in WP_Query.', 'advanced-post-list' ),
+	'authors'                 => esc_html__( 'Show or remove posts that were created by a certain author, or authors. You can only choose between adding or removing, not both.', 'advanced-post-list' ) .
 		'<br /><br />' .
-		esc_html( 'Operator - Determines whether you want to include or exclude authors.', 'advanced-post-list' ) .
+		esc_html__( 'Operator - Determines whether you want to include or exclude authors.', 'advanced-post-list' ) .
 		'<br /><br />' .
-		esc_html( 'Author Names/IDs - Displays a list of authors the site currently has and is divided/grouped into separate role groups.', 'advanced-post-list' ),
-	'post_status' =>
-		esc_html( 'Holds the settings to show which posts to display based on the user visibility and/or the page states. To which is only visible to the users with the necessary capabilities to view them.', 'advanced-post-list' ) .
+		esc_html__( 'Author Names/IDs - Displays a list of authors the site currently has and is divided/grouped into separate role groups.', 'advanced-post-list' ),
+	'post_status'             => esc_html__( 'Holds the settings to show which posts to display based on the user visibility and/or the page states. To which is only visible to the users with the necessary capabilities to view them.', 'advanced-post-list' ) .
 		'<br /><br />' .
-		esc_html( '<b>Visibility</b> - Display posts as either Public, Private, or Both', 'advanced-post-list' ) .
+		esc_html__( '<b>Visibility</b> - Display posts as either Public, Private, or Both', 'advanced-post-list' ) .
 		'<br /><br />' .
-		esc_html( '<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, Auto-save, Inherit, and/or Trash.', 'advanced-post-list' ),
-	'user_perms' =>
-		esc_html__( 'Uses the user permission via. user capabilities to determine what posts to display in the post list to the visitor/user.', 'advanced-post-list' ),
-	'offset' =>
-		esc_html( 'Number of posts to skip/displace.', 'advanced-post-list' ) .
-		'<br />' .
-		esc_html( 'NOTE: Offset is ignored when List Amount is set to -1 (show all posts).', 'advanced-post-list' ),
-	'exclude_posts_by_id' =>
-		esc_html__( 'Add post/page IDs, seperated by a comma (,), will prevent those posts from being added to the post list.', 'advanced-post-list' ),
-	'enable_sticky_posts' =>
-		esc_html__( 'Meant for the built-in post type (Posts) function. When checked, this will prevent sticky posts from always displaying at the top of the post list.', 'advanced-post-list' ),
-	'exclude_current_post' =>
-		esc_html__( 'When checked, the current post being viewed will be excluded from the post list.', 'advanced-post-list' ),
-	'exclude_duplicate_posts' =>
-		esc_html__(	'In the "order that it is received", each preset post list being viewed will add the post IDs to a global exclude list built into APL. When checked, the preset post list will add the post IDs (listed at the time) to the exclude filter settings in WP_Query. This will remove any posts that have already been displayed to the user by the APL plugin.', 'advanced-post-list' ),
+		esc_html__( '<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, Auto-save, Inherit, and/or Trash.', 'advanced-post-list' ),
+	'user_perms'              => esc_html__( 'Uses the user permission via. user capabilities to determine what posts to display in the post list to the visitor/user.', 'advanced-post-list' ),
+	'offset'                  => esc_html__( 'Number of posts to skip/displace.', 'advanced-post-list' ) . '<br />' .
+		                         esc_html__( 'NOTE: Offset is ignored when List Amount is set to -1 (show all posts).', 'advanced-post-list' ),
+	'exclude_posts_by_id'     => esc_html__( 'Add post/page IDs, seperated by a comma (,), will prevent those posts from being added to the post list.', 'advanced-post-list' ),
+	'enable_sticky_posts'     => esc_html__( 'Meant for the built-in post type (Posts) function. When checked, this will prevent sticky posts from always displaying at the top of the post list.', 'advanced-post-list' ),
+	'exclude_current_post'    => esc_html__( 'When checked, the current post being viewed will be excluded from the post list.', 'advanced-post-list' ),
+	'exclude_duplicate_posts' => esc_html__( 'In the "order that it is received", each preset post list being viewed will add the post IDs to a global exclude list built into APL. When checked, the preset post list will add the post IDs (listed at the time) to the exclude filter settings in WP_Query. This will remove any posts that have already been displayed to the user by the APL plugin.', 'advanced-post-list' ),
 );
 ?>
 <?php
@@ -79,17 +61,17 @@ $apl_help_text = array(
  *
  * @since 0.4.0
  *
- * @param string         $post_type      Post Type slug.
- * @param string         $taxonomy       Taxonomy slug.
- * @param APL_Post_List  $apl_post_list  Current Post List object.
- * @param int            $term_parent    Parent Term ID.
- * @param int            $indent         Number of indents.
+ * @param string        $post_type     Post Type slug.
+ * @param string        $taxonomy      Taxonomy slug.
+ * @param APL_Post_List $apl_post_list Current Post List object.
+ * @param int           $term_parent   Parent Term ID.
+ * @param int           $indent        Number of indents.
  * @return void
  */
 function apl_render_categories( $post_type, $taxonomy, $apl_post_list, $term_parent = 0, $indent = 0 ) {
 	$args = array(
-		'taxonomy' => $taxonomy,
-		'parent' => $term_parent,
+		'taxonomy'   => $taxonomy,
+		'parent'     => $term_parent,
 		'hide_empty' => false,
 	);
 	$terms = get_terms( $args );
@@ -163,11 +145,11 @@ function apl_render_categories( $post_type, $taxonomy, $apl_post_list, $term_par
  */
 function apl_render_page_parents( $post_type, $apl_post_list, $page_parent = 0, $indent = 0 ) {
 	$args = array(
-		'post_type'       => $post_type,
-		'post_parent'     => $page_parent,
-		'posts_per_page'  => -1,
-		'order'           => 'DESC',
-		'orderby'         => 'name',
+		'post_type'      => $post_type,
+		'post_parent'    => $page_parent,
+		'posts_per_page' => -1,
+		'order'          => 'DESC',
+		'orderby'        => 'name',
 	);
 	$query_pages = new WP_Query( $args );
 
@@ -232,13 +214,13 @@ function apl_render_page_parents( $post_type, $apl_post_list, $page_parent = 0, 
 				?>
 	<?php endwhile; ?>
 	<?php if ( 0 === $page_parent ) : ?>
-			<tfoot>
-				<tr>
-					<th><?php esc_html_e( 'Add', 'advanced-post-list' ); ?></th>
-					<th><?php esc_html_e( 'ID', 'advanced-post-list' ); ?></th>
-					<th><?php esc_html_e( 'Page Title', 'advanced-post-list' ); ?></th>
-				</tr>
-			</tfoot>
+				<tfoot>
+					<tr>
+						<th><?php esc_html_e( 'Add', 'advanced-post-list' ); ?></th>
+						<th><?php esc_html_e( 'ID', 'advanced-post-list' ); ?></th>
+						<th><?php esc_html_e( 'Page Title', 'advanced-post-list' ); ?></th>
+					</tr>
+				</tfoot>
 			</tbody>
 		</table>
 	<?php endif; ?>
@@ -249,8 +231,8 @@ function apl_render_page_parents( $post_type, $apl_post_list, $page_parent = 0, 
 /**
  * APL Render checked post types.
  *
- * @param type $apl_post_types
- * @param type $post_type
+ * @param string $apl_post_types Post Types selected.
+ * @param string $post_type Current post type.
  * @return string
  */
 function apl_checked_post_type( $apl_post_types, $post_type ) {
@@ -273,8 +255,8 @@ function apl_checked_post_type( $apl_post_types, $post_type ) {
 /**
  * Diplay ( Hide or Show ) post type containers.
  *
- * @param type $apl_post_types
- * @param type $post_type
+ * @param array $apl_post_types Post Types selected.
+ * @param string $post_type Current post type.
  * @return string
  */
 function apl_display_post_type( $apl_post_types, $post_type ) {
@@ -331,9 +313,10 @@ $apl_taxonomy_objs = get_taxonomies( '', 'objects' );
 $apl_term_objs_arr = array();
 foreach ( $apl_tax_terms as $key => $value ) {
 	$args = array(
-		'taxonomy' => $key,
+		'taxonomy'   => $key,
 		'hide_empty' => false,
 	);
+
 	$apl_term_objs_arr[ $key ] = get_terms( $args );
 }
 
@@ -410,7 +393,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 									<hr />
 									<?php foreach ( $v_pt_arr['tax_arr'] as $index => $tax_slug ) : ?>
 										<?php
-										$opt_value = $k_pt_slug . '-' . $tax_slug;
+										$opt_value    = $k_pt_slug . '-' . $tax_slug;
 										$tax_selected = '';
 										if ( isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 											foreach ( $apl_post_list->tax_query[ $k_pt_slug ] as $k3_pl_tax_query => $v3_pl_tax_query ) {
@@ -459,9 +442,9 @@ foreach ( $apl_tax_terms as $key => $value ) {
 									<?php $first_tax = true; ?>
 									<?php foreach ( $v_pt_arr['tax_arr'] as $index => $tax_slug ) : ?>
 										<?php
-										$tax_display = 'display: none;';
+										$tax_display      = 'display: none;';
 										$tax_chk_required = '';
-										$tax_chk_dynamic = '';
+										$tax_chk_dynamic  = '';
 										if ( isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 											foreach ( $apl_post_list->tax_query[ $k_pt_slug ] as $k3_pl_tax_query => $v3_pl_tax_query ) {
 												if ( 'relation' !== $k3_pl_tax_query ) {
@@ -480,7 +463,7 @@ foreach ( $apl_tax_terms as $key => $value ) {
 
 											if ( $first_tax && ! isset( $apl_post_list->tax_query[ $k_pt_slug ] ) ) {
 												$tax_display = 'display: block;';
-												$first_tax = false;
+												$first_tax   = false;
 											}
 										}
 										?>
@@ -535,7 +518,6 @@ foreach ( $apl_tax_terms as $key => $value ) {
 			<div>
 				<label for="apl_spinner_posts_per_page"><?php esc_html_e( 'List Amount:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['list_amount']; ?>"></span>
-				
 			</div>
 			<div>
 				<div class="apl-spinner-posts_per_page-wrap">
@@ -564,7 +546,6 @@ foreach ( $apl_tax_terms as $key => $value ) {
 						<div id="apl_slider_handle_offset" class="apl-slider-handle-offset ui-slider-handle"></div>
 					</div>
 				</div>
-				
 			</div>
 		</div>
 		<!-- ORDER BY -->
@@ -612,10 +593,11 @@ foreach ( $apl_tax_terms as $key => $value ) {
 						<?php foreach ( $wp_roles->role_names as $k_role_slug => $v_role_name ) : ?>
 							<?php
 							$args = array(
-								'orderby'  => 'display_name',
-								'order'    => 'DESC',
-								'role'     => $k_role_slug,
+								'orderby' => 'display_name',
+								'order'   => 'DESC',
+								'role'    => $k_role_slug,
 							);
+
 							$apl_authors = get_users( $args );
 							?>
 							<?php if ( $apl_authors ) : ?>

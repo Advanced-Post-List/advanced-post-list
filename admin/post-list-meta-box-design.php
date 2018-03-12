@@ -4,11 +4,13 @@
  *
  * Design Meta Box for making new Post Lists.
  *
- * @link https://github.com/Advanced-Post-List/advanced-post-list/
+ * @uses `wpml_object_id`
+ * @link https://wpml.org/wpml-hook/wpml_object_id/
  *
  * @package advanced-post-list
  * @package advanced-post-list\APL_Admin
  * @since 0.4.0
+ * @since 0.4.4 Added stricter APL_Design object referencing, WPML compatibility, and CodeMirror.
  */
 
 /*
@@ -37,13 +39,20 @@ $apl_help_text = array(
 
 if ( 'apl_post_list' === $post->post_type ) {
 	$apl_post_list = new APL_Post_List( $post->post_name );
-	$apl_design = new APL_Design( $apl_post_list->pl_apl_design );
+	$apl_design_post_id = $apl_post_list->pl_apl_design_id;
+	if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+		$apl_design_post_id = apply_filters( 'wpml_object_id', $apl_post_list->pl_apl_design_id, 'apl_design', true );
+	}
+	$apl_design = new APL_Design( $apl_design_post_id );
 } else if ( defined( 'ICL_SITEPRESS_VERSION' )  && 'apl_design' === $post->post_type ) {
-	$apl_design = new APL_Design( $post->post_name );
+	$wpml_post_id = apply_filters( 'wpml_object_id', $post->ID,'apl_design', true );
+
+	$design_post_id = intval( $post->ID );
+	$apl_design = new APL_Design( $design_post_id );
 }
 
 ?>
-<?php include( APL_DIR . '/admin/admin-dialog-internal-shortcodes.php' ); ?>
+<?php include APL_DIR . '/admin/admin-dialog-internal-shortcodes.php'; ?>
 <div class="apl-design-box-1">
 	<div class="apl-design-column">
 		<div class="apl-design-row">
@@ -51,7 +60,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<label for="apl_textarea_before"><?php esc_html_e( 'Before list:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['before_list']; ?>"></span>
 			</div>
-			<div>
+			<div class="apl-textarea-before-wrap">
 				<textarea id="apl_textarea_before" class="apl-textarea-before large-text" name="apl_before" rows="3"><?php echo $apl_design->before; ?></textarea>
 			</div>
 		</div>
@@ -65,7 +74,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 					<span class="dashicons dashicons-clipboard"></span>
 				</a>
 			</div>
-			<div>
+			<div class="apl-textarea-content-wrap">
 				<textarea id="apl_textarea_content" class="apl-textarea-content large-text" name="apl_content" rows="9"><?php echo $apl_design->content; ?></textarea>
 			</div>
 		</div>
@@ -74,7 +83,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<label for="apl_textarea_after"><?php esc_html_e( 'After list:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['after_list']; ?>"></span>
 			</div>
-			<div>
+			<div class="apl-textarea-after-wrap">
 				<textarea id="apl_textarea_after" class="apl-textarea-after large-text" name="apl_after" rows="3"><?php echo $apl_design->after; ?></textarea>
 			</div>
 		</div>
@@ -83,8 +92,8 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<label for="apl_textarea_empty_message"><?php esc_html_e( 'Empty Message:', 'advanced-post-list' ); ?></label>
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['empty_message']; ?>"></span>
 			</div>
-			<div>
-				<div style="margin: 3px 0px 3px 6px;">
+			<div class="apl-textarea-empty-message-wrap">
+				<div style="margin: 3px 0 3px 6px;">
 					<input type="checkbox" id="apl_empty_message_enable" class="apl-empty-message-enable" name="apl_empty_enable" <?php echo ! empty( $apl_design->empty ) ? 'checked="checked"' : ''; ?> />
 					<label for="apl_empty_message_enable"><?php esc_html_e( 'Enable (Overwrites Default)', 'advanced-post-list' ) ?></label>
 				</div>

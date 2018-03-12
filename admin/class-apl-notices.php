@@ -118,7 +118,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * @since 0.4.2
 		 */
 		private function _requires() {
-			require_once( APL_DIR . 'admin/functions-notice.php' );
+			require_once APL_DIR . 'admin/functions-notice.php';
 		}
 
 		/**
@@ -279,7 +279,6 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				return $rtn_action_options;
 			}
 
-
 			foreach ( $action_options as $action_option ) {
 				$tmp_delay_o = $this->action_options_defaults();
 
@@ -336,7 +335,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			}
 
 			$notice_default = $this->notice_defaults();
-			$new_notice = wp_parse_args( $notice, $notice_default );
+			$new_notice     = wp_parse_args( $notice, $notice_default );
 
 			$new_notice['action_options'] = $this->set_action_options( $new_notice['action_options'] );
 
@@ -366,14 +365,14 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			}
 
 			$notice_default = $this->notice_defaults();
-			$new_notice = wp_parse_args( $notice, $notice_default );
+			$new_notice     = wp_parse_args( $notice, $notice_default );
 
 			$new_notice['action_options'] = $this->set_action_options( $new_notice['action_options'] );
 
 			$this->notices[ $notice['slug'] ] = $new_notice;
 			$this->obj_update_options();
 			// DO NOT use activate. This is intended to update pre-existing data.
-			//$this->activate_notice( $slug );
+			// //$this->activate_notice( $slug );
 
 			return true;
 		}
@@ -409,7 +408,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 */
 		public function activate_notice( $slug ) {
 			$display_time = time() + $this->notices[ $slug ]['delay_time'];
-			$display_time -= 1;
+			$display_time--;
 
 			if ( 'user' === $this->notices[ $slug ]['target'] ) {
 				$current_user_id = get_current_user_id();
@@ -517,17 +516,21 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * have the same functionality, but serves as a future development concept.
 		 *
 		 * @since 0.4.2
+		 * @since 0.4.4 Fixed displaying content when JS hasn't loaded.
 		 *
 		 * @uses APL_DIR . 'admin/display/notice-default.php' Template for default notices.
 		 *
 		 * @return void
 		 */
 		public function display_notice_default() {
+			if ( ! wp_script_is( 'apl-notice-js', 'enqueued' ) ) {
+				return;
+			}
 
-			$current_screen = get_current_screen();
+			$current_screen  = get_current_screen();
 			$current_user_id = get_current_user_id();
 			foreach ( $this->active_notices as $a_notice_slug => $a_notice_time_display ) {
-				$notice_show     = true;
+				$notice_show = true;
 
 				// Screen Restriction.
 				if ( ! empty( $this->notices[ $a_notice_slug ]['screens'] ) ) {
@@ -553,7 +556,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 
 				// Display/Render.
 				if ( time() > $a_notice_time_display && $notice_show ) {
-					include( APL_DIR . 'admin/view/display/notice-default.php' );
+					include APL_DIR . 'admin/view/display/notice-default.php';
 				}
 			}
 		}
@@ -572,10 +575,14 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * @return void
 		 */
 		public function display_notice_apl() {
-			$current_screen = get_current_screen();
+			if ( ! wp_script_is( 'apl-notice-js', 'enqueued' ) ) {
+				return;
+			}
+
+			$current_screen  = get_current_screen();
 			$current_user_id = get_current_user_id();
 			foreach ( $this->active_notices as $a_notice_slug => $a_notice_time_display ) {
-				$notice_show  = true;
+				$notice_show = true;
 
 				// Screen Restriction.
 				if ( ! empty( $this->notices[ $a_notice_slug ]['screens'] ) ) {
@@ -601,7 +608,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 
 				// Display/Render.
 				if ( time() > $a_notice_time_display && $notice_show ) {
-					include( APL_DIR . 'admin/view/display/notice-apl.php' );
+					include APL_DIR . 'admin/view/display/notice-apl.php';
 				}
 			}
 		}
