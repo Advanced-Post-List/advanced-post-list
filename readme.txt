@@ -113,6 +113,7 @@ Go to [Q&A](https://support.advancedpostlist.com/qa/).
 * Added stricter handling with APL_Design data to fix post lists not rendering.
 * Fixed WPML Compatability with translated posts.
 * Fixed APL Notice displaying when no JS is present to delay/dismiss.
+* Fixed APL Updater missing custom post types and taxonomies that exist.
 * Changed Internal Shortcodes Dialog.
 * Changed Settings Info metabox.
 
