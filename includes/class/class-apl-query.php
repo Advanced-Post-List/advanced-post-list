@@ -489,7 +489,10 @@ class APL_Query {
 			// If Posts Per Page is set to -1/Unlimited, then set nopaging to true.
 			if ( -1 === $query_str['posts_per_page'] ) {
 				$query_str['nopaging'] = true;
-				$query_str['offset']   = 0;
+			}
+
+			if ( isset( $query_str['offset'] ) ) {
+				$query_str['offset'] = 0;
 			}
 
 			// Sets the query string to just query IDs.
