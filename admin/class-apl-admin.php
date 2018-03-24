@@ -377,7 +377,7 @@ class APL_Admin {
 			);
 
 			global $wp_version;
-			if ( version_compare( $wp_version, '4.9', '>' ) ) {
+			if ( version_compare( $wp_version, '4.9', '>' ) && ( 'apl_post_list' === $screen->id || 'apl_design' === $screen->id ) ) {
 				// Enqueue code editor and settings for manipulating HTML.
 				// https://developer.wordpress.org/reference/functions/wp_enqueue_code_editor/
 				$args = array( 'type' => 'application/x-httpd-php' );
