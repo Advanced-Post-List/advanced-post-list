@@ -233,7 +233,8 @@ class APL_Core {
 			'public'              => true,
 			'exclude_from_search' => true,
 			'publicly_queryable'  => false,
-			'show_ui'             => true, // Shows up in admin menu bar.
+			// Shows up in admin menu bar.
+			'show_ui'             => true,
 			'show_in_menu'        => 'advanced_post_list',
 			'show_in_nav_menus'   => false,
 			'show_in_admin_bar'   => true,

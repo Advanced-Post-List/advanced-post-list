@@ -44,15 +44,18 @@ if ( 'apl_post_list' === $post->post_type ) {
 		$apl_design_post_id = apply_filters( 'wpml_object_id', $apl_post_list->pl_apl_design_id, 'apl_design', true );
 	}
 	$apl_design = new APL_Design( $apl_design_post_id );
-} else if ( defined( 'ICL_SITEPRESS_VERSION' )  && 'apl_design' === $post->post_type ) {
+} elseif ( defined( 'ICL_SITEPRESS_VERSION' )  && 'apl_design' === $post->post_type ) {
+	// Why isn't this being used? Is it needed? v0.4.4 WPML update.
 	$wpml_post_id = apply_filters( 'wpml_object_id', $post->ID,'apl_design', true );
 
 	$design_post_id = intval( $post->ID );
 	$apl_design = new APL_Design( $design_post_id );
+} else {
+	wp_die( 'Objects aren\' being loaded correctly in `post-list-meta-box-design.php`.' );
 }
 
 ?>
-<?php include APL_DIR . '/admin/admin-dialog-internal-shortcodes.php'; ?>
+<?php require APL_DIR . '/admin/admin-dialog-internal-shortcodes.php'; ?>
 <div class="apl-design-box-1">
 	<div class="apl-design-column">
 		<div class="apl-design-row">
