@@ -230,7 +230,7 @@ class APL_Admin {
 		add_submenu_page(
 			'advanced_post_list',
 			__( 'Add New Post List', 'advanced-post-list' ),
-			__( 'Add New', 'advanced-post-list' ),
+			__( '- New Post List', 'advanced-post-list' ),
 			'administrator',
 			'post-new.php?post_type=apl_post_list'
 		);
