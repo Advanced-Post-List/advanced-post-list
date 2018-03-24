@@ -123,7 +123,7 @@ class APL_Admin {
 			// Editor Meta Boxes.
 			add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
 			add_action( 'add_meta_boxes', array( $this, 'settings_meta_boxes' ) );
-			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			if ( defined( 'ICL_SITEPRESS_VERSION' ) || defined( 'APLP_VERSION' ) ) {
 				add_action( 'add_meta_boxes', array( $this, 'design_meta_boxes' ) );
 			}
 		}

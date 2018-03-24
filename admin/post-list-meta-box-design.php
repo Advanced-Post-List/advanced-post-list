@@ -50,6 +50,8 @@ if ( 'apl_post_list' === $post->post_type ) {
 
 	$design_post_id = intval( $post->ID );
 	$apl_design = new APL_Design( $design_post_id );
+} elseif ( 'apl_design' === $post->post_type ) {
+	$apl_design = new APL_Design( intval( $post->ID ) );
 } else {
 	wp_die( 'Objects aren\' being loaded correctly in `post-list-meta-box-design.php`.' );
 }
