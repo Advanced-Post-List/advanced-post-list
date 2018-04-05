@@ -141,6 +141,7 @@ class APL_Admin {
 	private function _requires() {
 		// Example.
 		// 'require_once( APL_DIR . 'includes/example.php' )'.
+		require_once APL_DIR . 'admin/functions-admin.php';
 		require_once APL_DIR . 'admin/export.php';
 		require_once APL_DIR . 'admin/import.php';
 		require_once APL_DIR . 'admin/class-apl-notices.php';
@@ -258,7 +259,7 @@ class APL_Admin {
 	 * @since 0.4.0
 	 */
 	public function submenu_settings_page() {
-		include( APL_DIR . 'admin/settings-page.php' );
+		apl_get_template( 'admin/settings-page.php' );
 	}
 
 	/**
@@ -456,10 +457,10 @@ class APL_Admin {
 
 			// Get values for variables to localize into JS files.
 			// POST => TAXONOMIES.
-			$data_post_tax = $this->get_post_tax();
+			$data_post_tax = apl_get_post_tax();
 
 			// TAXONOMIES => TERMS.
-			$data_tax_terms = $this->get_tax_terms();
+			$data_tax_terms = apl_get_tax_terms();
 
 			$data_ui_trans = array(
 				'tax_noneSelectedText'           => esc_html__( 'Select Taxonomy', 'advanced-post-list' ),
@@ -838,7 +839,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function settings_meta_box_info( $post, $metabox ) {
-		include APL_DIR . 'admin/settings-meta-box-info.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/settings-info.php', $args );
 	}
 
 	/**
@@ -850,7 +856,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function settings_meta_box_general( $post, $metabox ) {
-		include APL_DIR . 'admin/settings-meta-box-general.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/settings-general.php', $args );
 	}
 
 	/**
@@ -862,7 +873,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function settings_meta_box_import_export( $post, $metabox ) {
-		include APL_DIR . 'admin/settings-meta-box-import-export.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/settings-import-export.php', $args );
 	}
 
 	/**
@@ -874,11 +890,15 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function post_list_meta_box_filter( $post, $metabox ) {
-		$apl_post_tax           = $this->get_post_tax();
-		$apl_tax_terms          = $this->get_tax_terms();
-		$apl_display_post_types = apl_get_display_post_types();
+		$args = array(
+			'post'                   => $post,
+			'metabox'                => $metabox,
+			'apl_post_tax'           => apl_get_post_tax(),
+			'apl_tax_terms'          => apl_get_tax_terms(),
+			'apl_display_post_types' => apl_get_display_post_types(),
+		);
 
-		include APL_DIR . 'admin/post-list-meta-box-filter.php';
+		apl_get_template( 'admin/meta-box/post-list-filter.php', $args );
 	}
 
 	/**
@@ -892,7 +912,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function post_list_meta_box_design( $post, $metabox ) {
-		include APL_DIR . 'admin/post-list-meta-box-design.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/post-list-design.php', $args );
 	}
 
 	/**
@@ -907,7 +932,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function design_meta_box_design( $post, $metabox ) {
-		include APL_DIR . 'admin/post-list-meta-box-design.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/post-list-design.php', $args );
 	}
 
 	/**
@@ -2021,6 +2051,8 @@ class APL_Admin {
 	 *
 	 * Gets and returns an array of Post_Types => Taxonomies.
 	 *
+	 * @deprecated 0.4.4.1 Use apl_get_post_tax()
+	 *
 	 * @ignore
 	 * @since 0.4.0
 	 * @access private
@@ -2052,6 +2084,8 @@ class APL_Admin {
 	 * Get Taxonomies & Terms
 	 *
 	 * Gets and returns an array of Taxonomies => Terms.
+	 *
+	 * @deprecated 0.4.4.1 Use apl_get_tax_terms().
 	 *
 	 * @see get_terms()
 	 * @link https://developer.wordpress.org/reference/functions/get_terms/

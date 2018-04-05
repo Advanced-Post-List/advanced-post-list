@@ -162,6 +162,16 @@ class APL_Core {
 		 * @var string $APL_DIR Contains 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
 		 */
 		define( 'APL_DIR', plugin_dir_path( $plugin_file ) );
+
+		if ( ! defined( 'APL_TEMPLATE_DEBUG_MODE' ) ) {
+			/**
+			 * APL Template Debug
+			 *
+			 * @since 0.4.4.1
+			 * @var boolean $APL_TEMPLATE_DEBUG_MODE Used for bypassing child theme customizations when debugging.
+			 */
+			define( 'APL_TEMPLATE_DEBUG_MODE', false );
+		}
 	}
 
 	/**
