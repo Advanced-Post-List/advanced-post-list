@@ -937,7 +937,7 @@ class APL_Admin {
 			'metabox' => $metabox,
 		);
 
-		apl_get_template( 'admin/meta-box/post-list-design.php', $args );
+		apl_get_template( 'admin/meta-box/design-design.php', $args );
 	}
 
 	/**

@@ -225,7 +225,7 @@ input.apl-text-exclude-posts {
 /*
  * DESIGN META BOX
  */
-.apl-design-box-1 {
+.apl-design-box {
 	display: flex;
 	margin-bottom: 18px;
 }

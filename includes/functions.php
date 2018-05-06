@@ -322,6 +322,7 @@ if ( 'apl_get_template_part' ) {
 		$slug_name = $slug . '-' . $name . '.php';
 
 		// EXTRACT.
+		//extract( $args );
 		foreach ( $args as $arg_key => $arg_value ) {
 			if ( ! is_numeric( $arg_key ) ) {
 				$$arg_key = $arg_value;
@@ -330,6 +331,7 @@ if ( 'apl_get_template_part' ) {
 				$$arg_key = $arg_value;
 			}
 		}
+
 
 		// Look in yourtheme/slug-name.php and yourtheme/advanced-post-list/slug-name.php.
 		if ( $name && ! APL_TEMPLATE_DEBUG_MODE ) {
@@ -364,7 +366,8 @@ if ( 'apl_get_template_part' ) {
 		$template = apply_filters( 'apl_get_template_part', $template, $slug, $name );
 
 		if ( $template ) {
-			load_template( $template, false );
+			//load_template( $template, false );
+			include $template;
 		}
 	}
 }
