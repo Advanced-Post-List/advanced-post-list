@@ -275,7 +275,7 @@ class APL_Query {
 	 * @param array $arg_arr Multi-dimensional query_str array.
 	 * @return array Multi-dimensional query_str array.
 	 */
-	private function query_arg_consolidate( $arg_arr ) {
+	public function query_arg_consolidate( $arg_arr ) {
 		$query_count = count( $arg_arr );
 		for ( $i = 0; $i < $query_count; $i++ ) {
 			if ( empty( $arg_arr[ $i ]['post_parent'] ) ) {
