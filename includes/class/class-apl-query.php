@@ -442,6 +442,26 @@ class APL_Query {
 				$post_in_ids = array_merge( $this->query_wp( $query_str_array, true ), $post_in_ids );
 			}
 
+			// Add Terms for Any/All ( value = 0 ).
+			foreach ( $query_str['tax_query'] as $k1_index => $tax_arr ) {
+				if ( 'relation' === $k1_index ) {
+					continue;
+				}
+
+				if ( 0 === $tax_arr['terms'][0] && 1 === count( $tax_arr['terms'] ) ) {
+					$terms_args = array(
+						'taxonomy' => $tax_arr['taxonomy'],
+						'fields'   => 'ids',
+					);
+
+					$tax_arr['terms'] = get_terms( $terms_args );
+
+					$query_str['tax_query'][ $k1_index ] = $tax_arr;
+				} else {
+					$query_str['tax_query'][ $k1_index ] = $tax_arr;
+				}
+			}
+
 			// Since post__in and post__not_in don't mix at all. The 2 variables
 			// are stored seperately.
 			// TODO Create function for Post Include/Exclude.
