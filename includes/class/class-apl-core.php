@@ -850,7 +850,7 @@ class APL_Core {
 		$count  = 0;
 		if ( $wp_query_class->have_posts() ) {
 			// BEFORE.
-			$output .= $apl_design->before;
+			$output .= apply_filters( 'apl_core_loop_before', $apl_design->before );
 
 			$output .= $this->display_preset_list_content( $wp_query_class, $post_list_slug, $apl_design );
 
