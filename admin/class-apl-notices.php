@@ -633,6 +633,11 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			if ( empty( $notice_slug ) || empty( $action_index ) ) {
 				wp_die();
 			}
+			if ( empty( $notice_slug ) ) {
+				wp_send_json_error( 'Missing values from `notice_slug`.' );
+			} elseif ( empty( $action_index ) && 0 !== $action_index ) {
+				wp_send_json_error( 'Missing values from `action_index`.' );
+			}
 
 			$action_options            = $this->action_options_defaults();
 			$action_options['time']    = $this->default_dismiss_delay;
@@ -664,7 +669,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			}
 
 			$this->obj_update_options();
-			wp_die();
+			wp_send_json_success( 'Notice updated successfully.' );
 		}
 
 	}
