@@ -655,7 +655,8 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				// Always sets the delay time, even if dismissed, so last timestamp is recorded.
 				$current_user_id = get_current_user_id();
 				if ( $action_options['time'] ) {
-					$metadata = time() + $action_options['time'];
+					// Adds action_option delay time, reduced by 1 second to display at exact time.
+					$metadata = $current_time + $action_options['time'] - 1;
 
 					update_user_meta( $current_user_id, 'apl_notice_time_set_' . $notice_slug, $current_time );
 					update_user_meta( $current_user_id, 'apl_notice_display_time_' . $notice_slug, $metadata );
@@ -665,8 +666,9 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				}
 			} else {
 				if ( $action_options['time'] ) {
-					$this->active_notices[ $notice_slug ] = time() + $action_options['time'];
 					$this->notices[ $notice_slug ]['time_set'] = $current_time;
+					// Adds action_option delay time, reduced by 1 second to display at exact time.
+					$this->active_notices[ $notice_slug ] = $current_time + $action_options['time'] - 1;
 				}
 
 				if ( $action_options['dismiss'] ) {
