@@ -803,9 +803,6 @@ class APL_Core {
 		// Otherwise, for Admin show an alert message, and nothing to viewers.
 		$apl_post_list = new APL_Post_List( $post_list_slug );
 		if ( $apl_post_list->id ) {
-			// INIT.
-			require_once APL_DIR . 'includes/class/class-apl-shortcodes.php';
-
 			// Get APL Design.
 			$design_id = $apl_post_list->pl_apl_design_id;
 			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
@@ -820,7 +817,10 @@ class APL_Core {
 			return '';
 		}
 
-		// STEP - If Exclude Duplicates is checked (w/ multiple post lists),
+		// INIT.
+		require_once APL_DIR . 'includes/class/class-apl-shortcodes.php';
+
+		// If Exclude Duplicates is checked (w/ multiple post lists),
 		// then add any post IDs collected to the preset post list object's
 		// exclude post array to be filter out.
 		if ( $apl_post_list->pl_exclude_dupes ) {
