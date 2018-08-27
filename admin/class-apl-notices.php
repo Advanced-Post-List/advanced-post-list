@@ -53,6 +53,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 *                                   array('apl') = $this->apl_screens,
 		 *                                   array('CUSTOM')  = specific screen(s).
 		 *         @type int    $time_start  The time the notice was added to the object.
+		 *         @type int    $time_set    Set when AJAX/Action_Option was last used to delay time. Primarily for PHPUnit tests.
 		 *     }
 		 * }
 		 */
@@ -236,6 +237,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				'target'         => 'site',
 				'screens'        => array(),
 				'time_start'     => time(),
+				'time_set'       => time(),
 			);
 		}
 
@@ -648,11 +650,14 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			}
 
 			// User Notices or Sitewide.
+			$current_time = time();
 			if ( 'user' === $this->notices[ $notice_slug ]['target'] ) {
 				// Always sets the delay time, even if dismissed, so last timestamp is recorded.
 				$current_user_id = get_current_user_id();
 				if ( $action_options['time'] ) {
 					$metadata = time() + $action_options['time'];
+
+					update_user_meta( $current_user_id, 'apl_notice_time_set_' . $notice_slug, $current_time );
 					update_user_meta( $current_user_id, 'apl_notice_display_time_' . $notice_slug, $metadata );
 				}
 				if ( $action_options['dismiss'] ) {
@@ -661,6 +666,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			} else {
 				if ( $action_options['time'] ) {
 					$this->active_notices[ $notice_slug ] = time() + $action_options['time'];
+					$this->notices[ $notice_slug ]['time_set'] = $current_time;
 				}
 
 				if ( $action_options['dismiss'] ) {
