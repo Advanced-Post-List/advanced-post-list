@@ -852,31 +852,10 @@ class APL_Core {
 			// BEFORE.
 			$output .= $apl_design->before;
 
-			// Initial Internal Shortcodes since there's posts.
-			$internal_shortcodes = new APL_Internal_Shortcodes();
-
-			$output = apply_filters( 'apl_core_loop_before_content', $output, $count, $wp_query_class );
-
-			// LIST CONTENT.
-			while ( $wp_query_class->have_posts() ) {
-				$wp_query_class->the_post();
-
-				$this->_remove_duplicates[] = $wp_query_class->post->ID;
-				$output                    .= $internal_shortcodes->replace( $apl_design->content, $wp_query_class->post );
-				$count++;
-			}
-			// [final_end] internal shortcode.
-			if ( strrpos( $output, 'final_end' ) ) {
-				$output = $internal_shortcodes->final_end( $output );
-			}
-
-			$output = apply_filters( 'apl_core_loop_after_content', $output, $count, $wp_query_class );
+			$output .= $this->display_preset_list_content( $wp_query_class, $post_list_slug, $apl_design );
 
 			// AFTER.
 			$output .= $apl_design->after;
-
-			// Exit method for apl-shortcodes class; __destroy magic method wasn't working as intended.
-			$internal_shortcodes->remove();
 		} else {
 			// EMPTY.
 			$apl_options = apl_options_load();
@@ -891,6 +870,47 @@ class APL_Core {
 		wp_reset_postdata();
 
 		// STEP - Return output string.
+		return $output;
+	}
+
+	/**
+	 * Display Preset List Content
+	 *
+	 * @since 0.5
+	 *
+	 * @param WP_Query   $wp_query_class The query class from WP.
+	 * @param string     $apl_preset     APL's Preset Object.
+	 * @param APL_Design $apl_design     APL Design to render.
+	 * @return mixed|string|void
+	 */
+	private function display_preset_list_content( &$wp_query_class, $apl_preset, $apl_design ) {
+		// Initial Internal Shortcodes since there's posts.
+		$internal_shortcodes = new APL_Internal_Shortcodes();
+
+		$count  = 0;
+		$output = '';
+
+		$output = apply_filters( 'apl_core_loop_before_content', $output, $count, $wp_query_class );
+
+		// LIST CONTENT.
+		while ( $wp_query_class->have_posts() ) {
+			$wp_query_class->the_post();
+
+			$this->_remove_duplicates[] = $wp_query_class->post->ID;
+			$output                    .= $internal_shortcodes->replace( $apl_design->content, $wp_query_class->post );
+			$count++;
+		}
+
+		// [final_end] internal shortcode.
+		if ( strrpos( $output, 'final_end' ) ) {
+			$output = $internal_shortcodes->final_end( $output );
+		}
+
+		$output = apply_filters( 'apl_core_loop_after_content', $output, $count, $wp_query_class );
+
+		// Exit method for apl-shortcodes class; __destroy magic method wasn't working as intended.
+		$internal_shortcodes->remove();
+
 		return $output;
 	}
 }
