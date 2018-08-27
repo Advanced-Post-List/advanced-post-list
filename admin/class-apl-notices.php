@@ -490,12 +490,11 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				true
 			);
 
-
 			// Localization.
 			$notice_delays = array();
 			foreach ( $this->active_notices as $notice_slug => $notice_display_time ) {
-				foreach ( $this->notices[ $notice_slug ]['action_options'] as $delay_index => $delay_arr ) {
-					$notice_delays[ $notice_slug ][] = $delay_index;
+				foreach ( $this->notices[ $notice_slug ]['action_options'] as $action_index => $delay_arr ) {
+					$notice_delays[ $notice_slug ][] = $action_index;
 				}
 			}
 
@@ -623,15 +622,15 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		public function ajax_notice_action() {
 			check_ajax_referer( 'apl_ajax_notice' );
 			// Notice (Slug) => (Delay_Options) Index.
-			$notice_slug = null;
-			$delay_index = null;
+			$notice_slug  = null;
+			$action_index = null;
 			if ( isset( $_POST['notice_slug'] ) ) {
 				$notice_slug = filter_input( INPUT_POST, 'notice_slug', FILTER_SANITIZE_STRING );
 			}
-			if ( isset( $_POST['delay_index'] ) ) {
-				$delay_index = filter_input( INPUT_POST, 'delay_index', FILTER_SANITIZE_STRING );
+			if ( isset( $_POST['action_index'] ) ) {
+				$action_index = filter_input( INPUT_POST, 'action_index', FILTER_SANITIZE_STRING );
 			}
-			if ( empty( $notice_slug ) || empty( $delay_index ) ) {
+			if ( empty( $notice_slug ) || empty( $action_index ) ) {
 				wp_die();
 			}
 
@@ -639,8 +638,8 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			$action_options['time']    = $this->default_dismiss_delay;
 			$action_options['dismiss'] = false;
 
-			if ( isset( $this->notices[ $notice_slug ]['action_options'][ $delay_index ] ) ) {
-				$action_options = $this->notices[ $notice_slug ]['action_options'][ $delay_index ];
+			if ( isset( $this->notices[ $notice_slug ]['action_options'][ $action_index ] ) ) {
+				$action_options = $this->notices[ $notice_slug ]['action_options'][ $action_index ];
 			}
 
 			// User Notices or Sitewide.
