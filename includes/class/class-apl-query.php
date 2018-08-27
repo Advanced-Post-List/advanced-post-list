@@ -209,28 +209,12 @@ class APL_Query {
 				foreach ( $v1_pt_arr as $v2_pt_slug ) {
 					$tmp_query_args['post_type'] = array( $v2_pt_slug );
 
-					//$tmp_query_args['tax_query'] = $apl_post_list->tax_query[ $v2_pt_slug ];
 					$tmp_tax_query = $apl_post_list->tax_query[ $v2_pt_slug ];
 
 					if ( ! empty( $tmp_tax_query ) ) {
 						$tmp_query_args['tax_query']['relation'] = $tmp_tax_query['relation'];
-						unset( $tmp_tax_query['relation'] );
 
-						foreach ( $tmp_tax_query as $tax_arr ) {
-							// Any / All.
-							if ( isset( $tax_arr['terms'][0] ) && 0 === $tax_arr['terms'][0] ) {
-								$terms_args = array(
-									'taxonomy' => $tax_arr['taxonomy'],
-									'fields'   => 'ids',
-								);
-
-								$tax_arr['terms'] = get_terms( $terms_args );
-
-								$tmp_query_args['tax_query'][] = $tax_arr;
-							} else {
-								$tmp_query_args['tax_query'][] = $tax_arr;
-							}
-						}
+						$tmp_query_args['tax_query'] = $tmp_tax_query;
 					}
 
 					// Page Parents.
@@ -240,32 +224,13 @@ class APL_Query {
 				}
 			} else { // ANY.
 				$tmp_query_args['post_type'] = 'any';
-				//$tmp_query_args['tax_query'] = $apl_post_list->tax_query['any'];
 
 				if ( ! empty( $apl_post_list->tax_query[ $v1_pt_arr ] ) ) {
 					$tmp_tax_query                           = $apl_post_list->tax_query[ $v1_pt_arr ];
 					$tmp_query_args['tax_query']['relation'] = $tmp_tax_query['relation'];
-					unset( $tmp_tax_query['relation'] );
 
-					foreach ( $tmp_tax_query as $tax_arr ) {
-						// Any / All.
-						if ( 0 === $tax_arr['terms'][0] ) {
-							$terms_args = array(
-								'taxonomy' => $tax_arr['taxonomy'],
-								'fields'   => 'ids',
-							);
-
-							$tax_arr['terms'] = get_terms( $terms_args );
-
-							$tmp_query_args['tax_query'][] = $tax_arr;
-						} else {
-							$tmp_query_args['tax_query'][] = $tax_arr;
-						}
-					}
+					$tmp_query_args['tax_query'] = $tmp_tax_query;
 				}
-
-				// Post Parents is empty in 'Any'
-				//$tmp_query_args['post_parent__in'] = $apl_post_list->post_parent__in['any'];
 			}// End if().
 
 			// General Filter.
@@ -318,9 +283,16 @@ class APL_Query {
 				for ( $j = $i + 1; $j < $query_count; $j++ ) {
 					// IF there is a post_parents; which would conflict.
 					// IF both query_arg's tax_query match.
-					if ( isset( $arg_arr[ $i ]['post_parent'] ) && empty( $arg_arr[ $i ]['post_parent'] ) &&
-					$this->tax_query_match( $arg_arr[ $i ]['tax_query'], $arg_arr[ $j ]['tax_query'] ) ) {
+					$tax_query_match = $this->tax_query_match( $arg_arr[ $i ]['tax_query'], $arg_arr[ $j ]['tax_query'] );
+					if ( isset( $arg_arr[ $i ]['post_parent'] ) && empty( $arg_arr[ $i ]['post_parent'] ) && $tax_query_match ) {
+						$arg_arr[ $i ]['post_type'][] = $arg_arr['post_type'][0];
 
+						unset( $arg_arr[ $j ] );
+						$arg_arr = array_values( $arg_arr );
+
+						// Set $i back 1 to do next $j properly.
+						$i--;
+					} elseif ( ! isset( $arg_arr[ $i ]['post_parent'] ) && $tax_query_match ) {
 						$arg_arr[ $i ]['post_type'][] = $arg_arr['post_type'][0];
 
 						unset( $arg_arr[ $j ] );
