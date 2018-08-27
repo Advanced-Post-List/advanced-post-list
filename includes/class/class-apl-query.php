@@ -452,8 +452,8 @@ class APL_Query {
 	 * @return mixed WP_Query class if unrepeated, otherwise array of post_IDs.
 	 */
 	public function query_wp( $query_str_array, $repeated = false ) {
-		$post_in_IDs     = array();
-		$post_not_in_IDs = array();
+		$post_in_ids     = array();
+		$post_not_in_ids = array();
 
 		/*
 		 * Normally a recursive function will have an exit statement setup first,
@@ -461,14 +461,13 @@ class APL_Query {
 		 * moving on to the first/last instance.
 		 */
 		// TODO Create function for the repeated query_wp function.
-		// STEP 1.
 		if ( true === $repeated ) {
 			// Shift the args when repeating this method / function.
 			// If more args exist, then repeat this function.
 			// Merge returned post ids for pre-final query.
 			$query_str = array_shift( $query_str_array );
 			if ( ! empty( $query_str_array ) ) {
-				$post_in_IDs = array_merge( $this->query_wp( $query_str_array, true ), $post_in_IDs );
+				$post_in_ids = array_merge( $this->query_wp( $query_str_array, true ), $post_in_ids );
 			}
 
 			// Since post__in and post__not_in don't mix at all. The 2 variables
@@ -476,13 +475,13 @@ class APL_Query {
 			// TODO Create function for Post Include/Exclude.
 			if ( ! empty( $query_str['post__not_in'] ) && 0 < $query_str['posts_per_page'] ) {
 				// Removed at final.
-				//$post_not_in_IDs = $query_str['post__not_in'];
+				//$post_not_in_ids = $query_str['post__not_in'];
 				$query_str['posts_per_page'] += count( $query_str['post__not_in'] );
 			}
 			unset( $query_str['post__not_in'] );
 
 			if ( ! empty( $query_str['post__in'] ) ) {
-				$post_in_IDs = array_merge( $post_in_IDs, $query_str['post__in'] );
+				$post_in_ids = array_merge( $post_in_ids, $query_str['post__in'] );
 			}
 			unset( $query_str['post__in'] );
 
@@ -497,24 +496,21 @@ class APL_Query {
 
 			// Sets the query string to just query IDs.
 			$query_str['fields'] = 'ids';
-			$query_obj = new WP_Query( $query_str );
+			$query_obj           = new WP_Query( $query_str );
 
 			// Collect an array of Post IDs.
-			$post_IDs = array();
+			$post_ids = array();
 			if ( ! empty( $query_obj->posts ) ) {
-				foreach ( $query_obj->posts as $i => $post_ID ) {
-					$post_IDs[] = intval( $post_ID );
+				foreach ( $query_obj->posts as $i => $post_id ) {
+					$post_ids[] = intval( $post_id );
 				}
 			}
 
-			$post_IDs = array_merge( $post_IDs, $post_in_IDs );
+			$post_ids = array_merge( $post_ids, $post_in_ids );
 
 			wp_reset_postdata();
-			return $post_IDs;
-
+			return $post_ids;
 		} else {
-			// STEP 2.
-
 			/*
 			 * This is the Initial and Final Query. This is used to collect IDs first
 			 * with 1 or more query_str (that couldn't be consolidated/merged), and
@@ -523,28 +519,28 @@ class APL_Query {
 			 * compatability with posts_in & posts_not_in.
 			 */
 
-			$post_in_IDs = array_merge( $this->query_wp( $query_str_array, true ) );
+			$post_in_ids = array_merge( $this->query_wp( $query_str_array, true ) );
 			$query_str   = array_shift( $query_str_array );
 
 			// Filter out excluded posts.
 			foreach ( $query_str['post__not_in'] as $post_not_value ) {
-				foreach ( $post_in_IDs as $key => $post_in_value ) {
+				foreach ( $post_in_ids as $key => $post_in_value ) {
 					if ( $post_in_value === $post_not_value ) {
-						unset( $post_in_IDs[ $key ] );
+						unset( $post_in_ids[ $key ] );
 					}
 				}
 			}
-			$post_in_IDs = array_merge( $post_in_IDs );
+			$post_in_ids = array_merge( $post_in_ids );
 
 			// Prevent defaulting when there's no posts.
-			if ( empty( $post_in_IDs ) ) {
-				$post_in_IDs[] = 0;
+			if ( empty( $post_in_ids ) ) {
+				$post_in_ids[] = 0;
 			}
 
 			// STEP.
 			// Set FINAL query_str with post IDs.
 			$final_query_str = array(
-				'post__in'            => $post_in_IDs,
+				'post__in'            => $post_in_ids,
 				'post_type'           => 'any',
 				'posts_per_page'      => $query_str['posts_per_page'],
 				'offset'              => $query_str['offset'],

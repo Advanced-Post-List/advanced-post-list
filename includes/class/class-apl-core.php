@@ -829,7 +829,7 @@ class APL_Core {
 			}
 		}
 
-		// STEP - Init APL_Query object (sets the query strings).
+		// Init APL_Query object (sets the query strings).
 		// The constructor will process and produce a final array of query_args.
 		// Then APL_Query will need to query_wp and return a final WP_Query class.
 		// NOTE: Look into class inheritance, or change the class name to match the concept; APL_Process, *_Factory.
