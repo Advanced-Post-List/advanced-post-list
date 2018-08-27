@@ -403,10 +403,17 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * updating a notice that requires a hard reset.
 		 *
 		 * @since 0.4.2
+		 * @since 0.5 Change to return a boolean, true on success.
 		 *
 		 * @param string $slug Notice slug.
+		 * @return boolean
 		 */
 		public function activate_notice( $slug ) {
+			if ( ! isset( $this->notices[ $slug ] ) ) {
+				return false;
+			}
+
+			// Display at exactly X time, not (X + 1) time.
 			$display_time = time() + $this->notices[ $slug ]['delay_time'];
 			$display_time--;
 
@@ -417,6 +424,8 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 
 			$this->active_notices[ $slug ] = $display_time;
 			$this->obj_update_options();
+
+			return true;
 		}
 
 		/**
