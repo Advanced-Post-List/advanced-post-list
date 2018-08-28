@@ -1571,6 +1571,17 @@ class APL_Admin {
 	public function ajax__restore_defaults() {
 		check_ajax_referer( 'apl_settings_restore_defaults' );
 
+		$this->restore_default_presets();
+
+		wp_send_json_success( 'Success' );
+	}
+
+	/**
+	 * Restore Default Presets
+	 *
+	 * @since 0.5
+	 */
+	public function restore_default_presets() {
 		include_once APL_DIR . 'admin/includes/default-presets.php';
 
 		$apl_post_list_default = apl_restore_post_list_default();
@@ -1593,8 +1604,6 @@ class APL_Admin {
 		$apl_post_list_default->slug          = 'footer-list';
 		$apl_post_list_default->pl_apl_design = 'footer-list';
 		$this->import_process_post_list_design( $apl_post_list_default, $apl_design_footer_list );
-
-		wp_send_json_success( 'Success' );
 	}
 
 	/**

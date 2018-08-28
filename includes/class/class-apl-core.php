@@ -465,7 +465,26 @@ class APL_Core {
 		$options = apl_options_load();
 
 		require_once APL_DIR . 'admin/class-apl-notices.php';
+		require_once APL_DIR . 'admin/class-apl-admin.php';
 		apl_notice_set_activation_review_plugin( false, true );
+
+		$args = array(
+			'post_status' => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+			),
+		);
+
+		// If there are no presets/post_lists, then add defaults for initial presets.
+		$apl_post_lists = apl_get_post_lists( $args );
+		if ( 1 > count( $apl_post_lists ) ) {
+			$apl_admin = APL_Admin::get_instance();
+			$apl_admin->restore_default_presets();
+		}
+
 		// Any Need? apl_options_load() already sets defaults if no data is found.
 		apl_options_save( $options );
 	}
