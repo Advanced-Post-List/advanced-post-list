@@ -565,10 +565,10 @@ class APL_Admin {
 			);
 
 			$settings_localize = array(
-				'export_nonce'  => wp_create_nonce( 'apl_settings_export' ),
-				'import_nonce'  => wp_create_nonce( 'apl_settings_import' ),
-				'restore_nonce' => wp_create_nonce( 'apl_settings_restore' ),
-				'trans'         => $trans_arr,
+				'export_nonce'          => wp_create_nonce( 'apl_settings_export' ),
+				'import_nonce'          => wp_create_nonce( 'apl_settings_import' ),
+				'restoreDefaultsNonce'  => wp_create_nonce( 'apl_settings_restore_defaults' ),
+				'trans'                 => $trans_arr,
 			);
 
 			$settings_ui_localize = array(
@@ -1277,6 +1277,8 @@ class APL_Admin {
 		add_action( 'wp_ajax_apl_settings_import', array( $this, 'ajax_settings_import' ) );
 		add_action( 'wp_ajax_apl_import', 'apl_import' );
 
+		add_action( 'wp_ajax_apl_settings_restore_defaults', array( $this, 'ajax__restore_defaults' ) );
+
 		add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
 		add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
 		add_action( 'after_wp_tiny_mce', array( $this, 'tinymce_extra_vars' ) );
@@ -1557,6 +1559,42 @@ class APL_Admin {
 		echo json_encode( $rtn_data );
 
 		die();
+	}
+
+	/**
+	 * AJAX - Restore Defaults
+	 *
+	 * @since 0.5
+	 *
+	 * @return void
+	 */
+	public function ajax__restore_defaults() {
+		check_ajax_referer( 'apl_settings_restore_defaults' );
+
+		include_once APL_DIR . 'admin/includes/default-presets.php';
+
+		$apl_post_list_default = apl_restore_post_list_default();
+
+		$apl_design_excerpt_divided      = apl_restore_design_excerpt_divided();
+		$apl_design_page_content_divided = apl_restore_design_page_content_divided();
+		$apl_design_footer_list          = apl_restore_design_footer_list();
+
+		$apl_post_list_default->title         = 'Excerpt Divided';
+		$apl_post_list_default->slug          = 'excerpt-divided';
+		$apl_post_list_default->pl_apl_design = 'excerpt-divided';
+		$this->import_process_post_list_design( $apl_post_list_default, $apl_design_excerpt_divided );
+
+		$apl_post_list_default->title         = 'Page Content Divided';
+		$apl_post_list_default->slug          = 'page-content-divided';
+		$apl_post_list_default->pl_apl_design = 'page-content-divided';
+		$this->import_process_post_list_design( $apl_post_list_default, $apl_design_page_content_divided );
+
+		$apl_post_list_default->title         = 'Footer List';
+		$apl_post_list_default->slug          = 'footer-list';
+		$apl_post_list_default->pl_apl_design = 'footer-list';
+		$this->import_process_post_list_design( $apl_post_list_default, $apl_design_footer_list );
+
+		wp_send_json_success( 'Success' );
 	}
 
 	/**
