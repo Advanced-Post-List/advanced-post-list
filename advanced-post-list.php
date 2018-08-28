@@ -46,7 +46,7 @@ if ( isset( $wp_version ) ) {
 }
 
 /* **** Core Singleton Class **** */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class/class-apl-core.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-apl-core.php';
 global $apl_core;
 $advanced_post_list = new APL_Core( __FILE__ );
 $apl_core = $advanced_post_list;
