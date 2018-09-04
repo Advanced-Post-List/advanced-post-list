@@ -126,6 +126,10 @@ class APL_Admin {
 			if ( defined( 'ICL_SITEPRESS_VERSION' ) || defined( 'APLP_VERSION' ) ) {
 				add_action( 'add_meta_boxes', array( $this, 'design_meta_boxes' ) );
 			}
+
+			add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
+			add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
+			add_action( 'tiny_mce_before_init', array( $this, 'tinymce_extra_vars' ) );
 		}
 	}
 
@@ -1278,11 +1282,6 @@ class APL_Admin {
 		add_action( 'wp_ajax_apl_import', 'apl_import' );
 
 		add_action( 'wp_ajax_apl_settings_restore_defaults', array( $this, 'ajax__restore_defaults' ) );
-
-		add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
-		add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
-		add_action( 'after_wp_tiny_mce', array( $this, 'tinymce_extra_vars' ) );
-		add_action( 'admin_init', array( $this, 'add_editor_style' ) );
 	}
 
 	/**
