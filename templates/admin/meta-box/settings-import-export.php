@@ -52,7 +52,7 @@ $apl_help_text = array(
 	</form>
 	<hr />
 	
-	<h3><?php esc_html_e( 'Restore Defaults ( WIP )', 'advanced-post-list' ); ?></h3>
+	<h3><?php esc_html_e( 'Restore Defaults', 'advanced-post-list' ); ?></h3>
 	<div class="apl-settings-row" >
 		<div class="apl-row-first-cell">
 			<label><?php esc_html_e( 'Default Post Lists:', 'advanced-post-list' ); ?></label>
@@ -62,11 +62,8 @@ $apl_help_text = array(
 			<p>
 				<?php esc_html_e( 'Restores the plugin\'s default preset table only, and will overwrite/add the default Post Lists. This will not delete other Post Lists (as long as the name isn\'t a default name).', 'advanced-post-list' ); ?>
 			</p>
-			<p>
-				<?php esc_html_e( 'Note: This is currently a Work In Progress. The functionality is relatively simple, however, many updates have taken place since then, and many of the defaults are relatively old.', 'advanced-post-list' ); ?>
-			</p>
 			<div>
-				<?php submit_button( __( 'Restore' ), 'secondary', 'apl_restore', true ); ?>
+				<?php submit_button( __( 'Restore' ), 'secondary', 'apl_restore_defaults', true ); ?>
 			</div>
 		</div>
 			

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: Post List, Tool, Editor, Featured, Related Posts, Author, Authors, Auto, Automate, Builder, Categories, Category, Child Pages, CMS, Content, Comment, Comments, CPT, CSS, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Design, Developer, Draft, Draft Posts, Excerpt, Feature, Featured, Featured Content, Filter, Future, Future Posts, HTML, Image, Images, Links, List, Links, Magazine, Magazines, News, Page, Pages, Parent, Parent Pages, Photos, PHP, Popular Posts, Post, Posts, Private, Private Posts, Programming, Published, Related Post, Related Posts, Recent, Recent Post, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Web Design, Web Development, Webmaster, Widget, Widgets, WPML
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 0.4.4
+Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,6 +107,26 @@ Go to [Q&A](https://support.advancedpostlist.com/qa/).
 6. Admin Screen for Settings.
 
 == Changelog ==
+
+= 0.5.0 =
+* Fix double offset.
+* Fix Check-All on All Post Lists screen.
+* Change submenu name to be indented.
+* Add additional extended edit support to APL Design post type.
+* Add Template Operations/Functions.
+* Add APL_Core->display_preset_list_content() for better encapsulation.
+* Fix possible issues with tax_query not being set and optimized correctly.
+* Change "any" terms operations to get & add all terms in APL_Query->query_wp. Prevents a loose bug.
+* Add filter support to Preset > Before content.
+* Change/Refactor Internal Shortcodes for better extendability.
+* Change APL_Core to a global variable.
+* Change display functions to be wrapper functions.
+* Change Notices display time to display at exact time.
+* Add WP community standard DISABLE_NAG_NOTICES.
+* Re-add install to add default presets when APL's Preset Db is empty.
+* Re-add Restore Defaults in Settings page.
+* Change location of APL_Core file.
+* Fix JS apl_tinyMCE is not defined when Gutenberg is active.
 
 = 0.4.4 =
 * Added CodeMirror to Display metabox in Post List editor.
@@ -344,6 +364,9 @@ Go to [Q&A](https://support.advancedpostlist.com/qa/).
 * Upgraded core functions.
 
 == Upgrade Notice ==
+
+= 0.5.0 =
+* Bug fixes and added extended support. No database update, but a backup is still recommended.
 
 = 0.4.4 =
 * Possible fix with displaying post list. IMPORTANT: Minor database update. PLEASE BACK UP DATA.

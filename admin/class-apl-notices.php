@@ -53,6 +53,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 *                                   array('apl') = $this->apl_screens,
 		 *                                   array('CUSTOM')  = specific screen(s).
 		 *         @type int    $time_start  The time the notice was added to the object.
+		 *         @type int    $time_set    Set when AJAX/Action_Option was last used to delay time. Primarily for PHPUnit tests.
 		 *     }
 		 * }
 		 */
@@ -236,6 +237,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				'target'         => 'site',
 				'screens'        => array(),
 				'time_start'     => time(),
+				'time_set'       => time(),
 			);
 		}
 
@@ -403,10 +405,17 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * updating a notice that requires a hard reset.
 		 *
 		 * @since 0.4.2
+		 * @since 0.5 Change to return a boolean, true on success.
 		 *
 		 * @param string $slug Notice slug.
+		 * @return boolean
 		 */
 		public function activate_notice( $slug ) {
+			if ( ! isset( $this->notices[ $slug ] ) ) {
+				return false;
+			}
+
+			// Display at exactly X time, not (X + 1) time.
 			$display_time = time() + $this->notices[ $slug ]['delay_time'];
 			$display_time--;
 
@@ -417,6 +426,8 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 
 			$this->active_notices[ $slug ] = $display_time;
 			$this->obj_update_options();
+
+			return true;
 		}
 
 		/**
@@ -481,12 +492,11 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				true
 			);
 
-
 			// Localization.
 			$notice_delays = array();
 			foreach ( $this->active_notices as $notice_slug => $notice_display_time ) {
-				foreach ( $this->notices[ $notice_slug ]['action_options'] as $delay_index => $delay_arr ) {
-					$notice_delays[ $notice_slug ][] = $delay_index;
+				foreach ( $this->notices[ $notice_slug ]['action_options'] as $action_index => $delay_arr ) {
+					$notice_delays[ $notice_slug ][] = $action_index;
 				}
 			}
 
@@ -515,50 +525,14 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * NOTE: As of 0.4.2, display_notice_default() & display_notice_apl()
 		 * have the same functionality, but serves as a future development concept.
 		 *
-		 * @since 0.4.2
-		 * @since 0.4.4 Fixed displaying content when JS hasn't loaded.
+		 * @since 0.5
 		 *
 		 * @uses APL_DIR . 'admin/display/notice-default.php' Template for default notices.
 		 *
 		 * @return void
 		 */
 		public function display_notice_default() {
-			if ( ! wp_script_is( 'apl-notice-js', 'enqueued' ) ) {
-				return;
-			}
-
-			$current_screen  = get_current_screen();
-			$current_user_id = get_current_user_id();
-			foreach ( $this->active_notices as $a_notice_slug => $a_notice_time_display ) {
-				$notice_show = true;
-
-				// Screen Restriction.
-				if ( ! empty( $this->notices[ $a_notice_slug ]['screens'] ) ) {
-					if ( ! in_array( 'apl', $this->notices[ $a_notice_slug ]['screens'], true ) ) {
-						if ( ! in_array( $current_screen->id, $this->notices[ $a_notice_slug ]['screens'], true ) ) {
-							continue;
-						}
-					}
-				}
-
-				// User Settings.
-				if ( 'user' === $this->notices[ $a_notice_slug ]['target'] ) {
-					$user_dismissed = get_user_meta( $current_user_id, 'apl_notice_dismissed_' . $a_notice_slug, true );
-					if ( ! $user_dismissed ) {
-						$user_notice_time_display = get_user_meta( $current_user_id, 'apl_notice_display_time_' . $a_notice_slug, true );
-						if ( ! empty( $user_notice_time_display ) ) {
-							$a_notice_time_display = intval( $user_notice_time_display );
-						}
-					} else {
-						$notice_show = false;
-					}
-				}
-
-				// Display/Render.
-				if ( time() > $a_notice_time_display && $notice_show ) {
-					include APL_DIR . 'admin/view/display/notice-default.php';
-				}
-			}
+			$this->display_notice( 'default' );
 		}
 
 		/**
@@ -568,14 +542,38 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		 * NOTE: As of 0.4.2, display_notice_default() & display_notice_apl()
 		 * have the same functionality, but serves as a future development concept.
 		 *
-		 * @since 0.4.2
+		 * @since 0.5
 		 *
 		 * @uses APL_DIR . 'admin/display/notice-apl.php' Template for notices.
 		 *
 		 * @return void
 		 */
 		public function display_notice_apl() {
-			if ( ! wp_script_is( 'apl-notice-js', 'enqueued' ) ) {
+			$this->display_notice( 'apl' );
+		}
+
+		/**
+		 * Display Notice as Default
+		 *
+		 * Method for default WP Admin notices.
+		 * NOTE: As of 0.4.2, display_notice_default() & display_notice_apl()
+		 * have the same functionality, but serves as a future development concept.
+		 *
+		 * @since 0.4.2
+		 * @since 0.4.4 Fixed displaying content when JS hasn't loaded.
+		 * @since 0.5 Changed to single display function with template param.
+		 *
+		 * @uses APL_DIR . 'admin/display/notice-default.php' Template for default notices.
+		 *
+		 * @param string $template Slug name for template.
+		 * @return void
+		 */
+		public function display_notice( $template ) {
+			if ( ! wp_script_is( 'apl-notice-js', 'enqueued' ) || ! wp_style_is( 'apl-notice-css', 'enqueued' ) ) {
+				return;
+			} elseif ( 'default' !== $template && 'aioseop' !== $template ) {
+				return;
+			} elseif ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
 
@@ -607,8 +605,13 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				}
 
 				// Display/Render.
+				if ( true === DISPLABLE_NAG_NOTICES && defined( 'DISABLE_NAG_NOTICES' ) && ( 'notice-error' !== $this->notices[ $a_notice_slug ]['class'] || 'notice-warning' !== $this->notices[ $a_notice_slug ]['class'] || 'notice-do-nag' !== $this->notices[ $a_notice_slug ]['class'] ) ) {
+					// Skip if `DISABLE_NAG_NOTICES` is implemented (as true).
+					// Important notices, WP's CSS `notice-error` & `notice-warning`, are still rendered.
+					continue;
+				}
 				if ( time() > $a_notice_time_display && $notice_show ) {
-					include APL_DIR . 'admin/view/display/notice-apl.php';
+					include APL_DIR . 'admin/view/display/notice-' . $template .'.php';
 				}
 			}
 		}
@@ -626,32 +629,41 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		public function ajax_notice_action() {
 			check_ajax_referer( 'apl_ajax_notice' );
 			// Notice (Slug) => (Delay_Options) Index.
-			$notice_slug = null;
-			$delay_index = null;
+			$notice_slug  = null;
+			$action_index = null;
 			if ( isset( $_POST['notice_slug'] ) ) {
 				$notice_slug = filter_input( INPUT_POST, 'notice_slug', FILTER_SANITIZE_STRING );
 			}
-			if ( isset( $_POST['delay_index'] ) ) {
-				$delay_index = filter_input( INPUT_POST, 'delay_index', FILTER_SANITIZE_STRING );
+			if ( isset( $_POST['action_index'] ) ) {
+				$action_index = filter_input( INPUT_POST, 'action_index', FILTER_SANITIZE_STRING );
 			}
-			if ( empty( $notice_slug ) || empty( $delay_index ) ) {
+			if ( empty( $notice_slug ) || empty( $action_index ) ) {
 				wp_die();
+			}
+			if ( empty( $notice_slug ) ) {
+				wp_send_json_error( 'Missing values from `notice_slug`.' );
+			} elseif ( empty( $action_index ) && 0 !== $action_index ) {
+				wp_send_json_error( 'Missing values from `action_index`.' );
 			}
 
 			$action_options            = $this->action_options_defaults();
 			$action_options['time']    = $this->default_dismiss_delay;
 			$action_options['dismiss'] = false;
 
-			if ( isset( $this->notices[ $notice_slug ]['action_options'][ $delay_index ] ) ) {
-				$action_options = $this->notices[ $notice_slug ]['action_options'][ $delay_index ];
+			if ( isset( $this->notices[ $notice_slug ]['action_options'][ $action_index ] ) ) {
+				$action_options = $this->notices[ $notice_slug ]['action_options'][ $action_index ];
 			}
 
 			// User Notices or Sitewide.
+			$current_time = time();
 			if ( 'user' === $this->notices[ $notice_slug ]['target'] ) {
 				// Always sets the delay time, even if dismissed, so last timestamp is recorded.
 				$current_user_id = get_current_user_id();
 				if ( $action_options['time'] ) {
-					$metadata = time() + $action_options['time'];
+					// Adds action_option delay time, reduced by 1 second to display at exact time.
+					$metadata = $current_time + $action_options['time'] - 1;
+
+					update_user_meta( $current_user_id, 'apl_notice_time_set_' . $notice_slug, $current_time );
 					update_user_meta( $current_user_id, 'apl_notice_display_time_' . $notice_slug, $metadata );
 				}
 				if ( $action_options['dismiss'] ) {
@@ -659,7 +671,9 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				}
 			} else {
 				if ( $action_options['time'] ) {
-					$this->active_notices[ $notice_slug ] = time() + $action_options['time'];
+					$this->notices[ $notice_slug ]['time_set'] = $current_time;
+					// Adds action_option delay time, reduced by 1 second to display at exact time.
+					$this->active_notices[ $notice_slug ] = $current_time + $action_options['time'] - 1;
 				}
 
 				if ( $action_options['dismiss'] ) {
@@ -668,7 +682,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			}
 
 			$this->obj_update_options();
-			wp_die();
+			wp_send_json_success( 'Notice updated successfully.' );
 		}
 
 	}

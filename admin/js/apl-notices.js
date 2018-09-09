@@ -46,7 +46,7 @@
                 processData: false,
                 contentType: false,
 
-                success: function( data, textStatus, jqXHR ){
+                success: function( response, textStatus, jqXHR ){
                     var noticeContainer = ".apl-notice-" + noticeSlug;
                     $( noticeContainer ).remove();
                 }

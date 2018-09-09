@@ -162,6 +162,16 @@ class APL_Core {
 		 * @var string $APL_DIR Contains 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
 		 */
 		define( 'APL_DIR', plugin_dir_path( $plugin_file ) );
+
+		if ( ! defined( 'APL_TEMPLATE_DEBUG_MODE' ) ) {
+			/**
+			 * APL Template Debug
+			 *
+			 * @since 0.4.4.1
+			 * @var boolean $APL_TEMPLATE_DEBUG_MODE Used for bypassing child theme customizations when debugging.
+			 */
+			define( 'APL_TEMPLATE_DEBUG_MODE', false );
+		}
 	}
 
 	/**
@@ -233,7 +243,8 @@ class APL_Core {
 			'public'              => true,
 			'exclude_from_search' => true,
 			'publicly_queryable'  => false,
-			'show_ui'             => true, // Shows up in admin menu bar.
+			// Shows up in admin menu bar.
+			'show_ui'             => true,
 			'show_in_menu'        => 'advanced_post_list',
 			'show_in_nav_menus'   => false,
 			'show_in_admin_bar'   => true,
@@ -454,7 +465,26 @@ class APL_Core {
 		$options = apl_options_load();
 
 		require_once APL_DIR . 'admin/class-apl-notices.php';
+		require_once APL_DIR . 'admin/class-apl-admin.php';
 		apl_notice_set_activation_review_plugin( false, true );
+
+		$args = array(
+			'post_status' => array(
+				'draft',
+				'pending',
+				'publish',
+				'future',
+				'private',
+			),
+		);
+
+		// If there are no presets/post_lists, then add defaults for initial presets.
+		$apl_post_lists = apl_get_post_lists( $args );
+		if ( 1 > count( $apl_post_lists ) ) {
+			$apl_admin = APL_Admin::get_instance();
+			$apl_admin->restore_default_presets();
+		}
+
 		// Any Need? apl_options_load() already sets defaults if no data is found.
 		apl_options_save( $options );
 	}
@@ -792,9 +822,6 @@ class APL_Core {
 		// Otherwise, for Admin show an alert message, and nothing to viewers.
 		$apl_post_list = new APL_Post_List( $post_list_slug );
 		if ( $apl_post_list->id ) {
-			// INIT.
-			require_once APL_DIR . 'includes/class/class-apl-shortcodes.php';
-
 			// Get APL Design.
 			$design_id = $apl_post_list->pl_apl_design_id;
 			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
@@ -809,7 +836,10 @@ class APL_Core {
 			return '';
 		}
 
-		// STEP - If Exclude Duplicates is checked (w/ multiple post lists),
+		// INIT.
+		require_once APL_DIR . 'includes/class/class-apl-shortcodes.php';
+
+		// If Exclude Duplicates is checked (w/ multiple post lists),
 		// then add any post IDs collected to the preset post list object's
 		// exclude post array to be filter out.
 		if ( $apl_post_list->pl_exclude_dupes ) {
@@ -818,7 +848,7 @@ class APL_Core {
 			}
 		}
 
-		// STEP - Init APL_Query object (sets the query strings).
+		// Init APL_Query object (sets the query strings).
 		// The constructor will process and produce a final array of query_args.
 		// Then APL_Query will need to query_wp and return a final WP_Query class.
 		// NOTE: Look into class inheritance, or change the class name to match the concept; APL_Process, *_Factory.
@@ -839,33 +869,12 @@ class APL_Core {
 		$count  = 0;
 		if ( $wp_query_class->have_posts() ) {
 			// BEFORE.
-			$output .= $apl_design->before;
+			$output .= apply_filters( 'apl_core_loop_before', $apl_design->before );
 
-			// Initial Internal Shortcodes since there's posts.
-			$internal_shortcodes = new APL_Internal_Shortcodes();
-
-			$output = apply_filters( 'apl_core_loop_before_content', $output, $count, $wp_query_class );
-
-			// LIST CONTENT.
-			while ( $wp_query_class->have_posts() ) {
-				$wp_query_class->the_post();
-
-				$this->_remove_duplicates[] = $wp_query_class->post->ID;
-				$output                    .= $internal_shortcodes->replace( $apl_design->content, $wp_query_class->post );
-				$count++;
-			}
-			// [final_end] internal shortcode.
-			if ( strrpos( $output, 'final_end' ) ) {
-				$output = $internal_shortcodes->final_end( $output );
-			}
-
-			$output = apply_filters( 'apl_core_loop_after_content', $output, $count, $wp_query_class );
+			$output .= $this->display_preset_list_content( $wp_query_class, $post_list_slug, $apl_design );
 
 			// AFTER.
 			$output .= $apl_design->after;
-
-			// Exit method for apl-shortcodes class; __destroy magic method wasn't working as intended.
-			$internal_shortcodes->remove();
 		} else {
 			// EMPTY.
 			$apl_options = apl_options_load();
@@ -880,6 +889,47 @@ class APL_Core {
 		wp_reset_postdata();
 
 		// STEP - Return output string.
+		return $output;
+	}
+
+	/**
+	 * Display Preset List Content
+	 *
+	 * @since 0.5
+	 *
+	 * @param WP_Query   $wp_query_class The query class from WP.
+	 * @param string     $apl_preset     APL's Preset Object.
+	 * @param APL_Design $apl_design     APL Design to render.
+	 * @return mixed|string|void
+	 */
+	private function display_preset_list_content( &$wp_query_class, $apl_preset, $apl_design ) {
+		// Initial Internal Shortcodes since there's posts.
+		$internal_shortcodes = new APL_Internal_Shortcodes();
+
+		$count  = 0;
+		$output = '';
+
+		$output = apply_filters( 'apl_core_loop_before_content', $output, $count, $wp_query_class );
+
+		// LIST CONTENT.
+		while ( $wp_query_class->have_posts() ) {
+			$wp_query_class->the_post();
+
+			$this->_remove_duplicates[] = $wp_query_class->post->ID;
+			$output                    .= $internal_shortcodes->replace( $apl_design->content, $wp_query_class->post );
+			$count++;
+		}
+
+		// [final_end] internal shortcode.
+		if ( strrpos( $output, 'final_end' ) ) {
+			$output = $internal_shortcodes->final_end( $output );
+		}
+
+		$output = apply_filters( 'apl_core_loop_after_content', $output, $count, $wp_query_class );
+
+		// Exit method for apl-shortcodes class; __destroy magic method wasn't working as intended.
+		$internal_shortcodes->remove();
+
 		return $output;
 	}
 }

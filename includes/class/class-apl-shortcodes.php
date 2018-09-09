@@ -90,8 +90,8 @@ class APL_Internal_Shortcodes {
 	public function __construct() {
 		// STEP 1.
 		$shortcode_list = $this->shortcode_list();
-		foreach ( $shortcode_list as $tag ) {
-			add_shortcode( $tag, array( $this, $tag ) );
+		foreach ( $shortcode_list as $tag => $callback ) {
+			add_shortcode( $tag, $callback );
 		}
 
 		// STEP 2.
@@ -117,7 +117,7 @@ class APL_Internal_Shortcodes {
 	public function remove() {
 		// STEP 1.
 		$shortcode_list = $this->shortcode_list();
-		foreach ( $shortcode_list as $tag ) {
+		foreach ( $shortcode_list as $tag => $callback ) {
 			remove_shortcode( $tag );
 		}
 		// STEP 2.
@@ -137,51 +137,51 @@ class APL_Internal_Shortcodes {
 	 *
 	 * @return array Internal Shortcode Tags used to add, replace, remove, etc.
 	 */
-	private function shortcode_list() {
+	protected function shortcode_list() {
 		$return_array = array(
-			'ID',
-			'post_name',
-			'post_slug',
-			'post_title',
+			'ID'                => array( $this, 'ID' ),
+			'post_name'         => array( $this, 'post_name' ),
+			'post_slug'         => array( $this, 'post_slug' ),
+			'post_title'        => array( $this, 'post_title' ),
 
-			'post_permalink',
-			'guid',
+			'post_permalink'    => array( $this, 'post_permalink' ),
+			'guid'              => array( $this, 'guid' ),
 
-			'post_date',
-			'post_date_gmt',
-			'post_modified',
-			'post_modified_gmt',
+			'post_date'         => array( $this, 'post_date' ),
+			'post_date_gmt'     => array( $this, 'post_date_gmt' ),
+			'post_modified'     => array( $this, 'post_modified' ),
+			'post_modified_gmt' => array( $this, 'post_modified_gmt' ),
 
-			'post_author',
+			'post_author'       => array( $this, 'post_author' ),
 
-			'post_thumb',
+			'post_thumb'        => array( $this, 'post_thumb' ),
 
-			'post_content',
-			'post_excerpt',
+			'post_content'      => array( $this, 'post_content' ),
+			'post_excerpt'      => array( $this, 'post_excerpt' ),
 
-			'comment_count',
-			'post_comments',
+			'comment_count'     => array( $this, 'comment_count' ),
+			'post_comments'     => array( $this, 'post_comments' ),
 
-			'post_parent',
+			'post_parent'       => array( $this, 'post_parent' ),
 
-			'post_type',
-			'post_tags',
-			'post_categories',
-			'post_terms',
+			'post_type'         => array( $this, 'post_type' ),
+			'post_tags'         => array( $this, 'post_tags' ),
+			'post_categories'   => array( $this, 'post_categories' ),
+			'post_terms'        => array( $this, 'post_terms' ),
 
-			'post_meta',
+			'post_meta'         => array( $this, 'post_meta' ),
 
-			'php_function',
+			'php_function'      => array( $this, 'php_function' ),
 
-			//LOOP SHORTCODE FUNCTIONS for $this->replace().
-			'item_number',
+			// LOOP SHORTCODE FUNCTIONS for $this->replace().
+			'item_number'       => array( $this, 'item_number' ),
 
 			// executed outside of class.
 			//'final_end',
 
 			// Extensions/Hook.
 			// Kalin's PDF Plugin (obsolete?).
-			'post_pdf',
+			'post_pdf'          => array( $this, 'post_pdf' ),
 		);
 
 		return $return_array;
@@ -206,12 +206,12 @@ class APL_Internal_Shortcodes {
 	 */
 	public function replace( $preset_content, $wp_post ) {
 		// INIT.
-		$return_str = $preset_content;
+		$return_str  = $preset_content;
 		$this->_post = $wp_post;
 
 		// STEP 1.
 		$shortcode_tags = $this->shortcode_list();
-		foreach ( $shortcode_tags as $tag ) {
+		foreach ( $shortcode_tags as $tag => $callback ) {
 			// STEP 2.
 			while ( preg_match( '#\[' . $tag . '(.*?)?\]#', $return_str, $matches_default ) ) {
 				// STEP 3.

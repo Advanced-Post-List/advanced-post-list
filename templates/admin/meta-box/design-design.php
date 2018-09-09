@@ -19,15 +19,15 @@
 //var_dump( $post );
 //var_dump( $metabox );
 $apl_help_text = array(
-	'before_list' => esc_html__(
+	'before_list'   => esc_html__(
 		'Used to store any HTML & CSS code that exists before the post/content listings. Useful for div, ul, ol, tables, etc.. As well as storing CSS styling for IDs and Classes.',
 		'advanced-post-list'
 	),
-	'list_content' => esc_html__(
+	'list_content'  => esc_html__(
 		'This where you design how your posts are going to display in the post list. In here you can use HTML, CSS, PHP (requires the PHP shortcode), and the plugin\'s internal shortcodes. Info can be found at the bottom, or by clicking on the shortcode info found below "List content".',
 		'advanced-post-list'
 	),
-	'after_list' => esc_html__(
+	'after_list'    => esc_html__(
 		'Used for ending any elements that are still open, or to display a final message to the users/visitors.',
 		'advanced-post-list'
 	),
@@ -38,22 +38,27 @@ $apl_help_text = array(
 );
 
 if ( 'apl_post_list' === $post->post_type ) {
-	$apl_post_list = new APL_Post_List( $post->post_name );
+	$apl_post_list      = new APL_Post_List( $post->post_name );
 	$apl_design_post_id = $apl_post_list->pl_apl_design_id;
 	if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 		$apl_design_post_id = apply_filters( 'wpml_object_id', $apl_post_list->pl_apl_design_id, 'apl_design', true );
 	}
 	$apl_design = new APL_Design( $apl_design_post_id );
-} else if ( defined( 'ICL_SITEPRESS_VERSION' )  && 'apl_design' === $post->post_type ) {
-	$wpml_post_id = apply_filters( 'wpml_object_id', $post->ID,'apl_design', true );
+} elseif ( defined( 'ICL_SITEPRESS_VERSION' ) && 'apl_design' === $post->post_type ) {
+	// Why isn't this being used? Is it needed? v0.4.4 WPML update.
+	$wpml_post_id = apply_filters( 'wpml_object_id', $post->ID, 'apl_design', true );
 
 	$design_post_id = intval( $post->ID );
-	$apl_design = new APL_Design( $design_post_id );
+	$apl_design     = new APL_Design( $design_post_id );
+} elseif ( 'apl_design' === $post->post_type ) {
+	$apl_design = new APL_Design( intval( $post->ID ) );
+} else {
+	wp_die( 'Objects aren\'t being loaded correctly in `' . dirname( __FILE__ ) . basename( __FILE__ ) . '`.' );
 }
 
 ?>
-<?php include APL_DIR . '/admin/admin-dialog-internal-shortcodes.php'; ?>
-<div class="apl-design-box-1">
+<?php apl_get_template_part( 'admin/meta-box/design/dialog', 'internal-shortcodes' ); ?>
+<div class="apl-design-box">
 	<div class="apl-design-column">
 		<div class="apl-design-row">
 			<div>

@@ -10,10 +10,10 @@
  */
 
 ( function($) {
-	var exportNonce  = apl_settings_local.export_nonce;
-	var importNonce  = apl_settings_local.import_nonce;
-	var restoreNonce = apl_settings_local.restore_nonce;
-	var trans        = apl_settings_local.trans;
+	var exportNonce          = apl_settings_local.export_nonce;
+	var importNonce          = apl_settings_local.import_nonce;
+	var restoreDefaultsNonce = apl_settings_local.restoreDefaultsNonce;
+	var trans                = apl_settings_local.trans;
 
 	/**
 	 * Save Settings Event
@@ -242,6 +242,36 @@
 			}
 		});// End AJAX.
 	});// End .submit().
+
+	/**
+	 * restore Defaults (AJAX)
+	 *
+	 * @since 0.5
+	 */
+	$('#apl_restore_defaults').click( function( event ) {
+		console.log( 'Restoring defaults...' );
+
+		if ( ! confirm( 'Restoring defaults will only restore \'Excerpt Divided\', \'Page Content Divided\', and \'Footer List\'. Continuing will overwrite these.\nPress Ok to proceed.' ) ) {
+			return false;
+		}
+
+		var formData = new FormData();
+		formData.append( 'action', 'apl_settings_restore_defaults' );
+		formData.append( '_ajax_nonce', restoreDefaultsNonce );
+		jQuery.ajax({
+			url:         ajaxurl,
+			type:        'POST',
+			data:        formData,
+			cache:       false,
+			dataType:    'json',
+			processData: false, // Don't process the files
+			contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+
+			success: function( data, textStatus, jqXHR ){
+				console.log( 'Defaults restored successfully.' );
+			}
+		});// End AJAX.
+	});
 
 	/**
 	 * APL Alert Dialog

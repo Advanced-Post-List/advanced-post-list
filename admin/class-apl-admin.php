@@ -123,9 +123,13 @@ class APL_Admin {
 			// Editor Meta Boxes.
 			add_action( 'add_meta_boxes', array( $this, 'post_list_meta_boxes' ) );
 			add_action( 'add_meta_boxes', array( $this, 'settings_meta_boxes' ) );
-			if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			if ( defined( 'ICL_SITEPRESS_VERSION' ) || defined( 'APLP_VERSION' ) ) {
 				add_action( 'add_meta_boxes', array( $this, 'design_meta_boxes' ) );
 			}
+
+			add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
+			add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
+			add_action( 'tiny_mce_before_init', array( $this, 'tinymce_extra_vars' ) );
 		}
 	}
 
@@ -141,6 +145,7 @@ class APL_Admin {
 	private function _requires() {
 		// Example.
 		// 'require_once( APL_DIR . 'includes/example.php' )'.
+		require_once APL_DIR . 'admin/functions-admin.php';
 		require_once APL_DIR . 'admin/export.php';
 		require_once APL_DIR . 'admin/import.php';
 		require_once APL_DIR . 'admin/class-apl-notices.php';
@@ -230,7 +235,7 @@ class APL_Admin {
 		add_submenu_page(
 			'advanced_post_list',
 			__( 'Add New Post List', 'advanced-post-list' ),
-			__( 'Add New', 'advanced-post-list' ),
+			__( '- New Post List', 'advanced-post-list' ),
 			'administrator',
 			'post-new.php?post_type=apl_post_list'
 		);
@@ -258,7 +263,7 @@ class APL_Admin {
 	 * @since 0.4.0
 	 */
 	public function submenu_settings_page() {
-		include( APL_DIR . 'admin/settings-page.php' );
+		apl_get_template( 'admin/settings-page.php' );
 	}
 
 	/**
@@ -377,7 +382,7 @@ class APL_Admin {
 			);
 
 			global $wp_version;
-			if ( version_compare( $wp_version, '4.9', '>' ) ) {
+			if ( version_compare( $wp_version, '4.9', '>' ) && ( 'apl_post_list' === $screen->id || 'apl_design' === $screen->id ) ) {
 				// Enqueue code editor and settings for manipulating HTML.
 				// https://developer.wordpress.org/reference/functions/wp_enqueue_code_editor/
 				$args = array( 'type' => 'application/x-httpd-php' );
@@ -456,10 +461,10 @@ class APL_Admin {
 
 			// Get values for variables to localize into JS files.
 			// POST => TAXONOMIES.
-			$data_post_tax = $this->get_post_tax();
+			$data_post_tax = apl_get_post_tax();
 
 			// TAXONOMIES => TERMS.
-			$data_tax_terms = $this->get_tax_terms();
+			$data_tax_terms = apl_get_tax_terms();
 
 			$data_ui_trans = array(
 				'tax_noneSelectedText'           => esc_html__( 'Select Taxonomy', 'advanced-post-list' ),
@@ -564,10 +569,10 @@ class APL_Admin {
 			);
 
 			$settings_localize = array(
-				'export_nonce'  => wp_create_nonce( 'apl_settings_export' ),
-				'import_nonce'  => wp_create_nonce( 'apl_settings_import' ),
-				'restore_nonce' => wp_create_nonce( 'apl_settings_restore' ),
-				'trans'         => $trans_arr,
+				'export_nonce'          => wp_create_nonce( 'apl_settings_export' ),
+				'import_nonce'          => wp_create_nonce( 'apl_settings_import' ),
+				'restoreDefaultsNonce'  => wp_create_nonce( 'apl_settings_restore_defaults' ),
+				'trans'                 => $trans_arr,
 			);
 
 			$settings_ui_localize = array(
@@ -838,7 +843,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function settings_meta_box_info( $post, $metabox ) {
-		include APL_DIR . 'admin/settings-meta-box-info.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/settings-info.php', $args );
 	}
 
 	/**
@@ -850,7 +860,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function settings_meta_box_general( $post, $metabox ) {
-		include APL_DIR . 'admin/settings-meta-box-general.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/settings-general.php', $args );
 	}
 
 	/**
@@ -862,7 +877,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function settings_meta_box_import_export( $post, $metabox ) {
-		include APL_DIR . 'admin/settings-meta-box-import-export.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/settings-import-export.php', $args );
 	}
 
 	/**
@@ -874,11 +894,15 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function post_list_meta_box_filter( $post, $metabox ) {
-		$apl_post_tax           = $this->get_post_tax();
-		$apl_tax_terms          = $this->get_tax_terms();
-		$apl_display_post_types = apl_get_display_post_types();
+		$args = array(
+			'post'                   => $post,
+			'metabox'                => $metabox,
+			'apl_post_tax'           => apl_get_post_tax(),
+			'apl_tax_terms'          => apl_get_tax_terms(),
+			'apl_display_post_types' => apl_get_display_post_types(),
+		);
 
-		include APL_DIR . 'admin/post-list-meta-box-filter.php';
+		apl_get_template( 'admin/meta-box/post-list-filter.php', $args );
 	}
 
 	/**
@@ -892,7 +916,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function post_list_meta_box_design( $post, $metabox ) {
-		include APL_DIR . 'admin/post-list-meta-box-design.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/post-list-design.php', $args );
 	}
 
 	/**
@@ -907,7 +936,12 @@ class APL_Admin {
 	 * @param array   $metabox With Meta Box id, title, callback, and args elements.
 	 */
 	public function design_meta_box_design( $post, $metabox ) {
-		include APL_DIR . 'admin/post-list-meta-box-design.php';
+		$args = array(
+			'post'    => $post,
+			'metabox' => $metabox,
+		);
+
+		apl_get_template( 'admin/meta-box/design-design.php', $args );
 	}
 
 	/**
@@ -1247,10 +1281,7 @@ class APL_Admin {
 		add_action( 'wp_ajax_apl_settings_import', array( $this, 'ajax_settings_import' ) );
 		add_action( 'wp_ajax_apl_import', 'apl_import' );
 
-		add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
-		add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
-		add_action( 'after_wp_tiny_mce', array( $this, 'tinymce_extra_vars' ) );
-		add_action( 'admin_init', array( $this, 'add_editor_style' ) );
+		add_action( 'wp_ajax_apl_settings_restore_defaults', array( $this, 'ajax__restore_defaults' ) );
 	}
 
 	/**
@@ -1527,6 +1558,51 @@ class APL_Admin {
 		echo json_encode( $rtn_data );
 
 		die();
+	}
+
+	/**
+	 * AJAX - Restore Defaults
+	 *
+	 * @since 0.5
+	 *
+	 * @return void
+	 */
+	public function ajax__restore_defaults() {
+		check_ajax_referer( 'apl_settings_restore_defaults' );
+
+		$this->restore_default_presets();
+
+		wp_send_json_success( 'Success' );
+	}
+
+	/**
+	 * Restore Default Presets
+	 *
+	 * @since 0.5
+	 */
+	public function restore_default_presets() {
+		include_once APL_DIR . 'admin/includes/default-presets.php';
+
+		$apl_post_list_default = apl_restore_post_list_default();
+
+		$apl_design_excerpt_divided      = apl_restore_design_excerpt_divided();
+		$apl_design_page_content_divided = apl_restore_design_page_content_divided();
+		$apl_design_footer_list          = apl_restore_design_footer_list();
+
+		$apl_post_list_default->title         = 'Excerpt Divided';
+		$apl_post_list_default->slug          = 'excerpt-divided';
+		$apl_post_list_default->pl_apl_design = 'excerpt-divided';
+		$this->import_process_post_list_design( $apl_post_list_default, $apl_design_excerpt_divided );
+
+		$apl_post_list_default->title         = 'Page Content Divided';
+		$apl_post_list_default->slug          = 'page-content-divided';
+		$apl_post_list_default->pl_apl_design = 'page-content-divided';
+		$this->import_process_post_list_design( $apl_post_list_default, $apl_design_page_content_divided );
+
+		$apl_post_list_default->title         = 'Footer List';
+		$apl_post_list_default->slug          = 'footer-list';
+		$apl_post_list_default->pl_apl_design = 'footer-list';
+		$this->import_process_post_list_design( $apl_post_list_default, $apl_design_footer_list );
 	}
 
 	/**
@@ -2021,6 +2097,8 @@ class APL_Admin {
 	 *
 	 * Gets and returns an array of Post_Types => Taxonomies.
 	 *
+	 * @deprecated 0.4.4.1 Use apl_get_post_tax()
+	 *
 	 * @ignore
 	 * @since 0.4.0
 	 * @access private
@@ -2052,6 +2130,8 @@ class APL_Admin {
 	 * Get Taxonomies & Terms
 	 *
 	 * Gets and returns an array of Taxonomies => Terms.
+	 *
+	 * @deprecated 0.4.4.1 Use apl_get_tax_terms().
 	 *
 	 * @see get_terms()
 	 * @link https://developer.wordpress.org/reference/functions/get_terms/
