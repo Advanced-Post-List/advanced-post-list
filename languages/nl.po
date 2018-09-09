@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Advanced Post List\n"
 "POT-Creation-Date: 2018-03-11 17:04-0700\n"
-"PO-Revision-Date: 2018-03-11 17:04-0700\n"
+"PO-Revision-Date: 2018-09-09 16:31-0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.1.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: advanced-post-list.php\n"
@@ -28,23 +28,22 @@ msgstr "Wat ben jij aan het proberen?"
 #: admin/class-apl-admin.php:91
 #, fuzzy
 msgid "You do not have admin capabilities in APL_Admin."
-msgstr "U hoeft niet admin mogelijkheden in APL_Admin."
+msgstr "Je hebt geen admin mogelijkheden in APL_Admin."
 
 #. Plugin Name of the plugin/theme
 #: admin/class-apl-admin.php:218
-#, fuzzy
 msgid "Advanced Post List"
-msgstr "Geavanceerde Post lijst"
+msgstr "Advanced Post List"
 
 #: admin/class-apl-admin.php:219
 #, fuzzy
 msgid "Adv. Post List"
-msgstr "Adv. Post lijst"
+msgstr "Adv. post lijst"
 
 #: admin/class-apl-admin.php:232 includes/class/class-apl-core.php:216
 #, fuzzy
 msgid "Add New Post List"
-msgstr "Nieuw Bericht toevoegen"
+msgstr "Voeg nieuwe post lijst"
 
 #: admin/class-apl-admin.php:233
 msgid "Add New"
@@ -66,7 +65,7 @@ msgstr "Selecteer Rangschikking"
 #: admin/class-apl-admin.php:466
 #, fuzzy
 msgid "# of # taxonomies selected"
-msgstr "# van # taxonomieën geselecteerd"
+msgstr "# van # taxonomies geselecteerd"
 
 #: admin/class-apl-admin.php:467 admin/post-list-meta-box-filter.php:559
 #: admin/post-list-meta-box-filter.php:587
@@ -78,7 +77,7 @@ msgstr "-Geen-"
 #: admin/class-apl-admin.php:468 admin/class-apl-admin.php:472
 #, fuzzy
 msgid "# Selected"
-msgstr "Geselecteerd"
+msgstr "# Geselecteerd"
 
 #: admin/class-apl-admin.php:469
 msgid "Select Status"
@@ -115,7 +114,7 @@ msgstr ""
 #: admin/class-apl-admin.php:548
 #, fuzzy
 msgid "No file(s) selected. Please choose a JSON file to upload."
-msgstr "Geen bestanden geselecteerd. Kies een JSON-bestand om te uploaden."
+msgstr "Geen bestand (en) geselecteerd. Kies een JSON-bestand om te uploaden."
 
 #: admin/class-apl-admin.php:549
 msgid "No File"
@@ -133,7 +132,7 @@ msgstr "Onjuist bestand"
 #: admin/class-apl-admin.php:552
 #, fuzzy
 msgid "Data successfully imported."
-msgstr "Gegevens succesvol geimporteerd."
+msgstr "Gegevens zijn geïmporteerd."
 
 #: admin/class-apl-admin.php:553
 msgid "Complete"
@@ -142,22 +141,22 @@ msgstr "Markeer als geïmporteerd"
 #: admin/class-apl-admin.php:554
 #, fuzzy
 msgid "Overwrite Presets"
-msgstr "Voorinstellingen worden overschreven"
+msgstr "Voor instellingen overschrijven"
 
 #: admin/class-apl-admin.php:555 admin/class-apl-admin.php:561
 #, fuzzy
 msgid "Illegal Characters"
-msgstr "Verkeerde tekens"
+msgstr "Ongeldige tekens"
 
 #: admin/class-apl-admin.php:556 admin/class-apl-admin.php:562
 #, fuzzy
 msgid "Cannot use (< > : \" / \\ | , ? *)."
-msgstr "Niet gebruiken (< >: \"/ \\ |,? *)."
+msgstr "Kan niet worden gebruikt (< >: \"/\\ |,? *)."
 
 #: admin/class-apl-admin.php:557 admin/class-apl-admin.php:563
 #, fuzzy
 msgid "Please rename your filename."
-msgstr "Wijzig uw filename."
+msgstr "Gelieve de naam van uw bestandsnaam."
 
 #: admin/class-apl-admin.php:670 admin/post-list-meta-box-filter.php:562
 msgid "Slug"
@@ -190,51 +189,57 @@ msgstr "Importeren / Exporteren"
 #: admin/class-apl-admin.php:1317 includes/class/class-apl-core.php:230
 #, fuzzy
 msgid "APL Post List"
-msgstr "APL Post lijst"
+msgstr "APL post lijst"
 
 #: admin/class-apl-admin.php:1318
 #, fuzzy
 msgid "Insert APL Shortcode"
-msgstr "Lijst van Shortcodes"
+msgstr "Invoegen APL shortcode"
 
 #: admin/class-apl-admin.php:1319
 #, fuzzy
 #| msgid "Shortcode"
 msgid "APL Shortcode"
-msgstr "Shortcode"
+msgstr "APL shortcode"
 
 #: admin/class-apl-admin.php:1320 includes/class/class-apl-core.php:214
 msgid "Post List"
 msgstr "Post lijst"
 
 #: admin/class-apl-admin.php:1321
+#, fuzzy
 msgid "Select the Post List you want."
-msgstr ""
+msgstr "Selecteer de gewenste berichtenlijst."
 
 #: admin/class-apl-admin.php:1415
 #, fuzzy
 msgid "Version number is not present in imported file."
-msgstr "Versienummer is niet aanwezig in het geïmporteerde bestand."
+msgstr "Het versienummer is niet aanwezig in het geïmporteerde bestand."
 
 #: admin/class-apl-admin.php:1659 admin/class-apl-admin.php:2036
 #, fuzzy
 msgid "Any / All"
-msgstr "Elke / alle"
+msgstr "Alle/alle"
 
 #: admin/class-apl-notices.php:254
 msgid "Dismiss"
-msgstr ""
+msgstr "Afwijzen"
 
 #: admin/functions-notice.php:32
+#, fuzzy
 msgid ""
 "Looks like you've been using Advanced Post List for awhile now, and that's "
 "awesome! By helping with a 5-star review, it also helps to reach out to more "
 "people."
 msgstr ""
+"Het lijkt erop dat u geweest bent met behulp van geavanceerde post lijst "
+"voor een tijdje nu, en dat is awesome! Door te helpen met een 5-sterren "
+"review, het helpt ook om uit te reiken naar meer mensen."
 
 #: admin/functions-notice.php:40
+#, fuzzy
 msgid "Yes, absolutely!"
-msgstr ""
+msgstr "Ja, absoluut!"
 
 #: admin/post-list-meta-box-design.php:23
 #, fuzzy
@@ -243,9 +248,9 @@ msgid ""
 "listings. Useful for div, ul, ol, tables, etc.. As well as storing CSS "
 "styling for IDs and Classes."
 msgstr ""
-"Gebruikt voor het opslaan van elke HTML & CSS-code die, voordat de post/"
-"inhoud aanbiedingen bestaat. Handig voor div, ul, ol, tabellen, enz... Naast "
-"het opslaan van CSS styling voor pijpleidingen en instrumentatie en klassen."
+"Gebruikt om een HTML & CSS-code die bestaat voor de post/inhoud aanbiedingen "
+"op te slaan. Nuttig voor div, UL, OL, tabellen, enz. Naast het opslaan van "
+"CSS styling voor id's en klassen."
 
 #: admin/post-list-meta-box-design.php:27
 #, fuzzy
@@ -255,10 +260,10 @@ msgid ""
 "plugin's internal shortcodes. Info can be found at the bottom, or by "
 "clicking on the shortcode info found below \"List content\"."
 msgstr ""
-"Dit waar u ontwerpen hoe uw berichten gaan weer te geven in de lijst met "
-"berichten. U kunt hier HTML, CSS, PHP (vereist de shortcode PHP), en van de "
-"plugin interne shortcodes. Info kan worden gevonden op de bodem, of door te "
-"klikken op de info van de shortcode vinden onder \"De inhoud van de lijst\"."
+"Dit waar u ontwerp hoe uw berichten gaan weer te geven in de post lijst. "
+"Hier u gebruik maken van HTML, CSS, php (vereist de PHP shortcode), en de "
+"plugin interne shortcodes. Info is te vinden op de bodem, of door te klikken "
+"op de shortcode info gevonden onder \"list content\"."
 
 #: admin/post-list-meta-box-design.php:31
 #, fuzzy
@@ -266,10 +271,11 @@ msgid ""
 "Used for ending any elements that are still open, or to display a final "
 "message to the users/visitors."
 msgstr ""
-"Gebruikt voor het beëindigen van alle elementen die nog open zijn of om een "
-"laatste boodschap aan de gebruikers/bezoekers weer te geven."
+"Gebruikt voor het beëindigen van elementen die nog open zijn, of om een "
+"definitief bericht aan de gebruikers/de bezoekers te tonen."
 
 #: admin/post-list-meta-box-design.php:35
+#, fuzzy
 msgid ""
 "This container holds the HTML & CSS content and if no posts are found to be "
 "listed in the preset. Then the preset post list will display this message. "
@@ -280,11 +286,20 @@ msgid ""
 "certain preset post list. Then simple create an empty element to fall back "
 "on. For example, an empty \"span\" HTML element."
 msgstr ""
+"Deze container bevat de HTML-& CSS-inhoud en als er geen berichten zijn "
+"gevonden om te worden opgenomen in de preset. Dan is de preset post lijst "
+"zal dit bericht weer te geven. Als er geen leeg bericht wordt gevonden, dan "
+"is de post lijst zal gebruik maken van de standaard lege bericht als "
+"ingeschakeld in de plugin admin instellingen. Anders zal de plugin display "
+"niets zoals het oorspronkelijk was ingesteld als. Let op: als u gebruik "
+"maakt van de standaard leeg bericht, maar je wilt niet om iets te tonen in "
+"een bepaalde preset post lijst. Dan eenvoudig een leeg element te maken om "
+"terug te vallen. Bijvoorbeeld, een lege \"span\" HTML-element."
 
 #: admin/post-list-meta-box-design.php:60
 #, fuzzy
 msgid "Before list:"
-msgstr "Voordat de lijst:"
+msgstr "Voor de lijst:"
 
 #: admin/post-list-meta-box-design.php:69
 msgid "List content:"
@@ -293,7 +308,7 @@ msgstr "Lijstinhoud:"
 #: admin/post-list-meta-box-design.php:73
 #, fuzzy
 msgid "List of Shortcodes"
-msgstr "Lijst van Shortcodes"
+msgstr "Lijst van shortcodes"
 
 #: admin/post-list-meta-box-design.php:83
 #, fuzzy
@@ -307,18 +322,18 @@ msgstr "Leeg bericht:"
 #: admin/post-list-meta-box-design.php:98
 #, fuzzy
 msgid "Enable (Overwrites Default)"
-msgstr "Inschakelen (overschrijft de standaard)"
+msgstr "Inschakelen (overschrijven standaard)"
 
 #: admin/post-list-meta-box-design.php:111
 #, fuzzy
 msgid "Edit Translation(s) of this Design."
-msgstr "Bewerken Translation(s) van dit ontwerp."
+msgstr "Vertaling (en) van dit ontwerp bewerken."
 
 #: admin/post-list-meta-box-design.php:114
 #, fuzzy
 msgid ""
 "Please save the Post List in order to manage translations of this Design."
-msgstr "Sla de lijst met berichten om beheer vertalingen van dit ontwerp."
+msgstr "Bewaar de post lijst om vertalingen van dit ontwerp te beheren."
 
 #: admin/post-list-meta-box-filter.php:23
 #, fuzzy
@@ -329,11 +344,11 @@ msgid ""
 "Each post/page can have only one post type, which may explain why it has "
 "been divided by post types."
 msgstr ""
-"Elke accordeon (jQuiry UI) bevat een afzonderlijke individuele post type. De "
-"standaard post typen ingebouwd in WordPress zijn Post en pagina. Eventuele "
-"extra post typen worden dynamisch toegevoegd op de wijze die WordPress doet. "
-"Let op: Elke post/pagina kan slechts één post type, wat kan verklaren waarom "
-"het is opgedeeld door bericht typen hebben."
+"Elke (jQuiry UI) accordeon bevat een aparte individuele post type. De "
+"standaard post types ingebouwd in WordPress zijn post en pagina. Eventuele "
+"extra post types worden dynamisch toegevoegd in de manier waarop WordPress "
+"doet. Let op: elke post/pagina kan slechts een post type, die kan verklaren "
+"waarom het is onderverdeeld per postsoorten."
 
 #: admin/post-list-meta-box-filter.php:24
 #, fuzzy
@@ -342,16 +357,21 @@ msgid ""
 "separate tabs. Hierarchies (categories) are located on the left, and non-"
 "hierarchies (tags) are located on the right."
 msgstr ""
-"Elke taxonomie is over het algemeen spugen in twee secties, en onderverdeeld "
-"in afzonderlijke tabbladen. Hiërarchieën (categorieën) bevinden zich aan de "
-"linkerkant, en niet-hiërarchieën (tags) bevinden zich aan de rechterkant."
+"Elke taxonomie is over het algemeen Spit in twee secties, en verdeeld in "
+"aparte tabbladen. Hiërarchieën (categorieën) bevinden zich aan de "
+"linkerkant, en niet-hiërarchieën (Tags) bevinden zich aan de rechterkant."
 
 #: admin/post-list-meta-box-filter.php:25
+#, fuzzy
 msgid ""
 "Each hierarchical post type has a Parent selector for selecting which "
 "children pages to display. You can add multiple Post Parents of dynamically "
 "add children pages according to the Current Page."
 msgstr ""
+"Elk hiërarchisch post type heeft een bovenliggende selector voor het "
+"selecteren van welke kinderen pagina's worden weergegeven. U meerdere post "
+"ouders van dynamisch toe te voegen kinderen pagina's op basis van de huidige "
+"pagina."
 
 #: admin/post-list-meta-box-filter.php:26
 #, fuzzy
@@ -360,9 +380,9 @@ msgid ""
 "into separate tabs. Hierarchies (categories) are located on the left, and "
 "non-hierarchies (tags) are located on the right."
 msgstr ""
-"Elke taxonomie is over het algemeen spugen in twee secties, en onderverdeeld "
-"in afzonderlijke tabbladen. Hiërarchieën (categorieën) bevinden zich aan de "
-"linkerkant, en niet-hiërarchieën (tags) bevinden zich aan de rechterkant."
+"MultiSelect elke taxonomie is over het algemeen Spit in twee secties, en "
+"verdeeld in aparte tabbladen. Hiërarchieën (categorieën) bevinden zich aan "
+"de linkerkant, en niet-hiërarchieën (Tags) bevinden zich aan de rechterkant."
 
 #: admin/post-list-meta-box-filter.php:29
 #, fuzzy
@@ -370,9 +390,9 @@ msgid ""
 "If selected, and more than one term is checked, then each term must be "
 "required within the CPT/taxonomy in order to be displayed in the post list."
 msgstr ""
-"Indien geselecteerd, en meer dan één termijn is gecontroleerd en vervolgens "
-"elke term moet binnen de CPT/taxonomie vereist om te kunnen worden "
-"weergegeven in de lijst met berichten."
+"Indien geselecteerd, en meer dan één termijn wordt gecontroleerd, dan moet "
+"elke termijn binnen CPT/taxonomie worden vereist om in de post lijst worden "
+"getoond."
 
 #: admin/post-list-meta-box-filter.php:30
 #, fuzzy
@@ -380,15 +400,15 @@ msgid ""
 "If selected, the post list preset will include any terms the current page/"
 "post has within the CTP/taxonomy."
 msgstr ""
-"Indien geselecteerd, zal de post lijst voorinstelling eventuele voorwaarden "
-"die de huidige pagina/post binnen de CTP/taxonomie heeft omvatten."
+"Als deze optie is geselecteerd, bevat de voorinstelling van de post lijst "
+"alle termen die de huidige pagina/post binnen de CTP/taxonomie heeft."
 
 #: admin/post-list-meta-box-filter.php:31
 #, fuzzy
 msgid "When checked, any terms will be included within that CPT/taxonomy."
 msgstr ""
-"Wanneer gecontroleerd, worden eventuele voorwaarden opgenomen binnen dat CPT/"
-"taxonomie."
+"Wanneer gecontroleerd, zullen om het even welke termijnen binnen dat CPT/"
+"taxonomie worden omvat."
 
 #: admin/post-list-meta-box-filter.php:32
 #, fuzzy
@@ -397,9 +417,9 @@ msgid ""
 "Negative one (-1) will display all the posts that are available after "
 "filtering."
 msgstr ""
-"De numerieke waarde van hoeveel berichten u wilt dat de lijst met berichten "
-"om weer te geven. Negatieve één (-1) alle berichten die beschikbaar na "
-"filtering zijn wordt weergegeven."
+"De numerieke waarde van het aantal berichten dat u wilt weergeven in de "
+"berichtlijst. Een negatieve (-1) geeft alle berichten weer die beschikbaar "
+"zijn na het filteren."
 
 #: admin/post-list-meta-box-filter.php:33
 #, fuzzy
@@ -407,41 +427,58 @@ msgid ""
 "Choose which page properties to sort from. All of which are built in params "
 "used in WP_Query."
 msgstr ""
-"Kies welke paginaeigenschappen om te sorteren. Die allemaal zijn opgebouwd "
-"uit params gebruikt in WP_Query."
+"Kies uit welke pagina-eigenschappen u wilt sorteren. Die allemaal zijn "
+"gebouwd in params gebruikt in WP_Query."
 
 #: admin/post-list-meta-box-filter.php:34
+#, fuzzy
 msgid ""
 "Show or remove posts that were created by a certain author, or authors. You "
 "can only choose between adding or removing, not both."
 msgstr ""
+"Berichten weergeven of verwijderen die zijn gemaakt door een bepaalde auteur "
+"of auteurs. U alleen kiezen tussen toevoegen of verwijderen, niet beide."
 
 #: admin/post-list-meta-box-filter.php:36
+#, fuzzy
 msgid "Operator - Determines whether you want to include or exclude authors."
-msgstr ""
+msgstr "Operator-bepaalt of u auteurs wilt opnemen of uitsluiten."
 
 #: admin/post-list-meta-box-filter.php:38
+#, fuzzy
 msgid ""
 "Author Names/IDs - Displays a list of authors the site currently has and is "
 "divided/grouped into separate role groups."
 msgstr ""
+"Auteur namen/id's-geeft een lijst van de auteurs van de site die momenteel "
+"heeft en is verdeeld/gegroepeerd in afzonderlijke rollengroepen."
 
 #: admin/post-list-meta-box-filter.php:39
+#, fuzzy
 msgid ""
 "Holds the settings to show which posts to display based on the user "
 "visibility and/or the page states. To which is only visible to the users "
 "with the necessary capabilities to view them."
 msgstr ""
+"Bevat de instellingen om te laten zien welke berichten worden weergegeven op "
+"basis van de zichtbaarheid van de gebruiker en/of de pagina Staten. Die "
+"alleen zichtbaar is voor de gebruikers met de nodige mogelijkheden om ze te "
+"bekijken."
 
 #: admin/post-list-meta-box-filter.php:41
+#, fuzzy
 msgid "<b>Visibility</b> - Display posts as either Public, Private, or Both"
 msgstr ""
+"<b> zichtbaarheid </b>-display berichten als openbare, particuliere, of beide"
 
 #: admin/post-list-meta-box-filter.php:43
+#, fuzzy
 msgid ""
 "<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, "
 "Auto-save, Inherit, and/or Trash."
 msgstr ""
+"<b> status Staten </b>: Kies uit gepubliceerd, toekomst, in afwachting van "
+"Review, Draft, automatisch opslaan, erven, en/of Prullenbak."
 
 #: admin/post-list-meta-box-filter.php:44
 #, fuzzy
@@ -449,17 +486,21 @@ msgid ""
 "Uses the user permission via. user capabilities to determine what posts to "
 "display in the post list to the visitor/user."
 msgstr ""
-"Gebruikt de gebruiker toestemming via. de mogelijkheden van de gebruiker om "
-"te bepalen wat posten weer te geven in de lijst van de post voor de bezoeker/"
-"gebruiker."
+"Maakt gebruik van de gebruiker toestemming via. gebruikers mogelijkheden om "
+"te bepalen welke berichten worden weergegeven in de post lijst aan de "
+"bezoeker/gebruiker."
 
 #: admin/post-list-meta-box-filter.php:45
+#, fuzzy
 msgid "Number of posts to skip/displace."
-msgstr ""
+msgstr "Aantal berichten over te slaan/verleggen."
 
 #: admin/post-list-meta-box-filter.php:46
+#, fuzzy
 msgid "NOTE: Offset is ignored when List Amount is set to -1 (show all posts)."
 msgstr ""
+"Opmerking: offset wordt genegeerd wanneer het lijst bedrag is ingesteld op-1 "
+"(alle berichten weergeven)."
 
 #: admin/post-list-meta-box-filter.php:47
 #, fuzzy
@@ -467,8 +508,8 @@ msgid ""
 "Add post/page IDs, seperated by a comma (,), will prevent those posts from "
 "being added to the post list."
 msgstr ""
-"Voeg bericht/pagina-IDs, gescheiden door een komma (,), voorkomt u dat deze "
-"posten worden toegevoegd aan de lijst met berichten."
+"Voeg post/pagina-id's, gescheiden door een komma (,), zal voorkomen dat deze "
+"berichten worden toegevoegd aan de post lijst."
 
 #: admin/post-list-meta-box-filter.php:48
 #, fuzzy
@@ -476,9 +517,9 @@ msgid ""
 "Meant for the built-in post type (Posts) function. When checked, this will "
 "prevent sticky posts from always displaying at the top of the post list."
 msgstr ""
-"Bedoeld voor de functie van de ingebouwde post-type (posten). Wanneer "
-"ingeschakeld, zal dit verhinderen kleverige posten altijd aan de bovenkant "
-"van de lijst met berichten weer te geven."
+"Bedoeld voor de ingebouwde post type (Posts) functie. Wanneer aangevinkt, "
+"zal dit voorkomen dat kleverige berichten altijd weergegeven op de top van "
+"de post lijst."
 
 #: admin/post-list-meta-box-filter.php:49
 #, fuzzy
@@ -486,8 +527,8 @@ msgid ""
 "When checked, the current post being viewed will be excluded from the post "
 "list."
 msgstr ""
-"Wanneer ingeschakeld, zal het huidige bericht wordt bekeken worden "
-"uitgesloten van de lijst met berichten."
+"Wanneer aangevinkt, zal de huidige post worden bekeken worden uitgesloten "
+"van de post lijst."
 
 #: admin/post-list-meta-box-filter.php:50
 #, fuzzy
@@ -498,18 +539,17 @@ msgid ""
 "exclude filter settings in WP_Query. This will remove any posts that have "
 "already been displayed to the user by the APL plugin."
 msgstr ""
-"In de \"bestellen dat zij is ontvangen\", elke lijst met vooraf ingestelde "
-"berichten wordt bekeken zal de post id's toevoegen aan een lijst van de "
-"globale uitsluiten APL ingebouwd. Wanneer ingeschakeld, zal de lijst met "
-"vooraf ingestelde berichten het bericht id's (vermeld op het moment) "
-"toevoegt aan de filterinstellingen uitsluiten in WP_Query. Hiermee "
-"verwijdert u alle posten die al zijn weergegeven aan de gebruiker door de "
-"APL-plugin."
+"In de \"orde dat het wordt ontvangen\", zal elke vooraf ingestelde post "
+"lijst die wordt bekeken de post IDs aan een globale uitsluitingslijst "
+"toevoegen die in APL wordt ingebouwd. Wanneer aangevinkt, zal de preset post "
+"lijst de post-id's (vermeld op het moment) toe te voegen aan de "
+"filterinstellingen uitsluiten in WP_Query. Dit zal verwijderen alle "
+"berichten die al zijn weergegeven aan de gebruiker door de APL plugin."
 
 #: admin/post-list-meta-box-filter.php:103
 #, fuzzy
 msgid "Any / All Terms"
-msgstr "Elke / alle voorwaarden"
+msgstr "Alle/alle voorwaarden"
 
 #: admin/post-list-meta-box-filter.php:169
 #, fuzzy
@@ -517,8 +557,8 @@ msgid ""
 "Adds the Current Page being displayed as a Parent Page, which will then add "
 "those child pages."
 msgstr ""
-"De huidige pagina wordt weergegeven als een bovenliggende pagina, die "
-"vervolgens die onderliggende pagina's toevoegen zal toegevoegd."
+"Hiermee voegt u de huidige pagina toe die wordt weergegeven als "
+"bovenliggende pagina, waarna deze onderliggende pagina's worden toegevoegd."
 
 #: admin/post-list-meta-box-filter.php:175
 #, fuzzy
@@ -552,12 +592,12 @@ msgstr "Taxonomiën"
 #: admin/post-list-meta-box-filter.php:372
 #, fuzzy
 msgid "Parent Pages"
-msgstr "Bovenliggende pagina 's"
+msgstr "Bovenliggende pagina's"
 
 #: admin/post-list-meta-box-filter.php:392
 #, fuzzy
 msgid "Req. Taxonomies"
-msgstr "Req. taxonomieën"
+msgstr "Vereiste taxonomie"
 
 #: admin/post-list-meta-box-filter.php:477
 #, fuzzy
@@ -567,7 +607,7 @@ msgstr "Voorwaarden vereisen"
 #: admin/post-list-meta-box-filter.php:484
 #, fuzzy
 msgid "Dynamic Terms"
-msgstr "Dynamische voorwaarden"
+msgstr "Dynamische termen"
 
 #: admin/post-list-meta-box-filter.php:519
 #, fuzzy
@@ -633,7 +673,7 @@ msgstr "Van"
 #: admin/post-list-meta-box-filter.php:589
 #, fuzzy
 msgid "Not From"
-msgstr "Niet uit"
+msgstr "Niet van"
 
 #: admin/post-list-meta-box-filter.php:618
 msgid "Post Status:"
@@ -650,7 +690,7 @@ msgstr "Openbare"
 #: admin/post-list-meta-box-filter.php:626
 #, fuzzy
 msgid "Private (BETA)"
-msgstr "Privé (BETA)"
+msgstr "Privé (bèta)"
 
 #: admin/post-list-meta-box-filter.php:630
 msgid "Pending Review"
@@ -679,7 +719,7 @@ msgstr "Prullenbak"
 #: admin/post-list-meta-box-filter.php:641
 #, fuzzy
 msgid "User Perms:"
-msgstr "Permanenten van de gebruiker:"
+msgstr "Gebruiker permanenten:"
 
 #: admin/post-list-meta-box-filter.php:647
 msgid "Readable"
@@ -696,7 +736,7 @@ msgstr "Post-ID uitsluiten:"
 #: admin/post-list-meta-box-filter.php:665
 #, fuzzy
 msgid "Enable Sticky Posts:"
-msgstr "Inschakelen van kleverige posten:"
+msgstr "Schakel Sticky Posts:"
 
 #: admin/post-list-meta-box-filter.php:671
 msgid "Exclude Current Post:"
@@ -705,14 +745,14 @@ msgstr "Sluit huidig bericht uit:"
 #: admin/post-list-meta-box-filter.php:677
 #, fuzzy
 msgid "Exclude Duplicate Posts:"
-msgstr "Duplicate Posts uitsluiten:"
+msgstr "Dubbele berichten uitsluiten:"
 
 #: admin/settings-meta-box-general.php:28
 #, fuzzy
 msgid "Used for ignoring post types when creating/editing a post list."
 msgstr ""
-"Gebruikt voor het negeren van de post typen bij het maken/bewerken van een "
-"lijst met berichten."
+"Gebruikt voor het negeren van post types bij het maken/bewerken van een post "
+"lijst."
 
 #: admin/settings-meta-box-general.php:30
 #, fuzzy
@@ -722,11 +762,11 @@ msgid ""
 "restored as it was left. Please Note: If the plugin is removed/uninstalled, "
 "then the plugin's data will be removed regardless."
 msgstr ""
-"Als \"Nee\" is geselecteerd, zullen dan van de plugin databasegegevens niet "
-"worden verwijderd wanneer de plugin wordt gedeactiveerd. Wanneer opnieuw "
-"wordt geactiveerd, zal de plugin gegevens hersteld als het bleef. Let op: "
-"Als de plugin verwijderd/verwijderd is, dan van de plugin zal worden "
-"gegevens verwijderd ongeacht."
+"Als \"nee\" is geselecteerd, dan zal de plugin database gegevens niet worden "
+"verwijderd wanneer de plugin is gedeactiveerd. Wanneer re-geactiveerd, zal "
+"de plugin gegevens hersteld zoals het was links. Let op: als de plugin is "
+"verwijderd/gedeïnstalleerd, dan is de plugin de gegevens zullen worden "
+"verwijderd, ongeacht."
 
 #: admin/settings-meta-box-general.php:32
 msgid "Enable Default Empty Message: "
@@ -738,9 +778,8 @@ msgid ""
 "Used as a default option to use if no posts are found and the Empty Message "
 "is empty within the preset post list."
 msgstr ""
-"Gebruikt als een standaardoptie te gebruiken als geen berichten zijn "
-"gevonden en de lege bericht leeg in de lijst met vooraf ingestelde berichten "
-"is."
+"Gebruikt als een standaardoptie te gebruiken als er geen berichten zijn "
+"gevonden en het lege bericht is leeg in de preset post lijst."
 
 #: admin/settings-meta-box-general.php:34
 msgid "Enable Global Exit (boolean): "
@@ -752,8 +791,8 @@ msgid ""
 "If enabled (yes), the all presets will fallback on the global/default Empty "
 "Message."
 msgstr ""
-"Als ingeschakeld (Ja), zal het alle voorinstellingen terugval op de "
-"wereldwijde/default leeg bericht."
+"Indien ingeschakeld (Yes), zal de all presets terugval op de Global/default "
+"leeg bericht."
 
 #: admin/settings-meta-box-general.php:36
 msgid "Empty Message: "
@@ -765,8 +804,8 @@ msgid ""
 "Contains the message that will be displayed if no posts are found. HTML and "
 "CSS can be used."
 msgstr ""
-"Bevat het bericht dat wordt weergegeven als er geen berichten worden "
-"gevonden. HTML en CSS kan worden gebruikt."
+"Bevat het bericht dat wordt weergegeven als er geen berichten zijn gevonden. "
+"HTML en CSS kan worden gebruikt."
 
 #: admin/settings-meta-box-general.php:86
 msgid "Save Settings"
@@ -778,8 +817,8 @@ msgid ""
 "Exports the whole APL preset database/table. Illegal (< > : \" / \\ | , ? *) "
 "characters cannot be used as the exported filename."
 msgstr ""
-"Export de hele APL voorinstelling/databasetabel. Illegale (< >: \"/ \\ |,? "
-"*) tekens mogen niet worden gebruikt als het geëxporteerde bestand."
+"Exporteert de hele APL preset database/tabel. Illegaal (< >: \"/\\ |,? *) "
+"tekens kunnen niet worden gebruikt als de geëxporteerde bestandsnaam."
 
 #: admin/settings-meta-box-import-export.php:16
 #, fuzzy
@@ -787,8 +826,8 @@ msgid ""
 "Imports data into the database. If there are any pre-existing data, you will "
 "be prompted list of overwrite items."
 msgstr ""
-"Met deze methode importeert gegevens in de database. Als er geen bestaande "
-"gegevens zijn, wordt u gevraagd lijst overschrijven de items."
+"Importeert gegevens in de database. Als er om het even welke reeds bestaande "
+"gegevens zijn, zal u lijst van items overschrijven worden veroorzaakt."
 
 #: admin/settings-meta-box-import-export.php:18
 #, fuzzy
@@ -796,13 +835,13 @@ msgid ""
 "Designed to restore only the default preset table the plugin initially came "
 "with."
 msgstr ""
-"Ontwikkeld om te herstellen van alleen de vooraf ingestelde standaardtabel "
-"die de plugin in eerste instantie kwam met."
+"Ontworpen om te herstellen alleen de standaard preset tabel de plugin kwam "
+"aanvankelijk met."
 
 #: admin/settings-meta-box-import-export.php:23
 #, fuzzy
 msgid "Export Post List Database"
-msgstr "Post lijst Database exporteren"
+msgstr "Post list-database exporteren"
 
 #: admin/settings-meta-box-import-export.php:26
 msgid "Filename:"
@@ -815,7 +854,7 @@ msgstr "Exporteer"
 #: admin/settings-meta-box-import-export.php:37
 #, fuzzy
 msgid "Import Post List File"
-msgstr "Post lijst importbestand"
+msgstr "Post lijstbestand importeren"
 
 #: admin/settings-meta-box-import-export.php:42
 msgid "Upload File:"
@@ -828,12 +867,12 @@ msgstr "Importeer"
 #: admin/settings-meta-box-import-export.php:55
 #, fuzzy
 msgid "Restore Defaults ( WIP )"
-msgstr "Herstellen van de standaardwaarden (WIP)"
+msgstr "Standaardwaarden herstellen (OHW)"
 
 #: admin/settings-meta-box-import-export.php:58
 #, fuzzy
 msgid "Default Post Lists:"
-msgstr "Post standaardlijsten:"
+msgstr "Standaard post lijsten:"
 
 #: admin/settings-meta-box-import-export.php:63
 #, fuzzy
@@ -842,9 +881,9 @@ msgid ""
 "default Post Lists. This will not delete other Post Lists (as long as the "
 "name isn't a default name)."
 msgstr ""
-"Herstelt van de plugin standaard voorinstelling alleen indienen, en zullen "
-"overschrijven/toevoegen de standaard Post lijst. Dit zal niet verwijderen "
-"andere Post lijsten (zolang de naam niet een standaardnaam)."
+"Herstelt de standaard vooraf ingestelde tabel van de plugin alleen, en zal "
+"overschrijven/Voeg de standaard post lijsten. Dit zal niet verwijderen "
+"andere berichtenlijsten (zolang de naam is geen standaardnaam)."
 
 #: admin/settings-meta-box-import-export.php:66
 #, fuzzy
@@ -853,9 +892,9 @@ msgid ""
 "simple, however, many updates have taken place since then, and many of the "
 "defaults are relatively old."
 msgstr ""
-"Opmerking: Dit is momenteel een Work In Progress. De functionaliteit is "
-"relatief eenvoudig, echter veel updates hebben plaatsgevonden sindsdien, en "
-"veel van de standaardinstellingen zijn vrij oude."
+"Nota: dit is momenteel het werk in uitvoering. De functionaliteit is "
+"relatief eenvoudig, maar veel updates hebben plaatsgevonden sindsdien, en "
+"veel van de standaardinstellingen zijn relatief oud."
 
 #: admin/settings-meta-box-import-export.php:69
 msgid "Restore"
@@ -864,35 +903,35 @@ msgstr "Zet terug"
 #: admin/settings-page.php:19
 #, fuzzy
 msgid "APL - Settings"
-msgstr "APL - instellingen"
+msgstr "APL-instellingen"
 
 #: advanced-post-list.php:39
 #, fuzzy
 msgid "This plugin requires WordPress 4.5 or higher to operate. "
-msgstr "Deze plugin vereist Wordpress 2.0.2 of hoger om te opereren."
+msgstr "Deze plugin vereist WordPress 4,5 of hoger te bedienen."
 
 #: advanced-post-list.php:40
 #, fuzzy
 msgid ""
 "<a href=\"http://codex.wordpress.org/Upgrading_WordPress\">Please update!</a>"
 msgstr ""
-"<a href=\"http://codex.wordpress.org/Upgrading_WordPress\">Update "
-"alstublieft</a>"
+"< a href = \"http://codex.wordpress.org/Upgrading_WordPress\" > gelieve te "
+"updaten! </a>"
 
 #: advanced-post-list.php:41 advanced-post-list.php:45
 #, fuzzy
 msgid "Advanced Post List: Error"
-msgstr "Geavanceerde Post lijst: fout"
+msgstr "Uitgebreid berichtlijst: fout"
 
 #: advanced-post-list.php:44
 #, fuzzy
 msgid "You are attempting to access this plugin directly."
-msgstr "U wilt deze plugin direct benaderen."
+msgstr "U probeert om deze plugin direct toegang."
 
 #: includes/class/class-apl-core.php:213
 #, fuzzy
 msgid "APL Post Lists"
-msgstr "APL Post lijsten"
+msgstr "APL post lijsten"
 
 #: includes/class/class-apl-core.php:215
 msgctxt "List"
@@ -907,32 +946,32 @@ msgstr "Post lijst bewerken"
 #: includes/class/class-apl-core.php:218
 #, fuzzy
 msgid "New Post List"
-msgstr "Lijst met nieuwe berichten"
+msgstr "Nieuwe post lijst"
 
 #: includes/class/class-apl-core.php:219
 #, fuzzy
 msgid "View Post List"
-msgstr "Bekijk de lijst van de Post"
+msgstr "Post lijst weergeven"
 
 #: includes/class/class-apl-core.php:220
 #, fuzzy
 msgid "View Post Lists"
-msgstr "Lijsten van de Post bekijken"
+msgstr "Post lijsten weergeven"
 
 #: includes/class/class-apl-core.php:221
 #, fuzzy
 msgid "Search Post Lists"
-msgstr "Zoek Post lijsten"
+msgstr "Lijsten zoeken in berichten"
 
 #: includes/class/class-apl-core.php:222
 #, fuzzy
 msgid "No Post Lists found"
-msgstr "Geen lijsten gevonden"
+msgstr "Geen post lijsten gevonden"
 
 #: includes/class/class-apl-core.php:223
 #, fuzzy
 msgid "No Post Lists found in Trash"
-msgstr "Geen Post lijsten gevonden in Prullenbak"
+msgstr "Geen post lijsten gevonden in de Prullenbak"
 
 #: includes/class/class-apl-core.php:224 includes/class/class-apl-core.php:280
 msgid ":"
@@ -941,32 +980,32 @@ msgstr ":"
 #: includes/class/class-apl-core.php:225
 #, fuzzy
 msgid "All Post Lists"
-msgstr "Alle Post lijsten"
+msgstr "Alle post lijsten"
 
 #: includes/class/class-apl-core.php:226
 #, fuzzy
 msgid "Post List Archives"
-msgstr "Archieven discussiegroep"
+msgstr "Post lijst archief"
 
 #: includes/class/class-apl-core.php:227
 #, fuzzy
 msgid "Post List Attributes"
-msgstr "Post lijst kenmerken"
+msgstr "Kenmerken van post lijst"
 
 #: includes/class/class-apl-core.php:228
 #, fuzzy
 msgid "Insert into Post List"
-msgstr "In bericht invoegen"
+msgstr "Invoegen in post lijst"
 
 #: includes/class/class-apl-core.php:229
 #, fuzzy
 msgid "Upload to this Post List"
-msgstr "Uploaden naar deze Post lijst"
+msgstr "Uploaden naar deze post lijst"
 
 #: includes/class/class-apl-core.php:232
 #, fuzzy
 msgid "APL Preset Post Lists."
-msgstr "APL voorinstelling Post lijst."
+msgstr "APL preset post lijsten."
 
 #: includes/class/class-apl-core.php:269
 #, fuzzy
@@ -985,7 +1024,7 @@ msgstr "Nieuwe rij aanmaken"
 #: includes/class/class-apl-core.php:272
 #, fuzzy
 msgid "Add New Design"
-msgstr "Nieuw Ontwerp"
+msgstr "Nieuw ontwerp toevoegen"
 
 #: includes/class/class-apl-core.php:273
 msgid "Edit Design"
@@ -994,7 +1033,7 @@ msgstr "Ontwerp bewerken"
 #: includes/class/class-apl-core.php:274
 #, fuzzy
 msgid "New Design"
-msgstr "Nieuw Ontwerp"
+msgstr "Nieuw design"
 
 #: includes/class/class-apl-core.php:275
 msgid "View Design"
@@ -1003,7 +1042,7 @@ msgstr "Ontwerp Bekijken"
 #: includes/class/class-apl-core.php:276
 #, fuzzy
 msgid "View Designs"
-msgstr "Weergave ontwerpen"
+msgstr "Bekijk ontwerpen"
 
 #: includes/class/class-apl-core.php:277
 #, fuzzy
@@ -1013,12 +1052,12 @@ msgstr "Zoek ontwerpen"
 #: includes/class/class-apl-core.php:278
 #, fuzzy
 msgid "No Design found"
-msgstr "Geen model gevonden"
+msgstr "Geen ontwerp gevonden"
 
 #: includes/class/class-apl-core.php:279
 #, fuzzy
 msgid "No Design found in Trash"
-msgstr "Geen model gevonden in Prullenbak"
+msgstr "Geen ontwerp gevonden in de Prullenbak"
 
 #: includes/class/class-apl-core.php:281
 #, fuzzy
@@ -1028,17 +1067,17 @@ msgstr "Alle ontwerpen"
 #: includes/class/class-apl-core.php:282
 #, fuzzy
 msgid "Design Archives"
-msgstr "Ontwerp archieven"
+msgstr "Ontwerp archief"
 
 #: includes/class/class-apl-core.php:283
 #, fuzzy
 msgid "Design Attributes"
-msgstr "Ontwerp kenmerken"
+msgstr "Ontwerp attributen"
 
 #: includes/class/class-apl-core.php:284
 #, fuzzy
 msgid "Insert into Design"
-msgstr "Invoegen van Design"
+msgstr "Invoegen in ontwerp"
 
 #: includes/class/class-apl-core.php:285
 #, fuzzy
@@ -1048,12 +1087,12 @@ msgstr "Uploaden naar dit ontwerp"
 #: includes/class/class-apl-core.php:286
 #, fuzzy
 msgid "APL Design"
-msgstr "APL Design"
+msgstr "APL ontwerp"
 
 #: includes/class/class-apl-core.php:288
 #, fuzzy
 msgid "APL Designs for Preset Post Lists."
-msgstr "APL ontwerpen voor vooraf ingestelde Post lijsten."
+msgstr "APL ontwerpt voor vooraf ingestelde post lijsten."
 
 #: includes/class/class-apl-core.php:625
 #: includes/class/class-apl-updater.php:959 includes/functions.php:37
@@ -1064,13 +1103,12 @@ msgstr "Sorry, maar er is op dit moment geen inhoud beschikbaar."
 #: includes/class/class-apl-core.php:727
 #, fuzzy
 msgid "NOTICE: Shortcode name is missing. Ex [post_list name='example']"
-msgstr ""
-"Let op: De naam van de Shortcode ontbreekt. Ex [post_list naam = 'voorbeeld']"
+msgstr "Let op: shortcode naam ontbreekt. Ex [post_list name = ' voorbeeld ']"
 
 #: includes/class/class-apl-core.php:806
 #, fuzzy
 msgid "NOTICE: Post list 'name' does not exist or is invalid."
-msgstr "AANKONDIGING: Post lijst 'naam' bestaat niet of is ongeldig."
+msgstr "Bericht: de post lijst ' naam ' bestaat niet of is ongeldig."
 
 #: includes/class/class-apl-shortcodes.php:1334
 #, fuzzy
@@ -1078,8 +1116,8 @@ msgid ""
 "Error: Add define(\"APL_ALLOW_PHP\", true); to wp-config.php for "
 "php_function to work."
 msgstr ""
-"Fout: Toevoegen define (\"APL_ALLOW_PHP\", true); aan wp-config.php voor "
-"php_function om te werken."
+"Fout: add define (\"APL_ALLOW_PHP\", True); aan wp-config. php voor "
+"php_function aan het werk."
 
 #: includes/class/class-apl-shortcodes.php:1336
 msgid "Error: Change define(\"APL_ALLOW_PHP\", true); in "
@@ -1088,7 +1126,7 @@ msgstr "Fout: Verandering define (\"APL_ALLOW_PHP\", true); in "
 #: includes/class/class-apl-shortcodes.php:1337
 #, fuzzy
 msgid "wp-config.php for php_function to work."
-msgstr "wp-config.php voor php_function om te werken."
+msgstr "wp-config. php voor php_function aan het werk."
 
 #: includes/class/class-apl-shortcodes.php:1339
 msgid "Error: Name shortcode attribute must have a name. "
@@ -1100,13 +1138,13 @@ msgid ""
 "Error: Function does not exist. Check name in shortcode or is function name "
 "is loaded."
 msgstr ""
-"Fout: Functie does not exist. Zie de naam in de shortcode of is functienaam "
-"wordt geladen."
+"Fout: de functie bestaat niet. Check naam in shortcode of is functienaam is "
+"geladen."
 
 #: includes/class/class-apl-shortcodes.php:1359
 #, fuzzy
 msgid "Error: Unknown Error."
-msgstr "Fout: Onbekende fout."
+msgstr "Fout: onbekende fout."
 
 #: includes/class/class-apl-shortcodes.php:1361
 msgid "defined APL_ALLOW_PHP: "
@@ -1128,18 +1166,18 @@ msgid ""
 "APL Updater Class Error: empty version and/or empty APL Options & APL Preset "
 "Db is being passed to the Updater Class."
 msgstr ""
-"APL Updater klasse Error: lege versie en/of lege APL opties & APL "
-"voorinstelling Db wordt doorgegeven aan de Updater-klasse."
+"APL Updater klasse fout: lege versie en/of lege APL opties & APL preset DB "
+"wordt doorgegeven aan de updater klasse."
 
 #: includes/class/class-apl-widget.php:31
 #, fuzzy
 msgid "Advanced Post Lists"
-msgstr "Geavanceerde Post lijsten"
+msgstr "Geavanceerde bericht lijsten"
 
 #: includes/class/class-apl-widget.php:32
 #, fuzzy
 msgid "Display preset post lists"
-msgstr "Vooraf ingestelde post lijsten weergeven"
+msgstr "Vooraf ingestelde bericht lijsten weergeven"
 
 #. Plugin URI of the plugin/theme
 #, fuzzy
@@ -1153,10 +1191,9 @@ msgid ""
 "Provides a wide array of static settings and dynamic features. Also supports "
 "Custom Post Types and Taxonomies."
 msgstr ""
-"Hoogst klantgerichte post lijsten weer te geven aan uw gebruikers en "
-"bezoekers maken. Biedt een breed scala aan instellingen voor statische en "
-"dynamische eigenschappen. Ook ondersteunt aangepaste bericht typen en "
-"taxonomieën."
+"Maak zeer aanpasbare bericht lijsten om weer te geven aan uw gebruikers en "
+"bezoekers. Biedt een breed scala aan statische instellingen en dynamische "
+"functies. Ondersteunt ook aangepaste post typen en taxonomie."
 
 #. Author of the plugin/theme
 #, fuzzy
