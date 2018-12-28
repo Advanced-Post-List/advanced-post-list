@@ -443,22 +443,24 @@ class APL_Query {
 			}
 
 			// Add Terms for Any/All ( value = 0 ).
-			foreach ( $query_str['tax_query'] as $k1_index => $tax_arr ) {
-				if ( 'relation' === $k1_index ) {
-					continue;
-				}
+			if ( ! empty( $query_str['tax_query'] ) ) {
+				foreach ( $query_str['tax_query'] as $k1_index => $tax_arr ) {
+					if ( 'relation' === $k1_index ) {
+						continue;
+					}
 
-				if ( 0 === $tax_arr['terms'][0] && 1 === count( $tax_arr['terms'] ) ) {
-					$terms_args = array(
-						'taxonomy' => $tax_arr['taxonomy'],
-						'fields'   => 'ids',
-					);
+					if ( 0 === $tax_arr['terms'][0] && 1 === count( $tax_arr['terms'] ) ) {
+						$terms_args = array(
+							'taxonomy' => $tax_arr['taxonomy'],
+							'fields'   => 'ids',
+						);
 
-					$tax_arr['terms'] = get_terms( $terms_args );
+						$tax_arr['terms'] = get_terms( $terms_args );
 
-					$query_str['tax_query'][ $k1_index ] = $tax_arr;
-				} else {
-					$query_str['tax_query'][ $k1_index ] = $tax_arr;
+						$query_str['tax_query'][ $k1_index ] = $tax_arr;
+					} else {
+						$query_str['tax_query'][ $k1_index ] = $tax_arr;
+					}
 				}
 			}
 
