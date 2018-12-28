@@ -129,7 +129,7 @@ class APL_Admin {
 
 			add_filter( 'mce_external_plugins', array( $this, 'mce_external_plugins' ) );
 			add_filter( 'mce_buttons', array( $this, 'mce_buttons' ) );
-			add_action( 'tiny_mce_before_init', array( $this, 'tinymce_extra_vars' ) );
+			add_action( 'admin_head', array( $this, 'tinymce_extra_vars' ) );
 		}
 	}
 
