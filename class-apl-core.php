@@ -874,7 +874,7 @@ class APL_Core {
 			$output .= $this->display_preset_list_content( $wp_query_class, $post_list_slug, $apl_design );
 
 			// AFTER.
-			$output .= $apl_design->after;
+			$output .= apply_filters( 'apl_core_loop_after', $apl_design->after );
 		} else {
 			// EMPTY.
 			$apl_options = apl_options_load();
