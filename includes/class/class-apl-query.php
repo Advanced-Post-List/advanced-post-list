@@ -235,6 +235,7 @@ class APL_Query {
 
 			// General Filter.
 			$tmp_query_args['posts_per_page'] = $apl_post_list->posts_per_page;
+			$tmp_query_args['page']           = 1;
 			$tmp_query_args['offset']         = $apl_post_list->offset;
 			$tmp_query_args['orderby']        = $apl_post_list->order_by;
 			$tmp_query_args['order']          = $apl_post_list->order;
@@ -416,8 +417,6 @@ class APL_Query {
 	 *
 	 * @see Function/method/class relied on
 	 * @link https://gist.github.com/EkoJr/7352549
-	 * @global type $varname Description.
-	 * @global type $varname Description.
 	 *
 	 * @param array   $query_str_array Multi-dimensional query_str array.
 	 * @param boolean $repeated This function repeated.
@@ -464,8 +463,15 @@ class APL_Query {
 				}
 			}
 
+			if ( isset( $query_str['page'] ) ) {
+				if ( 1 < $query_str['page'] ) {
+					$query_str['posts_per_page'] *= $query_str['page'];
+				}
+				unset( $query_str['page'] );
+			}
+
 			// Since post__in and post__not_in don't mix at all. The 2 variables
-			// are stored seperately.
+			// are stored separately.
 			// TODO Create function for Post Include/Exclude.
 			if ( ! empty( $query_str['post__not_in'] ) && 0 < $query_str['posts_per_page'] ) {
 				// Removed at final.
@@ -531,17 +537,25 @@ class APL_Query {
 				$post_in_ids[] = 0;
 			}
 
+			$paginate_offset = 0;
+			if ( isset( $query_str['page'] ) ) {
+				$paginate_offset = $query_str['posts_per_page'] * ( $query_str['page'] - 1 );
+			}
+
 			// STEP.
 			// Set FINAL query_str with post IDs.
 			$final_query_str = array(
 				'post__in'            => $post_in_ids,
 				'post_type'           => 'any',
 				'posts_per_page'      => $query_str['posts_per_page'],
-				'offset'              => $query_str['offset'],
+				'offset'              => ( $query_str['offset'] + $paginate_offset ),
 				'nopaging'            => ( -1 === $query_str['posts_per_page'] ) ? true : false,
 				'order'               => $query_str['order'],
 				'orderby'             => $query_str['orderby'],
 				'ignore_sticky_posts' => $query_str['ignore_sticky_posts'],
+				// Does not work. Uses offset instead.
+				//'page'                => $query_str['page'],
+				//'paged'               => $query_str['page'],
 			);
 
 			// Get FINAL Query Object.
