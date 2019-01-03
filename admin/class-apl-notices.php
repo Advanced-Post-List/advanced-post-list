@@ -13,7 +13,7 @@
 
 if ( ! class_exists( 'APL_Notices' ) ) {
 	/**
-	 * APL Notice.
+	 * APL Notices
 	 *
 	 * Admin notices for APL.
 	 *
@@ -510,8 +510,8 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			wp_enqueue_script( 'apl-notice-js' );
 
 			wp_enqueue_style(
-				'apl-notices-css',
-				APL_URL . 'admin/css/apl-notices.css',
+				'apl-notice-css',
+				APL_URL . 'admin/css/apl-notice.css',
 				false,
 				APL_VERSION,
 				false
@@ -571,7 +571,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 		public function display_notice( $template ) {
 			if ( ! wp_script_is( 'apl-notice-js', 'enqueued' ) || ! wp_style_is( 'apl-notice-css', 'enqueued' ) ) {
 				return;
-			} elseif ( 'default' !== $template && 'aioseop' !== $template ) {
+			} elseif ( 'default' !== $template && 'apl' !== $template ) {
 				return;
 			} elseif ( ! current_user_can( 'manage_options' ) ) {
 				return;
@@ -605,7 +605,7 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 				}
 
 				// Display/Render.
-				if ( true === DISPLABLE_NAG_NOTICES && defined( 'DISABLE_NAG_NOTICES' ) && ( 'notice-error' !== $this->notices[ $a_notice_slug ]['class'] || 'notice-warning' !== $this->notices[ $a_notice_slug ]['class'] || 'notice-do-nag' !== $this->notices[ $a_notice_slug ]['class'] ) ) {
+				if ( defined( 'DISABLE_NAG_NOTICES' ) && true === DISPLABLE_NAG_NOTICES && ( 'notice-error' !== $this->notices[ $a_notice_slug ]['class'] || 'notice-warning' !== $this->notices[ $a_notice_slug ]['class'] || 'notice-do-nag' !== $this->notices[ $a_notice_slug ]['class'] ) ) {
 					// Skip if `DISABLE_NAG_NOTICES` is implemented (as true).
 					// Important notices, WP's CSS `notice-error` & `notice-warning`, are still rendered.
 					continue;
