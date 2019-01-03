@@ -57,6 +57,8 @@ function apl_options_default() {
  * Gets APLOptions from WordPress database and returns it. If there is no data,
  * then set to defaults, save, and return options.
  *
+ * @todo Maybe-Change to apl_get_options.
+ *
  * @since 0.1.0
  * @since 0.4.0 - Moved to non-class function.
  *
@@ -82,6 +84,8 @@ function apl_options_load() {
  * APL Save Options.
  *
  * Save APL_Options.
+ *
+ * @todo Maybe-Change to apl_set_options.
  *
  * @since 0.1.0
  * @since 0.4.0 - Moved to non-class function.
