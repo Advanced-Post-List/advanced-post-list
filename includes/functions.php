@@ -14,7 +14,7 @@
 /**
  * APL Option Defaults.
  *
- * Sets options to default values. Deprecated.
+ * Sets apl_options to default values.
  *
  * STEP 1 - Set options as an array.
  * STEP 2 - Add default values to options.
@@ -35,6 +35,17 @@ function apl_options_default() {
 	$options['delete_core_db']       = false;
 	$options['default_empty_enable'] = false;
 	$options['default_empty_output'] = '<p>' . __( 'Sorry, but no content is available at this time.', 'advanced-post-list' ) . '</p>';
+
+	/**
+	 * Filter - APL Options Default
+	 *
+	 * Default array keys and values for APL_Options.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $options
+	 */
+	$options = apply_filters( 'apl_options_default', $options );
 
 	// Step 3.
 	return $options;
@@ -58,6 +69,7 @@ function apl_options_load() {
 	$options = get_option( 'apl_options' );
 
 	if ( false !== $options ) {
+		$options = wp_parse_args( $options, apl_options_default() );
 		return $options;
 	} else {
 		$options = apl_options_default();
