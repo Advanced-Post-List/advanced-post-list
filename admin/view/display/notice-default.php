@@ -19,7 +19,21 @@ if ( isset( $notice['class'] ) && ! empty( $notice['class'] ) ) {
 
 ?>
 <div class="notice <?php echo esc_attr( $notice_class ); ?> is-dismissible apl-notice-container apl-notice-<?php echo esc_attr( $notice['slug'] ); ?>">
-	<p><?php echo esc_html( $notice['message'] ); ?></p>
+	<p>
+		<?php
+		echo wp_kses(
+			$notice['message'], array(
+				'a' => array(
+					'href' => array(),
+					'title' => array()
+				),
+				'br' => array(),
+				'em' => array(),
+				'strong' => array(),
+			)
+		);
+		?>
+	</p>
 	<p class="apl-notice-actions">
 		<?php foreach ( $notice['action_options'] as $key => $action_option ) : ?>
 			<?php
