@@ -15,7 +15,7 @@
      * @access public
      *
      * @global string $apl_notice_data.notice_nonce
-     * @listens apl-notice-delay-{notice_slug}-{delay_index}:click
+     * @listens apl-notice-delay-{notice_slug}-{action_index}:click
      *
      * @param string noticeSlug
      * @param string delayIndex
@@ -33,7 +33,7 @@
 
             var formData = new FormData();
             formData.append( "notice_slug", noticeSlug );
-            formData.append( "delay_index", delayIndex );
+            formData.append( "action_index", delayIndex );
 
             formData.append( "action", "apl_notice" );
             formData.append( "_ajax_nonce", noticeNonce );
@@ -61,7 +61,7 @@
      * @access public
      *
      * @global string $apl_notice_data.notice_nonce
-     * @listens apl-notice-delay-{notice_slug}-{delay_index}:click
+     * @listens apl-notice-delay-{notice_slug}-{action_index}:click
      *
      * @param string noticeSlug
      */
@@ -75,7 +75,7 @@
 
             var formData = new FormData();
             formData.append( "notice_slug", noticeSlug );
-            formData.append( "delay_index", "default" );
+            formData.append( "action_index", "default" );
 
             formData.append( "action", "apl_notice" );
             formData.append( "_ajax_nonce", noticeNonce );
