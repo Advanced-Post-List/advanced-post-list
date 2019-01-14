@@ -637,9 +637,8 @@ if ( ! class_exists( 'APL_Notices' ) ) {
 			if ( isset( $_POST['action_index'] ) ) {
 				$action_index = filter_input( INPUT_POST, 'action_index', FILTER_SANITIZE_STRING );
 			}
-			if ( empty( $notice_slug ) || empty( $action_index ) ) {
-				wp_die();
-			}
+
+			// Error handling & exit/die.
 			if ( empty( $notice_slug ) ) {
 				wp_send_json_error( 'Missing values from `notice_slug`.' );
 			} elseif ( empty( $action_index ) && 0 !== $action_index ) {

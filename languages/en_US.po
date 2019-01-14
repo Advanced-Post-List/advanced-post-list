@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Advanced Post List\n"
-"POT-Creation-Date: 2018-09-09 16:25-0700\n"
-"PO-Revision-Date: 2018-09-09 16:27-0700\n"
+"POT-Creation-Date: 2019-01-14 01:13-0800\n"
+"PO-Revision-Date: 2019-01-14 01:14-0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: advanced-post-list.php\n"
@@ -43,10 +43,8 @@ msgid "Add New Post List"
 msgstr "Add New Post List"
 
 #: admin/class-apl-admin.php:238
-#, fuzzy
-#| msgid "New Post List"
 msgid "- New Post List"
-msgstr "New Post List"
+msgstr "- New Post List"
 
 #: admin/class-apl-admin.php:247
 msgid "APL Settings"
@@ -452,10 +450,10 @@ msgid "Display preset post lists"
 msgstr "Display preset post lists"
 
 #. translators: %s template name
-#: includes/functions.php:293
+#: includes/functions.php:309
 #, php-format
 msgid "Template %s does not exist."
-msgstr ""
+msgstr "Template %s does not exist."
 
 #: templates/admin/meta-box/design-design.php:23
 #: templates/admin/meta-box/post-list-design.php:23
@@ -583,6 +581,9 @@ msgid ""
 "children pages to display. You can add multiple Post Parents of dynamically "
 "add children pages according to the Current Page."
 msgstr ""
+"Each hierarchical post type has a Parent selector for selecting which "
+"children pages to display. You can add multiple Post Parents of dynamically "
+"add children pages according to the Current Page."
 
 #: templates/admin/meta-box/post-list-filter.php:26
 msgid ""
@@ -637,16 +638,20 @@ msgid ""
 "Show or remove posts that were created by a certain author, or authors. You "
 "can only choose between adding or removing, not both."
 msgstr ""
+"Show or remove posts that were created by a certain author, or authors. You "
+"can only choose between adding or removing, not both."
 
 #: templates/admin/meta-box/post-list-filter.php:36
 msgid "Operator - Determines whether you want to include or exclude authors."
-msgstr ""
+msgstr "Operator - Determines whether you want to include or exclude authors."
 
 #: templates/admin/meta-box/post-list-filter.php:38
 msgid ""
 "Author Names/IDs - Displays a list of authors the site currently has and is "
 "divided/grouped into separate role groups."
 msgstr ""
+"Author Names/IDs - Displays a list of authors the site currently has and is "
+"divided/grouped into separate role groups."
 
 #: templates/admin/meta-box/post-list-filter.php:39
 msgid ""
@@ -654,16 +659,21 @@ msgid ""
 "visibility and/or the page states. To which is only visible to the users "
 "with the necessary capabilities to view them."
 msgstr ""
+"Holds the settings to show which posts to display based on the user "
+"visibility and/or the page states. To which is only visible to the users "
+"with the necessary capabilities to view them."
 
 #: templates/admin/meta-box/post-list-filter.php:41
 msgid "<b>Visibility</b> - Display posts as either Public, Private, or Both"
-msgstr ""
+msgstr "<b>Visibility</b> - Display posts as either Public, Private, or Both"
 
 #: templates/admin/meta-box/post-list-filter.php:43
 msgid ""
 "<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, "
 "Auto-save, Inherit, and/or Trash."
 msgstr ""
+"<b>Status States</b>: Choose from Published, Future, Pending Review, Draft, "
+"Auto-save, Inherit, and/or Trash."
 
 #: templates/admin/meta-box/post-list-filter.php:44
 msgid ""
@@ -675,11 +685,12 @@ msgstr ""
 
 #: templates/admin/meta-box/post-list-filter.php:45
 msgid "Number of posts to skip/displace."
-msgstr ""
+msgstr "Number of posts to skip/displace."
 
 #: templates/admin/meta-box/post-list-filter.php:46
 msgid "NOTE: Offset is ignored when List Amount is set to -1 (show all posts)."
 msgstr ""
+"NOTE: Offset is ignored when List Amount is set to -1 (show all posts)."
 
 #: templates/admin/meta-box/post-list-filter.php:47
 msgid ""
