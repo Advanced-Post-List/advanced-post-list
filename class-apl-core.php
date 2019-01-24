@@ -57,12 +57,12 @@ class APL_Core {
 	 *                internalization support.
 	 *                Changed check version to hook method.
 	 * @access public
+	public function __construct() {
 	 *
 	 * @param string $file Main plugin file.
 	 */
-	public function __construct( $file ) {
 		// STEP 1.
-		$this->_define_constants( $file );
+		$this->_define_constants();
 		$this->_requires();
 
 		// STEP 2.
@@ -103,7 +103,7 @@ class APL_Core {
 	 *
 	 * @param string $plugin_file Main plugin file.
 	 */
-	private function _define_constants( $plugin_file ) {
+	private function _define_constants() {
 		/*
 		 * Get plugin-file-data from advanced-post-list.php, and grab
 		 * the plugin's meta default_headers.
@@ -113,7 +113,7 @@ class APL_Core {
 			'Slug'    => 'Text Domain',
 			'Version' => 'Version',
 		);
-		$plugin_data = get_file_data( $plugin_file, $default_headers );
+		$plugin_data = get_file_data( __FILE__, $default_headers );
 
 		/**
 		 * APL Display Name.
@@ -151,7 +151,7 @@ class APL_Core {
 		 *                APL_Core::_define_constants().
 		 * @var string $APL_URL Contains 'http://localhost/wordpress/wp-content/plugins/advanced-post-list/'.
 		 */
-		define( 'APL_URL', plugin_dir_url( $plugin_file ) );
+		define( 'APL_URL', plugin_dir_url( __FILE__ ) );
 
 		/**
 		 * Directory Path.
@@ -161,7 +161,7 @@ class APL_Core {
 		 *                APL_Core::_define_constants().
 		 * @var string $APL_DIR Contains 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
 		 */
-		define( 'APL_DIR', plugin_dir_path( $plugin_file ) );
+		define( 'APL_DIR', plugin_dir_path( __FILE__ ) );
 
 		if ( ! defined( 'APL_TEMPLATE_DEBUG_MODE' ) ) {
 			/**
