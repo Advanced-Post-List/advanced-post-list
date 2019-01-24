@@ -56,16 +56,22 @@ class APL_Core {
 	 * @since 0.4.0 - Added hook for loading the textdomain to enable
 	 *                internalization support.
 	 *                Changed check version to hook method.
-	 * @access public
-	public function __construct() {
-	 *
-	 * @param string $file Main plugin file.
+	 * @since 0.5.4 - Encapsulated operation in hook `action__init()`.
 	 */
-		// STEP 1.
+	public function __construct() {
+		add_action( 'plugins_loaded', array( $this, 'action__init' ), 3 );
+	}
+
+	/**
+	 * Initialization Action
+	 *
+	 * @since 0.5.4 - Move from constructor.
+	 */
+	public function action__init() {
+		// Set plugin file data/properties.
 		$this->_define_constants();
 		$this->_requires();
 
-		// STEP 2.
 		/* **** ACTION & FILTERS HOOKS **** */
 		add_action( 'plugins_loaded', array( $this, 'action_check_version' ), 6 );
 		add_action( 'plugins_loaded', array( $this, 'action_load_plugin_textdomain' ) );
@@ -76,7 +82,7 @@ class APL_Core {
 		add_shortcode( 'post_list', array( $this, 'shortcode_post_list' ) );
 		add_action( 'widgets_init', array( $this, 'action_widget_init' ) );
 
-		// STEP 3.
+		/* **** ADMIN ACTION & FILTERS HOOKS **** */
 		if ( is_admin() ) {
 			// Admin Class.
 			add_action( 'init', array( 'APL_Admin', 'get_instance' ) );
