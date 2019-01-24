@@ -73,7 +73,7 @@ class APL_Core {
 		$this->_requires();
 
 		/* **** ACTION & FILTERS HOOKS **** */
-		add_action( 'plugins_loaded', array( $this, 'action_check_version' ), 6 );
+		add_action( 'plugins_loaded', array( $this, 'action_check_version' ), 9 );
 		add_action( 'plugins_loaded', array( $this, 'action_load_plugin_textdomain' ) );
 		add_action( 'init', array( $this, 'action_register_post_type_post_list' ), 6 );
 		add_action( 'init', array( $this, 'action_register_post_type_design' ), 6 );
