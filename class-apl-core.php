@@ -56,18 +56,24 @@ class APL_Core {
 	 * @since 0.4.0 - Added hook for loading the textdomain to enable
 	 *                internalization support.
 	 *                Changed check version to hook method.
-	 * @access public
-	 *
-	 * @param string $file Main plugin file.
+	 * @since 0.5.4 - Encapsulated operation in hook `action__init()`.
 	 */
-	public function __construct( $file ) {
-		// STEP 1.
-		$this->_define_constants( $file );
+	public function __construct() {
+		add_action( 'plugins_loaded', array( $this, 'action__init' ), 3 );
+	}
+
+	/**
+	 * Initialization Action
+	 *
+	 * @since 0.5.4 - Move from constructor.
+	 */
+	public function action__init() {
+		// Set plugin file data/properties.
+		$this->_define_constants();
 		$this->_requires();
 
-		// STEP 2.
 		/* **** ACTION & FILTERS HOOKS **** */
-		add_action( 'plugins_loaded', array( $this, 'action_check_version' ), 6 );
+		add_action( 'plugins_loaded', array( $this, 'action_check_version' ), 9 );
 		add_action( 'plugins_loaded', array( $this, 'action_load_plugin_textdomain' ) );
 		add_action( 'init', array( $this, 'action_register_post_type_post_list' ), 6 );
 		add_action( 'init', array( $this, 'action_register_post_type_design' ), 6 );
@@ -76,7 +82,7 @@ class APL_Core {
 		add_shortcode( 'post_list', array( $this, 'shortcode_post_list' ) );
 		add_action( 'widgets_init', array( $this, 'action_widget_init' ) );
 
-		// STEP 3.
+		/* **** ADMIN ACTION & FILTERS HOOKS **** */
 		if ( is_admin() ) {
 			// Admin Class.
 			add_action( 'init', array( 'APL_Admin', 'get_instance' ) );
@@ -103,7 +109,7 @@ class APL_Core {
 	 *
 	 * @param string $plugin_file Main plugin file.
 	 */
-	private function _define_constants( $plugin_file ) {
+	private function _define_constants() {
 		/*
 		 * Get plugin-file-data from advanced-post-list.php, and grab
 		 * the plugin's meta default_headers.
@@ -113,7 +119,7 @@ class APL_Core {
 			'Slug'    => 'Text Domain',
 			'Version' => 'Version',
 		);
-		$plugin_data = get_file_data( $plugin_file, $default_headers );
+		$plugin_data = get_file_data( __FILE__, $default_headers );
 
 		/**
 		 * APL Display Name.
@@ -151,7 +157,7 @@ class APL_Core {
 		 *                APL_Core::_define_constants().
 		 * @var string $APL_URL Contains 'http://localhost/wordpress/wp-content/plugins/advanced-post-list/'.
 		 */
-		define( 'APL_URL', plugin_dir_url( $plugin_file ) );
+		define( 'APL_URL', plugin_dir_url( __FILE__ ) );
 
 		/**
 		 * Directory Path.
@@ -161,7 +167,7 @@ class APL_Core {
 		 *                APL_Core::_define_constants().
 		 * @var string $APL_DIR Contains 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
 		 */
-		define( 'APL_DIR', plugin_dir_path( $plugin_file ) );
+		define( 'APL_DIR', plugin_dir_path( __FILE__ ) );
 
 		if ( ! defined( 'APL_TEMPLATE_DEBUG_MODE' ) ) {
 			/**
