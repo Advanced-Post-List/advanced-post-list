@@ -244,10 +244,10 @@ class APL_Query {
 			if ( 'none' !== $apl_post_list->perm ) {
 				$tmp_query_args['perm'] = $apl_post_list->perm;
 			}
-			if ( 'none' !== $apl_post_list->author__bool ) {
-				if ( 'in' === $apl_post_list->author__in ) {
+			if ( 'none' !== $apl_post_list->author__bool && ! empty( $apl_post_list->author__in ) ) {
+				if ( 'in' === $apl_post_list->author__bool ) {
 					$tmp_query_args['author__in'] = $apl_post_list->author__in;
-				} elseif ( 'not_in' === $apl_post_list->author__in ) {
+				} elseif ( 'not_in' === $apl_post_list->author__bool ) {
 					$tmp_query_args['author__not_in'] = $apl_post_list->author__in;
 				}
 			}
