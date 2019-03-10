@@ -3,7 +3,7 @@ Contributors: EkoJr
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VFUYQGQ7VXEDC
 Tags: Post List, Tool, Editor, Featured, Related Posts, Author, Authors, Auto, Automate, Builder, Categories, Category, Child Pages, CMS, Content, Comment, Comments, CPT, CSS, Custom, Custom Post Type, Custom Post Types, Custom Taxonomy, Custom Taxonomies, Design, Developer, Draft, Draft Posts, Excerpt, Feature, Featured, Featured Content, Filter, Future, Future Posts, HTML, Image, Images, Links, List, Links, Magazine, Magazines, News, Page, Pages, Parent, Parent Pages, Photos, PHP, Popular Posts, Post, Posts, Private, Private Posts, Programming, Published, Related Post, Related Posts, Recent, Recent Post, Recent Posts, Shortcode, Shortcodes, Simple, Tag, Tags, Thumbnail, Web Design, Web Development, Webmaster, Widget, Widgets, WPML
 Requires at least: 4.5
-Tested up to: 5.0
+Tested up to: 5.1
 Stable tag: 0.5.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
