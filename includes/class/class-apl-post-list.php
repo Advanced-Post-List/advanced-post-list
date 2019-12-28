@@ -357,7 +357,9 @@ class APL_Post_List {
 			$this->post_parent__in     = get_post_meta( $this->id, 'apl_post_parent__in', true )     ?: array();
 			$this->post_parent_dynamic = get_post_meta( $this->id, 'apl_post_parent_dynamic', true ) ?: array();
 			$this->posts_per_page      = get_post_meta( $this->id, 'apl_posts_per_page', true )      ?: 5;
+			$this->posts_per_page      = intval( $this->posts_per_page );
 			$this->offset              = get_post_meta( $this->id, 'apl_offset', true )              ?: 0;
+			$this->offset              = intval( $this->offset );
 			$this->order_by            = get_post_meta( $this->id, 'apl_order_by', true )            ?: 'none';
 			$this->order               = get_post_meta( $this->id, 'apl_order', true )               ?: 'DESC';
 			$this->author__bool        = get_post_meta( $this->id, 'apl_author__bool', true )        ?: 'none';
