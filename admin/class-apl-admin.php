@@ -1214,7 +1214,10 @@ class APL_Admin {
 	 * @link https://developer.wordpress.org/reference/hooks/admin_post_action/
 	 */
 	public function save_general_settings() {
-		if ( ! is_admin() ) {
+		if (
+				! wp_verify_nonce( $_POST['apl_general_settings_nonce'], 'apl_settings_general_save' ) &&
+				! current_user_can( 'administrator' )
+		) {
 			wp_die();
 		}
 		$options = apl_options_load();
@@ -1254,7 +1257,8 @@ class APL_Admin {
 
 		$options['default_empty_output'] = '';
 		if ( isset( $_POST['apl_default_empty_message'] ) ) {
-			// Sanatize with admins?
+			// Sanitize with admins?
+			// TODO Possibly change to a WP_Post Object. Db update would be required.
 			$tmp_empty_messaage = filter_input( INPUT_POST, 'apl_default_empty_message', FILTER_UNSAFE_RAW );
 
 			$options['default_empty_output'] = $tmp_empty_messaage;
