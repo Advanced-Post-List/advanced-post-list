@@ -68,8 +68,6 @@ class APL_Core {
 	 * @since 0.5.4 - Move from constructor.
 	 */
 	public function action__init() {
-		// Set plugin file data/properties.
-		$this->_define_constants();
 		$this->_requires();
 
 		/* **** ACTION & FILTERS HOOKS **** */
@@ -92,91 +90,6 @@ class APL_Core {
 			register_activation_hook( $file_dir, array( 'APL_Core', 'activation' ) );
 			register_deactivation_hook( $file_dir, array( 'APL_Core', 'deactivation' ) );
 			register_uninstall_hook( $file_dir, array( 'APL_Core', 'uninstall' ) );
-		}
-	}
-
-	/**
-	 * Define APL Constants
-	 *
-	 * Defines all the constants for APL.
-	 *
-	 * @ignore
-	 * @since 0.3.2
-	 * @access private
-	 *
-	 * @see get_file_data()
-	 * @link https://hitchhackerguide.com/2011/02/12/get_plugin_data/
-	 *
-	 * @param string $plugin_file Main plugin file.
-	 */
-	private function _define_constants() {
-		/*
-		 * Get plugin-file-data from advanced-post-list.php, and grab
-		 * the plugin's meta default_headers.
-		 */
-		$default_headers = array(
-			'Name'    => 'Plugin Name',
-			'Slug'    => 'Text Domain',
-			'Version' => 'Version',
-		);
-		$plugin_data = get_file_data( __FILE__, $default_headers );
-
-		/**
-		 * APL Display Name.
-		 *
-		 * @since 0.1.0
-		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
-		 *                APL_Core::_define_constants().
-		 * @var string $APL_NAME Contains 'Advanced Post List'.
-		 */
-		define( 'APL_NAME', $plugin_data['Name'] );
-
-		/**
-		 * APL Slug.
-		 *
-		 * @since 0.3.2
-		 * @var string $APL_SLUG Contains 'advanced-post-list'.
-		 */
-		define( 'APL_SLUG', $plugin_data['Slug'] );
-
-		/**
-		 * Version Number.
-		 *
-		 * @since 0.1.0
-		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
-		 *                APL_Core::_define_constants().
-		 * @var string $APL_VERSION Ex. '1.2.3'.
-		 */
-		define( 'APL_VERSION', $plugin_data['Version'] );
-
-		/**
-		 * URL Location.
-		 *
-		 * @since 0.1.0
-		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
-		 *                APL_Core::_define_constants().
-		 * @var string $APL_URL Contains 'http://localhost/wordpress/wp-content/plugins/advanced-post-list/'.
-		 */
-		define( 'APL_URL', plugin_dir_url( __FILE__ ) );
-
-		/**
-		 * Directory Path.
-		 *
-		 * @since 0.1.0
-		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
-		 *                APL_Core::_define_constants().
-		 * @var string $APL_DIR Contains 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
-		 */
-		define( 'APL_DIR', plugin_dir_path( __FILE__ ) );
-
-		if ( ! defined( 'APL_TEMPLATE_DEBUG_MODE' ) ) {
-			/**
-			 * APL Template Debug
-			 *
-			 * @since 0.4.4.1
-			 * @var boolean $APL_TEMPLATE_DEBUG_MODE Used for bypassing child theme customizations when debugging.
-			 */
-			define( 'APL_TEMPLATE_DEBUG_MODE', false );
 		}
 	}
 

@@ -45,6 +45,127 @@ if ( isset( $wp_version ) ) {
 	wp_die( esc_html( $error_msg ), esc_html__( 'Advanced Post List: Error', 'advanced-post-list' ) );
 }
 
+/* **** DEFINE CONSTANTS **** */
+if (
+		! defined( 'APL_VERSION' )
+) {
+	// PHP < 5.2 compatibility for __DIR__.
+	// Avoid using `plugin_basename()` with situations that don't store the plugin directory in `WP_PLUGIN_DIR`; ex. unit testing with Travis CI.
+	$directory        = dirname( __FILE__ );
+	$root_dir         = wp_normalize_path( str_replace( basename( $directory ), '', $directory ) );
+	$plugin_basename  = wp_normalize_path( str_replace( str_replace( basename( $directory ), '', $directory ), '', __FILE__ ) );
+	$plugin_dir       = $root_dir . $plugin_basename;
+	/*
+	 * Get plugin-file-data from advanced-post-list.php, and grab
+	 * the plugin's meta default_headers.
+	 *
+	 * @see get_file_data()
+	 * @link https://hitchhackerguide.com/2011/02/12/get_plugin_data/
+	 */
+	$default_headers = array(
+		'Name'       => 'Plugin Name',
+		'Slug'       => 'Text Domain',
+		'TextDomain' => 'Text Domain',
+		'DomainPath' => 'Domain Path',
+		'Version'    => 'Version',
+	);
+	$plugin_data = get_file_data( __FILE__, $default_headers );
+
+	/**
+	 * Plugin Basename.
+	 *
+	 * @since 0.5.6
+	 *
+	 * @var string APL_PLUGIN_BASENAME Plugin basename on WP platform. Eg. 'advanced-post-list/advanced-post-list.php`.
+	 */
+	define( 'APL_PLUGIN_BASENAME', $plugin_basename );
+
+	/**
+	 * Version Number.
+	 *
+	 * @since 0.1.0
+	 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
+	 *                APL_Core::_define_constants().
+	 * @var string $APL_VERSION Ex. '1.2.3'.
+	 */
+	define( 'APL_VERSION', $plugin_data['Version'] );
+
+	/**
+	 * APL Display Name.
+	 *
+	 * @since 0.1.0
+	 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
+	 *                APL_Core::_define_constants().
+	 * @var string $APL_NAME Contains 'Advanced Post List'.
+	 */
+	define( 'APL_NAME', $plugin_data['Name'] );
+
+	/**
+	 * APL Slug.
+	 *
+	 * @deprecated 0.5.6 Use `APL_TEXTDOMAIN` constant.
+	 *
+	 * @since 0.3.2
+	 *
+	 * @var string $APL_SLUG Contains 'advanced-post-list'.
+	 */
+	define( 'APL_SLUG', $plugin_data['Slug'] );
+
+	/**
+	 * APL Text Domain.
+	 *
+	 * @since 0.5.6
+	 * @var string $APL_TEXTDOMAIN Contains 'advanced-post-list'.
+	 */
+	define( 'APL_TEXTDOMAIN', $plugin_data['TextDomain'] );
+
+	if ( ! defined( 'APL_DIR' ) ) {
+		/**
+		 * Directory Path.
+		 *
+		 * @since 0.1.0
+		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
+		 *                APL_Core::_define_constants().
+		 * @var string $APL_DIR Contains 'C:\xampp\htdocs\wordpress\wp-content\plugins\advanced-post-list/'.
+		 */
+		define( 'APL_DIR', plugin_dir_path( __FILE__ ) );
+	}
+
+	if ( ! defined( 'APL_URL' ) ) {
+		/**
+		 * URL Location.
+		 *
+		 * @since 0.1.0
+		 * @since 0.3.2 - Moved from advanced-post-list.php to class-apl-core
+		 *                APL_Core::_define_constants().
+		 * @var string $APL_URL Contains 'http://localhost/wordpress/wp-content/plugins/advanced-post-list/'.
+		 */
+		define( 'APL_URL', plugin_dir_url( __FILE__ ) );
+	}
+
+	if ( ! defined( 'APL_DOMAIN_PATH' ) ) {
+
+		/**
+		 * Plugin's Text Domain Path
+		 *
+		 * @since 1.0.0
+		 *
+		 * @var string $APL_DOMAIN_PATH Directory for storing languages.
+		 */
+		define( 'APL_DOMAIN_PATH', $plugin_data['DomainPath'] );
+	}
+
+	if ( ! defined( 'APL_TEMPLATE_DEBUG_MODE' ) ) {
+		/**
+		 * APL Template Debug
+		 *
+		 * @since 0.4.4.1
+		 * @var boolean $APL_TEMPLATE_DEBUG_MODE Used for bypassing child theme customizations when debugging.
+		 */
+		define( 'APL_TEMPLATE_DEBUG_MODE', false );
+	}
+}
+
 /* **** Core Singleton Class **** */
 require_once plugin_dir_path( __FILE__ ) . 'class-apl-core.php';
 global $apl_core;
