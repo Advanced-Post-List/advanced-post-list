@@ -39,6 +39,7 @@ $apl_help_text = array(
 ?>
 <form id="apl-settings-form" method="post" action="<?php echo esc_attr( admin_url( 'admin-post.php' ) ); ?>" >
 	<input type="hidden" name="action" value="apl_save_general_settings">
+	<?php wp_nonce_field( 'apl_settings_general_save', 'apl_general_settings_nonce' ); ?>
 	<div class="apl-settings-row" >
 		<div class="apl-row-first-cell">
 			<label>Ignore Post Types:</label>

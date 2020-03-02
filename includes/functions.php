@@ -65,7 +65,7 @@ function apl_options_default() {
  * @see Function/method/class relied on
  * @link URL
  *
- * @return object APL option settings.
+ * @return array APL option settings.
  */
 function apl_options_load() {
 	$options = get_option( 'apl_options' );
