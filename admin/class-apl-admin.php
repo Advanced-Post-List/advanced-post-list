@@ -358,7 +358,7 @@ class APL_Admin {
 
 			wp_register_script(
 				'apl-admin-ui-multiselect-js',
-				APL_URL . 'admin/js/jquery.multiselect.min.js',
+				APL_URL . 'admin/js/jquery-multiselect/jquery.multiselect.min.js',
 				array(
 					'jquery',
 					'jquery-ui-core',
@@ -371,7 +371,7 @@ class APL_Admin {
 
 			wp_register_script(
 				'apl-admin-ui-multiselect-filter-js',
-				APL_URL . 'admin/js/jquery.multiselect.filter.min.js',
+				APL_URL . 'admin/js/jquery-multiselect/jquery.multiselect.filter.min.js',
 				array(
 					'jquery',
 					'jquery-ui-core',
@@ -437,7 +437,7 @@ class APL_Admin {
 			$wp_scripts = wp_scripts();
 			wp_enqueue_style(
 				'apl-admin-ui-css',
-				'https://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css',
+				APL_URL . 'admin/css/jquery-ui/jquery-ui.min.css',
 				false,
 				APL_VERSION,
 				false
@@ -445,7 +445,7 @@ class APL_Admin {
 
 			wp_enqueue_style(
 				'apl-admin-ui-multiselect-css',
-				APL_URL . 'admin/css/jquery.multiselect.css',
+				APL_URL . 'admin/css/jquery-multiselect/jquery.multiselect.css',
 				false,
 				APL_VERSION,
 				false
@@ -453,7 +453,7 @@ class APL_Admin {
 
 			wp_enqueue_style(
 				'apl-admin-ui-multiselect-filter-css',
-				APL_URL . 'admin/css/jquery.multiselect.filter.css',
+				APL_URL . 'admin/css/jquery-multiselect/jquery.multiselect.filter.css',
 				false,
 				APL_VERSION,
 				false
@@ -536,10 +536,9 @@ class APL_Admin {
 				false
 			);
 
-			$wp_scripts = wp_scripts();
 			wp_enqueue_style(
 				'apl-admin-ui-css',
-				'https://ajax.googleapis.com/ajax/libs/jqueryui/' . $wp_scripts->registered['jquery-ui-core']->ver . '/themes/smoothness/jquery-ui.css',
+				APL_URL . 'admin/css/jquery-ui/jquery-ui.css',
 				false,
 				APL_VERSION,
 				false
