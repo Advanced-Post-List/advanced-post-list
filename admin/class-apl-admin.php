@@ -1435,33 +1435,55 @@ class APL_Admin {
 		$raw_content = array();
 		$i = 0;
 		while ( isset( $_FILES[ 'file_' . $i ] ) ) {
-			$file_arr = $_FILES[ 'file_' . $i ];
-			$file_content = file_get_contents( $file_arr['tmp_name'] );
-			$raw_content[] = json_decode( $file_content );
+			/**
+			 * @type array $file_{$i} {
+			 *     @type int    $error
+			 *     @type string $name
+			 *     @type int    $size
+			 *     @type string $tmp_name
+			 *     @type string $type
+			 * }
+			 */
+			if ( isset( $_FILES[ 'file_' . $i ]['tmp_name'] ) && ! empty( $_FILES[ 'file_' . $i ]['tmp_name'] ) ) {
+				$file_error = ( isset( $_FILES[ 'file_' . $i ]['error'] ) ) ? intval( filter_var( $_FILES[ 'file_' . $i ]['error'], FILTER_SANITIZE_NUMBER_INT ) ) : 1;
+				$file_type  = ( isset( $_FILES[ 'file_' . $i ]['type'] ) )  ? filter_var( $_FILES[ 'file_' . $i ]['type'], FILTER_SANITIZE_STRING )                : '';
+				$file_tmp   = ( isset( $_FILES[ 'file_' . $i ]['type'] ) )  ? filter_var( $_FILES[ 'file_' . $i ]['tmp_name'], FILTER_SANITIZE_STRING )            : '';
+
+				// 2 = validate_file() - windows drive paths are needed for development purposes.
+				if ( ! $file_error && 'application/json' === $file_type && ! in_array( validate_file( $file_tmp ), array( 1, 3 ) ) ) {
+					$file_content  = file_get_contents( $_FILES[ 'file_' . $i ]['tmp_name'] );
+
+					$raw_content[] = json_decode( $file_content );
+				}
+			}
 			$i++;
 		}
 
 		$imported_content = array();
 		foreach ( $raw_content as $v1_content ) {
 			$update_items = array();
-			if ( isset( $v1_content->version ) ) {
+			if (
+					isset( $v1_content->version ) &&
+					preg_match( '/([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:\.([0-9]|dev|a[1-9]|b[1-9]+))?/', $v1_content->version ) )
+			{
 				$version = $v1_content->version;
 			} else {
-				return new WP_Error( 'apl_admin', __( 'Version number is not present in imported file.', 'advanced-post-list' ) );
+				return new WP_Error( 'apl_admin', __( 'Version number is missing or invalid in imported file.', 'advanced-post-list' ) );
 			}
 
 			// 0.3 Database.
 			if ( version_compare( '0.3.0', $version, '<' ) && version_compare( '0.4.0', $version, '>' ) ) {
-				if ( isset( $v1_content->presetDbObj ) ) {
+				if ( isset( $v1_content->presetDbObj ) && $v1_content->presetDbObj instanceof APL_Preset_Db ) {
 					$update_items['preset_db'] = $v1_content->presetDbObj;
 				}
 			}
+
 			// 0.4+ Database.
 			elseif( version_compare( '0.4.0', $version, '<' ) ) {
-				if ( isset( $v1_content->apl_post_list_arr ) ) {
+				if ( isset( $v1_content->apl_post_list_arr ) && $v1_content->apl_post_list_arr instanceof APL_Post_List ) {
 					$update_items['apl_post_list_arr'] = $v1_content->apl_post_list_arr;
 				}
-				if ( isset( $v1_content->apl_design_arr ) ) {
+				if ( isset( $v1_content->apl_design_arr ) && $v1_content->apl_design_arr instanceof APL_Design ) {
 					$update_items['apl_design_arr'] = $v1_content->apl_design_arr;
 				}
 			}

@@ -45,7 +45,7 @@ function apl_export() {
 	}
 
 	header( 'Content-type: application/json' );
-	header( 'Content-Disposition: attachment; filename="' . $_GET['filename'] . '.json"' );
+	header( 'Content-Disposition: attachment; filename="' . sanitize_file_name( $_GET['filename'] . '.json' ) . '"' );
 
 	// OLD METHOD.
 	//echo trim( json_encode( $outputFileData ) );

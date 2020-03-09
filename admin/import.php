@@ -26,7 +26,8 @@ function apl_import() {
 	$tmp_design     = get_option( 'apl_import_overwrite_design' );
 
 	if ( isset( $_GET['post_list_overwrite'] ) ) {
-		$tmp_post_list_slugs = explode( ',', $_GET['post_list_overwrite'] );
+		$post_list_overwrite = filter_input( INPUT_GET, 'post_list_overwrite', FILTER_SANITIZE_STRING );
+		$tmp_post_list_slugs = explode( ',', $post_list_overwrite );
 
 		foreach ( $tmp_post_list_slugs as  $v1_pt_slug ) {
 			foreach ( $tmp_post_list as $k2_index => $v2_post_list_import ) {
