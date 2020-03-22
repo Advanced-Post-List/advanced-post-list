@@ -581,7 +581,9 @@ class APL_Admin {
 			wp_localize_script( 'apl-settings-js', 'apl_settings_local', $settings_localize );
 			wp_localize_script( 'apl-settings-ui-js', 'apl_settings_ui_local', $settings_ui_localize );
 
-			do_action( 'add_meta_boxes', $hook_suffix );
+			global $post_type;
+			do_action( 'add_meta_boxes', $hook_suffix, $post_type );
+
 			$screen_args = array(
 				'max'     => 2,
 				'default' => 2,
