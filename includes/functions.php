@@ -387,3 +387,942 @@ if ( 'apl_get_template_part' ) {
 		}
 	}
 }
+
+/**
+ * Allowed Global Attributes
+ *
+ * @since 0.5.6.1
+ *
+ * @return array
+ */
+function apl_allowed_global_attributes() {
+	return array(
+		'aria-*'              => true,
+		'accesskey'           => true,
+		'autocapitalize'      => true,
+		'autocomplete'        => true,
+		'class'               => true,
+		'contenteditable'     => true,
+		'data-*'              => true,
+		'dir'                 => true,
+		'draggable'           => true,
+		'dropzone'            => true,
+		'exportparts'         => true,
+		'hidden'              => true,
+		'id'                  => true,
+		'inputmode'           => true,
+		'is'                  => true,
+		'itemid'              => true,
+		'intemprop'           => true,
+		'itemref'             => true,
+		'itemscope'           => true,
+		'itemtype'            => true,
+		'lang'                => true,
+		'part'                => true,
+		'slot'                => true,
+		'spellcheck'          => true,
+		'style'               => true,
+		'tabindex'            => true,
+		'title'               => true,
+		'translate'           => true,
+		'onabort'             => true,
+		'onautocomplete'      => true,
+		'onautocompleteerror' => true,
+		'onblur'              => true,
+		'oncancel'            => true,
+		'oncanplay'           => true,
+		'oncanplaythrough'    => true,
+		'onchange'            => true,
+		'onclick'             => true,
+		'onclose'             => true,
+		'oncontextmenu'       => true,
+		'oncuechange'         => true,
+		'ondblclick'          => true,
+		'ondrag'              => true,
+		'ondragend'           => true,
+		'ondragenter'         => true,
+		'ondragexit'          => true,
+		'ondragleave'         => true,
+		'ondragover'          => true,
+		'ondragstart'         => true,
+		'ondrop'              => true,
+		'ondurationchange'    => true,
+		'onemptied'           => true,
+		'onended'             => true,
+		'onerror'             => true,
+		'onfocus'             => true,
+		'oninput'             => true,
+		'oninvalid'           => true,
+		'onkeydown'           => true,
+		'onkeypress'          => true,
+		'onkeyup'             => true,
+		'onload'              => true,
+		'onloadeddata'        => true,
+		'onloadedmetadata'    => true,
+		'onloadstart'         => true,
+		'onmousedown'         => true,
+		'onmouseenter'        => true,
+		'onmouseleave'        => true,
+		'onmousemove'         => true,
+		'onmouseout'          => true,
+		'onmouseover'         => true,
+		'onmouseup'           => true,
+		'onmousewheel'        => true,
+		'onpause'             => true,
+		'onplay'              => true,
+		'onplaying'           => true,
+		'onprogress'          => true,
+		'onratechange'        => true,
+		'onreset'             => true,
+		'onresize'            => true,
+		'onscroll'            => true,
+		'onseeked'            => true,
+		'onseeking'           => true,
+		'onselect'            => true,
+		'onshow'              => true,
+		'onsort'              => true,
+		'onstalled'           => true,
+		'onsubmit'            => true,
+		'onsuspend'           => true,
+		'ontimeupdate'        => true,
+		'ontoggle'            => true,
+		'onvolumechange'      => true,
+		'onwaiting'           => true,
+	);
+}
+
+/**
+ * Allowed Tags - Default
+ *
+ * @since 0.5.6.1
+ *
+ * @return array
+ */
+function apl_allowed_tags_default() {
+	return array(
+		// Content Sectioning.
+		'address'  => apl_allowed_global_attributes(),
+		'articles' => apl_allowed_global_attributes(),
+		'aside'    => apl_allowed_global_attributes(),
+		'footer'   => apl_allowed_global_attributes(),
+		'header'   => apl_allowed_global_attributes(),
+		'h1'       => apl_allowed_global_attributes(),
+		'h2'       => apl_allowed_global_attributes(),
+		'h3'       => apl_allowed_global_attributes(),
+		'h4'       => apl_allowed_global_attributes(),
+		'h5'       => apl_allowed_global_attributes(),
+		'h6'       => apl_allowed_global_attributes(),
+		'hgroup'   => apl_allowed_global_attributes(),
+		'main'     => apl_allowed_global_attributes(),
+		'nav'      => apl_allowed_global_attributes(),
+		'section'  => apl_allowed_global_attributes(),
+
+		// Text Content.
+		'blockquote' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'cite' => true,
+			)
+		),
+		'dd'         => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'nowrap' => true,
+			)
+		),
+		'div'        => apl_allowed_global_attributes(),
+		'dl'         => apl_allowed_global_attributes(),
+		'dt'         => apl_allowed_global_attributes(),
+		'figcaption' => apl_allowed_global_attributes(),
+		'figure'     => apl_allowed_global_attributes(),
+		'hr'         => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'   => true, // Deprecated.
+				'color'   => true,
+				'noshade' => true, // Deprecated.
+				'size'    => true, // Deprecated.
+				'width'   => true, // Deprecated.
+			)
+		),
+		'li'         => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'value' => true,
+			)
+		),
+		'ol'         => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'reversed' => true,
+				'start'    => true,
+			)
+		),
+		'p'          => apl_allowed_global_attributes(),
+		'pre'        => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'pre' => true,
+			)
+		),
+		'ul'         => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'compact' => true,
+				'type'    => true,
+			)
+		),
+
+		// Inline Text Sematics
+		'a'      => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'download'       => true,
+				'href'           => true,
+				'hreflang'       => true,
+				'name'           => true, // Deprecated.
+				'ping'           => true,
+				'referrerpolicy' => true,
+				'rel'            => true,
+				'rev'            => true, // Deprecated.
+				'target'         => true,
+				'type'           => true,
+			)
+		),
+		'abbr'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'title' => true,
+			)
+		),
+		'b'      => apl_allowed_global_attributes(),
+		'bdi'    => apl_allowed_global_attributes(),
+		'bdo'    => apl_allowed_global_attributes(),
+		'br'     => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'clear' => true, // Deprecated.
+			)
+		),
+		'cite'   => apl_allowed_global_attributes(),
+		'code'   => apl_allowed_global_attributes(),
+		'data'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'value' => true,
+			)
+		),
+		'dfn'    => apl_allowed_global_attributes(),
+		'em'     => apl_allowed_global_attributes(),
+		'i'      => apl_allowed_global_attributes(),
+		'kbd'    => apl_allowed_global_attributes(),
+		'mark'   => apl_allowed_global_attributes(),
+		'q'      => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'cite' => true,
+			)
+		),
+		'rb'     => apl_allowed_global_attributes(),
+		'rp'     => apl_allowed_global_attributes(),
+		'rt'     => apl_allowed_global_attributes(),
+		'rtc'    => apl_allowed_global_attributes(),
+		'ruby'   => apl_allowed_global_attributes(),
+		's'      => apl_allowed_global_attributes(),
+		'samp'   => apl_allowed_global_attributes(),
+		'small'  => apl_allowed_global_attributes(),
+		'span'   => apl_allowed_global_attributes(),
+		'strong' => apl_allowed_global_attributes(),
+		'sub'    => apl_allowed_global_attributes(),
+		'sup'    => apl_allowed_global_attributes(),
+		'time'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'datetime' => true,
+			)
+		),
+		'u'      => apl_allowed_global_attributes(),
+		'var'    => apl_allowed_global_attributes(),
+		'wbr'    => apl_allowed_global_attributes(),
+
+		// Image & Media.
+		'area'  => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'alt'            => true,
+				'accesskey'      => true, // Deprecated.
+				'coords'         => true,
+				'download'       => true,
+				'href'           => true,
+				'hreflang'       => true,
+				'media'          => true,
+				'name'           => true, // Deprecated.
+				'nohref'         => true, // Deprecated.
+				'ping'           => true,
+				'referrerpolicy' => true,
+				'rel'            => true,
+				'shape'          => true,
+				'tabindex'       => true, // Deprecated.
+				'target'         => true,
+				'type'           => true, // Deprecated.
+			)
+		),
+		'audio' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'autoplay' => true,
+				'buffered' => true,
+				'controls' => true,
+				'loop'     => true,
+				'muted'    => true,
+				'played'   => true,
+				'preload'  => true,
+				'src'      => true,
+				'volume'   => true,
+			)
+		),
+		'img'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'          => true, // Deprecated.
+				'alt'            => true,
+				'border'         => true, // Deprecated.
+				'crossorigin'    => true,
+				'decoding'       => true,
+				'height'         => true,
+				'hspace'         => true, // Deprecated.
+				'importance'     => true,
+				'intrinsicsize'  => true,
+				'ismap'          => true,
+				'loading'        => true,
+				'longdesc'       => true, // Deprecated.
+				'name'           => true, // Deprecated.
+				'onerror'        => true,
+				'referrerpolicy' => true,
+				'sizes'          => true,
+				'src'            => true,
+				'srcset'         => true,
+				'usemap'         => true,
+				'vspace'         => true, // Deprecated.
+				'width'          => true,
+			)
+		),
+		'map'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'map' => true,
+			)
+		),
+		'track' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'default' => true,
+				'kind'    => true,
+				'label'   => true,
+				'src'     => true,
+				'srclang' => true,
+			)
+		),
+		'video' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'autoplay'             => true,
+				'autoPictureInPicture' => true,
+				'buffered'             => true,
+				'controls'             => true,
+				'controlslist'         => true,
+				'crossorigin'          => true,
+				'currentTime'          => true,
+				'duration'             => true,
+				'height'               => true,
+				'intrinsicsize'        => true,
+				'loop'                 => true,
+				'muted'                => true,
+				'playinline'           => true,
+				'poster'               => true,
+				'preload'              => true,
+				'src'                  => true,
+				'width'                => true,
+			)
+		),
+
+		// Embedded Content.
+		'embed'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'height' => true,
+				'src'    => true,
+				'type'   => true,
+				'width'  => true,
+			)
+		),
+		'iframe'  => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'           => true, // Deprecated.
+				'allow'           => true,
+				'allowfullscreen' => true,
+				'csp'             => true,
+				'frameborder'     => true, // Deprecated.
+				'height'          => true,
+				'importance'      => true,
+				'loading'         => true,
+				'longdesc'        => true, // Deprecated.
+				'marginheight'    => true, // Deprecated.
+				'marginwidth'     => true, // Deprecated.
+				'name'            => true,
+				'referrerpolicy'  => true,
+				'sandbox'         => true,
+				'scrolling'       => true, // Deprecated.
+				'src'             => true,
+				'srcdoc'          => true,
+				'width'           => true,
+			)
+		),
+		'object'  => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'archive' => true, // Deprecated.
+				'border' => true, // Deprecated.
+				'classid' => true, // Deprecated.
+				'codebase' => true, // Deprecated.
+				'codetype' => true, // Deprecated.
+				'data' => true,
+				'declare' => true, // Deprecated.
+				'form' => true,
+				'height' => true,
+				'name' => true,
+				'standby' => true, // Deprecated.
+				'tabindex' => true, // Deprecated.
+				'type' => true,
+				'typemustmatch' => true,
+				'usemap' => true,
+				'width' => true,
+			)
+		),
+		'param'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'name'      => true,
+				'type'      => true, // Deprecated.
+				'value'     => true,
+				'valuetype' => true, // Deprecated.
+			)
+		),
+		'picture' => apl_allowed_global_attributes(),
+		'source'  => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'media'  => true,
+				'sizes'  => true,
+				'src'    => true,
+				'srcset' => true,
+				'type'   => true,
+			)
+		),
+
+		// Scripting.
+		'canvas'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'height' => true,
+				'width'  => true,
+			)
+		),
+		'noscript' => apl_allowed_global_attributes(),
+		'script'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'async'          => true,
+				'crossorigin'    => true,
+				'defer'          => true,
+				'integrity'      => true,
+				'language'       => true, // Deprecated.
+				'nomodule'       => true,
+				'referrerPolicy' => true,
+				'src'            => true,
+				'text'           => true,
+				'type'           => true,
+				'type.module'    => true,
+			)
+		),
+
+		// Demarcating edits.
+		'del' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'cite'     => true,
+				'datetime' => true,
+			)
+		),
+		'ins' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'cite'     => true,
+				'datetime' => true,
+			)
+		),
+
+		// Table Content.
+		'caption'  => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align' => true, // Deprecated.
+			)
+		),
+		'col'      => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'   => true, // Deprecated.
+				'bgcolor' => true, // Deprecated.
+				'char'    => true, // Deprecated.
+				'charoff' => true, // Deprecated.
+				'span'    => true,
+				'valign'  => true, // Deprecated.
+				'width'   => true, // Deprecated.
+			)
+		),
+		'colgroup'      => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'   => true, // Deprecated.
+				'bgcolor' => true, // Deprecated.
+				'char'    => true, // Deprecated.
+				'charoff' => true, // Deprecated.
+				'span'    => true,
+				'valign'  => true, // Deprecated.
+				'width'   => true, // Deprecated.
+			)
+		),
+		'table'    => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'       => true, // Deprecated.
+				'bgcolor'     => true, // Deprecated.
+				'border'      => true, // Deprecated.
+				'cellpadding' => true, // Deprecated.
+				'cellspacing' => true, // Deprecated.
+				'frame'       => true, // Deprecated.
+				'rules'       => true, // Deprecated.
+				'summary'     => true, // Deprecated.
+				'width'       => true, // Deprecated.
+			)
+		),
+		'tbody'    => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'   => true, // Deprecated.
+				'bgcolor' => true, // Deprecated.
+				'char'    => true, // Deprecated.
+				'charoff' => true, // Deprecated.
+				'valign'  => true, // Deprecated.
+			)
+		),
+		'td'       => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'abbr'    => true, // Deprecated.
+				'align'   => true, // Deprecated.
+				'axis'    => true, // Deprecated.
+				'bgcolor' => true, // Deprecated.
+				'char'    => true, // Deprecated.
+				'charoff' => true, // Deprecated.
+				'colspan' => true,
+				'headers' => true,
+				'rowspan' => true,
+				'scope'   => true, // Deprecated.
+				'valign'  => true, // Deprecated.
+				'width'   => true, // Deprecated.
+			)
+		),
+		'tfoot'    => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'   => true, // Deprecated.
+				'bgcolor' => true, // Deprecated.
+				'char'    => true, // Deprecated.
+				'charoff' => true, // Deprecated.
+				'valign'  => true, // Deprecated.
+			)
+		),
+		'th'       => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'abbr'    => true,
+				'align'   => true, // Deprecated.
+				'axis'    => true, // Deprecated.
+				'bgcolor' => true, // Deprecated.
+				'char'    => true, // Deprecated.
+				'charoff' => true, // Deprecated.
+				'colspan' => true,
+				'headers' => true,
+				'rowspan' => true,
+				'scope'   => true,
+				'valign'  => true, // Deprecated.
+				'width'   => true, // Deprecated.
+			)
+		),
+		'thead'    => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'   => true, // Deprecated.
+				'bgcolor' => true, // Deprecated.
+				'char'    => true, // Deprecated.
+				'charoff' => true, // Deprecated.
+				'valign'  => true, // Deprecated.
+			)
+		),
+		'tr'       => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'align'   => true, // Deprecated.
+				'bgcolor' => true, // Deprecated.
+				'char'    => true, // Deprecated.
+				'charoff' => true, // Deprecated.
+				'valign'  => true, // Deprecated.
+			)
+		),
+
+		// Forms.
+		'button'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'autofocus'      => true,
+				'disabled'       => true,
+				'form'           => true,
+				'formaction'     => true,
+				'formenctype'    => true,
+				'formmethod'     => true,
+				'formnovalidate' => true,
+				'formtarget'     => true,
+				'name'           => true,
+				'type'           => true,
+				'value'          => true,
+			)
+		),
+		'datalist' => apl_allowed_global_attributes(),
+		'fieldset' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'disabled' => true,
+				'form'     => true,
+				'name'     => true,
+			)
+		),
+		'form'     => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'accept'         => true, // Deprecated.
+				'accept-charset' => true,
+				'action'         => true,
+				'enctype'        => true,
+				'method'         => true,
+				'name'           => true,
+				'novalidate'     => true,
+				'target'         => true,
+			)
+		),
+		'input'    => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'accept'         => true,
+				'alt'            => true,
+				'autocomplete'   => true,
+				'autofocus'      => true,
+				'capture'        => true,
+				'checked'        => true,
+				'dirname'        => true,
+				'disabled'       => true,
+				'form'           => true,
+				'formaction'     => true,
+				'formenctype'    => true,
+				'formmethod'     => true,
+				'formnovalidate' => true,
+				'formtarget'     => true,
+				'height'         => true,
+				'list'           => true,
+				'max'            => true,
+				'maxlength'      => true,
+				'min'            => true,
+				'minlength'      => true,
+				'multiple'       => true,
+				'name'           => true,
+				'pattern'        => true,
+				'placeholder'    => true,
+				'readonly'       => true,
+				'required'       => true,
+				'size'           => true,
+				'src'            => true,
+				'step'           => true,
+				'type'           => true,
+				'value'          => true,
+				'width'          => true,
+			)
+		),
+		'label'    => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'for'  => true,
+				'form' => true, // Deprecated.
+			)
+		),
+		'legend'   => apl_allowed_global_attributes(),
+		'meter'    => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'form'    => true,
+				'high'    => true,
+				'low'     => true,
+				'max'     => true,
+				'min'     => true,
+				'optimum' => true,
+				'value'   => true,
+			)
+		),
+		'optgroup' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'disabled' => true,
+				'label' => true,
+			)
+		),
+		'option'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'disabled' => true,
+				'label'    => true,
+				'selected' => true,
+				'value'    => true,
+			)
+		),
+		'output'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'for' => true,
+			)
+		),
+		'progress' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'max'   => true,
+				'value' => true,
+			)
+		),
+		'select'   => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'autofocus' => true,
+				'disabled'  => true,
+				'form'      => true,
+				'multiple'  => true,
+				'name'      => true,
+				'required'  => true,
+				'size'      => true,
+			)
+		),
+		/*
+		 * (IMPORTANT) Keep disabled to prevent ending the textarea element.
+		 *
+		'textarea' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'autofocus'   => true,
+				'cols'        => true,
+				'disabled'    => true,
+				'form'        => true,
+				'maxlength'   => true,
+				'minlength'   => true,
+				'name'        => true,
+				'placeholder' => true,
+				'readonly'    => true,
+				'required'    => true,
+				'rows'        => true,
+				'spellcheck'  => true,
+				'wrap'        => true,
+			)
+		),
+		*/
+
+		// Interactive Elements.
+		'details' => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'open' => true,
+			)
+		),
+		'dialog'  => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'open' => true,
+			)
+		),
+		'menu'    => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'label' => true,
+				'type' => true,
+			)
+		),
+		'summary' => apl_allowed_global_attributes(),
+
+		// Web Components.
+		'slot'     => array_merge(
+			apl_allowed_global_attributes(),
+			array(
+				'name' => true,
+			)
+		),
+		'template' => apl_allowed_global_attributes(),
+	);
+}
+
+/**
+ * Allowed Tags - Before
+ *
+ * @since 0.5.6.1
+ *
+ * @return array
+ */
+function apl_allowed_tags_before() {
+	$allowed_tags = array_merge(
+		apl_allowed_tags_default(),
+		array(
+			// Document metadata.
+			'head'  => apl_allowed_global_attributes(),
+			'link'  => array_merge(
+				apl_allowed_global_attributes(),
+				array(
+					'as'             => true,
+					'disabled'       => true,
+					'href'           => true,
+					'hreflang'       => true,
+					'importance'     => true,
+					'integrity'      => true,
+					'media'          => true,
+					'referrerpolicy' => true,
+					'rel'            => true,
+					'sizes'          => true,
+					'title'          => true,
+					'type'           => true,
+				)
+			),
+			'meta'  => array(
+				'content' => true,
+				'name' => true,
+			),
+			'style' => array_merge(
+				apl_allowed_global_attributes(),
+				array(
+					'type'  => true,
+					'media' => true,
+					'nonce' => true,
+					'title' => true,
+				)
+			),
+			'title' => apl_allowed_global_attributes(),
+
+			// Sectioning root.
+			'body' => array_merge(
+				apl_allowed_global_attributes(),
+				array(
+					'onafterprint'     => true,
+					'onbeforeprint'    => true,
+					'onbeforeunload'   => true,
+					'onblur'           => true,
+					'onerror'          => true,
+					'onfocus'          => true,
+					'onhashchange'     => true,
+					'onlanguagechange' => true,
+					'onload'           => true,
+					'onmessage'        => true,
+					'onoffline'        => true,
+					'ononline'         => true,
+					'onpopstate'       => true,
+					'onredo'           => true,
+					'onresize'         => true,
+					'onstorage'        => true,
+					'onundo'           => true,
+					'onunload'         => true,
+				)
+			),
+		)
+	);
+
+	/**
+	 * Allowed Tags - Before
+	 *
+	 * @since 0.5.6.1
+	 *
+	 * @param array $allowed_tags
+	 */
+	return apply_filters( 'apl_allowed_tags_before', $allowed_tags );
+}
+
+/**
+ * Allowed Tags - Content
+ *
+ * @since 0.5.6.1
+ *
+ * @return array
+ */
+function apl_allowed_tags_content() {
+	$allowed_tags = apl_allowed_tags_default();
+
+	/**
+	 * Allowed Tags - Content
+	 *
+	 * @since 0.5.6.1
+	 *
+	 * @param array $allowed_tags
+	 */
+	return apply_filters( 'apl_allowed_tags_content', $allowed_tags );
+}
+
+/**
+ * Allowed Tags - After
+ *
+ * @since 0.5.6.1
+ *
+ * @return array
+ */
+function apl_allowed_tags_after() {
+	$allowed_tags = array_merge(
+		apl_allowed_tags_default(),
+		array(
+			// Sectioning root.
+			'body' => array_merge(
+				apl_allowed_global_attributes(),
+				array(
+					'onafterprint'     => true,
+					'onbeforeprint'    => true,
+					'onbeforeunload'   => true,
+					'onblur'           => true,
+					'onerror'          => true,
+					'onfocus'          => true,
+					'onhashchange'     => true,
+					'onlanguagechange' => true,
+					'onload'           => true,
+					'onmessage'        => true,
+					'onoffline'        => true,
+					'ononline'         => true,
+					'onpopstate'       => true,
+					'onredo'           => true,
+					'onresize'         => true,
+					'onstorage'        => true,
+					'onundo'           => true,
+					'onunload'         => true,
+				)
+			),
+		)
+	);
+
+	/**
+	 * Allowed Tags - After
+	 *
+	 * @since 0.5.6.1
+	 *
+	 * @param array $allowed_tags
+	 */
+	return apply_filters( 'apl_allowed_tags_after', $allowed_tags );
+}
+

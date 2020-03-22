@@ -82,7 +82,7 @@ $apl_help_text = array(
 		</div>
 	</div>
 	<div class="apl-settings-row" >
-		<textarea id="apl_textarea_default_empty" class="apl-default-empty-message" name="apl_default_empty_message" rows="9" ><?php echo $options['default_empty_output']; ?></textarea>
+		<textarea id="apl_textarea_default_empty" class="apl-default-empty-message" name="apl_default_empty_message" rows="9" ><?php echo wp_kses( $options['default_empty_output'], apl_allowed_tags_before() ) ; ?></textarea>
 	</div>
 	<?php submit_button( __( 'Save Settings' ), 'primary', 'apl_save_settings', false ); ?>
 </form>

@@ -81,7 +81,7 @@ class APL_Core {
 		add_action( 'widgets_init', array( $this, 'action_widget_init' ) );
 
 		/* **** ADMIN ACTION & FILTERS HOOKS **** */
-		if ( is_admin() ) {
+		if ( current_user_can( 'administrator' ) ) {
 			// Admin Class.
 			add_action( 'init', array( 'APL_Admin', 'get_instance' ) );
 
@@ -123,7 +123,9 @@ class APL_Core {
 		require_once APL_DIR . 'includes/functions.php';
 
 		// ADMIN.
-		require_once APL_DIR . 'admin/class-apl-admin.php';
+		if ( current_user_can( 'administrator' ) ) {
+			require_once APL_DIR . 'admin/class-apl-admin.php';
+		}
 	}
 
 	/**

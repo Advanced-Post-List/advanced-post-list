@@ -66,7 +66,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['before_list']; ?>"></span>
 			</div>
 			<div class="apl-textarea-before-wrap">
-				<textarea id="apl_textarea_before" class="apl-textarea-before large-text" name="apl_before" rows="3"><?php echo $apl_design->before; ?></textarea>
+				<textarea id="apl_textarea_before" class="apl-textarea-before large-text" name="apl_before" rows="3"><?php echo wp_kses( $apl_design->before, apl_allowed_tags_before() ); ?></textarea>
 			</div>
 		</div>
 		<div class="apl-design-row">
@@ -80,7 +80,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				</a>
 			</div>
 			<div class="apl-textarea-content-wrap">
-				<textarea id="apl_textarea_content" class="apl-textarea-content large-text" name="apl_content" rows="9"><?php echo $apl_design->content; ?></textarea>
+				<textarea id="apl_textarea_content" class="apl-textarea-content large-text" name="apl_content" rows="9"><?php echo wp_kses( $apl_design->content, apl_allowed_tags_content() ); ?></textarea>
 			</div>
 		</div>
 		<div class="apl-design-row">
@@ -89,7 +89,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 				<span class="apl-tooltip apl-help apl-help-icon dashicons dashicons-editor-help" title="<?php echo $apl_help_text['after_list']; ?>"></span>
 			</div>
 			<div class="apl-textarea-after-wrap">
-				<textarea id="apl_textarea_after" class="apl-textarea-after large-text" name="apl_after" rows="3"><?php echo $apl_design->after; ?></textarea>
+				<textarea id="apl_textarea_after" class="apl-textarea-after large-text" name="apl_after" rows="3"><?php echo wp_kses( $apl_design->after, apl_allowed_tags_after() ); ?></textarea>
 			</div>
 		</div>
 		<div class="apl-design-row">
@@ -102,7 +102,7 @@ if ( 'apl_post_list' === $post->post_type ) {
 					<input type="checkbox" id="apl_empty_message_enable" class="apl-empty-message-enable" name="apl_empty_enable" <?php echo ! empty( $apl_design->empty ) ? 'checked="checked"' : ''; ?> />
 					<label for="apl_empty_message_enable"><?php esc_html_e( 'Enable (Overwrites Default)', 'advanced-post-list' ) ?></label>
 				</div>
-				<textarea id="apl_textarea_empty_message" class="apl-textarea-empty-message large-text" name="apl_empty_message" rows="9" style="<?php echo empty( $apl_design->empty ) ? 'display: none;' : ''; ?>" ><?php echo $apl_design->empty; ?></textarea>
+				<textarea id="apl_textarea_empty_message" class="apl-textarea-empty-message large-text" name="apl_empty_message" rows="9" style="<?php echo empty( $apl_design->empty ) ? 'display: none;' : ''; ?>" ><?php echo wp_kses( $apl_design->empty, apl_allowed_tags_before() ); ?></textarea>
 			</div>
 		</div>
 		<?php if ( defined( 'ICL_SITEPRESS_VERSION' )  && 'apl_post_list' === $post->post_type ) : ?>
